@@ -11,6 +11,13 @@
 //  InGermany
 //
 
+//
+//  ArticleDetailView.swift
+//  InGermany
+//
+//  Created by SUM TJK on 14.09.25.
+//
+
 import SwiftUI
 
 struct ArticleDetailView: View {
@@ -31,14 +38,45 @@ struct ArticleDetailView: View {
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)
                 
+                // Теги
+                if !article.tags.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(article.tags, id: \.self) { tag in
+                                NavigationLink {
+                                    ArticlesByTagView(
+                                        tag: tag,
+                                        articles: DataService.shared.loadArticles(),
+                                        favoritesManager: favoritesManager,
+                                        selectedLanguage: selectedLanguage
+                                    )
+                                } label: {
+                                    Text("#\(tag)")
+                                        .font(.caption)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(Color.blue.opacity(0.15))
+                                        .foregroundColor(.blue)
+                                        .cornerRadius(8)
+                                }
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                
                 // Кнопки действий
                 HStack {
                     Button {
                         favoritesManager.toggleFavorite(article: article)
                     } label: {
                         Label(
-                            favoritesManager.isFavorite(article: article) ? "Убрать из избранного" : "В избранное",
-                            systemImage: favoritesManager.isFavorite(article: article) ? "heart.fill" : "heart"
+                            favoritesManager.isFavorite(article: article)
+                            ? "Убрать из избранного"
+                            : "В избранное",
+                            systemImage: favoritesManager.isFavorite(article: article)
+                            ? "heart.fill"
+                            : "heart"
                         )
                     }
                     
