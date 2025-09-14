@@ -6,20 +6,10 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-# Переходим в папку скрипта
 cd "$(dirname "$0")" || exit 1
 
-# Подтягиваем последние изменения
-git pull --rebase origin main
-
-# Добавляем все изменения
 git add .
-
-# Делаем коммит
 git commit -m "$1"
-
-# Отправляем на GitHub
 git push origin main
 
-# Показываем статус
-git status
+echo "✅ Проект сохранён и отправлен на GitHub."

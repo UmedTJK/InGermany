@@ -1,24 +1,3 @@
-//
-//  Article.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-
-//
-//  Article.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-
-//
-//  Article.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-
 import Foundation
 
 struct Article: Identifiable, Codable {
@@ -29,18 +8,17 @@ struct Article: Identifiable, Codable {
     let tags: [String]
 
     func localizedTitle(for language: String) -> String {
-        title[language] ?? title["de"] ?? title["en"] ?? title["ru"] ?? "Без названия"
+        title[language] ?? title["de"] ?? title["en"] ?? title["ru"] ?? title["tj"] ?? "Без названия"
     }
 
     func localizedContent(for language: String) -> String {
-        content[language] ?? content["de"] ?? content["en"] ?? content["ru"] ?? ""
+        content[language] ?? content["de"] ?? content["en"] ?? content["ru"] ?? content["tj"] ?? ""
     }
 }
 
-// MARK: - Sample for previews
 extension Article {
     static let sample = Article(
-        id: "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        id: "1",
         title: [
             "ru": "Пример статьи",
             "en": "Sample Article",
@@ -53,7 +31,7 @@ extension Article {
             "de": "Dies ist ein Beispieltext für die Vorschau.",
             "tj": "Ин матни намунавии мақола барои пешнамоиш аст."
         ],
-        categoryId: "11111111-1111-1111-1111-aaaaaaaaaaaa",
+        categoryId: "1",
         tags: ["пример", "sample", "beispiel", "намуна"]
     )
 }
