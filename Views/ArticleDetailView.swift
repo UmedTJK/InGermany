@@ -17,6 +17,12 @@
 //
 //  Created by SUM TJK on 14.09.25.
 //
+//
+//  ArticleDetailView.swift
+//  InGermany
+//
+//  Created by SUM TJK on 14.09.25.
+//
 
 import SwiftUI
 
@@ -62,6 +68,32 @@ struct ArticleDetailView: View {
                             }
                         }
                         .padding(.vertical, 4)
+                    }
+                }
+                
+                // Материалы по теме
+                let relatedArticles = DataService.shared.loadArticles().filter { other in
+                    other.id != article.id &&
+                    !Set(other.tags).isDisjoint(with: article.tags)
+                }
+                
+                if !relatedArticles.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Материалы по данной теме")
+                            .font(.headline)
+                            .padding(.top, 12)
+                        
+                        ForEach(relatedArticles.prefix(3)) { related in
+                            NavigationLink {
+                                ArticleDetailView(
+                                    article: related,
+                                    favoritesManager: favoritesManager,
+                                    selectedLanguage: selectedLanguage
+                                )
+                            } label: {
+                                ArticleRow(article: related, favoritesManager: favoritesManager)
+                            }
+                        }
                     }
                 }
                 
