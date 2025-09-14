@@ -1,45 +1,51 @@
-//
-//  .gitignore
-//  InGermany
-//
-//  Created by SUM TJK on 14.09.25.
-//
-
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 
 # Xcode
+xcuserdata/
 *.xcuserstate
-*.xcscmblueprint
 *.xccheckout
-*.xcodeproj/*
-!*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
-!*.xcworkspace/contents.xcworkspacedata
-!*.xcworkspace/xcshareddata/**
-
-# User-specific
-*.xcuserdatad
+*.xcscmblueprint
 *.moved-aside
 *.pbxuser
 *.mode1v3
 *.mode2v3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
 
 # Build products
 build/
 DerivedData/
 *.o
 *.LinkFileList
-*.hmap
 
 # Swift Package Manager
 .build/
+.swiftpm/
 Packages/
-xcuserdata/
 
-# Other
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Other IDEs
+.idea/
+*.iml
+.vscode/
+
+# Temporary/backup files
 *.swp
 *.lock
 *.orig
