@@ -6,7 +6,6 @@
 //
 //
 //
-//
 //  ContentView.swift
 //  InGermany
 //
@@ -51,8 +50,7 @@ struct ContentView: View {
             
             FavoritesView(
                 favoritesManager: favoritesManager,
-                articles: articles,
-                selectedLanguage: selectedLanguage
+                articles: articles
             )
             .tabItem {
                 Label("Favorites", systemImage: "star.fill")

@@ -9,6 +9,11 @@
 //  InGermany
 //
 
+//
+//  HomeView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct HomeView: View {
@@ -23,7 +28,11 @@ struct HomeView: View {
                     Section(header: Text("Избранное")) {
                         ForEach(favoritesManager.favoriteArticles(from: articles)) { article in
                             NavigationLink {
-                                ArticleView(article: article, favoritesManager: favoritesManager)
+                                ArticleDetailView(
+                                    article: article,
+                                    favoritesManager: favoritesManager,
+                                    selectedLanguage: selectedLanguage
+                                )
                             } label: {
                                 ArticleRow(article: article, favoritesManager: favoritesManager)
                             }
@@ -34,7 +43,11 @@ struct HomeView: View {
                 Section(header: Text("Все статьи")) {
                     ForEach(articles) { article in
                         NavigationLink {
-                            ArticleView(article: article, favoritesManager: favoritesManager)
+                            ArticleDetailView(
+                                article: article,
+                                favoritesManager: favoritesManager,
+                                selectedLanguage: selectedLanguage
+                            )
                         } label: {
                             ArticleRow(article: article, favoritesManager: favoritesManager)
                         }

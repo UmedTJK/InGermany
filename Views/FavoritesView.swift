@@ -8,7 +8,7 @@ import SwiftUI
 struct FavoritesView: View {
     @ObservedObject var favoritesManager: FavoritesManager
     let articles: [Article]
-    let selectedLanguage: String   // 👈 принимаем язык как параметр
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
         NavigationView {
@@ -20,14 +20,10 @@ struct FavoritesView: View {
                         selectedLanguage: selectedLanguage
                     )
                 } label: {
-                    VStack(alignment: .leading) {
-                        Text(article.localizedTitle(for: selectedLanguage))
-                            .font(.headline)
-                        Text(article.localizedContent(for: selectedLanguage))
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .lineLimit(2)
-                    }
+                    ArticleRow(
+                        article: article,
+                        favoritesManager: favoritesManager
+                    )
                 }
             }
             .navigationTitle("Избранное")
@@ -38,7 +34,6 @@ struct FavoritesView: View {
 #Preview {
     FavoritesView(
         favoritesManager: FavoritesManager(),
-        articles: [Article.sampleArticle],
-        selectedLanguage: "ru"
+        articles: [Article.sampleArticle]
     )
 }

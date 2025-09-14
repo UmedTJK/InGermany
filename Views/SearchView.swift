@@ -17,10 +17,8 @@ struct SearchView: View {
         } else {
             let lowercased = searchText.lowercased()
             return articles.filter { article in
-                // Проверяем заголовок и контент на выбранном языке
                 article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
                 article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
-                // Проверяем категорию (локализованное имя)
                 (CategoryManager.shared
                     .category(for: article.categoryId)?
                     .localizedName(for: selectedLanguage)
@@ -58,3 +56,4 @@ struct SearchView: View {
         articles: [Article.sampleArticle]
     )
 }
+
