@@ -6,52 +6,46 @@
 //
 
 ///
-//  ArticlesByCategoryView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-
 import SwiftUI
 
 struct ArticlesByCategoryView: View {
     let category: Category
-    let articles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @State private var articles: [Article] = []
 
     var body: some View {
-        List(filteredArticles) { article in
-            NavigationLink(
-                destination: ArticleView(article: article, favoritesManager: favoritesManager)
-            ) {
-                ArticleRow(article: article, favoritesManager: favoritesManager)
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                ForEach(Array(articles.enumerated()), id: \.offset) { index, tuple in
+                    let article = tuple.element
+                    NavigationLink(destination: ArticleView(article: article)) {
+                        ArticleRow(article: article, favoritesManager: favoritesManager)
+                            .scaleEffect(1.0)
+                            .animation(
+                                .spring(response: 0.5, dampingFraction: 0.7)
+                                    .delay(Double(index) * 0.05),
+                                value: articles.count
+                            )
+                    }
+                    .buttonStyle(.plain)
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                }
             }
+            .padding()
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))
-    }
-
-    private var filteredArticles: [Article] {
-        articles.filter { $0.categoryId == category.id }
+        .onAppear {
+            articles = DataService.shared.loadArticles().filter { $0.categoryId == category.id }
+        }
     }
 }
 
 #Preview {
-    ArticlesByCategoryView(
-        category: Category(
-            id: "1",
-            name: ["ru": "Финансы", "en": "Finance", "de": "Finanzen"],
-            icon: "banknote"
-        ),
-        articles: [
-            Article(
-                id: "1",
-                title: ["ru": "Заголовок", "en": "Title", "de": "Titel"],
-                content: ["ru": "Содержимое", "en": "Content", "de": "Inhalt"],
-                categoryId: "1",
-                tags: ["финансы", "налоги"]
-            )
-        ],
-        favoritesManager: FavoritesManager()
-    )
+    NavigationView {
+        ArticlesByCategoryView(
+            category: Category(id: "1", name: ["ru": "Финансы", "en": "Finance", "de": "Finanzen"], icon: "dollarsign.circle"),
+            favoritesManager: FavoritesManager()
+        )
+    }
 }

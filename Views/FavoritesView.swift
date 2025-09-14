@@ -5,58 +5,60 @@
 //  Created by SUM TJK on 13.09.25.
 //
 //
-//  FavoritesView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-//
-//  FavoritesView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
 //
 import SwiftUI
 
 struct FavoritesView: View {
     @ObservedObject var favoritesManager: FavoritesManager
-    let articles: [Article]
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @State private var allArticles: [Article] = []
+
+    // вычисляемые избранные статьи
+    private var favorites: [Article] {
+        favoritesManager.favoriteArticles(from: allArticles)
+    }
 
     var body: some View {
-        NavigationView {
-            if favoritesManager.favoriteArticles(from: articles).isEmpty {
-                Text("У вас пока нет избранных статей")
-                    .foregroundColor(.secondary)
-                    .padding()
-                    .navigationTitle("Избранное")
+        ScrollView {
+            if favorites.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "star")
+                        .font(.largeTitle)
+                        .foregroundColor(.gray)
+                    Text("Нет избранных статей")
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                List {
-                    ForEach(favoritesManager.favoriteArticles(from: articles)) { article in
-                        NavigationLink(
-                            destination: ArticleView(article: article, favoritesManager: favoritesManager)
-                        ) {
+                LazyVStack(spacing: 12) {
+                    ForEach(Array(favorites.enumerated()), id: \.offset) { index, tuple in
+                        let article = tuple.element
+                        NavigationLink(destination: ArticleView(article: article)) {
                             ArticleRow(article: article, favoritesManager: favoritesManager)
+                                .scaleEffect(1.0)
+                                .animation(
+                                    .spring(response: 0.5, dampingFraction: 0.7)
+                                        .delay(Double(index) * 0.05),
+                                    value: favorites.count
+                                )
                         }
+                        .buttonStyle(.plain)
+                        .transition(.move(edge: .trailing).combined(with: .opacity))
                     }
                 }
-                .navigationTitle("Избранное")
+                .padding()
             }
         }
+        .navigationTitle("Избранное")
+        .onAppear {
+            allArticles = DataService.shared.loadArticles()
+        }
+        .animation(.easeInOut, value: favorites.count)
     }
 }
 
 #Preview {
-    FavoritesView(
-        favoritesManager: FavoritesManager(),
-        articles: [
-            Article(
-                id: "1",
-                title: ["ru": "Заголовок", "en": "Title", "de": "Titel"],
-                content: ["ru": "Содержимое", "en": "Content", "de": "Inhalt"],
-                categoryId: "1",
-                tags: ["финансы", "налоги"]
-            )
-        ]
-    )
+    FavoritesView(favoritesManager: FavoritesManager())
 }

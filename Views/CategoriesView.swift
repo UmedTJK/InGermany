@@ -2,24 +2,6 @@
 //  CategoriesView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
-//
-//  CategoriesView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-
-//
-
-//
-//  CategoriesView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-
 //
 //  CategoriesView.swift
 //  InGermany
@@ -30,51 +12,52 @@
 import SwiftUI
 
 struct CategoriesView: View {
-    let categories: [Category]
-    let articles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @State private var categories: [Category] = []
 
     var body: some View {
-        NavigationView {
-            List(categories, id: \.id) { category in
-                NavigationLink(
-                    destination: ArticlesByCategoryView(
-                        category: category,
-                        articles: articles,
-                        favoritesManager: favoritesManager
-                    )
-                ) {
-                    HStack {
-                        Image(systemName: category.icon)
-                            .foregroundColor(.blue)
-                        Text(category.localizedName(for: selectedLanguage))
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                ForEach(Array(categories.enumerated()), id: \.offset) { index, tuple in
+                    let category = tuple.element
+                    NavigationLink(destination: ArticlesByCategoryView(category: category, favoritesManager: favoritesManager)) {
+                        HStack {
+                            Image(systemName: category.icon)
+                                .font(.title3)
+                                .foregroundColor(.blue)
+
+                            Text(category.localizedName(for: selectedLanguage))
+                                .font(.headline)
+                                .foregroundColor(.primary)
+
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                        .scaleEffect(1.0)
+                        .animation(
+                            .spring(response: 0.5, dampingFraction: 0.7)
+                                .delay(Double(index) * 0.05),
+                            value: categories.count
+                        )
                     }
+                    .buttonStyle(.plain)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
-            .navigationTitle("Категории")
+            .padding()
+        }
+        .navigationTitle("Категории")
+        .onAppear {
+            categories = DataService.shared.loadCategories()
         }
     }
 }
 
 #Preview {
-    CategoriesView(
-        categories: [
-            Category(
-                id: "1",
-                name: ["ru": "Финансы", "en": "Finance", "de": "Finanzen"],
-                icon: "banknote"
-            )
-        ],
-        articles: [
-            Article(
-                id: "1",
-                title: ["ru": "Заголовок", "en": "Title", "de": "Titel"],
-                content: ["ru": "Содержимое", "en": "Content", "de": "Inhalt"],
-                categoryId: "1",
-                tags: ["финансы", "налоги"]
-            )
-        ],
-        favoritesManager: FavoritesManager()
-    )
+    NavigationView {
+        CategoriesView(favoritesManager: FavoritesManager())
+    }
 }
