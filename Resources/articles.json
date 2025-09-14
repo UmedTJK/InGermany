@@ -1,0 +1,104 @@
+[
+  {
+    "id": "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "title": {
+      "ru": "Как открыть банковский счёт в Германии",
+      "en": "How to open a bank account in Germany",
+      "de": "Wie eröffnet man ein Bankkonto in Deutschland",
+      "tj": "Чӣ гуна ҳисоби бонкӣ дар Олмон кушодан мумкин аст"
+    },
+    "content": {
+      "ru": "Чтобы открыть банковский счёт, нужен паспорт, регистрация по месту жительства (Meldebescheinigung) и иногда справка о доходах.",
+      "en": "To open a bank account, you usually need a passport, a registration certificate (Meldebescheinigung), and sometimes proof of income.",
+      "de": "Um ein Bankkonto zu eröffnen, benötigen Sie in der Regel einen Pass, eine Anmeldebescheinigung und manchmal einen Einkommensnachweis.",
+      "tj": "Барои кушодани ҳисоби бонкӣ, одатан шиноснома, шаҳодатномаи бақайдгирӣ (Meldebescheinigung) ва баъзан шаҳодатномаи даромад лозим аст."
+    },
+    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
+    "tags": ["банк", "счёт", "финансы"]
+  },
+  {
+    "id": "11111111-bbbb-bbbb-bbbb-aaaaaaaaaaaa",
+    "title": {
+      "ru": "Как открыть сберегательный депозит в банке",
+      "en": "How to open a savings deposit in a bank",
+      "de": "Wie man ein Sparkonto bei einer Bank eröffnet",
+      "tj": "Чӣ гуна ҳисоботи пасандозро дар бонк кушоем"
+    },
+    "content": {
+      "ru": "Чтобы открыть депозит, обратитесь в выбранный банк с паспортом и справкой о регистрации. Обычно минимальная сумма — от 10 сомони или эквивалент в валюте.",
+      "en": "To open a savings deposit, visit your chosen bank with your passport and registration certificate. Usually, the minimum amount starts from 10 somoni or the equivalent in foreign currency.",
+      "de": "Um ein Sparkonto zu eröffnen, gehen Sie mit Ihrem Reisepass und der Anmeldebescheinigung zur ausgewählten Bank. In der Regel beträgt der Mindestbetrag 10 Somoni oder der entsprechende Betrag in Fremdwährung.",
+      "tj": "Барои кушодани амонат, ба бонки интихобшуда бо шиноснома ва шаҳодатномаи бақайдгирӣ муроҷиат кунед. Одатан, маблағи ҳадди ақал аз 10 сомонӣ ё муодили он бо асъори хориҷӣ оғоз меёбад."
+    },
+    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
+    "tags": ["депозит", "банк", "сбережения"]
+  },
+  {
+    "id": "22222222-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    "title": {
+      "ru": "Как найти первую работу в Германии",
+      "en": "How to find your first job in Germany",
+      "de": "Wie man den ersten Job in Deutschland findet",
+      "tj": "Чӣ гуна кори аввалини худро дар Олмон пайдо кардан мумкин аст"
+    },
+    "content": {
+      "ru": "Для поиска работы используйте сайты вакансий, такие как StepStone, Indeed и LinkedIn. Подготовьте резюме на немецком языке и сопроводительное письмо.",
+      "en": "To find your first job in Germany, use job portals like StepStone, Indeed, and LinkedIn. Prepare your CV in German and a proper cover letter.",
+      "de": "Um den ersten Job in Deutschland zu finden, nutzen Sie Jobportale wie StepStone, Indeed und LinkedIn. Bereiten Sie Ihren Lebenslauf auf Deutsch und ein Bewerbungsschreiben vor.",
+      "tj": "Барои ёфтани кори аввал дар Олмон, аз порталҳои корӣ мисли StepStone, Indeed ва LinkedIn истифода баред. CV ва номаи ҳамроҳро ба забони олмонӣ омода кунед."
+    },
+    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
+    "tags": ["работа", "резюме", "интеграция"]
+  },
+  {
+    "id": "33333333-bbbb-bbbb-bbbb-cccccccccccc",
+    "title": {
+      "ru": "Интеграционные и языковые курсы",
+      "en": "Integration and language courses",
+      "de": "Integrations- und Sprachkurse",
+      "tj": "Курсҳои мутобиқшавӣ ва забонӣ"
+    },
+    "content": {
+      "ru": "После приезда в Германию новоприбывшие могут посещать интеграционные курсы и курсы немецкого языка. Они помогают освоить язык и культуру страны.",
+      "en": "After arriving in Germany, newcomers can attend integration and German language courses. These help to learn the language and understand the culture.",
+      "de": "Nach der Ankunft in Deutschland können Neuankömmlinge an Integrations- und Deutschkursen teilnehmen. Diese helfen, die Sprache und Kultur des Landes kennenzulernen.",
+      "tj": "Пас аз расидан ба Олмон, навомадагон метавонанд курсҳои мутобиқшавӣ ва курсҳои забони олмониро ширкат кунанд. Онҳо барои омӯхтани забон ва фарҳанги кишвар кӯмак мекунанд."
+    },
+    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
+    "tags": ["немецкий язык", "курс", "интеграция"]
+  },
+  {
+    "id": "44444444-bbbb-bbbb-bbbb-dddddddddddd",
+    "title": {
+      "ru": "Регистрация по месту жительства в Германии",
+      "en": "Residence registration in Germany",
+      "de": "Wohnsitzanmeldung in Deutschland",
+      "tj": "Бақайдгирӣ дар ҷои истиқомат дар Олмон"
+    },
+    "content": {
+      "ru": "В течение 14 дней после приезда в Германию необходимо зарегистрироваться в местном Bürgeramt. Для этого нужен паспорт и договор аренды жилья.",
+      "en": "Within 14 days after arriving in Germany, you must register your residence at the local Bürgeramt. You will need your passport and a rental contract.",
+      "de": "Innerhalb von 14 Tagen nach der Ankunft in Deutschland müssen Sie Ihren Wohnsitz beim örtlichen Bürgeramt anmelden. Sie benötigen Ihren Reisepass und den Mietvertrag.",
+      "tj": "Дар давоми 14 рӯз пас аз расидан ба Олмон бояд дар Bürgeramt-и маҳаллӣ бақайдгирӣ кунед. Барои ин шиноснома ва шартномаи иҷораи хона лозим аст."
+    },
+    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
+    "tags": ["регистрация", "бюрократия", "Meldebescheinigung"]
+  },
+  {
+    "id": "55555555-bbbb-bbbb-bbbb-eeeeeeeeeeee",
+    "title": {
+      "ru": "Как пользоваться Deutschland-Ticket",
+      "en": "How to use the Deutschland-Ticket",
+      "de": "Wie man das Deutschland-Ticket benutzt",
+      "tj": "Чӣ гуна аз Deutschland-Ticket истифода бурдан мумкин аст"
+    },
+    "content": {
+      "ru": "Deutschland-Ticket стоит 49 евро в месяц и позволяет пользоваться всеми видами общественного транспорта в Германии.",
+      "en": "The Deutschland-Ticket costs 49 euros per month and allows you to use all types of public transport across Germany.",
+      "de": "Das Deutschland-Ticket kostet 49 Euro pro Monat und ermöglicht die Nutzung aller Arten von öffentlichen Verkehrsmitteln in Deutschland.",
+      "tj": "Deutschland-Ticket 49 евро дар як моҳ арзиш дорад ва имкон медиҳад, ки аз тамоми намудҳои нақлиёти ҷамъиятӣ дар Олмон истифода баред."
+    },
+    "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
+    "tags": ["транспорт", "жизнь", "билет"]
+  }
+]

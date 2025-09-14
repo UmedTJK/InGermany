@@ -1,0 +1,52 @@
+[
+  {
+    "id": "11111111-1111-1111-1111-aaaaaaaaaaaa",
+    "name": {
+      "ru": "Финансы",
+      "en": "Finance",
+      "de": "Finanzen",
+      "tj": "Молия"
+    },
+    "icon": "banknote"
+  },
+  {
+    "id": "22222222-2222-2222-2222-bbbbbbbbbbbb",
+    "name": {
+      "ru": "Работа",
+      "en": "Work",
+      "de": "Arbeit",
+      "tj": "Кор"
+    },
+    "icon": "briefcase"
+  },
+  {
+    "id": "33333333-3333-3333-3333-cccccccccccc",
+    "name": {
+      "ru": "Учёба",
+      "en": "Study",
+      "de": "Studium",
+      "tj": "Омӯзиш"
+    },
+    "icon": "graduationcap"
+  },
+  {
+    "id": "44444444-4444-4444-4444-dddddddddddd",
+    "name": {
+      "ru": "Бюрократия",
+      "en": "Bureaucracy",
+      "de": "Bürokratie",
+      "tj": "Бюрократия"
+    },
+    "icon": "doc.text"
+  },
+  {
+    "id": "55555555-5555-5555-5555-eeeeeeeeeeee",
+    "name": {
+      "ru": "Жизнь",
+      "en": "Life",
+      "de": "Leben",
+      "tj": "Зиндагӣ"
+    },
+    "icon": "house"
+  }
+]
