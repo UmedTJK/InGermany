@@ -89,11 +89,17 @@ InGermany/
 
 ### 📸 Скриншоты
 
-Добавь свои изображения в папку `Screenshots/` и вставь их в README:
+<p align="center">
+  <img src="Screenshots/home.png" alt="Главный экран" width="30%" style="margin:10px;"/>
+  <img src="Screenshots/categories.png" alt="Категории" width="30%" style="margin:10px;"/>
+  <img src="Screenshots/article.png" alt="Статья" width="30%" style="margin:10px;"/>
+</p>
 
-![Главный экран](Screenshots/home.png)  
-![Категории](Screenshots/categories.png)  
-![Статья](Screenshots/article.png)  
+<p align="center">
+  <img src="Screenshots/search.png" alt="Поиск" width="30%" style="margin:10px;"/>
+  <img src="Screenshots/settings.png" alt="Настройки" width="30%" style="margin:10px;"/>
+  <img src="Screenshots/favorites.png" alt="Избранное" width="30%" style="margin:10px;"/>
+</p>
 
 ---
 
