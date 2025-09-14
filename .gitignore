@@ -1,0 +1,46 @@
+//
+//  .gitignore
+//  InGermany
+//
+//  Created by SUM TJK on 14.09.25.
+//
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+!*.xcworkspace/xcshareddata/**
+
+# User-specific
+*.xcuserdatad
+*.moved-aside
+*.pbxuser
+*.mode1v3
+*.mode2v3
+
+# Build products
+build/
+DerivedData/
+*.o
+*.LinkFileList
+*.hmap
+
+# Swift Package Manager
+.build/
+Packages/
+xcuserdata/
+
+# Other
+*.swp
+*.lock
+*.orig
+*.tmp
