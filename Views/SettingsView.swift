@@ -8,9 +8,18 @@
 /// Экран настроек приложения InGermany
 import SwiftUI
 
-/// Экран настроек приложения InGermany
+///
+//  SettingsView.swift
+//  InGermany
+//
+//  Created by SUM TJK on 13.09.25.
+//
+
+import SwiftUI
+
 struct SettingsView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false   // новый флаг темы
     
     // Поддерживаемые языки
     private let languages = [
@@ -22,6 +31,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                // Язык приложения
                 Section(header: Text("Язык приложения")) {
                     Picker("Выберите язык", selection: $selectedLanguage) {
                         ForEach(languages, id: \.0) { code, name in
@@ -31,6 +41,14 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                 }
                 
+                // Тема оформления
+                Section(header: Text("Оформление")) {
+                    Toggle(isOn: $isDarkMode) {
+                        Label("Тёмная тема", systemImage: "moon.fill")
+                    }
+                }
+                
+                // О приложении
                 Section(header: Text("О приложении")) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("InGermany – Work, Life and Study")

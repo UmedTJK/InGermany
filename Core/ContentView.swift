@@ -5,91 +5,64 @@
 //  Created by SUM TJK on 13.09.25.
 //
 //
+//
+//
+//  ContentView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var favoritesManager = FavoritesManager()
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
+    @StateObject private var favoritesManager = FavoritesManager()
     private let articles = DataService.shared.loadArticles()
+    private let categories = DataService.shared.loadCategories()
     
     var body: some View {
         TabView {
-            // Главная
-            MainArticlesView(
+            HomeView(
                 favoritesManager: favoritesManager,
-                articles: articles,
-                selectedLanguage: selectedLanguage
+                articles: articles
             )
             .tabItem {
-                Image(systemName: "house.fill")
-                Text("Главная")
+                Label("Home", systemImage: "house.fill")
             }
             
-            // Категории
             CategoriesView(
-                categories: DataService.shared.loadCategories(),
+                categories: categories,
                 articles: articles,
                 favoritesManager: favoritesManager,
                 selectedLanguage: selectedLanguage
             )
             .tabItem {
-                Image(systemName: "list.bullet")
-                Text("Категории")
+                Label("Categories", systemImage: "square.grid.2x2.fill")
             }
             
-            // Избранное
+            SearchView(
+                favoritesManager: favoritesManager,
+                articles: articles
+            )
+            .tabItem {
+                Label("Search", systemImage: "magnifyingglass")
+            }
+            
             FavoritesView(
                 favoritesManager: favoritesManager,
                 articles: articles,
                 selectedLanguage: selectedLanguage
             )
             .tabItem {
-                Image(systemName: "heart.fill")
-                Text("Избранное")
+                Label("Favorites", systemImage: "star.fill")
             }
             
-            // Настройки
             SettingsView()
                 .tabItem {
-                    Image(systemName: "gear")
-                    Text("Настройки")
+                    Label("Settings", systemImage: "gear")
                 }
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
-}
-
-// Главная страница (список статей)
-struct MainArticlesView: View {
-    @ObservedObject var favoritesManager: FavoritesManager
-    let articles: [Article]
-    let selectedLanguage: String
-    
-    var body: some View {
-        NavigationView {
-            List(articles) { article in
-                NavigationLink {
-                    ArticleDetailView(
-                        article: article,
-                        favoritesManager: favoritesManager,
-                        selectedLanguage: selectedLanguage
-                    )
-                } label: {
-                    VStack(alignment: .leading) {
-                        Text(article.localizedTitle(for: selectedLanguage))
-                            .font(.headline)
-                        Text(article.localizedContent(for: selectedLanguage))
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .lineLimit(2)
-                    }
-                }
-            }
-            .navigationTitle("Главная")
-        }
-    }
-}
-
-#Preview {
-    ContentView()
 }

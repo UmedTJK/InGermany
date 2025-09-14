@@ -129,3 +129,45 @@ Category (пример)
 Вкладка Settings → выбор языка и (в будущем) темы.
 
 Локализация работает через LocalizationManager.
+
+
+Схема зависимости
+ContentView
+│
+├── HomeView
+│    ├─ uses: [articles]
+│    └─ uses: FavoritesManager
+│
+├── CategoriesView
+│    ├─ uses: [categories, articles]
+│    ├─ uses: FavoritesManager
+│    └─ uses: selectedLanguage
+│         │
+│         └── ArticlesByCategoryView
+│              ├─ uses: [articles]
+│              ├─ uses: FavoritesManager
+│              └─ uses: selectedLanguage
+│                   │
+│                   └── ArticleDetailView
+│                        ├─ uses: Article
+│                        ├─ uses: FavoritesManager
+│                        └─ uses: selectedLanguage
+│
+├── SearchView
+│    ├─ uses: [articles]
+│    ├─ uses: FavoritesManager
+│    └─ uses: selectedLanguage
+│         │
+│         └── ArticleDetailView (аналогично CategoriesView → ArticleDetailView)
+│
+├── FavoritesView
+│    ├─ uses: [articles]
+│    ├─ uses: FavoritesManager
+│    └─ uses: selectedLanguage
+│         │
+│         └── ArticleDetailView
+│
+└── SettingsView
+     ├─ uses: AppStorage("selectedLanguage")
+     └─ uses: AppStorage("isDarkMode")
+
