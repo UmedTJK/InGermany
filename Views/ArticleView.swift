@@ -6,10 +6,9 @@
 //
 
 //
+//
 //  ArticleView.swift
 //  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
 //
 
 import SwiftUI
@@ -22,33 +21,27 @@ struct ArticleView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                // Заголовок
                 Text(article.localizedTitle(for: selectedLanguage))
                     .font(.title)
                     .bold()
 
-                if let category = CategoryManager.shared.category(for: article.categoryId) {
-                    HStack(spacing: 6) {
-                        Image(systemName: category.icon)
-                            .foregroundColor(.blue)
-                        Text(category.localizedName(for: selectedLanguage))
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
+                // Категория
+                HStack(spacing: 6) {
+                    Image(systemName: "folder")
+                        .foregroundColor(.blue)
+                    
+                    Text(
+                        CategoryManager.shared
+                            .category(for: article.categoryId)?
+                            .localizedName(for: selectedLanguage)
+                        ?? "Без категории"
+                    )
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                 }
 
-                if !article.tags.isEmpty {
-                    HStack {
-                        ForEach(article.tags, id: \.self) { tag in
-                            Label(tag, systemImage: "tag")
-                                .font(.caption)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.gray.opacity(0.2))
-                                .clipShape(Capsule())
-                        }
-                    }
-                }
-
+                // Содержимое
                 Text(article.localizedContent(for: selectedLanguage))
                     .font(.body)
                     .foregroundColor(.primary)
@@ -59,12 +52,14 @@ struct ArticleView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    favoritesManager.toggleFavorite(id: article.id)
+                    favoritesManager.toggleFavorite(article: article)
                 } label: {
-                    Label(
-                        favoritesManager.isFavorite(id: article.id) ? "Удалить из избранного" : "Добавить в избранное",
-                        systemImage: favoritesManager.isFavorite(id: article.id) ? "star.fill" : "star"
+                    Image(
+                        systemName: favoritesManager.isFavorite(article: article)
+                        ? "star.fill"
+                        : "star"
                     )
+                    .foregroundColor(.yellow)
                 }
             }
         }
@@ -74,13 +69,7 @@ struct ArticleView: View {
 #Preview {
     NavigationView {
         ArticleView(
-            article: Article(
-                id: "1",
-                title: ["ru": "Заголовок", "en": "Title", "de": "Titel"],
-                content: ["ru": "Содержимое", "en": "Content", "de": "Inhalt"],
-                categoryId: "1",
-                tags: ["финансы", "налоги"]
-            ),
+            article: Article.sampleArticle,
             favoritesManager: FavoritesManager()
         )
     }

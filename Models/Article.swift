@@ -1,3 +1,13 @@
+//
+//  Article.swift
+//  InGermany
+//
+
+//
+//  Article.swift
+//  InGermany
+//
+
 import Foundation
 
 struct Article: Identifiable, Codable {
@@ -6,32 +16,30 @@ struct Article: Identifiable, Codable {
     let content: [String: String]
     let categoryId: String
     let tags: [String]
-
+    
+    // Методы локализации
     func localizedTitle(for language: String) -> String {
-        title[language] ?? title["de"] ?? title["en"] ?? title["ru"] ?? title["tj"] ?? "Без названия"
+        title[language] ?? title["en"] ?? title.values.first ?? "No title"
     }
-
+    
     func localizedContent(for language: String) -> String {
-        content[language] ?? content["de"] ?? content["en"] ?? content["ru"] ?? content["tj"] ?? ""
+        content[language] ?? content["en"] ?? content.values.first ?? "No content"
     }
 }
 
+// 🔹 Пример статьи для превью
 extension Article {
-    static let sample = Article(
-        id: "1",
+    static let sampleArticle: Article = Article(
+        id: "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
         title: [
-            "ru": "Пример статьи",
-            "en": "Sample Article",
-            "de": "Beispielartikel",
-            "tj": "Мақолаи намунавӣ"
+            "ru": "Финансы в Германии",
+            "en": "Finance in Germany"
         ],
         content: [
-            "ru": "Это пример текста статьи для превью.",
-            "en": "This is a sample text for preview.",
-            "de": "Dies ist ein Beispieltext für die Vorschau.",
-            "tj": "Ин матни намунавии мақола барои пешнамоиш аст."
+            "ru": "Все о финансах и банковской системе",
+            "en": "All about finance and the banking system"
         ],
-        categoryId: "1",
-        tags: ["пример", "sample", "beispiel", "намуна"]
+        categoryId: "11111111-1111-1111-1111-aaaaaaaaaaaa",
+        tags: ["финансы", "банк"]
     )
 }

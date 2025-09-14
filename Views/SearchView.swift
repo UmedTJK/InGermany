@@ -2,20 +2,9 @@
 //  SearchView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
+
 import SwiftUI
 
-/// Экран поиска статей по заголовкам и тегам
-//
-//  SearchView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-import SwiftUI
-
-/// Экран поиска статей по заголовкам и тегам
 struct SearchView: View {
     @ObservedObject var favoritesManager: FavoritesManager
     let articles: [Article]
@@ -28,16 +17,15 @@ struct SearchView: View {
         } else {
             let lowercased = searchText.lowercased()
             return articles.filter { article in
-                let titleMatch = article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased)
-                let contentMatch = article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased)
-                let tagsMatch = article.tags.contains { $0.lowercased().contains(lowercased) }
-                let categoryMatch: Bool = {
-                    if let category = CategoryManager.shared.category(for: article.categoryId) {
-                        return category.localizedName(for: selectedLanguage).lowercased().contains(lowercased)
-                    }
-                    return false
-                }()
-                return titleMatch || contentMatch || tagsMatch || categoryMatch
+                // Проверяем заголовок и контент на выбранном языке
+                article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
+                article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
+                // Проверяем категорию (локализованное имя)
+                (CategoryManager.shared
+                    .category(for: article.categoryId)?
+                    .localizedName(for: selectedLanguage)
+                    .lowercased()
+                    .contains(lowercased) ?? false)
             }
         }
     }
@@ -45,10 +33,17 @@ struct SearchView: View {
     var body: some View {
         NavigationView {
             List(filteredArticles) { article in
-                NavigationLink(
-                    destination: ArticleView(article: article, favoritesManager: favoritesManager)
-                ) {
-                    ArticleRow(article: article, favoritesManager: favoritesManager)
+                NavigationLink {
+                    ArticleDetailView(
+                        article: article,
+                        favoritesManager: favoritesManager,
+                        selectedLanguage: selectedLanguage
+                    )
+                } label: {
+                    ArticleRow(
+                        article: article,
+                        favoritesManager: favoritesManager
+                    )
                 }
             }
             .navigationTitle("Поиск")
@@ -60,6 +55,6 @@ struct SearchView: View {
 #Preview {
     SearchView(
         favoritesManager: FavoritesManager(),
-        articles: DataService.shared.loadArticles()
+        articles: [Article.sampleArticle]
     )
 }

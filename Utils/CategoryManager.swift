@@ -5,12 +5,9 @@
 //  Created by SUM TJK on 13.09.25.
 //
 
-// CategoryManager.swift - СОЗДАЙТЕ НОВЫЙ ФАЙЛ
 //
 //  CategoryManager.swift
 //  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
 //
 
 import Foundation
@@ -29,8 +26,12 @@ class CategoryManager {
         categories = dataService.loadCategories()
     }
     
-    func category(for id: String) -> Category? { // Измените на String
+    func category(for id: String) -> Category? {
         return categories.first { $0.id == id }
+    }
+    
+    func category(for name: String, language: String = "en") -> Category? {
+        return categories.first { $0.localizedName(for: language) == name }
     }
     
     func allCategories() -> [Category] {

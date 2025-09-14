@@ -4,13 +4,11 @@
 //
 //  Created by SUM TJK on 13.09.25.
 //
-// DataService.swift - ЗАМЕНИТЕ ВЕСЬ ФАЙЛ
 //
 //  DataService.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
+
 import Foundation
 
 final class DataService {
@@ -18,7 +16,6 @@ final class DataService {
     
     private init() {}
     
-    /// Универсальная загрузка любого Decodable файла из бандла
     private func load<T: Decodable>(_ filename: String) -> T {
         let data: Data
 
@@ -43,12 +40,10 @@ final class DataService {
         }
     }
     
-    /// Загрузка списка статей
     func loadArticles() -> [Article] {
         return load("articles.json")
     }
     
-    /// Загрузка списка категорий
     func loadCategories() -> [Category] {
         return load("categories.json")
     }
