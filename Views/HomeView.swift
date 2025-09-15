@@ -24,6 +24,13 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             List {
+                // 🔹 Новый раздел с картой
+                Section(header: Text("Полезное")) {
+                    NavigationLink(destination: MapView()) {
+                        Label("Карта локаций", systemImage: "map")
+                    }
+                }
+
                 if !favoritesManager.favoriteArticles(from: articles).isEmpty {
                     Section(header: Text("Избранное")) {
                         ForEach(favoritesManager.favoriteArticles(from: articles)) { article in
