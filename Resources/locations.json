@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "name": "Посольство Германии в Душанбе",
+    "latitude": 38.5731,
+    "longitude": 68.7791
+  },
+  {
+    "id": "2",
+    "name": "Ausländerbehörde Hildburghausen",
+    "latitude": 50.4250,
+    "longitude": 10.7317
+  },
+  {
+    "id": "3",
+    "name": "Bürgeramt Berlin",
+    "latitude": 52.5200,
+    "longitude": 13.4050
+  }
+]

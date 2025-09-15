@@ -47,4 +47,16 @@ final class DataService {
     func loadCategories() -> [Category] {
         return load("categories.json")
     }
+    
+    func loadLocations() -> [Location] {
+        guard let url = Bundle.main.url(forResource: "locations", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let locations = try? JSONDecoder().decode([Location].self, from: data) else {
+            return []
+        }
+        return locations
+    }
 }
+
+
+

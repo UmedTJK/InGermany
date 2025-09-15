@@ -20,6 +20,7 @@
 		AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */; };
 		AD8552D22E75BB62003D3826 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CA2E75B541003D3826 /* Theme.swift */; };
 		ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */ = {isa = PBXBuildFile; fileRef = ADA942002E78930B008D1364 /* Test_Document.pdf */; };
+		ADA942092E78950F008D1364 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = ADA942082E78950B008D1364 /* locations.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		AD8552CA2E75B541003D3826 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		ADA942002E78930B008D1364 /* Test_Document.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = Test_Document.pdf; sourceTree = "<group>"; };
+		ADA942082E78950B008D1364 /* locations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -111,6 +113,7 @@
 		AD8552C62E75B48D003D3826 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				ADA942082E78950B008D1364 /* locations.json */,
 				ADA942002E78930B008D1364 /* Test_Document.pdf */,
 				AD8552C82E75B4C4003D3826 /* categories.json */,
 				AD8552C72E75B4AF003D3826 /* articles.json */,
@@ -201,6 +204,7 @@
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
+				ADA942092E78950F008D1364 /* locations.json in Resources */,
 				AD38F5892E76C15600E36EA4 /* update.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,6 +360,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Приложению нужен доступ к вашему местоположению для отображения карты.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -386,6 +391,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Приложению нужен доступ к вашему местоположению для отображения карты.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
