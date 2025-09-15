@@ -58,6 +58,12 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
                     .padding(.vertical, 4)
+                    
+                    
+                    // 🔹 Навигационная кнопка на экран "О проекте"
+                    NavigationLink(destination: AboutView()) {
+                        Label("Подробнее о проекте", systemImage: "info.circle")
+                    }
                 }
             }
             .navigationTitle("Настройки")
