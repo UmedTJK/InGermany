@@ -14,6 +14,11 @@
 //  InGermany
 //
 
+//
+//  ArticleRow.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct ArticleRow: View {
@@ -22,7 +27,16 @@ struct ArticleRow: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
-        HStack {
+        HStack(alignment: .top, spacing: 12) {
+
+            // 🔹 Миниатюрное изображение (временно — логотип)
+            Image("Logo")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 60, height: 60)
+                .cornerRadius(8)
+                .clipped()
+
             VStack(alignment: .leading, spacing: 6) {
                 // Заголовок статьи
                 Text(article.localizedTitle(for: selectedLanguage))
@@ -46,9 +60,10 @@ struct ArticleRow: View {
                     .foregroundColor(.secondary)
                 }
             }
+
             Spacer()
-            
-            // Индикатор "Избранное"
+
+            // 🔹 Индикатор "Избранное"
             Image(systemName: favoritesManager.isFavorite(article: article) ? "star.fill" : "star")
                 .foregroundColor(.yellow)
         }
@@ -62,3 +77,4 @@ struct ArticleRow: View {
         favoritesManager: FavoritesManager()
     )
 }
+
