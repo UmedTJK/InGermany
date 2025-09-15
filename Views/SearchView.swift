@@ -3,20 +3,33 @@
 //  InGermany
 //
 
+//
+//  SearchView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct SearchView: View {
     @ObservedObject var favoritesManager: FavoritesManager
     let articles: [Article]
+    
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var searchText: String = ""
+    @State private var selectedTag: String? = nil
 
     private var filteredArticles: [Article] {
-        if searchText.isEmpty {
-            return articles
-        } else {
+        var results = articles
+
+        // Фильтрация по тегу (если выбран)
+        if let tag = selectedTag {
+            results = results.filter { $0.tags.contains(tag) }
+        }
+
+        // Фильтрация по тексту (если введён)
+        if !searchText.isEmpty {
             let lowercased = searchText.lowercased()
-            return articles.filter { article in
+            results = results.filter { article in
                 article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
                 article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
                 (CategoryManager.shared
@@ -26,23 +39,44 @@ struct SearchView: View {
                     .contains(lowercased) ?? false)
             }
         }
+
+        return results
     }
 
     var body: some View {
         NavigationView {
-            List(filteredArticles) { article in
-                NavigationLink {
-                    ArticleDetailView(
-                        article: article,
-                        favoritesManager: favoritesManager,
-                        selectedLanguage: selectedLanguage
-                    )
-                } label: {
-                    ArticleRow(
-                        article: article,
-                        favoritesManager: favoritesManager
-                    )
+            VStack {
+                // 🔹 Отображение уникальных тегов
+                let allTags = Set(articles.flatMap { $0.tags }).sorted()
+
+                if !allTags.isEmpty {
+                    TagFilterView(tags: allTags) { tag in
+                        // Повторное нажатие — сброс фильтра
+                        if selectedTag == tag {
+                            selectedTag = nil
+                        } else {
+                            selectedTag = tag
+                        }
+                    }
+                    .padding(.horizontal)
                 }
+
+                // 🔹 Список статей
+                List(filteredArticles) { article in
+                    NavigationLink {
+                        ArticleDetailView(
+                            article: article,
+                            favoritesManager: favoritesManager,
+                            selectedLanguage: selectedLanguage
+                        )
+                    } label: {
+                        ArticleRow(
+                            article: article,
+                            favoritesManager: favoritesManager
+                        )
+                    }
+                }
+                .listStyle(.plain)
             }
             .navigationTitle("Поиск")
             .searchable(text: $searchText, prompt: "Искать по статьям или категориям")
@@ -56,4 +90,3 @@ struct SearchView: View {
         articles: [Article.sampleArticle]
     )
 }
-
