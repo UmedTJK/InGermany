@@ -1,21 +1,23 @@
 [
-  {
-    "id": "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
-    "title": {
-      "ru": "Как открыть банковский счёт в Германии",
-      "en": "How to open a bank account in Germany",
-      "de": "Wie eröffnet man ein Bankkonto in Deutschland",
-      "tj": "Чӣ гуна ҳисоби бонкӣ дар Олмон кушодан мумкин аст"
-    },
-    "content": {
-      "ru": "Чтобы открыть банковский счёт, нужен паспорт, регистрация по месту жительства (Meldebescheinigung) и иногда справка о доходах.",
-      "en": "To open a bank account, you usually need a passport, a registration certificate (Meldebescheinigung), and sometimes proof of income.",
-      "de": "Um ein Bankkonto zu eröffnen, benötigen Sie in der Regel einen Pass, eine Anmeldebescheinigung und manchmal einen Einkommensnachweis.",
-      "tj": "Барои кушодани ҳисоби бонкӣ, одатан шиноснома, шаҳодатномаи бақайдгирӣ (Meldebescheinigung) ва баъзан шаҳодатномаи даромад лозим аст."
-    },
-    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
-    "tags": ["банк", "счёт", "финансы"]
-  },
+    {
+      "id": "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "title": {
+        "ru": "Как открыть банковский счёт в Германии",
+        "en": "How to open a bank account in Germany",
+        "de": "Wie eröffnet man ein Bankkonto in Deutschland",
+        "tj": "Чӣ гуна ҳисоби бонкӣ дар Олмон кушодан мумкин аст"
+      },
+      "content": {
+        "ru": "Чтобы открыть банковский счёт, нужен паспорт, регистрация по месту жительства (Meldebescheinigung) и иногда справка о доходах.",
+        "en": "To open a bank account, you usually need a passport, a registration certificate (Meldebescheinigung), and sometimes proof of income.",
+        "de": "Um ein Bankkonto zu eröffnen, benötigen Sie in der Regel einen Pass, eine Anmeldebescheinigung und manchmal einen Einkommensnachweis.",
+        "tj": "Барои кушодани ҳисоби бонкӣ, одатан шиноснома, шаҳодатномаи бақайдгирӣ (Meldebescheinigung) ва баъзан шаҳодатномаи даромад лозим аст."
+      },
+      "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
+      "tags": ["банк", "счёт", "финансы"],
+      "pdfFileName": "Test_Document"
+    }
+,
   {
     "id": "11111111-bbbb-bbbb-bbbb-aaaaaaaaaaaa",
     "title": {
