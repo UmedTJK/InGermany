@@ -16,6 +16,7 @@ struct Article: Identifiable, Codable {
     let content: [String: String]
     let categoryId: String
     let tags: [String]
+    let pdfFileName: String? // 🔹 Новое поле
     
     // Методы локализации
     func localizedTitle(for language: String) -> String {
@@ -26,6 +27,9 @@ struct Article: Identifiable, Codable {
         content[language] ?? content["en"] ?? content.values.first ?? "No content"
     }
 }
+
+
+
 
 // 🔹 Пример статьи для превью
 extension Article {
@@ -40,6 +44,8 @@ extension Article {
             "en": "All about finance and the banking system"
         ],
         categoryId: "11111111-1111-1111-1111-aaaaaaaaaaaa",
-        tags: ["финансы", "банк"]
+        tags: ["финансы", "банк"],
+        pdfFileName: "Test_Document"
     )
 }
+

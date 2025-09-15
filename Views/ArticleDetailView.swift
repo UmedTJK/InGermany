@@ -54,6 +54,19 @@ struct ArticleDetailView: View {
                 Spacer()
             }
             .padding()
+            
+            // 🔹 Кнопка "Открыть PDF"
+            if let pdfFileName = article.pdfFileName {
+                NavigationLink(destination: PDFViewer(fileName: pdfFileName)) {
+                    Label("Открыть PDF", systemImage: "doc.richtext")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue.opacity(0.1))
+                        .cornerRadius(10)
+                }
+            }
+
         }
         .navigationTitle("Статья")
         .navigationBarTitleDisplayMode(.inline)
