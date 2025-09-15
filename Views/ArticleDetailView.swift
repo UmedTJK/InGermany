@@ -5,25 +5,6 @@
 //  Created by SUM TJK on 14.09.25.
 //
 
-//
-//
-//  ArticleDetailView.swift
-//  InGermany
-//
-
-//
-//  ArticleDetailView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 14.09.25.
-//
-//
-//  ArticleDetailView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 14.09.25.
-//
-
 import SwiftUI
 
 struct ArticleDetailView: View {
@@ -34,105 +15,54 @@ struct ArticleDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Заголовок
+
+                // 🔹 Заглавное изображение (временно — логотип проекта)
+                Image("Logo")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 200)
+                    .clipped()
+                    .cornerRadius(12)
+                    .padding(.bottom, 4)
+
+                // 🔹 Заголовок статьи
                 Text(article.localizedTitle(for: selectedLanguage))
                     .font(.title)
-                    .fontWeight(.bold)
-                
-                // Основной текст
-                Text(article.localizedContent(for: selectedLanguage))
-                    .font(.body)
-                    .fixedSize(horizontal: false, vertical: true)
-                
-                // Теги
+                    .bold()
+
+                // 🔹 Теги
                 if !article.tags.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(article.tags, id: \.self) { tag in
-                                NavigationLink {
-                                    ArticlesByTagView(
-                                        tag: tag,
-                                        articles: DataService.shared.loadArticles(),
-                                        favoritesManager: favoritesManager,
-                                        selectedLanguage: selectedLanguage
-                                    )
-                                } label: {
-                                    Text("#\(tag)")
-                                        .font(.caption)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 4)
-                                        .background(Color.blue.opacity(0.15))
-                                        .foregroundColor(.blue)
-                                        .cornerRadius(8)
-                                }
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                
-                // Материалы по теме
-                let relatedArticles = DataService.shared.loadArticles().filter { other in
-                    other.id != article.id &&
-                    !Set(other.tags).isDisjoint(with: article.tags)
-                }
-                
-                if !relatedArticles.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Материалы по данной теме")
-                            .font(.headline)
-                            .padding(.top, 12)
-                        
-                        ForEach(relatedArticles.prefix(3)) { related in
-                            NavigationLink {
-                                ArticleDetailView(
-                                    article: related,
-                                    favoritesManager: favoritesManager,
-                                    selectedLanguage: selectedLanguage
-                                )
-                            } label: {
-                                ArticleRow(article: related, favoritesManager: favoritesManager)
+                                Text("#\(tag)")
+                                    .font(.caption)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 8)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(8)
                             }
                         }
                     }
                 }
-                
-                // Кнопки действий
-                HStack {
-                    Button {
-                        favoritesManager.toggleFavorite(article: article)
-                    } label: {
-                        Label(
-                            favoritesManager.isFavorite(article: article)
-                            ? "Убрать из избранного"
-                            : "В избранное",
-                            systemImage: favoritesManager.isFavorite(article: article)
-                            ? "heart.fill"
-                            : "heart"
-                        )
-                    }
-                    
-                    Spacer()
-                    
-                    Button {
-                        ShareService.shareArticle(article, language: selectedLanguage)
-                    } label: {
-                        Label("Поделиться", systemImage: "square.and.arrow.up")
-                    }
-                }
-                .padding(.top, 12)
+
+                // 🔹 Контент статьи
+                Text(article.localizedContent(for: selectedLanguage))
+                    .font(.body)
+                    .foregroundColor(.primary)
+
+                Spacer()
             }
             .padding()
         }
-        .navigationTitle(article.localizedTitle(for: selectedLanguage))
+        .navigationTitle("Статья")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            Button {
+                favoritesManager.toggleFavorite(id: article.id)
+            } label: {
+                Image(systemName: favoritesManager.isFavorite(id: article.id) ? "heart.fill" : "heart")
+            }
+        }
     }
-}
-
-#Preview {
-    ArticleDetailView(
-        article: Article.sampleArticle,
-        favoritesManager: FavoritesManager(),
-        selectedLanguage: "ru"
-    )
 }
