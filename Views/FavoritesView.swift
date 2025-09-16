@@ -12,30 +12,42 @@ struct FavoritesView: View {
     let articles: [Article]
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var selectedCategory: String? = nil
+    @State private var searchText: String = ""
     
     // Вычисляемое свойство для отфильтрованных избранных статей
     private var filteredFavoriteArticles: [Article] {
         let favorites = favoritesManager.favoriteArticles(from: articles)
         
-        guard let selectedCategory = selectedCategory else {
-            return favorites
+        // Фильтрация по категории
+        var filtered = favorites
+        if let selectedCategory = selectedCategory {
+            filtered = filtered.filter { $0.categoryId == selectedCategory }
         }
         
-        return favorites.filter { $0.categoryId == selectedCategory }
+        // Фильтрация по поиску
+        if !searchText.isEmpty {
+            filtered = filtered.filter { article in
+                let title = article.title[selectedLanguage] ?? article.title["ru"] ?? ""
+                return title.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+        
+        return filtered
     }
     
     // Получаем уникальные категории из избранного
     private var favoriteCategories: [Category] {
         let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
         let categoryIDs = Set(favoriteArticles.map { $0.categoryId })
-        
-        // Используем правильный метод из CategoryManager
         return CategoryManager.shared.allCategories().filter { categoryIDs.contains($0.id) }
     }
     
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
+                // Панель поиска
+                searchField
+                
                 // Панель фильтров категорий (только если есть избранное)
                 if !favoriteCategories.isEmpty && !filteredFavoriteArticles.isEmpty {
                     categoryFilterScrollView
@@ -44,7 +56,7 @@ struct FavoritesView: View {
                 // Список избранного
                 if filteredFavoriteArticles.isEmpty {
                     EmptyFavoritesView(
-                        hasFilters: selectedCategory != nil,
+                        hasFilters: selectedCategory != nil || !searchText.isEmpty,
                         selectedLanguage: selectedLanguage,
                         getTranslation: getTranslation
                     )
@@ -54,6 +66,31 @@ struct FavoritesView: View {
             }
             .navigationTitle(navigationTitle)
         }
+        .searchable(text: $searchText, prompt: getTranslation(key: "Поиск в избранном", language: selectedLanguage))
+    }
+    
+    // Поле поиска
+    private var searchField: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.gray)
+            TextField(getTranslation(key: "Поиск в избранном", language: selectedLanguage), text: $searchText)
+                .textFieldStyle(PlainTextFieldStyle())
+                .autocapitalization(.none)
+                .disableAutocorrection(true)
+            
+            if !searchText.isEmpty {
+                Button(action: { searchText = "" }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+        .padding(10)
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
+        .padding(.horizontal)
+        .padding(.top, 8)
     }
     
     private var navigationTitle: String {
@@ -77,7 +114,7 @@ struct FavoritesView: View {
                 // Кнопки для каждой категории
                 ForEach(favoriteCategories) { category in
                     CategoryFilterButton(
-                        title: category.localizedName(for: selectedLanguage), // Используем метод из Category
+                        title: category.localizedName(for: selectedLanguage),
                         isSelected: selectedCategory == category.id,
                         systemImage: category.icon
                     ) {
@@ -117,7 +154,8 @@ struct FavoritesView: View {
             "Все": ["ru": "Все", "en": "All", "de": "Alle", "tj": "Ҳама"],
             "Избранное": ["ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда"],
             "Нет избранного": ["ru": "Нет избранного", "en": "No favorites", "de": "Keine Favoriten", "tj": "Интихобшуда нест"],
-            "Попробуйте другую категорию": ["ru": "Попробуйте выбрать другую категорию", "en": "Try selecting another category", "de": "Versuchen Sie eine andere Kategorie", "tj": "Категорияи дигарро интихоб кунед"]
+            "Попробуйте другую категорию": ["ru": "Попробуйте выбрать другую категорию", "en": "Try selecting another category", "de": "Versuchen Sie eine andere Kategorie", "tj": "Категорияи дигарро интихоб кунед"],
+            "Поиск в избранном": ["ru": "Поиск в избранном", "en": "Search favorites", "de": "Favoriten durchsuchen", "tj": "Дар интихобшуда ҷустуҷӯ"]
         ]
         
         return translations[key]?[language] ?? key
@@ -171,7 +209,7 @@ struct EmptyFavoritesView: View {
                 .opacity(0.5)
             
             Text(hasFilters ?
-                 getTranslation("Нет избранного в этой категории", selectedLanguage) :
+                 getTranslation("Ничего не найдено", selectedLanguage) :
                  getTranslation("Нет избранного", selectedLanguage)
             )
             .font(.headline)
@@ -179,7 +217,7 @@ struct EmptyFavoritesView: View {
             .multilineTextAlignment(.center)
             
             if hasFilters {
-                Text(getTranslation("Попробуйте другую категорию", selectedLanguage))
+                Text(getTranslation("Попробуйте другой запрос или категорию", selectedLanguage))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
