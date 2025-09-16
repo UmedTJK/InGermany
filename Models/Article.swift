@@ -3,20 +3,25 @@
 //  InGermany
 //
 
-//
-//  Article.swift
-//  InGermany
-//
-
 import Foundation
 
-struct Article: Identifiable, Codable {
+// 1. Добавляем соответствие Hashable
+struct Article: Identifiable, Codable, Hashable {
     let id: String
     let title: [String: String]
     let content: [String: String]
     let categoryId: String
     let tags: [String]
-    let pdfFileName: String? // 🔹 Новое поле
+    let pdfFileName: String?
+    
+    // 2. Реализуем Hashable на основе id (уникальный идентификатор)
+    static func == (lhs: Article, rhs: Article) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     // Методы локализации
     func localizedTitle(for language: String) -> String {
@@ -27,9 +32,6 @@ struct Article: Identifiable, Codable {
         content[language] ?? content["en"] ?? content.values.first ?? "No content"
     }
 }
-
-
-
 
 // 🔹 Пример статьи для превью
 extension Article {
@@ -48,4 +50,3 @@ extension Article {
         pdfFileName: "Test_Document"
     )
 }
-

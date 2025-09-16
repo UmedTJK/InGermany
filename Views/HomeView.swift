@@ -5,28 +5,37 @@
 //  Created by SUM TJK on 13.09.25.
 //
 
-
-//
-//  HomeView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.09.25.
-//
-
 import SwiftUI
 
 struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @ObservedObject var favoritesManager: FavoritesManager
     let articles: [Article]
+    
+    // Состояние для управления навигацией к случайной статье
+    @State private var isShowingRandomArticle = false
+    @State private var randomArticle: Article?
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
-                // 🔹 Раздел с картой
+                // 🔹 Раздел с картой и случайной статьей
                 Section(header: Text("Полезное")) {
-                    NavigationLink(destination: MapView()) {
+                    // Карта локаций
+                    NavigationLink {
+                        MapView()
+                    } label: {
                         Label("Карта локаций", systemImage: "map")
+                    }
+                    
+                    // Кнопка "Случайная статья"
+                    Button(action: {
+                        // Выбираем случайную статью из всех доступных
+                        randomArticle = articles.randomElement()
+                        isShowingRandomArticle = true
+                    }) {
+                        Label("Случайная статья", systemImage: "dice.fill")
+                            .foregroundColor(.primary)
                     }
                 }
 
@@ -35,13 +44,7 @@ struct HomeView: View {
                 if !favorites.isEmpty {
                     Section(header: Text("Избранное (\(favorites.count))")) {
                         ForEach(favorites) { article in
-                            NavigationLink {
-                                ArticleView(
-                                    article: article,
-                                    allArticles: articles, // ✅ передаём allArticles
-                                    favoritesManager: favoritesManager
-                                )
-                            } label: {
+                            NavigationLink(value: article) {
                                 ArticleRow(
                                     article: article,
                                     favoritesManager: favoritesManager
@@ -54,13 +57,7 @@ struct HomeView: View {
                 // 🔹 Все статьи
                 Section(header: Text("Все статьи (\(articles.count))")) {
                     ForEach(articles) { article in
-                        NavigationLink {
-                            ArticleView(
-                                article: article,
-                                allArticles: articles, // ✅ передаём allArticles
-                                favoritesManager: favoritesManager
-                            )
-                        } label: {
+                        NavigationLink(value: article) {
                             ArticleRow(
                                 article: article,
                                 favoritesManager: favoritesManager
@@ -70,6 +67,24 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("Главная")
+            .navigationDestination(for: Article.self) { article in
+                ArticleView(
+                    article: article,
+                    allArticles: articles,
+                    favoritesManager: favoritesManager
+                )
+            }
+            .navigationDestination(isPresented: $isShowingRandomArticle) {
+                Group {
+                    if let randomArticle {
+                        ArticleView(
+                            article: randomArticle,
+                            allArticles: articles,
+                            favoritesManager: favoritesManager
+                        )
+                    }
+                }
+            }
         }
     }
 }
