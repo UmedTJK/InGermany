@@ -45,9 +45,6 @@ struct FavoritesView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Панель поиска
-                searchField
-                
                 // Панель фильтров категорий (только если есть избранное)
                 if !favoriteCategories.isEmpty && !filteredFavoriteArticles.isEmpty {
                     categoryFilterScrollView
@@ -67,30 +64,6 @@ struct FavoritesView: View {
             .navigationTitle(navigationTitle)
         }
         .searchable(text: $searchText, prompt: getTranslation(key: "Поиск в избранном", language: selectedLanguage))
-    }
-    
-    // Поле поиска
-    private var searchField: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-            TextField(getTranslation(key: "Поиск в избранном", language: selectedLanguage), text: $searchText)
-                .textFieldStyle(PlainTextFieldStyle())
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-            
-            if !searchText.isEmpty {
-                Button(action: { searchText = "" }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
-                }
-            }
-        }
-        .padding(10)
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
-        .padding(.horizontal)
-        .padding(.top, 8)
     }
     
     private var navigationTitle: String {
@@ -155,7 +128,9 @@ struct FavoritesView: View {
             "Избранное": ["ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда"],
             "Нет избранного": ["ru": "Нет избранного", "en": "No favorites", "de": "Keine Favoriten", "tj": "Интихобшуда нест"],
             "Попробуйте другую категорию": ["ru": "Попробуйте выбрать другую категорию", "en": "Try selecting another category", "de": "Versuchen Sie eine andere Kategorie", "tj": "Категорияи дигарро интихоб кунед"],
-            "Поиск в избранном": ["ru": "Поиск в избранном", "en": "Search favorites", "de": "Favoriten durchsuchen", "tj": "Дар интихобшуда ҷустуҷӯ"]
+            "Поиск в избранном": ["ru": "Поиск в избранном", "en": "Search favorites", "de": "Favoriten durchsuchen", "tj": "Дар интихобшуда ҷустуҷӯ"],
+            "Ничего не найдено": ["ru": "Ничего не найдено", "en": "Nothing found", "de": "Nichts gefunden", "tj": "Ҳеҷ чиз ёфт нашуд"],
+            "Попробуйте другой запрос или категорию": ["ru": "Попробуйте другой запрос или категорию", "en": "Try another search or category", "de": "Versuchen Sie eine andere Suche oder Kategorie", "tj": "Ҳарфи дигар ё категорияи дигарро кӯшиш кунед"]
         ]
         
         return translations[key]?[language] ?? key
