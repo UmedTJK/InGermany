@@ -5,6 +5,13 @@
 //  Created by SUM TJK on 13.09.25.
 //
 
+//
+//  FavoritesView.swift
+//  InGermany
+//
+//  Created by SUM TJK on 13.09.25.
+//
+
 import SwiftUI
 
 struct FavoritesView: View {
@@ -18,6 +25,7 @@ struct FavoritesView: View {
                 NavigationLink {
                     ArticleView(
                         article: article,
+                        allArticles: articles, // ✅ исправлено: сначала allArticles
                         favoritesManager: favoritesManager
                     )
                 } label: {

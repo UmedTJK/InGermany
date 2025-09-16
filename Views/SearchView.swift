@@ -4,14 +4,6 @@
 //
 
 //
-//  SearchView.swift
-//  InGermany
-//
-
-//
-//  SearchView.swift
-//  InGermany
-//
 
 import SwiftUI
 
@@ -26,12 +18,12 @@ struct SearchView: View {
     private var filteredArticles: [Article] {
         var results = articles
 
-        // Фильтрация по тегу (если выбран)
+        // Фильтрация по тегу
         if let tag = selectedTag {
             results = results.filter { $0.tags.contains(tag) }
         }
 
-        // Фильтрация по тексту (если введён)
+        // Фильтрация по тексту
         if !searchText.isEmpty {
             let lowercased = searchText.lowercased()
             results = results.filter { article in
@@ -56,11 +48,7 @@ struct SearchView: View {
 
                 if !allTags.isEmpty {
                     TagFilterView(tags: allTags) { tag in
-                        if selectedTag == tag {
-                            selectedTag = nil
-                        } else {
-                            selectedTag = tag
-                        }
+                        selectedTag = (selectedTag == tag) ? nil : tag
                     }
                     .padding(.horizontal)
                 }
@@ -70,6 +58,7 @@ struct SearchView: View {
                     NavigationLink {
                         ArticleView(
                             article: article,
+                            allArticles: articles, // ✅ теперь передаём список всех статей
                             favoritesManager: favoritesManager
                         )
                     } label: {

@@ -8,6 +8,11 @@
 //  InGermany
 //
 
+//
+//  ArticlesByCategoryView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct ArticlesByCategoryView: View {
@@ -21,6 +26,7 @@ struct ArticlesByCategoryView: View {
             NavigationLink {
                 ArticleView(
                     article: article,
+                    allArticles: articles, // ✅ добавлен обязательный аргумент
                     favoritesManager: favoritesManager
                 )
             } label: {
