@@ -3,21 +3,25 @@
 //  InGermany
 //
 
+//
+//  ArticlesByCategoryView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct ArticlesByCategoryView: View {
     let category: Category
     let articles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
-    let selectedLanguage: String   // 👈 теперь пробрасываем сверху
+    let selectedLanguage: String
 
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink {
-                ArticleDetailView(
+                ArticleView(
                     article: article,
-                    favoritesManager: favoritesManager,
-                    selectedLanguage: selectedLanguage
+                    favoritesManager: favoritesManager
                 )
             } label: {
                 VStack(alignment: .leading) {

@@ -4,15 +4,7 @@
 //
 //  Created by SUM TJK on 13.09.25.
 //
-//
-//  HomeView.swift
-//  InGermany
-//
 
-//
-//  HomeView.swift
-//  InGermany
-//
 
 import SwiftUI
 
@@ -32,13 +24,12 @@ struct HomeView: View {
                 }
 
                 if !favoritesManager.favoriteArticles(from: articles).isEmpty {
-                    Section(header: Text("Избранное")) {
+                    Section(header: Text("Избранное (\(favoritesManager.favoriteArticles(from: articles).count))")) {
                         ForEach(favoritesManager.favoriteArticles(from: articles)) { article in
                             NavigationLink {
-                                ArticleDetailView(
+                                ArticleView(
                                     article: article,
-                                    favoritesManager: favoritesManager,
-                                    selectedLanguage: selectedLanguage
+                                    favoritesManager: favoritesManager
                                 )
                             } label: {
                                 ArticleRow(article: article, favoritesManager: favoritesManager)
@@ -47,13 +38,12 @@ struct HomeView: View {
                     }
                 }
 
-                Section(header: Text("Все статьи")) {
+                Section(header: Text("Все статьи (\(articles.count))")) {
                     ForEach(articles) { article in
                         NavigationLink {
-                            ArticleDetailView(
+                            ArticleView(
                                 article: article,
-                                favoritesManager: favoritesManager,
-                                selectedLanguage: selectedLanguage
+                                favoritesManager: favoritesManager
                             )
                         } label: {
                             ArticleRow(article: article, favoritesManager: favoritesManager)

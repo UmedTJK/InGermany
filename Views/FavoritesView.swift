@@ -3,6 +3,8 @@
 //  InGermany
 //
 //  Created by SUM TJK on 13.09.25.
+//
+
 import SwiftUI
 
 struct FavoritesView: View {
@@ -14,10 +16,9 @@ struct FavoritesView: View {
         NavigationView {
             List(favoritesManager.favoriteArticles(from: articles)) { article in
                 NavigationLink {
-                    ArticleDetailView(
+                    ArticleView(
                         article: article,
-                        favoritesManager: favoritesManager,
-                        selectedLanguage: selectedLanguage
+                        favoritesManager: favoritesManager
                     )
                 } label: {
                     ArticleRow(
@@ -26,7 +27,7 @@ struct FavoritesView: View {
                     )
                 }
             }
-            .navigationTitle("Избранное")
+            .navigationTitle("Избранное (\(favoritesManager.favoriteArticles(from: articles).count))")
         }
     }
 }

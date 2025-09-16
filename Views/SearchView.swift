@@ -8,12 +8,17 @@
 //  InGermany
 //
 
+//
+//  SearchView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct SearchView: View {
     @ObservedObject var favoritesManager: FavoritesManager
     let articles: [Article]
-    
+
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var searchText: String = ""
     @State private var selectedTag: String? = nil
@@ -51,7 +56,6 @@ struct SearchView: View {
 
                 if !allTags.isEmpty {
                     TagFilterView(tags: allTags) { tag in
-                        // Повторное нажатие — сброс фильтра
                         if selectedTag == tag {
                             selectedTag = nil
                         } else {
@@ -64,10 +68,9 @@ struct SearchView: View {
                 // 🔹 Список статей
                 List(filteredArticles) { article in
                     NavigationLink {
-                        ArticleDetailView(
+                        ArticleView(
                             article: article,
-                            favoritesManager: favoritesManager,
-                            selectedLanguage: selectedLanguage
+                            favoritesManager: favoritesManager
                         )
                     } label: {
                         ArticleRow(
