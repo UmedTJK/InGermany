@@ -4,7 +4,7 @@ struct CategoriesView: View {
     let categories: [Category]
     let articles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
-    let selectedLanguage: String   // 👈 принимаем язык как параметр
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
         NavigationView {
@@ -13,8 +13,8 @@ struct CategoriesView: View {
                     ArticlesByCategoryView(
                         category: category,
                         articles: articles,
-                        favoritesManager: favoritesManager,
-                        selectedLanguage: selectedLanguage // 👈 пробрасываем дальше
+                        favoritesManager: favoritesManager
+                        // selectedLanguage больше не передаётся
                     )
                 } label: {
                     HStack {
@@ -24,8 +24,16 @@ struct CategoriesView: View {
                     }
                 }
             }
-            .navigationTitle("Категории")
+            .navigationTitle(getTranslation(key: "Категории", language: selectedLanguage))
         }
+    }
+
+    // Локализация заголовка
+    private func getTranslation(key: String, language: String) -> String {
+        let translations: [String: [String: String]] = [
+            "Категории": ["ru": "Категории", "en": "Categories", "de": "Kategorien", "tj": "Категорияҳо"]
+        ]
+        return translations[key]?[language] ?? key
     }
 }
 
@@ -33,7 +41,6 @@ struct CategoriesView: View {
     CategoriesView(
         categories: Category.sampleCategories,
         articles: [Article.sampleArticle],
-        favoritesManager: FavoritesManager(),
-        selectedLanguage: "ru"
+        favoritesManager: FavoritesManager()
     )
 }

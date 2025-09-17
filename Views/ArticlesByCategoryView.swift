@@ -3,46 +3,32 @@
 //  InGermany
 //
 
-//
-//  ArticlesByCategoryView.swift
-//  InGermany
-//
-
-//
-//  ArticlesByCategoryView.swift
-//  InGermany
-//
-
 import SwiftUI
 
 struct ArticlesByCategoryView: View {
     let category: Category
-    let articles: [Article]
+    let articles: [Article] // Все статьи
     @ObservedObject var favoritesManager: FavoritesManager
-    let selectedLanguage: String
-
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru" // Используем AppStorage
+    
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink {
                 ArticleView(
                     article: article,
-                    allArticles: articles, // ✅ добавлен обязательный аргумент
+                    allArticles: articles, // ✅ передаем все статьи
                     favoritesManager: favoritesManager
                 )
             } label: {
-                VStack(alignment: .leading) {
-                    Text(article.localizedTitle(for: selectedLanguage))
-                        .font(.headline)
-                    Text(article.localizedContent(for: selectedLanguage))
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .lineLimit(2)
-                }
+                ArticleRow( // Используем существующий компонент
+                    article: article,
+                    favoritesManager: favoritesManager
+                )
             }
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))
     }
-
+    
     private var filteredArticles: [Article] {
         articles.filter { $0.categoryId == category.id }
     }
@@ -55,10 +41,7 @@ struct ArticlesByCategoryView: View {
             name: ["ru": "Финансы", "en": "Finance"],
             icon: "banknote"
         ),
-        articles: [
-            Article.sampleArticle
-        ],
-        favoritesManager: FavoritesManager(),
-        selectedLanguage: "ru"
+        articles: DataService.shared.loadArticles(), // Все статьи
+        favoritesManager: FavoritesManager()
     )
 }

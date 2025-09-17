@@ -4,11 +4,6 @@
 //
 //  Created by SUM TJK on 13.09.25.
 //
-//
-//
-//  ContentView.swift
-//  InGermany
-//
 
 import SwiftUI
 
@@ -33,8 +28,7 @@ struct ContentView: View {
             CategoriesView(
                 categories: categories,
                 articles: articles,
-                favoritesManager: favoritesManager,
-                selectedLanguage: selectedLanguage
+                favoritesManager: favoritesManager
             )
             .tabItem {
                 Label("Categories", systemImage: "square.grid.2x2.fill")
