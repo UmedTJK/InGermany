@@ -51,22 +51,38 @@ struct ArticleDetailView: View {
                     .font(.body)
                     .foregroundColor(.primary)
 
-                Spacer()
-            }
-            .padding()
-            
-            // 🔹 Кнопка "Открыть PDF"
-            if let pdfFileName = article.pdfFileName {
-                NavigationLink(destination: PDFViewer(fileName: pdfFileName)) {
-                    Label("Открыть PDF", systemImage: "doc.richtext")
+                // 🔹 Кнопка экспорта в PDF
+                Button {
+                    ExportToPDF.export(
+                        title: article.localizedTitle(for: selectedLanguage),
+                        content: article.localizedContent(for: selectedLanguage),
+                        fileName: article.localizedTitle(for: selectedLanguage)
+                            .replacingOccurrences(of: " ", with: "_")
+                    )
+                } label: {
+                    Label("Экспорт в PDF", systemImage: "square.and.arrow.down")
                         .font(.headline)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.blue.opacity(0.1))
+                        .background(Color.green.opacity(0.1))
                         .cornerRadius(10)
                 }
-            }
 
+                // 🔹 Кнопка "Открыть PDF", если файл указан
+                if let pdfFileName = article.pdfFileName {
+                    NavigationLink(destination: PDFViewer(fileName: pdfFileName)) {
+                        Label("Открыть PDF", systemImage: "doc.richtext")
+                            .font(.headline)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(10)
+                    }
+                }
+
+                Spacer()
+            }
+            .padding()
         }
         .navigationTitle("Статья")
         .navigationBarTitleDisplayMode(.inline)
