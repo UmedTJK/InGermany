@@ -19,6 +19,8 @@
 		AD6C1E142E76C73D00EA59A7 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E132E76C73800EA59A7 /* Animations.swift */; };
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
 		AD732DED2E79D674009855C3 /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */; };
+		AD74545F2E7DC9C7001FC732 /* AI_CONTEXT2.md in Resources */ = {isa = PBXBuildFile; fileRef = AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */; };
+		AD7454632E7E617F001FC732 /* TextSizeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7454622E7E617C001FC732 /* TextSizeManager.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */; };
@@ -38,6 +40,8 @@
 		AD6C1E132E76C73800EA59A7 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
+		AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT2.md; sourceTree = "<group>"; };
+		AD7454622E7E617C001FC732 /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
 		AD8552C52E75B471003D3826 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -86,6 +90,7 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */,
 				AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */,
 				AD38F5882E76C15000E36EA4 /* update.sh */,
 				AD38F5862E76899600E36EA4 /* README.md */,
@@ -133,6 +138,7 @@
 		AD8552C92E75B506003D3826 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				AD7454622E7E617C001FC732 /* TextSizeManager.swift */,
 				AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */,
 				AD6275102E7BB377003D7FA9 /* ProgressBar.swift */,
 				AD6275072E7BB055003D7FA9 /* ReadingTimeCalculator.swift */,
@@ -217,6 +223,7 @@
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
 				AD732DED2E79D674009855C3 /* AI_CONTEXT.md in Resources */,
+				AD74545F2E7DC9C7001FC732 /* AI_CONTEXT2.md in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
 				AD38F5892E76C15600E36EA4 /* update.sh in Resources */,
 			);
@@ -237,6 +244,7 @@
 				AD6C1E142E76C73D00EA59A7 /* Animations.swift in Sources */,
 				AD40EEFD2E75F3DB00866648 /* CategoryManager.swift in Sources */,
 				AD6275082E7BB059003D7FA9 /* ReadingTimeCalculator.swift in Sources */,
+				AD7454632E7E617F001FC732 /* TextSizeManager.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */,
 			);

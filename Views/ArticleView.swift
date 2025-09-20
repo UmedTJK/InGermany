@@ -18,6 +18,10 @@ struct ArticleView: View {
     @StateObject private var readingTracker = ReadingTracker()
     @StateObject private var progressTracker = ReadingProgressTracker()
     
+    // Менеджер размера текста
+    @StateObject private var textSizeManager = TextSizeManager.shared
+    @State private var showTextSizePanel = false
+    
     private var relatedArticles: [Article] {
         allArticles
             .filter { $0.categoryId == article.categoryId && $0.id != article.id }
@@ -29,7 +33,7 @@ struct ArticleView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    // 🔹 Прогресс-бар чтения (ваша версия)
+                    // 🔹 Прогресс-бар чтения
                     ReadingProgressBar(
                         progress: progressTracker.scrollProgress,
                         height: 6,
@@ -84,11 +88,13 @@ struct ArticleView: View {
                         .foregroundColor(.secondary)
                     }
 
-                    // 🔹 Контент статьи с отслеживанием скролла
+                    // 🔹 Контент статьи с отслеживанием скролла и кастомным размером
                     Text(article.localizedContent(for: selectedLanguage))
-                        .font(.body)
+                        .font(textSizeManager.isCustomTextSizeEnabled ?
+                              textSizeManager.currentFont : .body)
                         .foregroundColor(.primary)
-                        .trackReadingProgress(progressTracker) // Добавляем отслеживание скролла
+                        .trackReadingProgress(progressTracker)
+                        .lineSpacing(4)
 
                     // 🔹 Рейтинг
                     VStack(alignment: .leading, spacing: 4) {
@@ -152,7 +158,16 @@ struct ArticleView: View {
             }
             .navigationTitle(article.localizedTitle(for: selectedLanguage))
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    // Кнопка настроек текста
+                    Button {
+                        showTextSizePanel.toggle()
+                        HapticFeedback.medium()
+                    } label: {
+                        Image(systemName: "textformat.size")
+                            .foregroundColor(.blue)
+                    }
+                    
                     Button {
                         favoritesManager.toggleFavorite(article: article)
                         HapticFeedback.medium()
@@ -164,10 +179,8 @@ struct ArticleView: View {
                         )
                         .foregroundColor(.yellow)
                     }
-                }
-                
-                // Кнопка для прокрутки к началу
-                ToolbarItem(placement: .navigationBarTrailing) {
+                    
+                    // Кнопка для прокрутки к началу
                     Button {
                         withAnimation {
                             proxy.scrollTo("articleTop", anchor: .top)
@@ -178,6 +191,9 @@ struct ArticleView: View {
                             .foregroundColor(.blue)
                     }
                 }
+            }
+            .sheet(isPresented: $showTextSizePanel) {
+                TextSizeSettingsPanel()
             }
             .onAppear {
                 // Начинаем отслеживание чтения

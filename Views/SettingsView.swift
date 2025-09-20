@@ -11,6 +11,7 @@ struct SettingsView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @ObservedObject private var readingHistoryManager = ReadingHistoryManager.shared
+    @StateObject private var textSizeManager = TextSizeManager.shared
     
     // Поддерживаемые языки
     private let languages = [
@@ -36,10 +37,25 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                 }
                 
-                // Тема оформления
-                Section(header: Text(getTranslation(key: "Оформление", language: selectedLanguage))) {
+                // Внешний вид
+                Section(header: Text(getTranslation(key: "Внешний вид", language: selectedLanguage))) {
                     Toggle(isOn: $isDarkMode) {
                         Label(getTranslation(key: "Тёмная тема", language: selectedLanguage), systemImage: "moon.fill")
+                    }
+                    
+                    NavigationLink {
+                        TextSizeSettingsPanel()
+                    } label: {
+                        HStack {
+                            Image(systemName: "textformat.size")
+                                .foregroundColor(.blue)
+                            Text(getTranslation(key: "Размер текста", language: selectedLanguage))
+                            Spacer()
+                            if textSizeManager.isCustomTextSizeEnabled {
+                                Text("\(Int(textSizeManager.fontSize)) pt")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     }
                 }
                 
@@ -106,7 +122,7 @@ struct SettingsView: View {
         }
     }
     
-    // MARK: - Helper Views
+    // MARK: - Helper Methods
     
     private func formatReadingTime(_ minutes: Int, language: String) -> String {
         switch language {
@@ -125,8 +141,9 @@ struct SettingsView: View {
         let translations: [String: [String: String]] = [
             "Язык приложения": ["ru": "Язык приложения", "en": "App Language", "de": "App-Sprache", "tj": "Забони барнома"],
             "Выберите язык": ["ru": "Выберите язык", "en": "Choose language", "de": "Sprache wählen", "tj": "Забонро интихоб кунед"],
-            "Оформление": ["ru": "Оформление", "en": "Appearance", "de": "Erscheinungsbild", "tj": "Намуди зоҳирӣ"],
+            "Внешний вид": ["ru": "Внешний вид", "en": "Appearance", "de": "Erscheinungsbild", "tj": "Намуди зоҳирӣ"],
             "Тёмная тема": ["ru": "Тёмная тема", "en": "Dark theme", "de": "Dunkles Theme", "tj": "Мавзӯи торик"],
+            "Размер текста": ["ru": "Размер текста", "en": "Text Size", "de": "Textgröße", "tj": "Андозаи матн"],
             "Статистика чтения": ["ru": "Статистика чтения", "en": "Reading Statistics", "de": "Lese-Statistiken", "tj": "Омори хондан"],
             "Прочитано статей": ["ru": "Прочитано статей", "en": "Articles read", "de": "Gelesene Artikel", "tj": "Мақолаҳои хондашуда"],
             "Общее время чтения": ["ru": "Общее время чтения", "en": "Total reading time", "de": "Gesamte Lesezeit", "tj": "Вақти умумии хондан"],
