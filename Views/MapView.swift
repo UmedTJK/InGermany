@@ -5,13 +5,6 @@
 //  Created by SUM TJK on 15.09.25.
 //
 
-//
-//  MapView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 15.09.25.
-//
-
 import SwiftUI
 import MapKit
 import CoreLocation
@@ -38,8 +31,9 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 }
 
 struct MapView: View {
-    let locations: [Location] = DataService.shared.loadLocations()
+    @State private var locations: [Location] = []
     @StateObject private var locationManager = LocationManager()
+    @State private var isLoading = true
 
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 50.4250, longitude: 10.7317),
@@ -47,50 +41,84 @@ struct MapView: View {
     )
 
     var body: some View {
-        Group {
-            if #available(iOS 17.0, *) {
-                Map(initialPosition: .region(region)) {
-                    ForEach(locations) { location in
-                        Annotation(location.name, coordinate: location.coordinate) {
-                            VStack {
-                                Image(systemName: "mappin.circle.fill")
-                                    .foregroundColor(.red)
-                                    .font(.title)
-                                Text(location.name)
-                                    .font(.caption)
-                                    .fixedSize()
+        NavigationStack {
+            Group {
+                if isLoading {
+                    ProgressView("Загрузка карты...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                } else {
+                    Group {
+                        if #available(iOS 17.0, *) {
+                            Map(initialPosition: .region(region)) {
+                                ForEach(locations) { location in
+                                    Annotation(location.name, coordinate: location.coordinate) {
+                                        VStack {
+                                            Image(systemName: "mappin.circle.fill")
+                                                .foregroundColor(.red)
+                                                .font(.title)
+                                            Text(location.name)
+                                                .font(.caption)
+                                                .fixedSize()
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            Map(coordinateRegion: $region, annotationItems: locations) { location in
+                                MapAnnotation(coordinate: location.coordinate) {
+                                    VStack {
+                                        Image(systemName: "mappin.circle.fill")
+                                            .foregroundColor(.red)
+                                            .font(.title)
+                                        Text(location.name)
+                                            .font(.caption)
+                                            .fixedSize()
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            } else {
-                Map(coordinateRegion: $region, annotationItems: locations) { location in
-                    MapAnnotation(coordinate: location.coordinate) {
-                        VStack {
-                            Image(systemName: "mappin.circle.fill")
-                                .foregroundColor(.red)
-                                .font(.title)
-                            Text(location.name)
-                                .font(.caption)
-                                .fixedSize()
+            }
+            .navigationTitle("Карта")
+            .edgesIgnoringSafeArea(.all)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        if let userLocation = locationManager.userLocation {
+                            region.center = userLocation
+                            region.span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
                         }
+                    }) {
+                        Label("Моё местоположение", systemImage: "location.fill")
+                    }
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        Task {
+                            await refreshLocations()
+                        }
+                    }) {
+                        Label("Обновить", systemImage: "arrow.clockwise")
                     }
                 }
             }
-        }
-        .navigationTitle("Карта")
-        .edgesIgnoringSafeArea(.all)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    if let userLocation = locationManager.userLocation {
-                        region.center = userLocation
-                        region.span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-                    }
-                }) {
-                    Label("Моё местоположение", systemImage: "location.fill")
-                }
+            .task {
+                await loadLocations()
             }
         }
+    }
+    
+    private func loadLocations() async {
+        locations = await DataService.shared.loadLocations()
+        isLoading = false
+    }
+    
+    private func refreshLocations() async {
+        isLoading = true
+        await DataService.shared.refreshData()
+        locations = await DataService.shared.loadLocations()
+        isLoading = false
     }
 }

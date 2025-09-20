@@ -11,18 +11,20 @@ struct ArticlesByTagView: View {
     let tag: String
     let articles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru" // Добавляем AppStorage
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink {
                 ArticleDetailView(
                     article: article,
-                    favoritesManager: favoritesManager,
-                    selectedLanguage: selectedLanguage
+                    favoritesManager: favoritesManager
                 )
             } label: {
-                ArticleRow(article: article, favoritesManager: favoritesManager)
+                ArticleRow(
+                    article: article,
+                    favoritesManager: favoritesManager
+                )
             }
         }
         .navigationTitle("#\(tag)")

@@ -2,39 +2,41 @@
 //  CategoryManager.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
-
-//
-//  CategoryManager.swift
-//  InGermany
-//
 
 import Foundation
 
-class CategoryManager {
-    static let shared = CategoryManager()
-    
+actor CategoryManager {
+    // Разрешаем доступ к синглтону без изоляции актора (только к самому инстансу),
+    // чтобы не ловить ошибки Swift 6 при обращении к .shared
+    nonisolated(unsafe) static let shared = CategoryManager()
+
     private let dataService = DataService.shared
     private var categories: [Category] = []
-    
-    private init() {
-        loadCategories()
+
+    private init() {}
+
+    /// Асинхронная загрузка категорий (из сети/локально через DataService)
+    func loadCategories() async {
+        categories = await dataService.loadCategories()
     }
-    
-    func loadCategories() {
-        categories = dataService.loadCategories()
-    }
-    
-    func category(for id: String) -> Category? {
-        return categories.first { $0.id == id }
-    }
-    
-    func category(for name: String, language: String = "en") -> Category? {
-        return categories.first { $0.localizedName(for: language) == name }
-    }
-    
+
+    /// Все категории (снимок текущего состояния)
     func allCategories() -> [Category] {
-        return categories
+        categories
+    }
+
+    /// Поиск по id
+    func category(for id: String) -> Category? {
+        categories.first { $0.id == id }
+    }
+
+    /// Поиск по локализованному имени
+    func category(for name: String, language: String = "en") -> Category? {
+        categories.first { $0.localizedName(for: language) == name }
+    }
+
+    /// Принудительное обновление
+    func refreshCategories() async {
+        await loadCategories()
     }
 }

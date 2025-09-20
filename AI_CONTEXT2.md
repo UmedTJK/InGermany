@@ -23,6 +23,7 @@
 •    🌍 Мультиязычность (RU/EN/DE/TJ)
 •    🎨 Поддержка темной темы
 •    📊 Аналитика чтения
+•    🎛️  Динамический размер текста (кастомизация шрифта)
 
 ⚙️ ТЕХНОЛОГИЧЕСКИЙ СТЕК
 Основные технологии:
@@ -70,7 +71,8 @@ InGermany/
 │       ├── FavoriteCard.swift        # Карточка для горизонтального скролла
 │       ├── PDFViewer.swift           # Вьювер PDF документов
 │       ├── ReadingProgressBar.swift  # Индикатор прогресса чтения
-│       └── TagFilterView.swift       # Компонент фильтрации по тегам
+│       ├── TagFilterView.swift       # Компонент фильтрации по тегам
+│       └── TextSizeSettingsPanel.swift # Панель настроек текста (новая)
 │
 ├── 📁 Models/                        # Модели данных
 │   ├── Article.swift                 # Модель статьи
@@ -91,7 +93,8 @@ InGermany/
 │   ├── ExportToPDF.swift             # Экспорт контента в PDF
 │   ├── ProgressBar.swift             # Компонент прогресс-бара
 │   ├── Animations.swift              # Кастомные анимации
-│   └── Theme.swift                   # Тема и цвета приложения
+│   ├── Theme.swift                   # Тема и цвета приложения
+│   └── TextSizeManager.swift         # Менеджер размера текста (новый)
 │
 ├── 📁 Resources/                     # Ресурсы приложения
 │   ├── articles.json                 # Данные статей (локализованные)
@@ -159,6 +162,26 @@ class RatingManager {
     func setRating(_ rating: Int, for articleId: String)
     func getAverageRating() -> Double
     func getRatedArticlesCount() -> Int
+}
+
+#### TextSizeManager (Singleton, ObservableObject)
+
+class TextSizeManager: ObservableObject {
+    static let shared = TextSizeManager()
+    
+    // Основные свойства
+    @Published var fontSize: CGFloat
+    @Published var isCustomTextSizeEnabled: Bool
+    
+    // Основные методы
+    func resetToDefault()
+    var currentFont: Font
+    
+    // Предустановленные размеры
+    let presetSizes: [CGFloat] = [14, 16, 18, 20, 22, 24]
+    
+    // Хранение в UserDefaults
+    // Данные сохраняются через стандартные ключи
 }
 
 #### ReadingHistoryManager (Singleton, ObservableObject)
@@ -352,13 +375,7 @@ struct RecentArticleCard: View {
     let lastReadDate: Date?
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 }
-ArticleRowWithReadingInfo
-struct ArticleRowWithReadingInfo: View {
-    let article: Article
-    let favoritesManager: FavoritesManager
-    let isRead: Bool
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-}
+
 CategoryArticleCard
 struct CategoryArticleCard: View {
     let article: Article
@@ -440,6 +457,8 @@ struct Category: Identifiable, Codable {
     - Пример: `ReadingHistoryManager` использует `@AppStorage("readingHistory") private var storedHistory: Data = Data()`
 
 2.  **Оптимизация памяти:** Менеджеры могут использовать in-memory кэш (например, `ratings: [String: Int]` в `RatingManager`) для производительности, синхронизируя его с `UserDefaults`.
+
+
 🎯 ARTICLEVIEW ARCHITECTURE
 Обязательные параметры
 struct ArticleView: View {
@@ -450,8 +469,25 @@ struct ArticleView: View {
     @ObservedObject var ratingManager = RatingManager.shared
     @StateObject private var readingTracker = ReadingTracker()
     @StateObject private var progressTracker = ReadingProgressTracker()
+    @StateObject private var textSizeManager = TextSizeManager.shared // новый
+}
 }
 Ключевые функции
+
+// Настройки текста
+.toolbar {
+    Button { showTextSizePanel.toggle() } // кнопка настроек текста
+}
+.sheet(isPresented: $showTextSizePanel) {
+    TextSizeSettingsPanel()
+}
+
+// Применение кастомного шрифта
+Text(article.content)
+    .font(textSizeManager.isCustomTextSizeEnabled ?
+          textSizeManager.currentFont : .body)
+
+
 // Отслеживание чтения
 .onAppear { readingTracker.startReading(articleId: article.id) }
 .onDisappear { readingTracker.finishReading() }
@@ -491,6 +527,9 @@ ShareLink(
 )
 
 🎨 UI КОМПОНЕНТЫ
+Text Size Settings Panel
+TextSizeSettingsPanel()
+// Включает: слайдер размера, быстрые пресеты, переключатель кастомного размера, предпросмотр
 Progress Bar
 ReadingProgressBar(
     progress: progressTracker.scrollProgress,
@@ -598,8 +637,10 @@ struct Theme {
 }
 
 
-
-
+История коммитов
+* a15ebae (HEAD -> main, origin/main) feat: добавлен динамический размер текста в ArticleView
+* 3415f56 feat: добавлены свайп-действия и контекстное меню для избранного
+* 71f0d74 Создал актуальный AI_CONTEXT2.md
 * 3415f56 (HEAD -> main, origin/main) feat: добавлены свайп-действия и контекстное меню для избранного
 * 71f0d74 Создал актуальный AI_CONTEXT2.md
 * acf0169 Обновил файл AI_CONTEXT.md
@@ -649,11 +690,14 @@ e
 
 
 🚀 ROADMAP
-Short-term (v1.6.0)
+Short-term (v1.6.0) ✓
 •    📊 Аналитика чтения
 •    📄 Экспорт PDF
 •    🎭 Анимации
 •    ⚡ Оптимизация
+•    🎛️  Динамический размер текста ✓
+
+
 Medium-term (v1.7.0)
 •    ☁️ Supabase
 •    🔔 Push-уведомления
@@ -737,7 +781,7 @@ Long-term (v2.0.0)
 6.  **Поиск по тегам в SearchView**
     Добавить в `SearchView` не только фильтр по одному тегу, но и секцию "Популярные теги" или поисковые подсказки по тегам.
 
-7.  **Динамический размер текста в ArticleView**
+7.  **Динамический размер текста в ArticleView** ✓
     Добавить панель инструментов или меню настроек в `ArticleView` для изменения размера шрифта. Сохранять выбор пользователя в `@AppStorage`.
 
 8.  **Копирование фрагмента текста**
@@ -788,9 +832,11 @@ Long-term (v2.0.0)
 3.    Не использовать UserDefaults напрямую — только через менеджеры.
 4.    Все тексты — через локализацию.
 5.    Код должен быть SwiftLint-совместимым и iOS 17+.
+6.    TextSizeManager доступен через TextSizeManager.shared
 
 📞 КОНТАКТЫ
 Разработчик: Umed Sabzaev
 Email: umed@example.com
 GitHub: https://github.com/UmedTJK
+Дата актуализации: 20.09.2025
 

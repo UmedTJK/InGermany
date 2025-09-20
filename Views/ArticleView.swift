@@ -14,13 +14,12 @@ struct ArticleView: View {
     @ObservedObject var ratingManager = RatingManager.shared
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    // Трекер чтения
     @StateObject private var readingTracker = ReadingTracker()
     @StateObject private var progressTracker = ReadingProgressTracker()
-    
-    // Менеджер размера текста
     @StateObject private var textSizeManager = TextSizeManager.shared
     @State private var showTextSizePanel = false
+    
+    @EnvironmentObject private var categoriesStore: CategoriesStore
     
     private var relatedArticles: [Article] {
         allArticles
@@ -51,14 +50,12 @@ struct ArticleView: View {
                         
                         Spacer()
                         
-                        // Индикатор прочитанности
                         if ReadingHistoryManager.shared.isRead(article.id) {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
                                 .font(.subheadline)
                         }
                         
-                        // Индикатор чтения в реальном времени
                         if progressTracker.isReading {
                             Image(systemName: "eye.fill")
                                 .foregroundColor(.green)
@@ -73,22 +70,20 @@ struct ArticleView: View {
                         .bold()
                         .id("articleTop")
 
-                    // 🔹 Категория
+                    // 🔹 Категория (через CategoriesStore)
                     HStack(spacing: 6) {
                         Image(systemName: "folder")
                             .foregroundColor(.blue)
 
                         Text(
-                            CategoryManager.shared
-                                .category(for: article.categoryId)?
-                                .localizedName(for: selectedLanguage)
-                            ?? "Без категории"
+                            categoriesStore.categoryName(for: article.categoryId,
+                                                         language: selectedLanguage)
                         )
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     }
 
-                    // 🔹 Контент статьи с отслеживанием скролла и кастомным размером
+                    // 🔹 Контент
                     Text(article.localizedContent(for: selectedLanguage))
                         .font(textSizeManager.isCustomTextSizeEnabled ?
                               textSizeManager.currentFont : .body)
@@ -113,7 +108,7 @@ struct ArticleView: View {
                     }
                     .padding(.top)
 
-                    // 🔹 Кнопка "Поделиться"
+                    // 🔹 Поделиться
                     ShareLink(
                         item: "\(article.localizedTitle(for: selectedLanguage))\n\n\(article.localizedContent(for: selectedLanguage))",
                         subject: Text(article.localizedTitle(for: selectedLanguage)),
@@ -159,7 +154,6 @@ struct ArticleView: View {
             .navigationTitle(article.localizedTitle(for: selectedLanguage))
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    // Кнопка настроек текста
                     Button {
                         showTextSizePanel.toggle()
                         HapticFeedback.medium()
@@ -180,7 +174,6 @@ struct ArticleView: View {
                         .foregroundColor(.yellow)
                     }
                     
-                    // Кнопка для прокрутки к началу
                     Button {
                         withAnimation {
                             proxy.scrollTo("articleTop", anchor: .top)
@@ -196,11 +189,8 @@ struct ArticleView: View {
                 TextSizeSettingsPanel()
             }
             .onAppear {
-                // Начинаем отслеживание чтения
                 readingTracker.startReading(articleId: article.id)
                 progressTracker.reset()
-                
-                // Прокручиваем к началу при открытии
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     withAnimation {
                         proxy.scrollTo("articleTop", anchor: .top)
@@ -208,14 +198,11 @@ struct ArticleView: View {
                 }
             }
             .onDisappear {
-                // Завершаем отслеживание чтения
                 readingTracker.finishReading()
                 progressTracker.reset()
             }
         }
     }
-    
-    // MARK: - Локализация
     
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
@@ -255,5 +242,6 @@ struct ArticleView: View {
             allArticles: DataService.shared.loadArticles(),
             favoritesManager: FavoritesManager()
         )
+        .environmentObject(CategoriesStore.shared)
     }
 }

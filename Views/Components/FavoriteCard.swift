@@ -11,18 +11,20 @@ struct FavoriteCard: View {
     let article: Article
     let favoritesManager: FavoritesManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @EnvironmentObject private var categoriesStore: CategoriesStore
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Иконка категории в круге
             HStack {
-                if let category = CategoryManager.shared.category(for: article.categoryId) {
+                if let category = categoriesStore.category(for: article.categoryId) {
                     ZStack {
                         Circle()
                             .fill(
                                 LinearGradient(
-                                    colors: [Color(red: 0.88, green: 0.91, blue: 0.96),
-                                            Color(red: 0.78, green: 0.83, blue: 0.92)],
+                                    colors: [
+                                        Color(red: 0.88, green: 0.91, blue: 0.96),
+                                        Color(red: 0.78, green: 0.83, blue: 0.92)
+                                    ],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
@@ -37,14 +39,12 @@ struct FavoriteCard: View {
                 
                 Spacer()
                 
-                // Иконка избранного с анимацией
                 Image(systemName: favoritesManager.isFavorite(article: article) ? "star.fill" : "star")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(favoritesManager.isFavorite(article: article) ? .yellow : .gray.opacity(0.6))
                     .symbolEffect(.bounce, value: favoritesManager.isFavorite(article: article))
             }
             
-            // Заголовок статьи
             Text(article.title[selectedLanguage] ?? article.title["ru"] ?? "")
                 .font(.system(size: 16, weight: .semibold, design: .rounded))
                 .foregroundColor(.primary)
@@ -54,9 +54,8 @@ struct FavoriteCard: View {
             
             Spacer()
             
-            // Категория подзаголовком
-            if let category = CategoryManager.shared.category(for: article.categoryId) {
-                Text(category.localizedName(for: selectedLanguage).uppercased())
+            if let _ = categoriesStore.category(for: article.categoryId) {
+                Text(categoriesStore.categoryName(for: article.categoryId, language: selectedLanguage).uppercased())
                     .font(.system(size: 11, weight: .medium, design: .rounded))
                     .foregroundColor(.blue)
                     .padding(.horizontal, 8)
@@ -69,17 +68,7 @@ struct FavoriteCard: View {
         }
         .padding(16)
         .frame(width: 170, height: 140)
-        .cardStyle() // Используем ваш стиль из Animations.swift
-    }
-}
-
-// Модификатор для красивого скролла
-struct AppleScrollViewModifier: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .scrollTargetBehavior(.viewAligned)
-            .scrollTargetLayout()
-            .scrollIndicators(.hidden)
+        .cardStyle()
     }
 }
 
@@ -93,11 +82,13 @@ struct AppleScrollViewModifier: ViewModifier {
                 article: Article.sampleArticle,
                 favoritesManager: FavoritesManager()
             )
+            .environmentObject(CategoriesStore.shared)
             
             FavoriteCard(
                 article: Article.sampleArticle,
                 favoritesManager: FavoritesManager()
             )
+            .environmentObject(CategoriesStore.shared)
         }
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct ArticleDetailView: View {
     let article: Article
     @ObservedObject var favoritesManager: FavoritesManager
-    let selectedLanguage: String
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
         ScrollView {

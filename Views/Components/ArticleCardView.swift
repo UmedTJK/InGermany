@@ -10,9 +10,8 @@ import SwiftUI
 struct ArticleCardView: View {
     let article: Article
     let favoritesManager: FavoritesManager
-    let selectedLanguage: String
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    // Добавляем вычисляемое свойство для удобства
     private var isFavorite: Bool {
         favoritesManager.isFavorite(article: article)
     }
@@ -21,8 +20,7 @@ struct ArticleCardView: View {
         NavigationLink {
             ArticleDetailView(
                 article: article,
-                favoritesManager: favoritesManager,
-                selectedLanguage: selectedLanguage
+                favoritesManager: favoritesManager
             )
         } label: {
             VStack(alignment: .leading, spacing: 8) {
@@ -68,7 +66,6 @@ struct ArticleCardView: View {
             .cornerRadius(14)
             .shadow(radius: 2)
         }
-        // Контекстное меню по долгому нажатию на карточку
         .contextMenu {
             Button {
                 toggleFavorite()
@@ -79,39 +76,25 @@ struct ArticleCardView: View {
                 )
             }
             
-            // Опция поделиться
             ShareLink(item: article.localizedTitle(for: selectedLanguage)) {
                 Label("Поделиться", systemImage: "square.and.arrow.up")
             }
             
-            // Дополнительная информация о статье
             Button {
                 // Можно добавить действие показа деталей
             } label: {
                 Label("Информация о статье", systemImage: "info.circle")
             }
         }
-        .onTapGesture {
-            // Обычный тап обрабатывается NavigationLink
-        }
     }
     
     private func toggleFavorite() {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
             favoritesManager.toggleFavorite(article: article)
-            // Легкая вибрация для подтверждения действия
             #if os(iOS)
             let generator = UIImpactFeedbackGenerator(style: .medium)
             generator.impactOccurred()
             #endif
         }
     }
-}
-
-#Preview {
-    ArticleCardView(
-        article: Article.sampleArticle,
-        favoritesManager: FavoritesManager(),
-        selectedLanguage: "ru"
-    )
 }

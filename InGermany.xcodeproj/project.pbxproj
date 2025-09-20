@@ -21,6 +21,9 @@
 		AD732DED2E79D674009855C3 /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */; };
 		AD74545F2E7DC9C7001FC732 /* AI_CONTEXT2.md in Resources */ = {isa = PBXBuildFile; fileRef = AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */; };
 		AD7454632E7E617F001FC732 /* TextSizeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7454622E7E617C001FC732 /* TextSizeManager.swift */; };
+		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
+		AD74546E2E7E8E6A001FC732 /* CategoriesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */; };
+		AD7454732E7E9B45001FC732 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454722E7E9B43001FC732 /* CHANGELOG.md */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */; };
@@ -42,6 +45,9 @@
 		AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
 		AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT2.md; sourceTree = "<group>"; };
 		AD7454622E7E617C001FC732 /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
+		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesStore.swift; sourceTree = "<group>"; };
+		AD7454722E7E9B43001FC732 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
 		AD8552C52E75B471003D3826 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -90,6 +96,7 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD7454722E7E9B43001FC732 /* CHANGELOG.md */,
 				AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */,
 				AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */,
 				AD38F5882E76C15000E36EA4 /* update.sh */,
@@ -117,6 +124,7 @@
 		AD8552C32E75B452003D3826 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				AD74546B2E7E7937001FC732 /* NetworkService.swift */,
 				AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */,
 				AD8552C42E75B463003D3826 /* DataService.swift */,
 				AD8552C52E75B471003D3826 /* AuthService.swift */,
@@ -138,6 +146,7 @@
 		AD8552C92E75B506003D3826 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */,
 				AD7454622E7E617C001FC732 /* TextSizeManager.swift */,
 				AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */,
 				AD6275102E7BB377003D7FA9 /* ProgressBar.swift */,
@@ -218,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD38F5872E76899D00E36EA4 /* README.md in Resources */,
+				AD7454732E7E9B45001FC732 /* CHANGELOG.md in Resources */,
 				AD38F5852E76891600E36EA4 /* .gitignore in Resources */,
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
@@ -245,6 +255,8 @@
 				AD40EEFD2E75F3DB00866648 /* CategoryManager.swift in Sources */,
 				AD6275082E7BB059003D7FA9 /* ReadingTimeCalculator.swift in Sources */,
 				AD7454632E7E617F001FC732 /* TextSizeManager.swift in Sources */,
+				AD74546E2E7E8E6A001FC732 /* CategoriesStore.swift in Sources */,
+				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */,
 			);
