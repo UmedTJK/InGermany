@@ -1,737 +1,94 @@
 [
   {
-    "id": "177b5cc8-9de1-4bd4-9739-9e1ec090f904",
+    "id": "9f8c0e3a-4b9a-4b21-9ad2-aaaabbbbcccc",
     "title": {
-      "ru": "Финансы — пример 1",
-      "en": "Финансы - Example 1",
-      "de": "Финансы - Beispiel 1",
-      "tj": "Финансы — намунаи 1"
+      "ru": "Как открыть банковский счёт в Германии",
+      "en": "How to Open a Bank Account in Germany",
+      "de": "Wie man ein Bankkonto in Deutschland eröffnet",
+      "tj": "Чӣ гуна дар Олмон суратҳисоби бонкӣ кушоем"
     },
     "content": {
-      "ru": "Это пример содержимого статьи №1 в категории Финансы.",
-      "en": "This is example content for article #1 in category Finance.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #1 in der Kategorie Finanzen.",
-      "tj": "Ин мазмуни намунавии мақолаи №1 дар категорияи Молия аст."
+      "ru": "## Почему это важно?\nОткрыть счёт — первый шаг к финансовой независимости в Германии. Без него невозможно получать зарплату, пособия или арендовать жильё.\n\n## Основные шаги\n1. **Выбор банка** — онлайн (N26, Vivid) или классический (Sparkasse, Volksbank).\n2. **Документы**: паспорт, Anmeldung (регистрация по месту жительства).\n3. **Анкета** — заполняется в отделении или онлайн.\n4. **Идентификация** — PostIdent или VideoIdent.\n\n## Советы\n- Онлайн-банки быстрее и дешевле, но без офисов.\n- Классические банки стабильнее, но требуют Termin.\n\n> 💡 *Держите копию Meldebescheinigung — её просят почти всегда.*",
+      "en": "## Why is it important?\nOpening a bank account is the first step towards financial independence in Germany.\n\n## Main steps\n1. **Choose a bank** — online (N26, Vivid) or traditional (Sparkasse, Volksbank).\n2. **Prepare documents**: passport, proof of residence (Anmeldung).\n3. **Application** — fill it out in branch or online.\n4. **Identity check** — PostIdent or VideoIdent.\n\n## Tips\n- Online banks are faster and cheaper.\n- Traditional banks are more stable but require appointments.\n\n> 💡 *Always carry a copy of your registration certificate.*",
+      "de": "## Warum ist es wichtig?\nEin Konto zu eröffnen ist der erste Schritt zur finanziellen Unabhängigkeit in Deutschland.\n\n## Schritte\n1. **Bank auswählen** — online (N26, Vivid) oder klassisch (Sparkasse, Volksbank).\n2. **Dokumente**: Reisepass, Anmeldung.\n3. **Antrag** — im Filiale oder online.\n4. **Identitätsprüfung** — PostIdent oder VideoIdent.\n\n## Tipps\n- Online-Banken sind schneller und günstiger.\n- Klassische Banken stabiler, aber Termin nötig.\n\n> 💡 *Halten Sie immer eine Kopie Ihrer Anmeldung bereit.*",
+      "tj": "## Чаро муҳим аст?\nКушодани суратҳисоб қадами аввалини мустақилияти молиявӣ дар Олмон аст.\n\n## Қадамҳо\n1. **Интихоби бонк** — онлайн (N26, Vivid) ё классикӣ (Sparkasse, Volksbank).\n2. **Ҳуҷҷатҳо**: паспорт ва Anmeldung.\n3. **Ариза** — онлайн ё дар шӯъба.\n4. **Санҷиши шахсият** — PostIdent ё VideoIdent.\n\n## Маслиҳатҳо\n- Онлайн-бонкҳо зудтар ва арзонтаранд.\n- Бонкҳои классикӣ боэътимодтаранд, вале Termin талаб мекунанд.\n\n> 💡 *Ҳамеша нусхаи Meldebescheinigung-ро нигоҳ доред.*"
     },
     "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
     "tags": [
+      "bank",
       "finance",
-      "финансы",
-      "пример"
+      "account"
     ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
+    "createdAt": "2025-09-20T10:00:00Z",
+    "updatedAt": "2025-09-20T10:00:00Z"
   },
   {
-    "id": "7b675af9-164a-4020-b404-a43cccd920af",
+    "id": "d6c7aa7a-0f3a-4bcd-bbbb-ccccddddeeee",
     "title": {
-      "ru": "Финансы — пример 2",
-      "en": "Финансы - Example 2",
-      "de": "Финансы - Beispiel 2",
-      "tj": "Финансы — намунаи 2"
+      "ru": "Как работает система здравоохранения в Германии",
+      "en": "How the Healthcare System Works in Germany",
+      "de": "Wie das Gesundheitssystem in Deutschland funktioniert",
+      "tj": "Чӣ гуна низоми тандурустӣ дар Олмон амал мекунад"
     },
     "content": {
-      "ru": "Это пример содержимого статьи №2 в категории Финансы.",
-      "en": "This is example content for article #2 in category Finance.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #2 in der Kategorie Finanzen.",
-      "tj": "Ин мазмуни намунавии мақолаи №2 дар категорияи Молия аст."
-    },
-    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
-    "tags": [
-      "finance",
-      "финансы",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "e2a331d1-a388-47b8-a6d1-979ffbd1a3dc",
-    "title": {
-      "ru": "Финансы — пример 3",
-      "en": "Финансы - Example 3",
-      "de": "Финансы - Beispiel 3",
-      "tj": "Финансы — намунаи 3"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №3 в категории Финансы.",
-      "en": "This is example content for article #3 in category Finance.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #3 in der Kategorie Finanzen.",
-      "tj": "Ин мазмуни намунавии мақолаи №3 дар категорияи Молия аст."
-    },
-    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
-    "tags": [
-      "finance",
-      "финансы",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "464d185b-189e-4d76-8197-1999b41c8d99",
-    "title": {
-      "ru": "Финансы — пример 4",
-      "en": "Финансы - Example 4",
-      "de": "Финансы - Beispiel 4",
-      "tj": "Финансы — намунаи 4"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №4 в категории Финансы.",
-      "en": "This is example content for article #4 in category Finance.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #4 in der Kategorie Finanzen.",
-      "tj": "Ин мазмуни намунавии мақолаи №4 дар категорияи Молия аст."
-    },
-    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
-    "tags": [
-      "finance",
-      "финансы",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "4bc2f067-f445-456a-a0bb-38d069a0e92e",
-    "title": {
-      "ru": "Финансы — пример 5",
-      "en": "Финансы - Example 5",
-      "de": "Финансы - Beispiel 5",
-      "tj": "Финансы — намунаи 5"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №5 в категории Финансы.",
-      "en": "This is example content for article #5 in category Finance.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #5 in der Kategorie Finanzen.",
-      "tj": "Ин мазмуни намунавии мақолаи №5 дар категорияи Молия аст."
-    },
-    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
-    "tags": [
-      "finance",
-      "финансы",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "13be453d-549e-4eb7-ba86-183b9762d415",
-    "title": {
-      "ru": "Работа — пример 1",
-      "en": "Работа - Example 1",
-      "de": "Работа - Beispiel 1",
-      "tj": "Работа — намунаи 1"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №1 в категории Работа.",
-      "en": "This is example content for article #1 in category Work.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #1 in der Kategorie Arbeit.",
-      "tj": "Ин мазмуни намунавии мақолаи №1 дар категорияи Кор аст."
-    },
-    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
-    "tags": [
-      "work",
-      "работа",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "dfba1fb0-1121-4ef3-a260-a643ea694a24",
-    "title": {
-      "ru": "Работа — пример 2",
-      "en": "Работа - Example 2",
-      "de": "Работа - Beispiel 2",
-      "tj": "Работа — намунаи 2"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №2 в категории Работа.",
-      "en": "This is example content for article #2 in category Work.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #2 in der Kategorie Arbeit.",
-      "tj": "Ин мазмуни намунавии мақолаи №2 дар категорияи Кор аст."
-    },
-    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
-    "tags": [
-      "work",
-      "работа",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "b37c6e7c-5703-4555-964f-b849659d1003",
-    "title": {
-      "ru": "Работа — пример 3",
-      "en": "Работа - Example 3",
-      "de": "Работа - Beispiel 3",
-      "tj": "Работа — намунаи 3"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №3 в категории Работа.",
-      "en": "This is example content for article #3 in category Work.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #3 in der Kategorie Arbeit.",
-      "tj": "Ин мазмуни намунавии мақолаи №3 дар категорияи Кор аст."
-    },
-    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
-    "tags": [
-      "work",
-      "работа",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "452180c3-3f79-4525-9e66-7feebee9b4d7",
-    "title": {
-      "ru": "Работа — пример 4",
-      "en": "Работа - Example 4",
-      "de": "Работа - Beispiel 4",
-      "tj": "Работа — намунаи 4"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №4 в категории Работа.",
-      "en": "This is example content for article #4 in category Work.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #4 in der Kategorie Arbeit.",
-      "tj": "Ин мазмуни намунавии мақолаи №4 дар категорияи Кор аст."
-    },
-    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
-    "tags": [
-      "work",
-      "работа",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "e5679b97-d760-4603-9c75-42519547adec",
-    "title": {
-      "ru": "Работа — пример 5",
-      "en": "Работа - Example 5",
-      "de": "Работа - Beispiel 5",
-      "tj": "Работа — намунаи 5"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №5 в категории Работа.",
-      "en": "This is example content for article #5 in category Work.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #5 in der Kategorie Arbeit.",
-      "tj": "Ин мазмуни намунавии мақолаи №5 дар категорияи Кор аст."
-    },
-    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
-    "tags": [
-      "work",
-      "работа",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "13a47ce9-d9f9-44b5-aeae-7a7df89332f7",
-    "title": {
-      "ru": "Учёба — пример 1",
-      "en": "Учёба - Example 1",
-      "de": "Учёба - Beispiel 1",
-      "tj": "Учёба — намунаи 1"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №1 в категории Учёба.",
-      "en": "This is example content for article #1 in category Study.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #1 in der Kategorie Studium.",
-      "tj": "Ин мазмуни намунавии мақолаи №1 дар категорияи Таҳсилот аст."
-    },
-    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
-    "tags": [
-      "study",
-      "учёба",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "c44cf817-3de1-4bd8-8d62-2ef6bd7f1988",
-    "title": {
-      "ru": "Учёба — пример 2",
-      "en": "Учёба - Example 2",
-      "de": "Учёба - Beispiel 2",
-      "tj": "Учёба — намунаи 2"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №2 в категории Учёба.",
-      "en": "This is example content for article #2 in category Study.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #2 in der Kategorie Studium.",
-      "tj": "Ин мазмуни намунавии мақолаи №2 дар категорияи Таҳсилот аст."
-    },
-    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
-    "tags": [
-      "study",
-      "учёба",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "806c0b0a-f1d7-4ef7-b1f3-2f116b07c896",
-    "title": {
-      "ru": "Учёба — пример 3",
-      "en": "Учёба - Example 3",
-      "de": "Учёба - Beispiel 3",
-      "tj": "Учёба — намунаи 3"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №3 в категории Учёба.",
-      "en": "This is example content for article #3 in category Study.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #3 in der Kategorie Studium.",
-      "tj": "Ин мазмуни намунавии мақолаи №3 дар категорияи Таҳсилот аст."
-    },
-    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
-    "tags": [
-      "study",
-      "учёба",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "498a9440-b85d-4755-97ed-6b0a51918300",
-    "title": {
-      "ru": "Учёба — пример 4",
-      "en": "Учёба - Example 4",
-      "de": "Учёба - Beispiel 4",
-      "tj": "Учёба — намунаи 4"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №4 в категории Учёба.",
-      "en": "This is example content for article #4 in category Study.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #4 in der Kategorie Studium.",
-      "tj": "Ин мазмуни намунавии мақолаи №4 дар категорияи Таҳсилот аст."
-    },
-    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
-    "tags": [
-      "study",
-      "учёба",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "a2a20fd9-ae02-4765-b679-3c70c9f9cb8b",
-    "title": {
-      "ru": "Учёба — пример 5",
-      "en": "Учёба - Example 5",
-      "de": "Учёба - Beispiel 5",
-      "tj": "Учёба — намунаи 5"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №5 в категории Учёба.",
-      "en": "This is example content for article #5 in category Study.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #5 in der Kategorie Studium.",
-      "tj": "Ин мазмуни намунавии мақолаи №5 дар категорияи Таҳсилот аст."
-    },
-    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
-    "tags": [
-      "study",
-      "учёба",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "f4d1238f-2732-420c-a3c9-e01e996532f6",
-    "title": {
-      "ru": "Бюрократия — пример 1",
-      "en": "Бюрократия - Example 1",
-      "de": "Бюрократия - Beispiel 1",
-      "tj": "Бюрократия — намунаи 1"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №1 в категории Бюрократия.",
-      "en": "This is example content for article #1 in category Bureaucracy.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #1 in der Kategorie Bürokratie.",
-      "tj": "Ин мазмуни намунавии мақолаи №1 дар категорияи Бюрократия аст."
-    },
-    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
-    "tags": [
-      "bureaucracy",
-      "бюрократия",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "27195493-d244-46a2-bbda-e792c736fc1e",
-    "title": {
-      "ru": "Бюрократия — пример 2",
-      "en": "Бюрократия - Example 2",
-      "de": "Бюрократия - Beispiel 2",
-      "tj": "Бюрократия — намунаи 2"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №2 в категории Бюрократия.",
-      "en": "This is example content for article #2 in category Bureaucracy.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #2 in der Kategorie Bürokratie.",
-      "tj": "Ин мазмуни намунавии мақолаи №2 дар категорияи Бюрократия аст."
-    },
-    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
-    "tags": [
-      "bureaucracy",
-      "бюрократия",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "44133c95-3222-4e93-ab89-e3a4e00b8767",
-    "title": {
-      "ru": "Бюрократия — пример 3",
-      "en": "Бюрократия - Example 3",
-      "de": "Бюрократия - Beispiel 3",
-      "tj": "Бюрократия — намунаи 3"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №3 в категории Бюрократия.",
-      "en": "This is example content for article #3 in category Bureaucracy.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #3 in der Kategorie Bürokratie.",
-      "tj": "Ин мазмуни намунавии мақолаи №3 дар категорияи Бюрократия аст."
-    },
-    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
-    "tags": [
-      "bureaucracy",
-      "бюрократия",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "69cb98ee-d4ac-43d1-9cbc-129eddc56369",
-    "title": {
-      "ru": "Бюрократия — пример 4",
-      "en": "Бюрократия - Example 4",
-      "de": "Бюрократия - Beispiel 4",
-      "tj": "Бюрократия — намунаи 4"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №4 в категории Бюрократия.",
-      "en": "This is example content for article #4 in category Bureaucracy.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #4 in der Kategorie Bürokratie.",
-      "tj": "Ин мазмуни намунавии мақолаи №4 дар категорияи Бюрократия аст."
-    },
-    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
-    "tags": [
-      "bureaucracy",
-      "бюрократия",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "3e95a2e1-553c-4e3d-acbf-66c34d7dc015",
-    "title": {
-      "ru": "Бюрократия — пример 5",
-      "en": "Бюрократия - Example 5",
-      "de": "Бюрократия - Beispiel 5",
-      "tj": "Бюрократия — намунаи 5"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №5 в категории Бюрократия.",
-      "en": "This is example content for article #5 in category Bureaucracy.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #5 in der Kategorie Bürokratie.",
-      "tj": "Ин мазмуни намунавии мақолаи №5 дар категорияи Бюрократия аст."
-    },
-    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
-    "tags": [
-      "bureaucracy",
-      "бюрократия",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "caf7f387-5325-4154-9ea8-061136d86f73",
-    "title": {
-      "ru": "Жизнь — пример 1",
-      "en": "Жизнь - Example 1",
-      "de": "Жизнь - Beispiel 1",
-      "tj": "Жизнь — намунаи 1"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №1 в категории Жизнь.",
-      "en": "This is example content for article #1 in category Life.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #1 in der Kategorie Leben.",
-      "tj": "Ин мазмуни намунавии мақолаи №1 дар категорияи Зиндагӣ аст."
+      "ru": "## Основы системы\nВ Германии действует **обязательное медицинское страхование** (Krankenversicherung).\n\n### Виды страховки\n- 🏥 **Gesetzliche (GKV)** — государственная.\n- 🩺 **Private (PKV)** — частная.\n\n## Как оформить\n1. При трудоустройстве работодатель регистрирует в GKV.\n2. Студенты и фрилансеры выбирают сами.\n\n## Стоимость\n- В среднем ~14% от зарплаты (делятся пополам с работодателем).\n\n> ℹ️ *Совет: выбирайте Krankenkasse с бонусными программами, например AOK PLUS.*",
+      "en": "## Basics\nGermany has **mandatory health insurance** (Krankenversicherung).\n\n### Types\n- 🏥 **Statutory (GKV)**\n- 🩺 **Private (PKV)**\n\n## Registration\n1. Employers register employees in GKV.\n2. Students and freelancers choose themselves.\n\n## Costs\n- Around 14% of salary, split with employer.\n\n> ℹ️ *Tip: Choose Krankenkassen with bonus programs (e.g., AOK PLUS).*",
+      "de": "## Grundlagen\nDeutschland hat eine **Krankenversicherungspflicht**.\n\n### Arten\n- 🏥 **Gesetzliche (GKV)**\n- 🩺 **Private (PKV)**\n\n## Anmeldung\n1. Arbeitgeber meldet Arbeitnehmer bei GKV an.\n2. Studenten und Selbständige wählen selbst.\n\n## Kosten\n- Rund 14% des Gehalts, geteilt mit dem Arbeitgeber.\n\n> ℹ️ *Tipp: Bonusprogramme der Krankenkassen nutzen (z. B. AOK PLUS).*",
+      "tj": "## Асосҳо\nДар Олмон **суғуртаи ҳатмии тиббӣ** (Krankenversicherung) амал мекунад.\n\n### Навъҳо\n- 🏥 **Давлатӣ (GKV)**\n- 🩺 **Хусусӣ (PKV)**\n\n## Чӣ гуна ба қайд гирифтан\n1. Корфармо шуморо ба GKV ворид мекунад.\n2. Донишҷӯён ва фрилансерҳо худ интихоб мекунанд.\n\n## Арзиш\n- ~14% музди меҳнат, ки бо корфармо тақсим мешавад.\n\n> ℹ️ *Маслиҳат: Krankenkasse бо бонус интихоб кунед (AOK PLUS).*"
     },
     "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
     "tags": [
-      "life",
-      "жизнь",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "0bd129cc-6daa-4de8-b3d7-38304231497d",
-    "title": {
-      "ru": "Жизнь — пример 2",
-      "en": "Жизнь - Example 2",
-      "de": "Жизнь - Beispiel 2",
-      "tj": "Жизнь — намунаи 2"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №2 в категории Жизнь.",
-      "en": "This is example content for article #2 in category Life.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #2 in der Kategorie Leben.",
-      "tj": "Ин мазмуни намунавии мақолаи №2 дар категорияи Зиндагӣ аст."
-    },
-    "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
-    "tags": [
-      "life",
-      "жизнь",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "dc32bf40-b98c-4abe-a5bb-27608a0102d8",
-    "title": {
-      "ru": "Жизнь — пример 3",
-      "en": "Жизнь - Example 3",
-      "de": "Жизнь - Beispiel 3",
-      "tj": "Жизнь — намунаи 3"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №3 в категории Жизнь.",
-      "en": "This is example content for article #3 in category Life.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #3 in der Kategorie Leben.",
-      "tj": "Ин мазмуни намунавии мақолаи №3 дар категорияи Зиндагӣ аст."
-    },
-    "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
-    "tags": [
-      "life",
-      "жизнь",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "a5b50e7a-5343-481e-a1fd-22ec3413c42e",
-    "title": {
-      "ru": "Жизнь — пример 4",
-      "en": "Жизнь - Example 4",
-      "de": "Жизнь - Beispiel 4",
-      "tj": "Жизнь — намунаи 4"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №4 в категории Жизнь.",
-      "en": "This is example content for article #4 in category Life.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #4 in der Kategorie Leben.",
-      "tj": "Ин мазмуни намунавии мақолаи №4 дар категорияи Зиндагӣ аст."
-    },
-    "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
-    "tags": [
-      "life",
-      "жизнь",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "191f158b-7bcc-4d40-b6ad-b862b6daf3e4",
-    "title": {
-      "ru": "Жизнь — пример 5",
-      "en": "Жизнь - Example 5",
-      "de": "Жизнь - Beispiel 5",
-      "tj": "Жизнь — намунаи 5"
-    },
-    "content": {
-      "ru": "Это пример содержимого статьи №5 в категории Жизнь.",
-      "en": "This is example content for article #5 in category Life.",
-      "de": "Dies ist ein Beispielinhalt für Artikel #5 in der Kategorie Leben.",
-      "tj": "Ин мазмуни намунавии мақолаи №5 дар категорияи Зиндагӣ аст."
-    },
-    "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
-    "tags": [
-      "life",
-      "жизнь",
-      "пример"
-    ],
-    "createdAt": "2025-09-18T17:25:26.466061Z",
-    "updatedAt": "2025-09-18T17:25:26.466061Z"
-  },
-  {
-    "id": "80a73c9a-1c60-4f10-9fad-42da177846c0",
-    "title": {
-      "en": "Finance Article #1"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
-    "tags": [
-      "finance"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "e75d2fa2-37ab-45b4-bba2-1408307c1233",
-    "title": {
-      "en": "Finance Article #2"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "11111111-1111-1111-1111-aaaaaaaaaaaa",
-    "tags": [
-      "finance"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "dc5eb983-3f70-4cfe-b75d-ff73e1e1ec6a",
-    "title": {
-      "en": "Work Article #1"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
-    "tags": [
-      "work"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "d2485629-3430-4bbd-b95c-4fdd717ba225",
-    "title": {
-      "en": "Work Article #2"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
-    "tags": [
-      "work"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "86d018b1-5454-42c6-8032-6fb347b774f1",
-    "title": {
-      "en": "Study Article #1"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
-    "tags": [
-      "study"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "859919e6-cb7c-4f8b-b229-547c7155d60a",
-    "title": {
-      "en": "Study Article #2"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
-    "tags": [
-      "study"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "ebc37e69-1a92-466c-a982-53baa3aaf9ef",
-    "title": {
-      "en": "Bureaucracy Article #1"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
-    "tags": [
-      "bureaucracy"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "a4729bb9-073d-448a-9fc3-d7b1a6621495",
-    "title": {
-      "en": "Bureaucracy Article #2"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
-    "tags": [
-      "bureaucracy"
-    ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
-  },
-  {
-    "id": "4574107f-418a-47f5-9346-2fb9babbc591",
-    "title": {
-      "en": "Life Article #1"
-    },
-    "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
-    },
-    "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
-    "tags": [
+      "health",
+      "insurance",
       "life"
     ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
+    "createdAt": "2025-09-20T12:00:00Z",
+    "updatedAt": "2025-09-20T12:00:00Z"
   },
   {
-    "id": "3248bf6a-1e10-4e6d-8c73-d07ba9bce00f",
+    "id": "7a6d0c9b-94d1-46e0-9f77-1111aaaabbbb",
     "title": {
-      "en": "Life Article #2"
+      "ru": "Как поступить в университет в Германии",
+      "en": "How to Apply to a University in Germany",
+      "de": "Wie man sich an einer Universität in Deutschland bewirbt",
+      "tj": "Чӣ гуна ба донишгоҳ дар Олмон дохил шудан мумкин аст"
     },
     "content": {
-      "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc sit amet aliquam tincidunt, nisl nunc tincidunt nunc, eget aliquam nisl nunc sit amet lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vulputate, sapien nec sollicitudin volutpat, lorem sapien aliquam elit, sed dapibus nisi elit sed sapien. Praesent at ipsum at velit facilisis laoreet. Curabitur sit amet eros et nulla tincidunt sodales.\n\n"
+      "ru": "## Основные требования\nЧтобы поступить, нужен **школьный аттестат** или диплом, признанный в Германии (Anabin). Также потребуется знание языка.\n\n## Пошаговый процесс\n1. 🔎 Проверка диплома на сайте Anabin.\n2. ✍️ Подача документов через портал **uni-assist.de**.\n3. 📜 Документы: переводы аттестатов, мотивационное письмо, сертификаты языка.\n4. 🏛️ Получение Zulassungsbescheid (приглашение).\n5. 🎓 Запись на курс.\n\n## Языковые требования\n- Немецкий: TestDaF, DSH или Telc C1 Hochschule.\n- Английский: IELTS/TOEFL для англоязычных программ.\n\n> 📌 *Совет: начинайте подготовку за год — многие вузы закрывают приём весной.*",
+      "en": "## Main requirements\nYou need a **recognized diploma** (check via Anabin) and proof of language proficiency.\n\n## Step-by-step\n1. 🔎 Check your diploma at Anabin.\n2. ✍️ Apply through **uni-assist.de**.\n3. 📜 Documents: translated certificates, motivation letter, language tests.\n4. 🏛️ Receive Zulassungsbescheid (admission letter).\n5. 🎓 Enroll in the university.\n\n## Language requirements\n- German: TestDaF, DSH, or Telc C1 Hochschule.\n- English: IELTS/TOEFL for English programs.\n\n> 📌 *Tip: start preparations a year earlier — many universities close applications in spring.*",
+      "de": "## Voraussetzungen\nBenötigt wird ein **anerkanntes Zeugnis** (über Anabin prüfen) und Sprachnachweise.\n\n## Schritte\n1. 🔎 Zeugnis über Anabin prüfen.\n2. ✍️ Bewerbung über **uni-assist.de**.\n3. 📜 Dokumente: Übersetzungen, Motivationsschreiben, Sprachtests.\n4. 🏛️ Zulassungsbescheid erhalten.\n5. 🎓 Immatrikulation.\n\n## Sprachtests\n- Deutsch: TestDaF, DSH, Telc C1 Hochschule.\n- Englisch: IELTS/TOEFL.\n\n> 📌 *Tipp: Frühzeitig vorbereiten – viele Bewerbungsfristen enden im Frühjahr.*",
+      "tj": "## Талаботи асосӣ\nБарои дохил шудан лозим аст **аттестат ё дипломи эътирофшуда** (Anabin) ва донистани забон.\n\n## Қадамҳо\n1. 🔎 Санҷиши диплом дар Anabin.\n2. ✍️ Пур кардани ариза дар **uni-assist.de**.\n3. 📜 Ҳуҷҷатҳо: тарҷумаи диплом, номаи ҳавасмандӣ, сертификати забон.\n4. 🏛️ Гирифтани Zulassungsbescheid.\n5. 🎓 Сабт шудан ба донишгоҳ.\n\n## Талаботи забон\n- Олмонӣ: TestDaF, DSH, Telc C1 Hochschule.\n- Англисӣ: IELTS/TOEFL.\n\n> 📌 *Маслиҳат: омодагиро як сол пеш оғоз кунед.*"
     },
-    "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
+    "categoryId": "33333333-3333-3333-3333-cccccccccccc",
     "tags": [
-      "life"
+      "study",
+      "university",
+      "application"
     ],
-    "pdfFileName": null,
-    "createdAt": "2025-09-18T18:22:40Z",
-    "updatedAt": "2025-09-18T18:22:40Z"
+    "createdAt": "2025-09-20T14:00:00Z",
+    "updatedAt": "2025-09-20T14:00:00Z"
+  },
+  {
+    "id": "88d5c71b-21b7-4c56-8ef5-2222bbbbcccc",
+    "title": {
+      "ru": "Что такое Anmeldung и как её оформить",
+      "en": "What is Anmeldung and How to Register",
+      "de": "Was ist Anmeldung und wie funktioniert sie",
+      "tj": "Anmeldung чист ва чӣ гуна онро сабт кардан мумкин аст"
+    },
+    "content": {
+      "ru": "## Что такое Anmeldung?\nЭто официальная регистрация по месту жительства в Германии. Без неё невозможно открыть счёт, оформить страховку или заключить контракт.\n\n## Как оформить\n1. 📍 Найдите Bürgeramt в вашем городе.\n2. 📑 Возьмите с собой: паспорт + договор аренды (Wohnungsgeberbestätigung).\n3. 📝 Заполните форму Anmeldung.\n4. ✔️ Получите **Meldebescheinigung** — справку о регистрации.\n\n## Сроки\n- Нужно зарегистрироваться в течение **14 дней** после переезда.\n\n> ⚠️ *Штрафы возможны при опоздании.*",
+      "en": "## What is Anmeldung?\nIt is the official registration of residence in Germany. Without it you cannot open a bank account, get insurance, or sign a contract.\n\n## How to register\n1. 📍 Visit Bürgeramt.\n2. 📑 Bring passport + rental contract (Wohnungsgeberbestätigung).\n3. 📝 Fill in Anmeldung form.\n4. ✔️ Receive **Meldebescheinigung**.\n\n## Deadlines\n- Registration required within **14 days** of moving.\n\n> ⚠️ *Late registration can lead to fines.*",
+      "de": "## Was ist Anmeldung?\nDie Anmeldung ist die offizielle Wohnsitzmeldung in Deutschland. Ohne sie kann man kein Konto eröffnen oder Versicherung abschließen.\n\n## Ablauf\n1. 📍 Zum Bürgeramt gehen.\n2. 📑 Reisepass + Mietvertrag (Wohnungsgeberbestätigung) mitnehmen.\n3. 📝 Formular ausfüllen.\n4. ✔️ **Meldebescheinigung** erhalten.\n\n## Frist\n- Innerhalb von **14 Tagen** nach Umzug.\n\n> ⚠️ *Bei Verspätung droht ein Bußgeld.*",
+      "tj": "## Anmeldung чист?\nИн бақайдгирии расмии ҷойи истиқомат дар Олмон аст. Бе он кушодани ҳисоб, суғурта ва шартнома имконнопазир аст.\n\n## Чӣ гуна сабт кардан\n1. 📍 Ба Bürgeramt муроҷиат кунед.\n2. 📑 Паспорт + шартномаи иҷора (Wohnungsgeberbestätigung) биёред.\n3. 📝 Формаро пур кунед.\n4. ✔️ **Meldebescheinigung**-ро гиред.\n\n## Муҳлат\n- Дар давоми **14 рӯз** пас аз кӯчидан сабт кунед.\n\n> ⚠️ *Барои таъхир ҷарима мешавад.*"
+    },
+    "categoryId": "44444444-4444-4444-4444-dddddddddddd",
+    "tags": [
+      "bureaucracy",
+      "registration",
+      "anmeldung"
+    ],
+    "createdAt": "2025-09-20T15:00:00Z",
+    "updatedAt": "2025-09-20T15:00:00Z"
   }
 ]
