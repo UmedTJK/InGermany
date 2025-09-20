@@ -2,8 +2,6 @@
 //  ArticleRow.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
 
 import SwiftUI
 
@@ -11,8 +9,7 @@ struct ArticleRow: View {
     let article: Article
     let favoritesManager: FavoritesManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var categoriesStore: CategoriesStore
-    
+
     private var isFavorite: Bool {
         favoritesManager.isFavorite(article: article)
     }
@@ -25,31 +22,32 @@ struct ArticleRow: View {
             )
         } label: {
             HStack(alignment: .top, spacing: 12) {
-                Image("Logo")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(8)
-                    .clipped()
+                // 🔹 Мини-иконка категории
+                if let category = CategoriesStore.shared.category(for: article.categoryId) {
+                    ZStack {
+                        Circle()
+                            .fill(Color(hex: category.colorHex) ?? .blue)
+                            .frame(width: 42, height: 42)
+                        Image(systemName: category.icon)
+                            .foregroundColor(.white)
+                            .font(.system(size: 18))
+                    }
+                }
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(article.localizedTitle(for: selectedLanguage))
                         .font(.headline)
                         .foregroundColor(.primary)
                         .lineLimit(2)
 
-                    HStack(spacing: 6) {
-                        Image(systemName: "folder")
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
+                    // 🔹 Метаданные (категория + дата + бейджи)
+                    ArticleMetaView(article: article)
 
-                        Text(
-                            categoriesStore.categoryName(for: article.categoryId,
-                                                         language: selectedLanguage)
-                        )
+                    // 🔹 Анонс
+                    Text(article.localizedContent(for: selectedLanguage))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    }
+                        .lineLimit(2)
                 }
 
                 Spacer()

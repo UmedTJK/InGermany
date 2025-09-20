@@ -14,24 +14,40 @@ struct CategoriesView: View {
                         category: category,
                         articles: articles,
                         favoritesManager: favoritesManager
-                        // selectedLanguage больше не передаётся
                     )
                 } label: {
-                    HStack {
-                        Image(systemName: category.icon)
-                            .foregroundColor(.blue)
+                    HStack(spacing: 12) {
+                        // 🔹 Цветная иконка категории
+                        ZStack {
+                            Circle()
+                                .fill(Color(hex: category.colorHex) ?? .blue)
+                                .frame(width: 32, height: 32)
+                            Image(systemName: category.icon)
+                                .foregroundColor(.white)
+                                .font(.system(size: 16))
+                        }
+
                         Text(category.localizedName(for: selectedLanguage))
+                            .font(.headline)
+                            .foregroundColor(.primary)
                     }
+                    .padding(.vertical, 6)
                 }
             }
             .navigationTitle(getTranslation(key: "Категории", language: selectedLanguage))
+            .listStyle(PlainListStyle())
         }
     }
 
     // Локализация заголовка
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
-            "Категории": ["ru": "Категории", "en": "Categories", "de": "Kategorien", "tj": "Категорияҳо"]
+            "Категории": [
+                "ru": "Категории",
+                "en": "Categories",
+                "de": "Kategorien",
+                "tj": "Категорияҳо"
+            ]
         ]
         return translations[key]?[language] ?? key
     }
