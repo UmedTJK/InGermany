@@ -14,24 +14,29 @@ struct CategoriesView: View {
                         category: category,
                         articles: articles,
                         favoritesManager: favoritesManager
-                        // selectedLanguage больше не передаётся
                     )
                 } label: {
                     HStack {
                         Image(systemName: category.icon)
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color(hex: category.colorHex) ?? .blue)
                         Text(category.localizedName(for: selectedLanguage))
                     }
                 }
             }
             .navigationTitle(getTranslation(key: "Категории", language: selectedLanguage))
+            .listStyle(PlainListStyle()) // чтобы было без лишнего оформления
         }
     }
 
     // Локализация заголовка
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
-            "Категории": ["ru": "Категории", "en": "Categories", "de": "Kategorien", "tj": "Категорияҳо"]
+            "Категории": [
+                "ru": "Категории",
+                "en": "Categories",
+                "de": "Kategorien",
+                "tj": "Категорияҳо"
+            ]
         ]
         return translations[key]?[language] ?? key
     }

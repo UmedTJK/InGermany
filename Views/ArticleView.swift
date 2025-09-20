@@ -239,7 +239,7 @@ struct ArticleView: View {
     NavigationView {
         ArticleView(
             article: Article.sampleArticle,
-            allArticles: DataService.shared.loadArticles(),
+            allArticles: [Article.sampleArticle], // ✅ мок-данные вместо async вызова,
             favoritesManager: FavoritesManager()
         )
         .environmentObject(CategoriesStore.shared)

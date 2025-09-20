@@ -7,7 +7,8 @@
       "de": "Finanzen",
       "tj": "Молия"
     },
-    "icon": "banknote"
+    "icon": "banknote",
+    "colorHex": "#4A90E2"
   },
   {
     "id": "22222222-2222-2222-2222-bbbbbbbbbbbb",
@@ -17,7 +18,8 @@
       "de": "Arbeit",
       "tj": "Кор"
     },
-    "icon": "briefcase"
+    "icon": "briefcase",
+    "colorHex": "#27AE60"
   },
   {
     "id": "33333333-3333-3333-3333-cccccccccccc",
@@ -27,7 +29,8 @@
       "de": "Studium",
       "tj": "Таҳсилот"
     },
-    "icon": "graduationcap"
+    "icon": "graduationcap",
+    "colorHex": "#F39C12"
   },
   {
     "id": "44444444-4444-4444-4444-dddddddddddd",
@@ -37,7 +40,8 @@
       "de": "Bürokratie",
       "tj": "Бюрократия"
     },
-    "icon": "doc.text"
+    "icon": "doc.text",
+    "colorHex": "#8E44AD"
   },
   {
     "id": "55555555-5555-5555-5555-eeeeeeeeeeee",
@@ -47,6 +51,7 @@
       "de": "Leben",
       "tj": "Зиндагӣ"
     },
-    "icon": "house"
+    "icon": "house",
+    "colorHex": "#E74C3C"
   }
 ]

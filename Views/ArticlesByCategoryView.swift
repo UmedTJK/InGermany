@@ -35,14 +35,15 @@ struct ArticlesByCategoryView: View {
 }
 
 #Preview {
-    // Для Preview оставляем синхронную версию или используем mock данные
     ArticlesByCategoryView(
         category: Category(
             id: "11111111-1111-1111-1111-aaaaaaaaaaaa",
             name: ["ru": "Финансы", "en": "Finance", "de": "Finanzen", "tj": "Молия"],
-            icon: "banknote"
+            icon: "banknote",
+            colorHex: "#4A90E2"   // ✅ добавили цвет
         ),
         articles: [], // Пустой массив для preview
         favoritesManager: FavoritesManager()
     )
 }
+
