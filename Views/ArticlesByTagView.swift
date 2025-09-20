@@ -5,20 +5,13 @@
 //  Created by SUM TJK on 14.09.25.
 //
 
-//
-//  ArticlesByTagView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 15.09.25.
-//
-
 import SwiftUI
 
 struct ArticlesByTagView: View {
     let tag: String
     let articles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
-    let selectedLanguage: String
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru" // Добавляем AppStorage
 
     var body: some View {
         List(filteredArticles) { article in
@@ -44,7 +37,6 @@ struct ArticlesByTagView: View {
     ArticlesByTagView(
         tag: "финансы",
         articles: [Article.sampleArticle],
-        favoritesManager: FavoritesManager(),
-        selectedLanguage: "ru"
+        favoritesManager: FavoritesManager()
     )
 }
