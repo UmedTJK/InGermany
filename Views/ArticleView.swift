@@ -5,6 +5,11 @@
 //  Created by SUM TJK on 13.09.25.
 //
 
+//
+//  ArticleView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct ArticleView: View {
@@ -18,9 +23,7 @@ struct ArticleView: View {
     @StateObject private var progressTracker = ReadingProgressTracker()
     @StateObject private var textSizeManager = TextSizeManager.shared
     @State private var showTextSizePanel = false
-    
-    @EnvironmentObject private var categoriesStore: CategoriesStore
-    
+
     private var relatedArticles: [Article] {
         allArticles
             .filter { $0.categoryId == article.categoryId && $0.id != article.id }
@@ -32,7 +35,7 @@ struct ArticleView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    // 🔹 Прогресс-бар чтения
+                    // 🔹 Прогресс-бар
                     ReadingProgressBar(
                         progress: progressTracker.scrollProgress,
                         height: 6,
@@ -40,6 +43,15 @@ struct ArticleView: View {
                     )
                     .padding(.bottom, 8)
                     
+                    // 🔹 Заголовок
+                    Text(article.localizedTitle(for: selectedLanguage))
+                        .font(.title)
+                        .bold()
+                        .id("articleTop")
+
+                    // 🔹 Метаданные
+                    ArticleMetaView(article: article)
+
                     // 🔹 Время чтения и индикаторы
                     HStack {
                         Image(systemName: "clock")
@@ -61,26 +73,6 @@ struct ArticleView: View {
                                 .foregroundColor(.green)
                                 .font(.subheadline)
                         }
-                    }
-                    .padding(.bottom, 8)
-
-                    // 🔹 Заголовок
-                    Text(article.localizedTitle(for: selectedLanguage))
-                        .font(.title)
-                        .bold()
-                        .id("articleTop")
-
-                    // 🔹 Категория (через CategoriesStore)
-                    HStack(spacing: 6) {
-                        Image(systemName: "folder")
-                            .foregroundColor(.blue)
-
-                        Text(
-                            categoriesStore.categoryName(for: article.categoryId,
-                                                         language: selectedLanguage)
-                        )
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
                     }
 
                     // 🔹 Контент
@@ -191,11 +183,6 @@ struct ArticleView: View {
             .onAppear {
                 readingTracker.startReading(articleId: article.id)
                 progressTracker.reset()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation {
-                        proxy.scrollTo("articleTop", anchor: .top)
-                    }
-                }
             }
             .onDisappear {
                 readingTracker.finishReading()
@@ -209,13 +196,13 @@ struct ArticleView: View {
             "Оцените статью": [
                 "ru": "Оцените статью",
                 "en": "Rate this article",
-                "de": "Bewerten Sie diesen Artikel",
-                "tj": "Мақоларо баҳо диҳед"
+                "de": "Artikel bewerten",
+                "tj": "Мақоларо баҳогузорӣ кунед"
             ],
             "Поделитесь этой статьёй": [
                 "ru": "Поделитесь этой статьёй",
                 "en": "Share this article",
-                "de": "Teilen Sie diesen Artikel",
+                "de": "Artikel teilen",
                 "tj": "Ин мақоларо мубодила кунед"
             ],
             "Поделиться статьёй": [
@@ -223,12 +210,6 @@ struct ArticleView: View {
                 "en": "Share article",
                 "de": "Artikel teilen",
                 "tj": "Мақоларо мубодила кунед"
-            ],
-            "Похожие статьи": [
-                "ru": "Похожие статьи",
-                "en": "Related articles",
-                "de": "Ähnliche Artikel",
-                "tj": "Мақолаҳои монанд"
             ]
         ]
         return translations[key]?[language] ?? key

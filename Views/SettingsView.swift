@@ -2,14 +2,14 @@
 //  SettingsView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
 
 import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    @AppStorage("useRelativeDates") private var useRelativeDates: Bool = true
+    
     @ObservedObject private var readingHistoryManager = ReadingHistoryManager.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
     
@@ -56,6 +56,14 @@ struct SettingsView: View {
                                     .foregroundColor(.secondary)
                             }
                         }
+                    }
+                }
+                
+                // Формат даты
+                Section(header: Text(getTranslation(key: "Формат даты", language: selectedLanguage))) {
+                    Toggle(isOn: $useRelativeDates) {
+                        Label(getTranslation(key: "Относительные даты", language: selectedLanguage),
+                              systemImage: "calendar")
                     }
                 }
                 
@@ -112,7 +120,6 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 4)
                     
-                    // Навигационная кнопка на экран "О проекте"
                     NavigationLink(destination: AboutView()) {
                         Label(getTranslation(key: "Подробнее о проекте", language: selectedLanguage), systemImage: "info.circle")
                     }
@@ -144,6 +151,8 @@ struct SettingsView: View {
             "Внешний вид": ["ru": "Внешний вид", "en": "Appearance", "de": "Erscheinungsbild", "tj": "Намуди зоҳирӣ"],
             "Тёмная тема": ["ru": "Тёмная тема", "en": "Dark theme", "de": "Dunkles Theme", "tj": "Мавзӯи торик"],
             "Размер текста": ["ru": "Размер текста", "en": "Text Size", "de": "Textgröße", "tj": "Андозаи матн"],
+            "Формат даты": ["ru": "Формат даты", "en": "Date format", "de": "Datumsformat", "tj": "Формати сана"],
+            "Относительные даты": ["ru": "Относительные даты", "en": "Relative dates", "de": "Relative Daten", "tj": "Санаҳои нисбӣ"],
             "Статистика чтения": ["ru": "Статистика чтения", "en": "Reading Statistics", "de": "Lese-Statistiken", "tj": "Омори хондан"],
             "Прочитано статей": ["ru": "Прочитано статей", "en": "Articles read", "de": "Gelesene Artikel", "tj": "Мақолаҳои хондашуда"],
             "Общее время чтения": ["ru": "Общее время чтения", "en": "Total reading time", "de": "Gesamte Lesezeit", "tj": "Вақти умумии хондан"],

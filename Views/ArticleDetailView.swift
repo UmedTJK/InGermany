@@ -2,8 +2,6 @@
 //  ArticleDetailView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 14.09.25.
-//
 
 import SwiftUI
 
@@ -15,20 +13,13 @@ struct ArticleDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-
-                // 🔹 Заглавное изображение (временно — логотип проекта)
-                Image("Logo")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 200)
-                    .clipped()
-                    .cornerRadius(12)
-                    .padding(.bottom, 4)
-
-                // 🔹 Заголовок статьи
+                // 🔹 Заголовок
                 Text(article.localizedTitle(for: selectedLanguage))
                     .font(.title)
                     .bold()
+
+                // 🔹 Метаданные
+                ArticleMetaView(article: article)
 
                 // 🔹 Теги
                 if !article.tags.isEmpty {
@@ -46,12 +37,12 @@ struct ArticleDetailView: View {
                     }
                 }
 
-                // 🔹 Контент статьи
+                // 🔹 Контент
                 Text(article.localizedContent(for: selectedLanguage))
                     .font(.body)
                     .foregroundColor(.primary)
 
-                // 🔹 Кнопка экспорта в PDF
+                // 🔹 Экспорт в PDF
                 Button {
                     ExportToPDF.export(
                         title: article.localizedTitle(for: selectedLanguage),
@@ -68,7 +59,7 @@ struct ArticleDetailView: View {
                         .cornerRadius(10)
                 }
 
-                // 🔹 Кнопка "Открыть PDF", если файл указан
+                // 🔹 Открытие PDF
                 if let pdfFileName = article.pdfFileName {
                     NavigationLink(destination: PDFViewer(fileName: pdfFileName)) {
                         Label("Открыть PDF", systemImage: "doc.richtext")

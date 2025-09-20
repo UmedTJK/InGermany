@@ -16,15 +16,26 @@ struct CategoriesView: View {
                         favoritesManager: favoritesManager
                     )
                 } label: {
-                    HStack {
-                        Image(systemName: category.icon)
-                            .foregroundColor(Color(hex: category.colorHex) ?? .blue)
+                    HStack(spacing: 12) {
+                        // 🔹 Цветная иконка категории
+                        ZStack {
+                            Circle()
+                                .fill(Color(hex: category.colorHex) ?? .blue)
+                                .frame(width: 32, height: 32)
+                            Image(systemName: category.icon)
+                                .foregroundColor(.white)
+                                .font(.system(size: 16))
+                        }
+
                         Text(category.localizedName(for: selectedLanguage))
+                            .font(.headline)
+                            .foregroundColor(.primary)
                     }
+                    .padding(.vertical, 6)
                 }
             }
             .navigationTitle(getTranslation(key: "Категории", language: selectedLanguage))
-            .listStyle(PlainListStyle()) // чтобы было без лишнего оформления
+            .listStyle(PlainListStyle())
         }
     }
 
