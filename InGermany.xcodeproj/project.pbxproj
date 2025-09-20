@@ -19,11 +19,11 @@
 		AD6C1E142E76C73D00EA59A7 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E132E76C73800EA59A7 /* Animations.swift */; };
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
 		AD732DED2E79D674009855C3 /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */; };
-		AD74545F2E7DC9C7001FC732 /* AI_CONTEXT2.md in Resources */ = {isa = PBXBuildFile; fileRef = AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */; };
 		AD7454632E7E617F001FC732 /* TextSizeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7454622E7E617C001FC732 /* TextSizeManager.swift */; };
 		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
 		AD74546E2E7E8E6A001FC732 /* CategoriesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */; };
 		AD7454732E7E9B45001FC732 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454722E7E9B43001FC732 /* CHANGELOG.md */; };
+		AD7454752E7EC9CF001FC732 /* PROMPTS_FOR_AI_AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */; };
@@ -43,11 +43,11 @@
 		AD6C1E132E76C73800EA59A7 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
-		AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT2.md; sourceTree = "<group>"; };
 		AD7454622E7E617C001FC732 /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
 		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesStore.swift; sourceTree = "<group>"; };
 		AD7454722E7E9B43001FC732 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROMPTS_FOR_AI_AGENTS.md; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
 		AD8552C52E75B471003D3826 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -96,8 +96,8 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */,
 				AD7454722E7E9B43001FC732 /* CHANGELOG.md */,
-				AD74545E2E7DC9BF001FC732 /* AI_CONTEXT2.md */,
 				AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */,
 				AD38F5882E76C15000E36EA4 /* update.sh */,
 				AD38F5862E76899600E36EA4 /* README.md */,
@@ -233,7 +233,7 @@
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
 				AD732DED2E79D674009855C3 /* AI_CONTEXT.md in Resources */,
-				AD74545F2E7DC9C7001FC732 /* AI_CONTEXT2.md in Resources */,
+				AD7454752E7EC9CF001FC732 /* PROMPTS_FOR_AI_AGENTS.md in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
 				AD38F5892E76C15600E36EA4 /* update.sh in Resources */,
 			);
