@@ -24,6 +24,7 @@
 		AD74546E2E7E8E6A001FC732 /* CategoriesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */; };
 		AD7454732E7E9B45001FC732 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454722E7E9B43001FC732 /* CHANGELOG.md */; };
 		AD7454752E7EC9CF001FC732 /* PROMPTS_FOR_AI_AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */; };
+		AD7454FB2E7EEEF6001FC732 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */; };
@@ -48,6 +49,7 @@
 		AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesStore.swift; sourceTree = "<group>"; };
 		AD7454722E7E9B43001FC732 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROMPTS_FOR_AI_AGENTS.md; sourceTree = "<group>"; };
+		AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
 		AD8552C52E75B471003D3826 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 		AD8552C92E75B506003D3826 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */,
 				AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */,
 				AD7454622E7E617C001FC732 /* TextSizeManager.swift */,
 				AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */,
@@ -247,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */,
+				AD7454FB2E7EEEF6001FC732 /* Color+Hex.swift in Sources */,
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
 				AD6275112E7BB377003D7FA9 /* ExportToPDF.swift in Sources */,
 				AD6275122E7BB377003D7FA9 /* ProgressBar.swift in Sources */,
