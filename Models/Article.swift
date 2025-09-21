@@ -2,7 +2,7 @@
 //  Article.swift
 //  InGermany
 //
-//  Updated with dates and reading time functionality
+//  Updated with centralized date formatting via DateFormatterUtils
 //
 
 import Foundation
@@ -45,7 +45,7 @@ struct Article: Identifiable, Codable, Hashable {
         case id, title, content, categoryId, tags, pdfFileName, createdAt, updatedAt
     }
     
-    // MARK: - Custom Decoding (для совместимости со старыми JSON)
+    // MARK: - Custom Decoding (совместимость со старыми JSON)
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -57,7 +57,7 @@ struct Article: Identifiable, Codable, Hashable {
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         pdfFileName = try container.decodeIfPresent(String.self, forKey: .pdfFileName)
         
-        // Пытаемся декодировать даты (если их нет в JSON, ставим nil)
+        // Пытаемся декодировать даты
         if let createdAtString = try container.decodeIfPresent(String.self, forKey: .createdAt) {
             createdAt = ISO8601DateFormatter().date(from: createdAtString)
         } else {
@@ -83,7 +83,6 @@ struct Article: Identifiable, Codable, Hashable {
         try container.encode(tags, forKey: .tags)
         try container.encodeIfPresent(pdfFileName, forKey: .pdfFileName)
         
-        // Кодируем даты в ISO8601 формат
         if let createdAt = createdAt {
             try container.encode(ISO8601DateFormatter().string(from: createdAt), forKey: .createdAt)
         }
@@ -112,129 +111,49 @@ struct Article: Identifiable, Codable, Hashable {
     func localizedContent(for language: String) -> String {
         content[language] ?? content["en"] ?? content.values.first ?? "No content"
     }
-    
-    // MARK: - Date Formatting
-    
+}
+
+// MARK: - Date Formatting (delegated to Utils)
+
+extension Article {
     func formattedCreatedDate(for language: String = "ru") -> String {
-        guard let createdAt = createdAt else {
-            return getTranslation(key: "Дата неизвестна", language: language)
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        
-        switch language {
-        case "en":
-            formatter.locale = Locale(identifier: "en_US")
-        case "de":
-            formatter.locale = Locale(identifier: "de_DE")
-        case "tj":
-            formatter.locale = Locale(identifier: "ru_RU") // Используем русский формат
-        default:
-            formatter.locale = Locale(identifier: "ru_RU")
-        }
-        
-        return formatter.string(from: createdAt)
+        DateFormatterUtils.formattedDate(createdAt, language: language)
     }
     
     func formattedUpdatedDate(for language: String = "ru") -> String {
-        guard let updatedAt = updatedAt else {
-            return getTranslation(key: "Не обновлялась", language: language)
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        
-        switch language {
-        case "en":
-            formatter.locale = Locale(identifier: "en_US")
-        case "de":
-            formatter.locale = Locale(identifier: "de_DE")
-        case "tj":
-            formatter.locale = Locale(identifier: "ru_RU")
-        default:
-            formatter.locale = Locale(identifier: "ru_RU")
-        }
-        
-        return formatter.string(from: updatedAt)
+        DateFormatterUtils.formattedDate(updatedAt, language: language)
     }
     
-    // Относительное время (например, "2 дня назад")
     func relativeCreatedDate(for language: String = "ru") -> String {
-        guard let createdAt = createdAt else {
-            return getTranslation(key: "Дата неизвестна", language: language)
-        }
-        
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        
-        switch language {
-        case "en":
-            formatter.locale = Locale(identifier: "en_US")
-        case "de":
-            formatter.locale = Locale(identifier: "de_DE")
-        case "tj":
-            formatter.locale = Locale(identifier: "ru_RU")
-        default:
-            formatter.locale = Locale(identifier: "ru_RU")
-        }
-        
-        return formatter.localizedString(for: createdAt, relativeTo: Date())
-    }
-    
-    // MARK: - Content Analysis
-    
-    var wordCount: Int {
-        let allContent = content.values.joined(separator: " ")
-        return ReadingTimeCalculator.estimateReadingTime(for: allContent) * 200 // примерная оценка
-    }
-    
-    var isNew: Bool {
-        guard let createdAt = createdAt else { return false }
-        return Date().timeIntervalSince(createdAt) < 7 * 24 * 60 * 60 // 7 дней
-    }
-    
-    var isUpdatedRecently: Bool {
-        guard let updatedAt = updatedAt else { return false }
-        return Date().timeIntervalSince(updatedAt) < 3 * 24 * 60 * 60 // 3 дня
-    }
-    
-    // MARK: - Helper Methods
-    
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Дата неизвестна": [
-                "ru": "Дата неизвестна",
-                "en": "Date unknown",
-                "de": "Datum unbekannt",
-                "tj": "Сана номаълум"
-            ],
-            "Не обновлялась": [
-                "ru": "Не обновлялась",
-                "en": "Not updated",
-                "de": "Nicht aktualisiert",
-                "tj": "Навсозӣ нашуд"
-            ]
-        ]
-        return translations[key]?[language] ?? key
+        DateFormatterUtils.relativeDate(createdAt, language: language)
     }
 }
 
 // MARK: - Reading Time Extension
 
 extension Article {
-    /// Рассчитывает время чтения для текущей статьи на указанном языке
     func readingTime(for language: String) -> Int {
         let content = localizedContent(for: language)
         return ReadingTimeCalculator.estimateReadingTime(for: content, language: language)
     }
     
-    /// Форматированное время чтения
     func formattedReadingTime(for language: String) -> String {
         let minutes = readingTime(for: language)
         return ReadingTimeCalculator.formatReadingTime(minutes, language: language)
+    }
+}
+
+// MARK: - Content Analysis
+
+extension Article {
+    var isNew: Bool {
+        guard let createdAt = createdAt else { return false }
+        return Date().timeIntervalSince(createdAt) < 7 * 24 * 60 * 60
+    }
+    
+    var isUpdatedRecently: Bool {
+        guard let updatedAt = updatedAt else { return false }
+        return Date().timeIntervalSince(updatedAt) < 3 * 24 * 60 * 60
     }
 }
 
@@ -249,9 +168,9 @@ extension Article {
             "de": "Finanzen in Deutschland"
         ],
         content: [
-            "ru": "Все о финансах и банковской системе в Германии. Как открыть счет, получить кредит и управлять своими финансами.",
-            "en": "All about finance and the banking system in Germany. How to open an account, get credit and manage your finances.",
-            "de": "Alles über Finanzen und das Bankensystem in Deutschland. Wie Sie ein Konto eröffnen, einen Kredit erhalten und Ihre Finanzen verwalten."
+            "ru": "Все о финансах и банковской системе в Германии...",
+            "en": "All about finance and the banking system in Germany...",
+            "de": "Alles über Finanzen und das Bankensystem in Deutschland..."
         ],
         categoryId: "11111111-1111-1111-1111-aaaaaaaaaaaa",
         tags: ["финансы", "банк", "кредит"],
@@ -261,22 +180,6 @@ extension Article {
     )
     
     static let sampleArticles: [Article] = [
-        sampleArticle,
-        Article(
-            id: "22222222-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
-            title: [
-                "ru": "Поиск работы в Германии",
-                "en": "Job search in Germany",
-                "de": "Jobsuche in Deutschland"
-            ],
-            content: [
-                "ru": "Подробное руководство по поиску работы в Германии. Составление резюме, собеседования и трудовые права.",
-                "en": "Complete guide to finding work in Germany. CV writing, interviews and labor rights.",
-                "de": "Vollständiger Leitfaden zur Arbeitssuche in Deutschland. Lebenslauf schreiben, Interviews und Arbeitsrechte."
-            ],
-            categoryId: "22222222-2222-2222-2222-bbbbbbbbbbbb",
-            tags: ["работа", "резюме", "собеседование"],
-            createdAt: Calendar.current.date(byAdding: .day, value: -10, to: Date())
-        )
+        sampleArticle
     ]
 }

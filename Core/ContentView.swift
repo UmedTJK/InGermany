@@ -2,8 +2,6 @@
 //  ContentView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
 
 import SwiftUI
 
@@ -11,8 +9,10 @@ struct ContentView: View {
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    @EnvironmentObject private var categoriesStore: CategoriesStore
     @StateObject private var favoritesManager = FavoritesManager()
+    
+    let articles: [Article]
+    let categories: [Category]
     
     var body: some View {
         TabView {
@@ -22,8 +22,8 @@ struct ContentView: View {
                 }
             
             CategoriesView(
-                categories: categoriesStore.categories,
-                articles: categoriesStore.articles,
+                categories: categories,
+                articles: articles,
                 favoritesManager: favoritesManager
             )
             .tabItem {
@@ -32,7 +32,7 @@ struct ContentView: View {
             
             SearchView(
                 favoritesManager: favoritesManager,
-                articles: categoriesStore.articles
+                articles: articles
             )
             .tabItem {
                 Label("Search", systemImage: "magnifyingglass")
@@ -40,7 +40,7 @@ struct ContentView: View {
             
             FavoritesView(
                 favoritesManager: favoritesManager,
-                articles: categoriesStore.articles
+                articles: articles
             )
             .tabItem {
                 Label("Favorites", systemImage: "star.fill")

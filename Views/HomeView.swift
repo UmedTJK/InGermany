@@ -2,117 +2,195 @@
 //  HomeView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
 
 import SwiftUI
 
 struct HomeView: View {
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @ObservedObject var favoritesManager: FavoritesManager
-    @ObservedObject private var readingHistoryManager = ReadingHistoryManager.shared
-
-    @EnvironmentObject private var categoriesStore: CategoriesStore
-
     @State private var articles: [Article] = []
-    @State private var isLoading = true
-    @State private var dataSource: String = "unknown"
+    @State private var categories: [Category] = []
 
-    @State private var isShowingRandomArticle = false
-    @State private var randomArticle: Article?
-
-    // Категории берём из CategoriesStore
-    private var allCategories: [Category] {
-        categoriesStore.categories
-    }
-
-    private var articlesByCategory: [String: [Article]] {
-        Dictionary(grouping: articles) { $0.categoryId }
-    }
+    @ObservedObject var favoritesManager = FavoritesManager()
+    @EnvironmentObject private var categoriesStore: CategoriesStore
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // Полоска источника данных (network/cache/local)
-                Rectangle()
-                    .fill(getDataSourceColor())
-                    .frame(height: 3)
-                    .frame(maxWidth: .infinity)
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 28) {
+                    usefulToolsSection
+                    recentlyReadSection
+                    favoritesSection
 
-                Group {
-                    if isLoading {
-                        ProgressView("Загрузка данных...")
-                            .progressViewStyle(CircularProgressViewStyle())
-                    } else {
-                        ScrollView {
-                            VStack(alignment: .leading, spacing: 28) {
-                                usefulToolsSection
-                                recentlyReadSection
-                                favoritesSection
+                    // 🔹 Каждая категория отдельным блоком
+                    categorySection(title: "Финансы", categoryId: "11111111-1111-1111-1111-aaaaaaaaaaaa")
+                    categorySection(title: "Работа", categoryId: "22222222-2222-2222-2222-bbbbbbbbbbbb")
+                    categorySection(title: "Учёба", categoryId: "33333333-3333-3333-3333-cccccccccccc")
+                    categorySection(title: "Бюрократия", categoryId: "44444444-4444-4444-4444-dddddddddddd")
+                    categorySection(title: "Жизнь", categoryId: "55555555-5555-5555-5555-eeeeeeeeeeee")
 
-                                ForEach(allCategories, id: \.id) { category in
-                                    if let categoryArticles = articlesByCategory[category.id],
-                                       !categoryArticles.isEmpty {
-                                        categorySection(category: category, articles: categoryArticles)
-                                    }
-                                }
-
-                                allArticlesSection
-                            }
-                            .padding(.vertical)
-                        }
-                        .refreshable {
-                            await refreshData()
-                        }
-                    }
+                    allArticlesSection
                 }
+                .padding(.vertical, 16)
             }
             .navigationTitle(getTranslation(key: "Главная", language: selectedLanguage))
-            .background(Color(.systemGroupedBackground))
-            .navigationDestination(isPresented: $isShowingRandomArticle) {
-                if let randomArticle {
-                    ArticleView(
-                        article: randomArticle,
-                        allArticles: articles,
-                        favoritesManager: favoritesManager
-                    )
-                }
-            }
             .task {
-                await loadData()
+                articles = await DataService.shared.loadArticles()
+                categories = await DataService.shared.loadCategories()
             }
         }
     }
 
-    // MARK: - Data loading
+    // MARK: - Недавно прочитанное
+    private var recentlyReadSection: some View {
+        let readArticles = articles
+            .filter { ReadingHistoryManager.shared.isRead($0.id) }
+            .sorted { ($0.createdAt ?? Date.distantPast) > ($1.createdAt ?? Date.distantPast) }
 
-    private func loadData() async {
-        articles = await DataService.shared.loadArticles()
-        let sources = await DataService.shared.getLastDataSource()
-        dataSource = sources["articles"] ?? "unknown"
-        isLoading = false
+        return VStack(alignment: .leading, spacing: 12) {
+            Text(getTranslation(key: "Недавно прочитанное", language: selectedLanguage))
+                .font(.headline)
+                .padding(.horizontal)
+
+            if readArticles.isEmpty {
+                Text(getTranslation(key: "Нет статей", language: selectedLanguage))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(readArticles) { article in
+                            NavigationLink(
+                                destination: ArticleView(
+                                    article: article,
+                                    allArticles: articles,
+                                    favoritesManager: favoritesManager
+                                )
+                            ) {
+                                FavoriteCard(article: article, favoritesManager: favoritesManager)
+                                    .environmentObject(categoriesStore)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+        }
     }
 
-    private func refreshData() async {
-        isLoading = true
-        await DataService.shared.refreshData()
-        articles = await DataService.shared.loadArticles()
-        let sources = await DataService.shared.getLastDataSource()
-        dataSource = sources["articles"] ?? "unknown"
-        isLoading = false
+    // MARK: - Избранное
+    private var favoritesSection: some View {
+        let favs = favoritesManager.favoriteArticles(from: articles)
+            .sorted { ($0.createdAt ?? Date.distantPast) > ($1.createdAt ?? Date.distantPast) }
+
+        return VStack(alignment: .leading, spacing: 12) {
+            Text(getTranslation(key: "Избранное", language: selectedLanguage))
+                .font(.headline)
+                .padding(.horizontal)
+
+            if favs.isEmpty {
+                Text(getTranslation(key: "Нет статей", language: selectedLanguage))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(favs) { article in
+                            NavigationLink(
+                                destination: ArticleView(
+                                    article: article,
+                                    allArticles: articles,
+                                    favoritesManager: favoritesManager
+                                )
+                            ) {
+                                FavoriteCard(article: article, favoritesManager: favoritesManager)
+                                    .environmentObject(categoriesStore)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+        }
     }
 
-    private func getDataSourceColor() -> Color {
-        switch dataSource {
-        case "network": return .green
-        case "memory_cache": return .blue
-        case "local": return .orange
-        default: return .gray
+    // MARK: - Секция категории
+    private func categorySection(title: String, categoryId: String) -> some View {
+        let filtered = articles
+            .filter { $0.categoryId == categoryId }
+            .sorted { ($0.createdAt ?? Date.distantPast) > ($1.createdAt ?? Date.distantPast) }
+
+        return VStack(alignment: .leading, spacing: 12) {
+            Text(getTranslation(key: title, language: selectedLanguage))
+                .font(.headline)
+                .padding(.horizontal)
+
+            if filtered.isEmpty {
+                Text(getTranslation(key: "Нет статей", language: selectedLanguage))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(filtered) { article in
+                            NavigationLink(
+                                destination: ArticleView(
+                                    article: article,
+                                    allArticles: articles,
+                                    favoritesManager: favoritesManager
+                                )
+                            ) {
+                                FavoriteCard(article: article, favoritesManager: favoritesManager)
+                                    .environmentObject(categoriesStore)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+        }
+    }
+
+    // MARK: - Все статьи
+    private var allArticlesSection: some View {
+        let sorted = articles
+            .sorted { ($0.createdAt ?? Date.distantPast) > ($1.createdAt ?? Date.distantPast) }
+
+        return VStack(alignment: .leading, spacing: 12) {
+            Text(getTranslation(key: "Все статьи", language: selectedLanguage))
+                .font(.headline)
+                .padding(.horizontal)
+
+            if sorted.isEmpty {
+                Text(getTranslation(key: "Нет статей", language: selectedLanguage))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(sorted) { article in
+                            NavigationLink(
+                                destination: ArticleView(
+                                    article: article,
+                                    allArticles: articles,
+                                    favoritesManager: favoritesManager
+                                )
+                            ) {
+                                FavoriteCard(article: article, favoritesManager: favoritesManager)
+                                    .environmentObject(categoriesStore)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
         }
     }
 
     // MARK: - Полезные инструменты
-
     private var usefulToolsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(getTranslation(key: "Полезные инструменты", language: selectedLanguage))
@@ -122,32 +200,13 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     NavigationLink(destination: MapView()) {
-                        ToolCard(
-                            title: getTranslation(key: "Карта", language: selectedLanguage),
-                            systemImage: "map",
-                            color: .blue
-                        )
+                        ToolButton(icon: "map", title: getTranslation(key: "Карта", language: selectedLanguage))
                     }
-
-                    NavigationLink(destination: PDFViewer(fileName: "sample")) {
-                        ToolCard(
-                            title: getTranslation(key: "PDF Документы", language: selectedLanguage),
-                            systemImage: "doc.richtext",
-                            color: .green
-                        )
+                    NavigationLink(destination: PDFViewer(fileName: "sample.pdf")) { // ← здесь укажи реальный PDF
+                        ToolButton(icon: "doc.richtext", title: getTranslation(key: "PDF Документы", language: selectedLanguage))
                     }
-
-                    Button {
-                        if let random = articles.randomElement() {
-                            randomArticle = random
-                            isShowingRandomArticle = true
-                        }
-                    } label: {
-                        ToolCard(
-                            title: getTranslation(key: "Случайная статья", language: selectedLanguage),
-                            systemImage: "shuffle",
-                            color: .orange
-                        )
+                    NavigationLink(destination: RandomArticleView(articles: articles, favoritesManager: favoritesManager)) {
+                        ToolButton(icon: "shuffle", title: getTranslation(key: "Случайная статья", language: selectedLanguage))
                     }
                 }
                 .padding(.horizontal)
@@ -155,214 +214,48 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Недавно прочитанное
-    private var recentlyReadSection: some View {
-        let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
+    // MARK: - UI helper for tools
+    private struct ToolButton: View {
+        let icon: String
+        let title: String
 
-        return Group {
-            if !recentlyRead.isEmpty {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(getTranslation(key: "Недавно прочитанное", language: selectedLanguage))
-                        .font(.headline)
-                        .padding(.horizontal)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            ForEach(recentlyRead) { article in
-                                NavigationLink(destination: ArticleView(
-                                    article: article,
-                                    allArticles: articles,
-                                    favoritesManager: favoritesManager
-                                )) {
-                                    RecentArticleCard(
-                                        article: article,
-                                        favoritesManager: favoritesManager
-                                    )
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                }
+        var body: some View {
+            VStack {
+                Image(systemName: icon)
+                    .font(.largeTitle)
+                    .foregroundColor(.blue)
+                Text(title)
+                    .font(.subheadline)
             }
+            .frame(width: 120, height: 100)
+            .background(Color(.systemGray6))
+            .cornerRadius(12)
         }
     }
 
-    // MARK: - Избранное
-    private var favoritesSection: some View {
-        let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
-
-        return Group {
-            if !favoriteArticles.isEmpty {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(getTranslation(key: "Избранное", language: selectedLanguage))
-                        .font(.headline)
-                        .padding(.horizontal)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            ForEach(favoriteArticles) { article in
-                                NavigationLink(destination: ArticleView(
-                                    article: article,
-                                    allArticles: articles,
-                                    favoritesManager: favoritesManager
-                                )) {
-                                    FavoriteCard(
-                                        article: article,
-                                        favoritesManager: favoritesManager
-                                    )
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Категории (с цветом из colorHex)
-
-    private func categorySection(category: Category, articles: [Article]) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: category.icon)
-                    .foregroundColor(Color(hex: category.colorHex) ?? .blue)
-                Text(category.localizedName(for: selectedLanguage))
-                    .font(.headline)
-            }
-            .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(articles.prefix(5)) { article in
-                        NavigationLink(destination: ArticleView(
-                            article: article,
-                            allArticles: self.articles,
-                            favoritesManager: favoritesManager
-                        )) {
-                            ArticleCardView(
-                                article: article,
-                                favoritesManager: favoritesManager
-                            )
-                        }
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
-    }
-
-    // MARK: - Все статьи
-
-    private var allArticlesSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(getTranslation(key: "Все статьи", language: selectedLanguage))
-                .font(.headline)
-                .padding(.horizontal)
-
-            ForEach(articles.prefix(10)) { article in
-                NavigationLink(destination: ArticleView(
-                    article: article,
-                    allArticles: articles,
-                    favoritesManager: favoritesManager
-                )) {
-                    ArticleRowWithReadingInfo(
-                        article: article,
-                        favoritesManager: favoritesManager,
-                        isRead: readingHistoryManager.isRead(article.id)
-                    )
-                }
-            }
-        }
-        .padding(.horizontal)
-    }
-
-    // MARK: - Локализация заголовков
-
+    // MARK: - Переводы
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
-            "Главная": ["ru": "Главная", "en": "Home", "de": "Startseite", "tj": "Саҳифаи асосӣ"],
-            "Полезные инструменты": ["ru": "Полезные инструменты", "en": "Useful tools", "de": "Nützliche Werkzeuge", "tj": "Асбобҳои муфид"],
+            "Главная": ["ru": "Главная", "en": "Home", "de": "Startseite", "tj": "Асосӣ"],
+            "Финансы": ["ru": "Финансы", "en": "Finance", "de": "Finanzen", "tj": "Молия"],
+            "Работа": ["ru": "Работа", "en": "Work", "de": "Arbeit", "tj": "Кор"],
+            "Учёба": ["ru": "Учёба", "en": "Study", "de": "Studium", "tj": "Таҳсилот"],
+            "Бюрократия": ["ru": "Бюрократия", "en": "Bureaucracy", "de": "Bürokratie", "tj": "Бюрократия"],
+            "Жизнь": ["ru": "Жизнь", "en": "Life", "de": "Leben", "tj": "Зиндагӣ"],
+            "Все статьи": ["ru": "Все статьи", "en": "All Articles", "de": "Alle Artikel", "tj": "Ҳамаи мақолаҳо"],
+            "Нет статей": ["ru": "Нет статей", "en": "No articles", "de": "Keine Artikel", "tj": "Мақола нест"],
+            "Полезные инструменты": ["ru": "Полезные инструменты", "en": "Useful Tools", "de": "Nützliche Werkzeuge", "tj": "Асбобҳои муфид"],
             "Карта": ["ru": "Карта", "en": "Map", "de": "Karte", "tj": "Харита"],
-            "PDF Документы": ["ru": "PDF Документы", "en": "PDF Documents", "de": "PDF-Dokumente", "tj": "Ҳуҷҷатҳои PDF"],
-            "Случайная статья": ["ru": "Случайная статья", "en": "Random article", "de": "Zufälliger Artikel", "tj": "Мақолаи тасодуфӣ"],
-            "Недавно прочитанное": ["ru": "Недавно прочитанное", "en": "Recently read", "de": "Kürzlich gelesen", "tj": "Мақолаҳои охир хондашуда"],
-            "Избранное": ["ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда"],
-            "Все статьи": ["ru": "Все статьи", "en": "All articles", "de": "Alle Artikel", "tj": "Ҳамаи мақолаҳо"]
+            "PDF Документы": ["ru": "PDF Документы", "en": "PDF Documents", "de": "PDF Dokumente", "tj": "Ҳуҷҷатҳои PDF"],
+            "Случайная статья": ["ru": "Случайная статья", "en": "Random Article", "de": "Zufälliger Artikel", "tj": "Мақолаи тасодуфӣ"],
+            "Недавно прочитанное": ["ru": "Недавно прочитанное", "en": "Recently Read", "de": "Zuletzt gelesen", "tj": "Мақолаҳои охирин"],
+            "Избранное": ["ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда"]
         ]
         return translations[key]?[language] ?? key
     }
 }
 
-// MARK: - ArticleRowWithReadingInfo
-
-struct ArticleRowWithReadingInfo: View {
-    let article: Article
-    let favoritesManager: FavoritesManager
-    let isRead: Bool
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-
-    @EnvironmentObject private var categoriesStore: CategoriesStore
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            ZStack(alignment: .topTrailing) {
-                Image("Logo")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(8)
-                    .clipped()
-
-                if isRead {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 16))
-                        .foregroundColor(.green)
-                        .background(Color(.systemBackground))
-                        .clipShape(Circle())
-                        .offset(x: 4, y: -4)
-                }
-            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(article.localizedTitle(for: selectedLanguage))
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
-
-                HStack(spacing: 12) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "folder")
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-
-                        Text(
-                            categoriesStore.categoryName(for: article.categoryId,
-                                                         language: selectedLanguage)
-                        )
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    }
-
-                    Spacer()
-
-                    HStack(spacing: 4) {
-                        Image(systemName: "clock")
-                            .font(.caption)
-                            .foregroundColor(.orange)
-                        Text(article.formattedReadingTime(for: selectedLanguage))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-
-            Spacer()
-
-            Image(systemName: favoritesManager.isFavorite(article: article) ? "star.fill" : "star")
-                .foregroundColor(.yellow)
-        }
-        .padding(.vertical, 8)
-    }
+#Preview {
+    HomeView()
+        .environmentObject(CategoriesStore.shared)
 }

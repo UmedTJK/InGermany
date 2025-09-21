@@ -26,6 +26,7 @@
 		AD7454752E7EC9CF001FC732 /* PROMPTS_FOR_AI_AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */; };
 		AD7454FB2E7EEEF6001FC732 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */; };
 		AD7455462E7FD154001FC732 /* CardSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7455452E7FD152001FC732 /* CardSize.swift */; };
+		AD7455922E806641001FC732 /* DateFormatterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7455912E80663D001FC732 /* DateFormatterUtils.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */; };
@@ -52,6 +53,7 @@
 		AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROMPTS_FOR_AI_AGENTS.md; sourceTree = "<group>"; };
 		AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		AD7455452E7FD152001FC732 /* CardSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSize.swift; sourceTree = "<group>"; };
+		AD7455912E80663D001FC732 /* DateFormatterUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterUtils.swift; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
 		AD8552C52E75B471003D3826 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		AD8552C92E75B506003D3826 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				AD7455912E80663D001FC732 /* DateFormatterUtils.swift */,
 				AD7455452E7FD152001FC732 /* CardSize.swift */,
 				AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */,
 				AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */,
@@ -265,6 +268,7 @@
 				AD7454632E7E617F001FC732 /* TextSizeManager.swift in Sources */,
 				AD74546E2E7E8E6A001FC732 /* CategoriesStore.swift in Sources */,
 				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
+				AD7455922E806641001FC732 /* DateFormatterUtils.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */,
 			);

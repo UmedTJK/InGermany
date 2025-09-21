@@ -2,8 +2,6 @@
 //  InGermanyApp.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
 
 import SwiftUI
 
@@ -19,12 +17,15 @@ struct InGermanyApp: App {
                     ProgressView("Загрузка данных...")
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
-                    ContentView()
-                        .environmentObject(categoriesStore)
+                    ContentView(
+                        articles: appState.articles,
+                        categories: appState.categories
+                    )
+                    .environmentObject(categoriesStore)
                 }
             }
             .task {
-                await appState.loadData() // загрузка через AppState
+                await appState.loadData()
             }
         }
     }
@@ -33,19 +34,21 @@ struct InGermanyApp: App {
 @MainActor
 final class AppState: ObservableObject {
     @Published var isLoading = true
+    @Published var articles: [Article] = []
+    @Published var categories: [Category] = []
 
     func loadData() async {
-        // Предзагрузка данных через DataService
         let dataService = DataService.shared
-        async let articles = dataService.loadArticles()
-        async let categories = dataService.loadCategories()
-        async let locations = dataService.loadLocations()
-        _ = await (articles, categories, locations)
+        async let articlesTask = dataService.loadArticles()
+        async let categoriesTask = dataService.loadCategories()
+        async let locationsTask = dataService.loadLocations()
 
-        // Мост для вью: поднять CategoriesStore
+        let (articles, categories, _) = await (articlesTask, categoriesTask, locationsTask)
+
+        self.articles = articles
+        self.categories = categories
+
         await CategoriesStore.shared.bootstrap()
-
-        // Готово
         isLoading = false
     }
 }
