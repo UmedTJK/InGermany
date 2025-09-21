@@ -24,7 +24,7 @@ struct InGermanyApp: App {
                 }
             }
             .task {
-                await appState.loadData() // <-- обязательно await в Swift 6
+                await appState.loadData() // загрузка через AppState
             }
         }
     }
@@ -35,17 +35,17 @@ final class AppState: ObservableObject {
     @Published var isLoading = true
 
     func loadData() async {
-        // 1) Предзагрузка данных через DataService
+        // Предзагрузка данных через DataService
         let dataService = DataService.shared
         async let articles = dataService.loadArticles()
         async let categories = dataService.loadCategories()
         async let locations = dataService.loadLocations()
         _ = await (articles, categories, locations)
 
-        // 2) Мост для вью: поднимаем CategoriesStore
+        // Мост для вью: поднять CategoriesStore
         await CategoriesStore.shared.bootstrap()
 
-        // 3) Готово
+        // Готово
         isLoading = false
     }
 }
