@@ -7,48 +7,20 @@ import SwiftUI
 
 @main
 struct InGermanyApp: App {
-    @StateObject private var appState = AppState()
-    @StateObject private var categoriesStore = CategoriesStore.shared
+    @StateObject private var favoritesManager = FavoritesManager()
+    @StateObject private var localizationManager = LocalizationManager.shared
+    @StateObject private var categoriesStore = CategoriesStore() // Теперь доступен
+    @StateObject private var readingHistoryManager = ReadingHistoryManager.shared
+    @StateObject private var ratingManager = RatingManager()
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if appState.isLoading {
-                    ProgressView("Загрузка данных...")
-                        .progressViewStyle(CircularProgressViewStyle())
-                } else {
-                    ContentView(
-                        articles: appState.articles,
-                        categories: appState.categories
-                    )
-                    .environmentObject(categoriesStore)
-                }
-            }
-            .task {
-                await appState.loadData()
-            }
+            ContentView()
+                .environmentObject(favoritesManager)
+                .environmentObject(localizationManager)
+                .environmentObject(categoriesStore)
+                .environmentObject(readingHistoryManager)
+                .environmentObject(ratingManager)
         }
-    }
-}
-
-@MainActor
-final class AppState: ObservableObject {
-    @Published var isLoading = true
-    @Published var articles: [Article] = []
-    @Published var categories: [Category] = []
-
-    func loadData() async {
-        let dataService = DataService.shared
-        async let articlesTask = dataService.loadArticles()
-        async let categoriesTask = dataService.loadCategories()
-        async let locationsTask = dataService.loadLocations()
-
-        let (articles, categories, _) = await (articlesTask, categoriesTask, locationsTask)
-
-        self.articles = articles
-        self.categories = categories
-
-        await CategoriesStore.shared.bootstrap()
-        isLoading = false
     }
 }

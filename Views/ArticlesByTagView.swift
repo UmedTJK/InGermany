@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ArticlesByTagView: View {
     let tag: String
-    let articles: [Article]
-    @ObservedObject var favoritesManager: FavoritesManager
+    let favoritesManager: FavoritesManager // ПЕРВЫЙ параметр (после tag)
+    let articles: [Article]               // ВТОРОЙ параметр
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
@@ -22,8 +22,8 @@ struct ArticlesByTagView: View {
                 )
             } label: {
                 ArticleRow(
-                    article: article,
-                    favoritesManager: favoritesManager
+                    favoritesManager: favoritesManager, // ИСПРАВЛЕНО порядок
+                    article: article
                 )
             }
         }
@@ -38,7 +38,7 @@ struct ArticlesByTagView: View {
 #Preview {
     ArticlesByTagView(
         tag: "финансы",
-        articles: [Article.sampleArticle],
-        favoritesManager: FavoritesManager()
+        favoritesManager: FavoritesManager(), // ИСПРАВЛЕНО порядок
+        articles: [Article.sampleArticle]
     )
 }

@@ -2,38 +2,28 @@
 //  RatingManager.swift
 //  InGermany
 //
-//  Created by SUM TJK on 16.09.25.
-//
+
 import Foundation
 
-class RatingManager: ObservableObject {
-    static let shared = RatingManager()
+@MainActor
+final class RatingManager: ObservableObject {
+    @Published private(set) var ratings: [String: Int] = [:]
     
-    private let keyPrefix = "rating_"
-    
-    // Храним оценки в оперативной памяти (для быстрого отображения)
-    @Published private var ratings: [String: Int] = [:]
-    
-    private init() {
-        loadRatings()
-    }
-
-    func rating(for articleId: String) -> Int {
-        ratings[articleId] ?? 0
-    }
-
-    func setRating(_ rating: Int, for articleId: String) {
+    func setRating(for articleId: String, rating: Int) {
         ratings[articleId] = rating
-        UserDefaults.standard.set(rating, forKey: keyPrefix + articleId)
     }
+    
+    func rating(for articleId: String) -> Int? {
+        ratings[articleId]
+    }
+}
 
-    private func loadRatings() {
-        let defaults = UserDefaults.standard
-        for (key, value) in defaults.dictionaryRepresentation() {
-            if key.starts(with: keyPrefix), let intValue = value as? Int {
-                let articleId = String(key.dropFirst(keyPrefix.count))
-                ratings[articleId] = intValue
-            }
-        }
-    }
+// MARK: - Sample Data для Preview
+extension RatingManager {
+    static let example: RatingManager = {
+        let manager = RatingManager()
+        manager.setRating(for: "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa", rating: 5)
+        manager.setRating(for: "22222222-bbbb-bbbb-bbbb-bbbbbbbbbbbb", rating: 3)
+        return manager
+    }()
 }

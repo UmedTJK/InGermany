@@ -187,3 +187,19 @@ struct ReadingStats {
         return streak
     }
 }
+
+// MARK: - Sample Data для Preview
+extension ReadingHistoryManager {
+    static let example: ReadingHistoryManager = {
+        let manager = ReadingHistoryManager.shared
+        manager.clearHistory()
+        manager.addReadingEntry(articleId: "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa", readingTime: 120)
+        manager.addReadingEntry(articleId: "22222222-bbbb-bbbb-bbbb-bbbbbbbbbbbb", readingTime: 300)
+        return manager
+    }()
+}
+
+#Preview {
+    Text("Total read: \(ReadingHistoryManager.example.totalArticlesRead)")
+}
+

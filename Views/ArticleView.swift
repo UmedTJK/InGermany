@@ -2,227 +2,127 @@
 //  ArticleView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
-
-//
-//  ArticleView.swift
-//  InGermany
-//
 
 import SwiftUI
+import UIKit
 
 struct ArticleView: View {
     let article: Article
-    let allArticles: [Article]
-    @ObservedObject var favoritesManager: FavoritesManager
-    @ObservedObject var ratingManager = RatingManager.shared
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    
-    @StateObject private var readingTracker = ReadingTracker()
-    @StateObject private var progressTracker = ReadingProgressTracker()
-    @StateObject private var textSizeManager = TextSizeManager.shared
-    @State private var showTextSizePanel = false
+    let allArticles: [Article]             // 🔹 список всех статей
+    let favoritesManager: FavoritesManager
 
-    private var relatedArticles: [Article] {
-        allArticles
-            .filter { $0.categoryId == article.categoryId && $0.id != article.id }
-            .prefix(3)
-            .map { $0 }
-    }
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @EnvironmentObject private var categoriesStore: CategoriesStore
+    @EnvironmentObject private var readingHistoryManager: ReadingHistoryManager
+    @EnvironmentObject private var ratingManager: RatingManager
+
+    @State private var isFavorite: Bool = false
+    @State private var tracker = ReadingTracker()
 
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    // 🔹 Прогресс-бар
-                    ReadingProgressBar(
-                        progress: progressTracker.scrollProgress,
-                        height: 6,
-                        foregroundColor: progressTracker.isReading ? .green : .blue
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+
+                // Заголовок
+                Text(article.localizedTitle(for: selectedLanguage))
+                    .font(.title)
+                    .bold()
+
+                // Даты
+                if article.createdAt != nil {
+                    Text(article.formattedCreatedDate(for: selectedLanguage))
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+
+                if article.updatedAt != nil {
+                    Text(article.formattedUpdatedDate(for: selectedLanguage))
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+
+                // Содержимое
+                Text(article.localizedContent(for: selectedLanguage))
+                    .font(.body)
+                    .padding(.top, 8)
+
+                // Время чтения
+                Text(article.formattedReadingTime(for: selectedLanguage))
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .padding(.top, 4)
+
+                // Рейтинг
+                HStack {
+                    Text(LocalizationManager.shared.translate("RateArticle"))
+                    Spacer()
+                    ForEach(1...5, id: \.self) { star in
+                        Image(systemName: (ratingManager.rating(for: article.id) ?? 0) >= star ? "star.fill" : "star")
+                            .onTapGesture { ratingManager.setRating(for: article.id, rating: star) }
+                    }
+                }
+                .padding(.vertical, 8)
+
+                // Поделиться
+                Button(action: shareArticle) {
+                    Label(
+                        LocalizationManager.shared.translate("ShareThisArticle"),
+                        systemImage: "square.and.arrow.up"
                     )
-                    .padding(.bottom, 8)
-                    
-                    // 🔹 Заголовок
-                    Text(article.localizedTitle(for: selectedLanguage))
-                        .font(.title)
-                        .bold()
-                        .id("articleTop")
-
-                    // 🔹 Метаданные
-                    ArticleMetaView(article: article)
-
-                    // 🔹 Время чтения и индикаторы
-                    HStack {
-                        Image(systemName: "clock")
-                            .foregroundColor(.secondary)
-                        Text(article.formattedReadingTime(for: selectedLanguage))
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        if ReadingHistoryManager.shared.isRead(article.id) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                                .font(.subheadline)
-                        }
-                        
-                        if progressTracker.isReading {
-                            Image(systemName: "eye.fill")
-                                .foregroundColor(.green)
-                                .font(.subheadline)
-                        }
-                    }
-
-                    // 🔹 Контент
-                    Text(article.localizedContent(for: selectedLanguage))
-                        .font(textSizeManager.isCustomTextSizeEnabled ?
-                              textSizeManager.currentFont : .body)
-                        .foregroundColor(.primary)
-                        .trackReadingProgress(progressTracker)
-                        .lineSpacing(4)
-
-                    // 🔹 Рейтинг
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(getTranslation(key: "Оцените статью", language: selectedLanguage))
-                            .font(.subheadline)
-                        HStack {
-                            ForEach(1..<6) { star in
-                                Image(systemName: star <= ratingManager.rating(for: article.id) ? "star.fill" : "star")
-                                    .foregroundColor(.yellow)
-                                    .onTapGesture {
-                                        ratingManager.setRating(star, for: article.id)
-                                        HapticFeedback.medium()
-                                    }
-                            }
-                        }
-                    }
-                    .padding(.top)
-
-                    // 🔹 Поделиться
-                    ShareLink(
-                        item: "\(article.localizedTitle(for: selectedLanguage))\n\n\(article.localizedContent(for: selectedLanguage))",
-                        subject: Text(article.localizedTitle(for: selectedLanguage)),
-                        message: Text(getTranslation(key: "Поделитесь этой статьёй", language: selectedLanguage))
-                    ) {
-                        Label(
-                            getTranslation(key: "Поделиться статьёй", language: selectedLanguage),
-                            systemImage: "square.and.arrow.up"
-                        )
-                        .padding(.top)
-                    }
-
-                    // 🔹 Похожие статьи
-                    if !relatedArticles.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(getTranslation(key: "Похожие статьи", language: selectedLanguage))
-                                .font(.headline)
-                                .padding(.top)
-
-                            ForEach(relatedArticles) { related in
-                                NavigationLink(destination: ArticleView(
-                                    article: related,
-                                    allArticles: allArticles,
-                                    favoritesManager: favoritesManager
-                                )) {
-                                    VStack(alignment: .leading) {
-                                        Text(related.localizedTitle(for: selectedLanguage))
-                                            .font(.subheadline)
-                                            .bold()
-                                        Text(related.localizedContent(for: selectedLanguage))
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .lineLimit(2)
-                                    }
-                                    .padding(.vertical, 4)
-                                }
-                            }
-                        }
-                    }
                 }
-                .padding()
+                .padding(.top, 8)
+
+                // Похожие статьи
+                RelatedArticlesView(
+                    currentArticle: article,
+                    favoritesManager: favoritesManager,
+                    articles: allArticles              // 🔹 передаём все статьи
+                )
             }
-            .navigationTitle(article.localizedTitle(for: selectedLanguage))
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button {
-                        showTextSizePanel.toggle()
-                        HapticFeedback.medium()
-                    } label: {
-                        Image(systemName: "textformat.size")
-                            .foregroundColor(.blue)
-                    }
-                    
-                    Button {
-                        favoritesManager.toggleFavorite(article: article)
-                        HapticFeedback.medium()
-                    } label: {
-                        Image(
-                            systemName: favoritesManager.isFavorite(article: article)
-                            ? "star.fill"
-                            : "star"
-                        )
-                        .foregroundColor(.yellow)
-                    }
-                    
-                    Button {
-                        withAnimation {
-                            proxy.scrollTo("articleTop", anchor: .top)
-                        }
-                        HapticFeedback.light()
-                    } label: {
-                        Image(systemName: "arrow.up.to.line.compact")
-                            .foregroundColor(.blue)
-                    }
+            .padding()
+        }
+        .onAppear {
+            isFavorite = favoritesManager.isFavorite(article: article)
+            tracker.startReading(articleId: article.id)
+        }
+        .onDisappear {
+            tracker.finishReading()
+        }
+        .navigationTitle(article.localizedTitle(for: selectedLanguage))
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: toggleFavorite) {
+                    Image(systemName: isFavorite ? "heart.fill" : "heart")
+                        .foregroundColor(isFavorite ? .red : .primary)
                 }
-            }
-            .sheet(isPresented: $showTextSizePanel) {
-                TextSizeSettingsPanel()
-            }
-            .onAppear {
-                readingTracker.startReading(articleId: article.id)
-                progressTracker.reset()
-            }
-            .onDisappear {
-                readingTracker.finishReading()
-                progressTracker.reset()
             }
         }
     }
-    
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Оцените статью": [
-                "ru": "Оцените статью",
-                "en": "Rate this article",
-                "de": "Artikel bewerten",
-                "tj": "Мақоларо баҳогузорӣ кунед"
-            ],
-            "Поделитесь этой статьёй": [
-                "ru": "Поделитесь этой статьёй",
-                "en": "Share this article",
-                "de": "Artikel teilen",
-                "tj": "Ин мақоларо мубодила кунед"
-            ],
-            "Поделиться статьёй": [
-                "ru": "Поделиться статьёй",
-                "en": "Share article",
-                "de": "Artikel teilen",
-                "tj": "Мақоларо мубодила кунед"
-            ]
-        ]
-        return translations[key]?[language] ?? key
+
+    private func toggleFavorite() {
+        favoritesManager.toggleFavorite(article: article)
+        isFavorite = favoritesManager.isFavorite(article: article)
+    }
+
+    private func shareArticle() {
+        let text = "\(article.localizedTitle(for: selectedLanguage))\n\n\(article.localizedContent(for: selectedLanguage))"
+        let av = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = scene.windows.first,
+           let rootVC = window.rootViewController {
+            rootVC.present(av, animated: true)
+        }
     }
 }
 
 #Preview {
-    NavigationView {
-        ArticleView(
-            article: Article.sampleArticle,
-            allArticles: [Article.sampleArticle], // ✅ мок-данные вместо async вызова,
-            favoritesManager: FavoritesManager()
-        )
-        .environmentObject(CategoriesStore.shared)
-    }
+    ArticleView(
+        article: Article.sampleArticle,
+        allArticles: Article.sampleArticles,   // 🔹 проброс для превью
+        favoritesManager: FavoritesManager()
+    )
+    .environmentObject(CategoriesStore())
+    .environmentObject(ReadingHistoryManager.example)
+    .environmentObject(RatingManager.example)
 }

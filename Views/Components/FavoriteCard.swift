@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct FavoriteCard: View {
-    let article: Article
-    let favoritesManager: FavoritesManager
+    let favoritesManager: FavoritesManager // ПЕРВЫЙ параметр
+    let article: Article                  // ВТОРОЙ параметр
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @EnvironmentObject private var categoriesStore: CategoriesStore
     
@@ -82,8 +82,8 @@ struct FavoriteCard: View {
             .ignoresSafeArea()
         
         FavoriteCard(
-            article: Article.sampleArticle,
-            favoritesManager: FavoritesManager()
+            favoritesManager: FavoritesManager(),
+            article: Article.sampleArticle
         )
         .environmentObject(CategoriesStore.shared)
     }

@@ -57,7 +57,6 @@ struct Article: Identifiable, Codable, Hashable {
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         pdfFileName = try container.decodeIfPresent(String.self, forKey: .pdfFileName)
         
-        // Пытаемся декодировать даты
         if let createdAtString = try container.decodeIfPresent(String.self, forKey: .createdAt) {
             createdAt = ISO8601DateFormatter().date(from: createdAtString)
         } else {
@@ -95,7 +94,7 @@ struct Article: Identifiable, Codable, Hashable {
     // MARK: - Hashable
     
     static func == (lhs: Article, rhs: Article) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
     
     func hash(into hasher: inout Hasher) {
@@ -179,7 +178,24 @@ extension Article {
         updatedAt: Calendar.current.date(byAdding: .day, value: -2, to: Date())
     )
     
-    static let sampleArticles: [Article] = [
-        sampleArticle
-    ]
+    static let sampleArticles: [Article] = [sampleArticle]
+    
+    static let example = Article(
+        id: UUID().uuidString,
+        title: [
+            "ru": "Пример статьи",
+            "en": "Example Article",
+            "de": "Beispielartikel",
+            "tj": "Мақолаи намунавӣ"
+        ],
+        content: [
+            "ru": "Это тестовое содержимое для превью.",
+            "en": "This is example content for previews.",
+            "de": "Dies ist ein Beispielinhalt für Vorschauen.",
+            "tj": "Ин мундариҷаи намунавӣ барои пешнамоиш аст."
+        ],
+        categoryId: "11111111-1111-1111-1111-aaaaaaaaaaaa",
+        createdAt: Date(),
+        updatedAt: Date()
+    )
 }

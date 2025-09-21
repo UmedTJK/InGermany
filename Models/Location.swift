@@ -2,8 +2,6 @@
 //  Location.swift
 //  InGermany
 //
-//  Created by SUM TJK on 15.09.25.
-//
 
 import Foundation
 import CoreLocation
@@ -17,4 +15,24 @@ struct Location: Identifiable, Codable {
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
+}
+
+// MARK: - Sample Data для Preview
+extension Location {
+    static let example = Location(
+        id: UUID().uuidString,
+        name: "Berlin",
+        latitude: 52.5200,
+        longitude: 13.4050
+    )
+    
+    static let sampleLocations: [Location] = [
+        example,
+        Location(
+            id: UUID().uuidString,
+            name: "Munich",
+            latitude: 48.1351,
+            longitude: 11.5820
+        )
+    ]
 }

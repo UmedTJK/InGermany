@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @ObservedObject var favoritesManager: FavoritesManager
-    let articles: [Article]
+    let favoritesManager: FavoritesManager // ПЕРВЫЙ параметр
+    let articles: [Article]               // ВТОРОЙ параметр
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var selectedCategory: String? = nil
     @State private var searchText: String = ""
@@ -37,9 +37,7 @@ struct FavoritesView: View {
                 }
                 if filteredFavoriteArticles.isEmpty {
                     EmptyFavoritesView(
-                        hasFilters: selectedCategory != nil || !searchText.isEmpty,
-                        selectedLanguage: selectedLanguage,
-                        getTranslation: getTranslation
+                        hasFilters: selectedCategory != nil || !searchText.isEmpty
                     )
                 } else {
                     favoritesList
@@ -47,11 +45,14 @@ struct FavoritesView: View {
             }
             .navigationTitle(navigationTitle)
         }
-        .searchable(text: $searchText, prompt: getTranslation(key: "Поиск в избранном", language: selectedLanguage))
+        .searchable(
+            text: $searchText,
+            prompt: LocalizationManager.shared.translate("SearchInFavorites") // УБРАЛИ language
+        )
     }
     
     private var navigationTitle: String {
-        let baseTitle = getTranslation(key: "Избранное", language: selectedLanguage)
+        let baseTitle = LocalizationManager.shared.translate("Favorites") // УБРАЛИ language
         return "\(baseTitle) (\(filteredFavoriteArticles.count))"
     }
     
@@ -59,7 +60,7 @@ struct FavoritesView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 CategoryFilterButton(
-                    title: getTranslation(key: "Все", language: selectedLanguage),
+                    title: LocalizationManager.shared.translate("All"), // УБРАЛИ language
                     isSelected: selectedCategory == nil,
                     systemImage: "star.fill"
                 ) {
@@ -92,24 +93,11 @@ struct FavoritesView: View {
                 )
             } label: {
                 ArticleRow(
-                    article: article,
-                    favoritesManager: favoritesManager
+                    favoritesManager: favoritesManager, // ИСПРАВЛЕНО порядок
+                    article: article
                 )
             }
         }
         .listStyle(PlainListStyle())
-    }
-    
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Все": ["ru": "Все", "en": "All", "de": "Alle", "tj": "Ҳама"],
-            "Избранное": ["ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда"],
-            "Нет избранного": ["ru": "Нет избранного", "en": "No favorites", "de": "Keine Favoriten", "tj": "Интихобшуда нест"],
-            "Попробуйте другую категорию": ["ru": "Попробуйте выбрать другую категорию", "en": "Try selecting another category", "de": "Versuchen Sie eine andere Kategorie", "tj": "Категорияи дигарро интихоб кунед"],
-            "Поиск в избранном": ["ru": "Поиск в избранном", "en": "Search favorites", "de": "Favoriten durchsuchen", "tj": "Дар интихобшуда ҷустуҷӯ"],
-            "Ничего не найдено": ["ru": "Ничего не найдено", "en": "Nothing found", "de": "Nichts gefunden", "tj": "Ҳеҷ чиз ёфт нашуд"],
-            "Попробуйте другой запрос или категорию": ["ru": "Попробуйте другой запрос или категорию", "en": "Try another search or category", "de": "Versuchen Sie eine andere Suche oder Kategorie", "tj": "Ҳарфи дигар ё категорияи дигарро кӯшиш кунед"]
-        ]
-        return translations[key]?[language] ?? key
     }
 }

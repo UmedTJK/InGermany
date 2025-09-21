@@ -13,7 +13,7 @@ final class CategoriesStore: ObservableObject {
     @Published private(set) var categories: [Category] = []
     @Published private(set) var byId: [String: Category] = [:]
 
-    private init() {}
+    init() {} // Убрали private
 
     /// Инициализирующая загрузка из CategoryManager (actor)
     func bootstrap() async {

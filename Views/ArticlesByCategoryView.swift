@@ -7,43 +7,64 @@ import SwiftUI
 
 struct ArticlesByCategoryView: View {
     let category: Category
-    let articles: [Article] // Все статьи
-    @ObservedObject var favoritesManager: FavoritesManager
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru" // Используем AppStorage
-    
+    let favoritesManager: FavoritesManager
+    let articles: [Article]
+
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @EnvironmentObject private var ratingManager: RatingManager
+
+    var filteredArticles: [Article] {
+        articles.filter { $0.categoryId == category.id }
+    }
+
     var body: some View {
         List(filteredArticles) { article in
-            NavigationLink {
-                ArticleView(
+            NavigationLink(
+                destination: ArticleView(
                     article: article,
-                    allArticles: articles, // ✅ передаем все статьи
+                    allArticles: articles,
                     favoritesManager: favoritesManager
                 )
-            } label: {
-                ArticleRow( // Используем существующий компонент
-                    article: article,
-                    favoritesManager: favoritesManager
-                )
+                .environmentObject(ratingManager)
+            ) {
+                HStack {
+                    Image("Logo")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .cornerRadius(6)
+                        .clipped()
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(article.localizedTitle(for: selectedLanguage))
+                            .font(.body)
+                            .fontWeight(.medium)
+                            .lineLimit(2)
+
+                        if article.createdAt != nil {
+                            Text(article.formattedCreatedDate(for: selectedLanguage))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
+                }
+                .padding(.vertical, 4)
             }
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))
-    }
-    
-    private var filteredArticles: [Article] {
-        articles.filter { $0.categoryId == category.id }
     }
 }
 
 #Preview {
     ArticlesByCategoryView(
-        category: Category(
-            id: "11111111-1111-1111-1111-aaaaaaaaaaaa",
-            name: ["ru": "Финансы", "en": "Finance", "de": "Finanzen", "tj": "Молия"],
-            icon: "banknote",
-            colorHex: "#4A90E2"   // ✅ добавили цвет
-        ),
-        articles: [], // Пустой массив для preview
-        favoritesManager: FavoritesManager()
+        category: Category.sampleCategories[0],
+        favoritesManager: FavoritesManager(),
+        articles: Article.sampleArticles
     )
+    .environmentObject(RatingManager.example)
 }
-

@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct SearchView: View {
-    @ObservedObject var favoritesManager: FavoritesManager
-    let articles: [Article]
+    let favoritesManager: FavoritesManager // ПЕРВЫЙ параметр - изменено на let
+    let articles: [Article]               // ВТОРОЙ параметр
 
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var searchText: String = ""
@@ -46,15 +46,20 @@ struct SearchView: View {
                         )
                     } label: {
                         ArticleRow(
-                            article: article,
-                            favoritesManager: favoritesManager
+                            favoritesManager: favoritesManager, // ИСПРАВЛЕНО порядок
+                            article: article
                         )
                     }
                 }
                 .listStyle(.plain)
             }
-            .navigationTitle("Поиск")
-            .searchable(text: $searchText, prompt: "Искать по статьям или категориям")
+            .navigationTitle(
+                LocalizationManager.shared.translate("Search") // УБРАЛИ language
+            )
+            .searchable(
+                text: $searchText,
+                prompt: LocalizationManager.shared.translate("SearchPrompt") // УБРАЛИ language
+            )
         }
     }
 }

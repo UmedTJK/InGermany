@@ -6,51 +6,88 @@
 import SwiftUI
 
 struct ContentView: View {
-    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    
-    @StateObject private var favoritesManager = FavoritesManager()
-    
-    let articles: [Article]
-    let categories: [Category]
-    
+    @EnvironmentObject private var favoritesManager: FavoritesManager
+    @EnvironmentObject private var localizationManager: LocalizationManager
+    @EnvironmentObject private var categoriesStore: CategoriesStore
+    @EnvironmentObject private var readingHistoryManager: ReadingHistoryManager
+    @EnvironmentObject private var ratingManager: RatingManager
+
+    @State private var articles: [Article] = []
+    @State private var locations: [Location] = []
+
     var body: some View {
         TabView {
-            HomeView(favoritesManager: favoritesManager)
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
-            
-            CategoriesView(
-                categories: categories,
-                articles: articles,
-                favoritesManager: favoritesManager
-            )
-            .tabItem {
-                Label("Categories", systemImage: "square.grid.2x2.fill")
+            // 🔹 Домой
+            NavigationStack {
+                HomeView(
+                    favoritesManager: favoritesManager,
+                    articles: articles
+                )
             }
-            
-            SearchView(
-                favoritesManager: favoritesManager,
-                articles: articles
-            )
             .tabItem {
-                Label("Search", systemImage: "magnifyingglass")
+                Label(
+                    localizationManager.translate("HomeTab"),
+                    systemImage: "house"
+                )
             }
-            
-            FavoritesView(
-                favoritesManager: favoritesManager,
-                articles: articles
-            )
+
+            // 🔹 Категории
+            NavigationStack {
+                CategoriesView(
+                    favoritesManager: favoritesManager,
+                    articles: articles,
+                    categories: categoriesStore.categories
+                )
+            }
             .tabItem {
-                Label("Favorites", systemImage: "star.fill")
+                Label(
+                    localizationManager.translate("CategoriesTab"),
+                    systemImage: "square.grid.2x2"
+                )
             }
-            
+
+            // 🔹 Поиск
+            NavigationStack {
+                SearchView(
+                    favoritesManager: favoritesManager,
+                    articles: articles
+                )
+            }
+            .tabItem {
+                Label(
+                    localizationManager.translate("SearchTab"),
+                    systemImage: "magnifyingglass"
+                )
+            }
+
+            // 🔹 Избранное
+            NavigationStack {
+                FavoritesView(
+                    favoritesManager: favoritesManager,
+                    articles: articles
+                )
+            }
+            .tabItem {
+                Label(
+                    localizationManager.translate("FavoritesTab"),
+                    systemImage: "star.fill"
+                )
+            }
+
+            // 🔹 Настройки (здесь переходов нет — можно оставить без NavigationStack)
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gear")
+                    Label(
+                        localizationManager.translate("SettingsTab"),
+                        systemImage: "gear"
+                    )
                 }
         }
-        .preferredColorScheme(isDarkMode ? .dark : .light)
+        .task {
+            // Загружаем данные
+            self.articles = await DataService.shared.loadArticles()
+            self.locations = await DataService.shared.loadLocations()
+            await categoriesStore.bootstrap()
+        }
     }
 }

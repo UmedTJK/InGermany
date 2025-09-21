@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ArticleCardView: View {
-    let article: Article
-    let favoritesManager: FavoritesManager
+    let favoritesManager: FavoritesManager // ПЕРВЫЙ параметр
+    let article: Article                  // ВТОРОЙ параметр
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
     private var isFavorite: Bool {
