@@ -59,3 +59,17 @@ struct Shadow {
     let x: CGFloat
     let y: CGFloat
 }
+
+extension View {
+    func sectionCardStyle() -> some View {
+        self
+            .padding(.vertical, 12)
+            .background(Theme.backgroundCard)
+            .cornerRadius(Theme.cardCornerRadius)
+            .shadow(color: Theme.cardShadow.color,
+                    radius: Theme.cardShadow.radius,
+                    x: Theme.cardShadow.x,
+                    y: Theme.cardShadow.y)
+            .padding(.horizontal)
+    }
+}

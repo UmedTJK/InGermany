@@ -5,13 +5,6 @@
 //  Created by SUM TJK on 20.09.25.
 //
 
-//
-//  Components.swift
-//  InGermany
-//
-//  Created by ChatGPT on 21.09.25.
-//
-
 import SwiftUI
 
 // MARK: - ToolCard
@@ -36,9 +29,12 @@ struct ToolCard: View {
         }
         .padding()
         .frame(width: 120, height: 120)
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+        .background(Theme.backgroundCard)
+        .cornerRadius(Theme.cardCornerRadius)
+        .shadow(color: Theme.cardShadow.color,
+                radius: Theme.cardShadow.radius,
+                x: Theme.cardShadow.x,
+                y: Theme.cardShadow.y)
     }
 }
 
@@ -50,21 +46,39 @@ struct RecentArticleCard: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(article.localizedTitle(for: selectedLanguage))
-                .font(.headline)
-                .foregroundColor(.primary)
-                .lineLimit(2)
+        VStack(alignment: .leading, spacing: 0) {
+            Image("Logo")
+                .resizable()
+                .scaledToFill()
+                .frame(height: 200)
+                .frame(maxWidth: .infinity)
+                .clipped()
             
-            Text(article.formattedReadingTime(for: selectedLanguage))
-                .font(.caption)
-                .foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(article.localizedTitle(for: selectedLanguage))
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .lineLimit(2)
+                
+                Text(article.formattedReadingTime(for: selectedLanguage))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(12)
         }
-        .padding()
-        .frame(width: 200, alignment: .leading)
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 1, x: 0, y: 1)
+        .frame(
+            width: CardSize.width(for: UIScreen.main.bounds.width),
+            height: CardSize.height(
+                for: UIScreen.main.bounds.height,
+                screenWidth: UIScreen.main.bounds.width
+            )
+        )
+        .background(Theme.backgroundCard)
+        .cornerRadius(Theme.cardCornerRadius)
+        .shadow(color: Theme.cardShadow.color,
+                radius: Theme.cardShadow.radius,
+                x: Theme.cardShadow.x,
+                y: Theme.cardShadow.y)
     }
 }
 
@@ -121,3 +135,4 @@ struct CategoryFilterButton: View {
         .buttonStyle(.plain)
     }
 }
+

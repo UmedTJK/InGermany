@@ -14,61 +14,65 @@ struct FavoriteCard: View {
     @EnvironmentObject private var categoriesStore: CategoriesStore
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
+        let cardWidth = CardSize.width(for: UIScreen.main.bounds.width)
+        let cardHeight = CardSize.height(
+            for: UIScreen.main.bounds.height,
+            screenWidth: UIScreen.main.bounds.width
+        )
+        
+        VStack(alignment: .leading, spacing: 0) {
+            // Верхний баннер = 60% от высоты карточки
+            ZStack {
+                Rectangle()
+                    .fill(Theme.cardGradient)
+                    .frame(height: cardHeight * 0.6)
+                
                 if let category = categoriesStore.category(for: article.categoryId) {
-                    ZStack {
-                        Circle()
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        Color(red: 0.88, green: 0.91, blue: 0.96),
-                                        Color(red: 0.78, green: 0.83, blue: 0.92)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(width: 32, height: 32)
-                        
-                        Image(systemName: category.icon)
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.white)
-                    }
+                    Image(systemName: category.icon)
+                        .font(.system(size: 32, weight: .medium))
+                        .foregroundColor(.white)
+                }
+            }
+            
+            // Нижний текстовый блок = 40% от высоты карточки
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .top) {
+                    Text(article.title[selectedLanguage] ?? article.title["ru"] ?? "")
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundColor(.primary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                    
+                    Spacer()
+                    
+                    Image(systemName: favoritesManager.isFavorite(article: article) ? "star.fill" : "star")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(favoritesManager.isFavorite(article: article) ? .yellow : .gray.opacity(0.6))
+                        .symbolEffect(.bounce, value: favoritesManager.isFavorite(article: article))
                 }
                 
-                Spacer()
-                
-                Image(systemName: favoritesManager.isFavorite(article: article) ? "star.fill" : "star")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(favoritesManager.isFavorite(article: article) ? .yellow : .gray.opacity(0.6))
-                    .symbolEffect(.bounce, value: favoritesManager.isFavorite(article: article))
+                if let _ = categoriesStore.category(for: article.categoryId) {
+                    Text(categoriesStore.categoryName(for: article.categoryId, language: selectedLanguage).uppercased())
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundColor(.blue)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule()
+                                .fill(Color.blue.opacity(0.12))
+                        )
+                }
             }
-            
-            Text(article.title[selectedLanguage] ?? article.title["ru"] ?? "")
-                .font(.system(size: 16, weight: .semibold, design: .rounded))
-                .foregroundColor(.primary)
-                .lineLimit(2)
-                .multilineTextAlignment(.leading)
-                .fixedSize(horizontal: false, vertical: true)
-            
-            Spacer()
-            
-            if let _ = categoriesStore.category(for: article.categoryId) {
-                Text(categoriesStore.categoryName(for: article.categoryId, language: selectedLanguage).uppercased())
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(
-                        Capsule()
-                            .fill(Color.blue.opacity(0.12))
-                    )
-            }
+            .padding(12)
+            .frame(height: cardHeight * 0.4) // нижний блок = 40%
         }
-        .padding(16)
-        .frame(width: 170, height: 140)
-        .cardStyle()
+        .frame(width: cardWidth, height: cardHeight)
+        .background(Theme.backgroundCard)
+        .cornerRadius(Theme.cardCornerRadius)
+        .shadow(color: Theme.cardShadow.color,
+                radius: Theme.cardShadow.radius,
+                x: Theme.cardShadow.x,
+                y: Theme.cardShadow.y)
     }
 }
 
@@ -77,18 +81,10 @@ struct FavoriteCard: View {
         Color(.systemGroupedBackground)
             .ignoresSafeArea()
         
-        HStack {
-            FavoriteCard(
-                article: Article.sampleArticle,
-                favoritesManager: FavoritesManager()
-            )
-            .environmentObject(CategoriesStore.shared)
-            
-            FavoriteCard(
-                article: Article.sampleArticle,
-                favoritesManager: FavoritesManager()
-            )
-            .environmentObject(CategoriesStore.shared)
-        }
+        FavoriteCard(
+            article: Article.sampleArticle,
+            favoritesManager: FavoritesManager()
+        )
+        .environmentObject(CategoriesStore.shared)
     }
 }
