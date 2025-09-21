@@ -156,7 +156,6 @@ struct HomeView: View {
     }
 
     // MARK: - Недавно прочитанное
-
     private var recentlyReadSection: some View {
         let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
 
@@ -190,7 +189,6 @@ struct HomeView: View {
     }
 
     // MARK: - Избранное
-
     private var favoritesSection: some View {
         let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
 
@@ -240,7 +238,7 @@ struct HomeView: View {
                     ForEach(articles.prefix(5)) { article in
                         NavigationLink(destination: ArticleView(
                             article: article,
-                            allArticles: self.articles, // показываем все для похожих/шара
+                            allArticles: self.articles,
                             favoritesManager: favoritesManager
                         )) {
                             ArticleCardView(
