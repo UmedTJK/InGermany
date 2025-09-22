@@ -7,6 +7,15 @@
 
 # Changelog
 
+## [v1.8.1] - 2025-09-22
+### Fixed
+- RandomArticle открывается через современный navigationDestination
+- Кнопка PDF на HomeView снова работает
+- ArticleRow больше не содержит вложенный NavigationLink → исчезли двойные стрелки
+- SearchView: восстановлен navigationTitle, убраны дубли и лишние отступы, фон непрозрачный
+- ArticlesByCategoryView: убрана лишняя chevron-стрелка
+
+
 ## [v1.6.5] - 2025-09-21
 ### Added
 - Новый утилитный модуль `CardSize` для адаптивного расчёта ширины и высоты карточек.
