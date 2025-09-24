@@ -24,7 +24,18 @@ struct ArticleCardView: View {
             )
         } label: {
             VStack(alignment: .leading, spacing: 8) {
-                // Индикатор избранного в правом верхнем углу
+                // 🔹 Фото статьи (если есть)
+                if let imageName = article.image {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 120)
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+                        .cornerRadius(12)
+                }
+
+                // 🔹 Индикатор избранного в правом верхнем углу
                 HStack {
                     Spacer()
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
@@ -33,16 +44,19 @@ struct ArticleCardView: View {
                         .padding(4)
                 }
 
+                // 🔹 Заголовок
                 Text(article.localizedTitle(for: selectedLanguage))
                     .font(.headline)
                     .foregroundColor(.primary)
                     .lineLimit(2)
 
+                // 🔹 Анонс
                 Text(article.localizedContent(for: selectedLanguage))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .lineLimit(3)
 
+                // 🔹 Теги + время чтения
                 HStack {
                     ForEach(article.tags.prefix(3), id: \.self) { tag in
                         Text("#\(tag)")
@@ -55,7 +69,6 @@ struct ArticleCardView: View {
                     
                     Spacer()
                     
-                    // Время чтения
                     Text(article.formattedReadingTime(for: selectedLanguage))
                         .font(.caption2)
                         .foregroundColor(.secondary)
@@ -81,7 +94,7 @@ struct ArticleCardView: View {
             }
             
             Button {
-                // Можно добавить действие показа деталей
+                // Дополнительное действие (опционально)
             } label: {
                 Label("Информация о статье", systemImage: "info.circle")
             }

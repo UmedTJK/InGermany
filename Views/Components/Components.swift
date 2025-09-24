@@ -38,6 +38,8 @@ struct ToolCard: View {
     }
 }
 
+
+
 // MARK: - RecentArticleCard
 
 struct RecentArticleCard: View {
@@ -47,12 +49,22 @@ struct RecentArticleCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Image("Logo")
-                .resizable()
-                .scaledToFill()
-                .frame(height: 200)
-                .frame(maxWidth: .infinity)
-                .clipped()
+            // 🔹 Фото статьи или fallback = логотип
+            if let imageName = article.image {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 200)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+            } else {
+                Image("Logo")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 200)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+            }
             
             VStack(alignment: .leading, spacing: 6) {
                 Text(article.localizedTitle(for: selectedLanguage))
@@ -81,6 +93,7 @@ struct RecentArticleCard: View {
                 y: Theme.cardShadow.y)
     }
 }
+
 
 // MARK: - EmptyFavoritesView
 

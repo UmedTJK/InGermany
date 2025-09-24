@@ -16,15 +16,24 @@ struct ArticleRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            // 🔹 Мини-иконка категории
-            if let category = CategoriesStore.shared.category(for: article.categoryId) {
-                ZStack {
-                    Circle()
-                        .fill(Color(hex: category.colorHex) ?? .blue)
-                        .frame(width: 42, height: 42)
-                    Image(systemName: category.icon)
-                        .foregroundColor(.white)
-                        .font(.system(size: 18))
+            // 🔹 Фото статьи или fallback (иконка категории)
+            if let imageName = article.image {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 60)
+                    .cornerRadius(8)
+                    .clipped()
+            } else {
+                if let category = CategoriesStore.shared.category(for: article.categoryId) {
+                    ZStack {
+                        Circle()
+                            .fill(Color(hex: category.colorHex) ?? .blue)
+                            .frame(width: 42, height: 42)
+                        Image(systemName: category.icon)
+                            .foregroundColor(.white)
+                            .font(.system(size: 18))
+                    }
                 }
             }
 

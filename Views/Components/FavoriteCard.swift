@@ -21,20 +21,28 @@ struct FavoriteCard: View {
         )
         
         VStack(alignment: .leading, spacing: 0) {
-            // Верхний баннер = 60% от высоты карточки
+            // 🔹 Верхний баннер = 60% от высоты карточки
             ZStack {
-                Rectangle()
-                    .fill(Theme.cardGradient)
-                    .frame(height: cardHeight * 0.6)
-                
-                if let category = categoriesStore.category(for: article.categoryId) {
-                    Image(systemName: category.icon)
-                        .font(.system(size: 32, weight: .medium))
-                        .foregroundColor(.white)
+                if let imageName = article.image {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: cardHeight * 0.6)
+                        .clipped()
+                } else {
+                    Rectangle()
+                        .fill(Theme.cardGradient)
+                        .frame(height: cardHeight * 0.6)
+                    
+                    if let category = categoriesStore.category(for: article.categoryId) {
+                        Image(systemName: category.icon)
+                            .font(.system(size: 32, weight: .medium))
+                            .foregroundColor(.white)
+                    }
                 }
             }
             
-            // Нижний текстовый блок = 40% от высоты карточки
+            // 🔹 Нижний текстовый блок = 40% от высоты карточки
             VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .top) {
                     Text(article.title[selectedLanguage] ?? article.title["ru"] ?? "")
