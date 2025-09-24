@@ -222,16 +222,11 @@ struct HomeView: View {
     }
 
     // MARK: - Категории (с цветом из colorHex)
-
     private func categorySection(category: Category, articles: [Article]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: category.icon)
-                    .foregroundColor(Color(hex: category.colorHex) ?? .blue)
-                Text(category.localizedName(for: selectedLanguage))
-                    .font(.headline)
-            }
-            .padding(.horizontal)
+            Text(category.localizedName(for: selectedLanguage))
+                .font(.headline)
+                .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
@@ -241,7 +236,7 @@ struct HomeView: View {
                             allArticles: self.articles,
                             favoritesManager: favoritesManager
                         )) {
-                            ArticleCardView(
+                            FavoriteCard(
                                 article: article,
                                 favoritesManager: favoritesManager
                             )
@@ -253,7 +248,9 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Все статьи
+    // MARK: - Все статьи (в стиле карточек)
+
+    // MARK: - Все статьи (горизонтальные карточки)
 
     private var allArticlesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -261,22 +258,26 @@ struct HomeView: View {
                 .font(.headline)
                 .padding(.horizontal)
 
-            ForEach(articles.prefix(10)) { article in
-                NavigationLink(destination: ArticleView(
-                    article: article,
-                    allArticles: articles,
-                    favoritesManager: favoritesManager
-                )) {
-                    ArticleRowWithReadingInfo(
-                        article: article,
-                        favoritesManager: favoritesManager,
-                        isRead: readingHistoryManager.isRead(article.id)
-                    )
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(articles.prefix(10)) { article in
+                        NavigationLink(destination: ArticleView(
+                            article: article,
+                            allArticles: articles,
+                            favoritesManager: favoritesManager
+                        )) {
+                            FavoriteCard(
+                                article: article,
+                                favoritesManager: favoritesManager
+                            )
+                        }
+                    }
                 }
+                .padding(.horizontal)
             }
         }
-        .padding(.horizontal)
     }
+
 
     // MARK: - Локализация заголовков
 
