@@ -15,49 +15,42 @@ struct ArticleRow: View {
     }
 
     var body: some View {
-        NavigationLink {
-            ArticleDetailView(
-                article: article,
-                favoritesManager: favoritesManager
-            )
-        } label: {
-            HStack(alignment: .top, spacing: 12) {
-                // 🔹 Мини-иконка категории
-                if let category = CategoriesStore.shared.category(for: article.categoryId) {
-                    ZStack {
-                        Circle()
-                            .fill(Color(hex: category.colorHex) ?? .blue)
-                            .frame(width: 42, height: 42)
-                        Image(systemName: category.icon)
-                            .foregroundColor(.white)
-                            .font(.system(size: 18))
-                    }
+        HStack(alignment: .top, spacing: 12) {
+            // 🔹 Мини-иконка категории
+            if let category = CategoriesStore.shared.category(for: article.categoryId) {
+                ZStack {
+                    Circle()
+                        .fill(Color(hex: category.colorHex) ?? .blue)
+                        .frame(width: 42, height: 42)
+                    Image(systemName: category.icon)
+                        .foregroundColor(.white)
+                        .font(.system(size: 18))
                 }
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(article.localizedTitle(for: selectedLanguage))
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                        .lineLimit(2)
-
-                    // 🔹 Метаданные (категория + дата + бейджи)
-                    ArticleMetaView(article: article)
-
-                    // 🔹 Анонс
-                    Text(article.localizedContent(for: selectedLanguage))
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .lineLimit(2)
-                }
-
-                Spacer()
-
-                Image(systemName: isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(isFavorite ? .red : .gray)
-                    .font(.system(size: 16))
             }
-            .padding(.vertical, 8)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(article.localizedTitle(for: selectedLanguage))
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .lineLimit(2)
+
+                // 🔹 Метаданные (категория + дата + бейджи)
+                ArticleMetaView(article: article)
+
+                // 🔹 Анонс
+                Text(article.localizedContent(for: selectedLanguage))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+            }
+
+            Spacer()
+
+            Image(systemName: isFavorite ? "heart.fill" : "heart")
+                .foregroundColor(isFavorite ? .red : .gray)
+                .font(.system(size: 16))
         }
+        .padding(.vertical, 8)
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
                 toggleFavorite()
@@ -76,7 +69,7 @@ struct ArticleRow: View {
             .tint(.blue)
         }
     }
-    
+
     private func toggleFavorite() {
         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
             favoritesManager.toggleFavorite(article: article)
