@@ -154,6 +154,8 @@ struct HomeView: View {
     }
 
     // MARK: - Недавно прочитанное
+
+    // MARK: - Недавно прочитанное
     private var recentlyReadSection: some View {
         let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
 
@@ -172,7 +174,7 @@ struct HomeView: View {
                                     allArticles: articles,
                                     favoritesManager: favoritesManager
                                 )) {
-                                    RecentArticleCard(article: article) // ✅ без favoritesManager
+                                    RecentArticleCard(article: article) // ✅ только article
                                 }
                             }
                         }
@@ -183,6 +185,9 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - Избранное
+
+    // MARK: - Избранное
     // MARK: - Избранное
     private var favoritesSection: some View {
         let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
@@ -197,11 +202,13 @@ struct HomeView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
                             ForEach(favoriteArticles) { article in
-                                NavigationLink(destination: ArticleView(
-                                    article: article,
-                                    allArticles: articles,
-                                    favoritesManager: favoritesManager
-                                )) {
+                                NavigationLink {
+                                    ArticleView(
+                                        article: article,
+                                        allArticles: articles,
+                                        favoritesManager: favoritesManager
+                                    )
+                                } label: {
                                     FavoriteCard(article: article) // ✅ без favoritesManager
                                 }
                             }
@@ -213,7 +220,10 @@ struct HomeView: View {
         }
     }
 
+
+
     // MARK: - Категории
+
     private func categorySection(category: Category, articles: [Article]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(category.localizedName(for: selectedLanguage))
@@ -221,24 +231,28 @@ struct HomeView: View {
                 .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(articles.prefix(5)) { article in
-                        NavigationLink(destination: ArticleView(
-                            article: article,
-                            allArticles: self.articles,
-                            favoritesManager: favoritesManager
-                        )) {
-                            ArticleCardView(article: article) // ✅ карточки без favoritesManager
-                                .frame(width: 200)
+                LazyHStack(spacing: 16) {
+                    ForEach(articles.prefix(10)) { article in
+                        NavigationLink {
+                            ArticleView(
+                                article: article,
+                                allArticles: self.articles,
+                                favoritesManager: favoritesManager
+                            )
+                        } label: {
+                            ArticleCompactCard(article: article)   // ✅ только article
                         }
                     }
                 }
                 .padding(.horizontal)
+                .padding(.vertical, 4)
             }
         }
+        .padding(.bottom, 24)
     }
 
     // MARK: - Все статьи
+
     private var allArticlesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(getTranslation(key: "Все статьи", language: selectedLanguage))
@@ -246,23 +260,28 @@ struct HomeView: View {
                 .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(articles.prefix(10)) { article in
-                        NavigationLink(destination: ArticleView(
-                            article: article,
-                            allArticles: articles,
-                            favoritesManager: favoritesManager
-                        )) {
-                            ArticleRow(article: article) // ✅ без favoritesManager
+                LazyHStack(spacing: 16) {
+                    ForEach(articles) { article in
+                        NavigationLink {
+                            ArticleView(
+                                article: article,
+                                allArticles: articles,
+                                favoritesManager: favoritesManager
+                            )
+                        } label: {
+                            ArticleCompactCard(article: article)   // ✅ только article
                         }
                     }
                 }
                 .padding(.horizontal)
+                .padding(.vertical, 4)
             }
         }
+        .padding(.bottom, 24)
     }
 
-    // MARK: - Локализация
+    // MARK: - Локализация заголовков
+
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Главная": ["ru": "Главная", "en": "Home", "de": "Startseite", "tj": "Саҳифаи асосӣ"],

@@ -7,6 +7,12 @@
 
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- HomeView: добавлены изображения статей, временный фикс отображения карточек.  
+  ⚠️ Требуется последующая переработка карточек категорий и секции «Все статьи».
+
 
 ### Added
 - Поддержка изображений для статей (`ArticleView`, `ArticleRow`, `ArticleCardView`, `FavoriteCard`, `RecentArticleCard`)
