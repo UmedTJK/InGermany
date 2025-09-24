@@ -7,85 +7,36 @@ import SwiftUI
 
 struct ArticleRow: View {
     let article: Article
-    let favoritesManager: FavoritesManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-
-    private var isFavorite: Bool {
-        favoritesManager.isFavorite(article: article)
-    }
-
+    
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            // 🔹 Фото статьи или fallback (иконка категории)
-            if let imageName = article.image {
-                Image(imageName)
+            if let imageName = article.image,
+               let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
+                Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 60, height: 60)
                     .cornerRadius(8)
                     .clipped()
             } else {
-                if let category = CategoriesStore.shared.category(for: article.categoryId) {
-                    ZStack {
-                        Circle()
-                            .fill(Color(hex: category.colorHex) ?? .blue)
-                            .frame(width: 42, height: 42)
-                        Image(systemName: category.icon)
-                            .foregroundColor(.white)
-                            .font(.system(size: 18))
-                    }
-                }
+                Image("Logo")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 60)
+                    .cornerRadius(8)
+                    .clipped()
             }
-
-            VStack(alignment: .leading, spacing: 4) {
+            
+            VStack(alignment: .leading, spacing: 6) {
                 Text(article.localizedTitle(for: selectedLanguage))
                     .font(.headline)
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
-
-                // 🔹 Метаданные (категория + дата + бейджи)
-                ArticleMetaView(article: article)
-
-                // 🔹 Анонс
+                
                 Text(article.localizedContent(for: selectedLanguage))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .lineLimit(2)
             }
-
-            Spacer()
-
-            Image(systemName: isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(isFavorite ? .red : .gray)
-                .font(.system(size: 16))
-        }
-        .padding(.vertical, 8)
-        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-            Button {
-                toggleFavorite()
-            } label: {
-                Label(
-                    isFavorite ? "Удалить" : "В избранное",
-                    systemImage: isFavorite ? "heart.slash" : "heart.fill"
-                )
-            }
-            .tint(isFavorite ? .gray : .red)
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            ShareLink(item: article.localizedTitle(for: selectedLanguage)) {
-                Label("Поделиться", systemImage: "square.and.arrow.up")
-            }
-            .tint(.blue)
-        }
-    }
-
-    private func toggleFavorite() {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-            favoritesManager.toggleFavorite(article: article)
-            #if os(iOS)
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.impactOccurred()
-            #endif
         }
     }
 }

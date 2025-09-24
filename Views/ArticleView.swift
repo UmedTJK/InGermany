@@ -28,9 +28,18 @@ struct ArticleView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    // 🔹 Картинка статьи (если есть)
-                    if let imageName = article.image {
-                        Image(imageName)
+                    // 🔹 Картинка статьи (загрузка из Bundle)
+                    if let imageName = article.image,
+                       let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: .infinity, maxHeight: 220)
+                            .clipped()
+                            .cornerRadius(12)
+                    } else {
+                        // fallback
+                        Image("Logo")
                             .resizable()
                             .scaledToFill()
                             .frame(maxWidth: .infinity, maxHeight: 220)

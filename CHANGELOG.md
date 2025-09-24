@@ -7,6 +7,15 @@
 
 # Changelog
 
+
+### Added
+- Поддержка изображений для статей (`ArticleView`, `ArticleRow`, `ArticleCardView`, `FavoriteCard`, `RecentArticleCard`)
+- Новые локальные ресурсы: `bank_account.jpg`, `germany2.jpg` … `germany13.jpg`
+
+### Changed
+- `articles.json`: добавлены ссылки на изображения для каждой статьи
+
+
 ## [v1.8.5] - 2025-09-24
 ### Added
 - Подключён **SwiftLint** для проверки качества кода.

@@ -44,53 +44,37 @@ struct ToolCard: View {
 
 struct RecentArticleCard: View {
     let article: Article
-    let favoritesManager: FavoritesManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // 🔹 Фото статьи или fallback = логотип
-            if let imageName = article.image {
-                Image(imageName)
+        HStack(spacing: 12) {
+            if let imageName = article.image,
+               let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
+                Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
-                    .frame(height: 200)
-                    .frame(maxWidth: .infinity)
+                    .frame(width: 60, height: 60)
+                    .cornerRadius(8)
                     .clipped()
             } else {
                 Image("Logo")
                     .resizable()
                     .scaledToFill()
-                    .frame(height: 200)
-                    .frame(maxWidth: .infinity)
+                    .frame(width: 60, height: 60)
+                    .cornerRadius(8)
                     .clipped()
             }
-            
-            VStack(alignment: .leading, spacing: 6) {
+
+            VStack(alignment: .leading, spacing: 4) {
                 Text(article.localizedTitle(for: selectedLanguage))
                     .font(.headline)
-                    .foregroundColor(.primary)
                     .lineLimit(2)
-                
-                Text(article.formattedReadingTime(for: selectedLanguage))
-                    .font(.caption)
+                Text(article.localizedContent(for: selectedLanguage))
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
+                    .lineLimit(2)
             }
-            .padding(12)
         }
-        .frame(
-            width: CardSize.width(for: UIScreen.main.bounds.width),
-            height: CardSize.height(
-                for: UIScreen.main.bounds.height,
-                screenWidth: UIScreen.main.bounds.width
-            )
-        )
-        .background(Theme.backgroundCard)
-        .cornerRadius(Theme.cardCornerRadius)
-        .shadow(color: Theme.cardShadow.color,
-                radius: Theme.cardShadow.radius,
-                x: Theme.cardShadow.x,
-                y: Theme.cardShadow.y)
     }
 }
 

@@ -21,10 +21,7 @@ struct ArticlesByTagView: View {
                     favoritesManager: favoritesManager
                 )
             } label: {
-                ArticleRow(
-                    article: article,
-                    favoritesManager: favoritesManager
-                )
+                ArticleRow(article: article) // ✅ без favoritesManager
             }
         }
         .navigationTitle("#\(tag)")
