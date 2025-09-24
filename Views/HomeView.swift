@@ -154,8 +154,6 @@ struct HomeView: View {
     }
 
     // MARK: - Недавно прочитанное
-
-    // MARK: - Недавно прочитанное
     private var recentlyReadSection: some View {
         let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
 
@@ -167,27 +165,28 @@ struct HomeView: View {
                         .padding(.horizontal)
 
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
+                        LazyHStack(spacing: 16) {
                             ForEach(recentlyRead) { article in
-                                NavigationLink(destination: ArticleView(
-                                    article: article,
-                                    allArticles: articles,
-                                    favoritesManager: favoritesManager
-                                )) {
-                                    RecentArticleCard(article: article) // ✅ только article
+                                NavigationLink {
+                                    ArticleView(
+                                        article: article,
+                                        allArticles: articles,
+                                        favoritesManager: favoritesManager
+                                    )
+                                } label: {
+                                    ArticleCompactCard(article: article) // ✅ единый стиль
                                 }
                             }
                         }
                         .padding(.horizontal)
+                        .padding(.vertical, 4)
                     }
                 }
+                .padding(.bottom, 24)
             }
         }
     }
 
-    // MARK: - Избранное
-
-    // MARK: - Избранное
     // MARK: - Избранное
     private var favoritesSection: some View {
         let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
@@ -200,7 +199,7 @@ struct HomeView: View {
                         .padding(.horizontal)
 
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
+                        LazyHStack(spacing: 16) {
                             ForEach(favoriteArticles) { article in
                                 NavigationLink {
                                     ArticleView(
@@ -209,18 +208,18 @@ struct HomeView: View {
                                         favoritesManager: favoritesManager
                                     )
                                 } label: {
-                                    FavoriteCard(article: article) // ✅ без favoritesManager
+                                    ArticleCompactCard(article: article) // ✅ единый стиль
                                 }
                             }
                         }
                         .padding(.horizontal)
+                        .padding(.vertical, 4)
                     }
                 }
+                .padding(.bottom, 24)
             }
         }
     }
-
-
 
     // MARK: - Категории
 
