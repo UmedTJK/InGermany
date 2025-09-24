@@ -27,7 +27,13 @@ struct ContentView: View {
                         favoritesManager: favoritesManager
                     )
                     .tabItem {
-                        Label("Home", systemImage: "house.fill")
+                        Label(
+                            LocalizationManager.shared.getTranslation(
+                                key: "Главная",
+                                language: selectedLanguage
+                            ),
+                            systemImage: "house.fill"
+                        )
                     }
                     
                     CategoriesView(
@@ -36,7 +42,13 @@ struct ContentView: View {
                         favoritesManager: favoritesManager
                     )
                     .tabItem {
-                        Label("Categories", systemImage: "square.grid.2x2.fill")
+                        Label(
+                            LocalizationManager.shared.getTranslation(
+                                key: "Категории",
+                                language: selectedLanguage
+                            ),
+                            systemImage: "square.grid.2x2.fill"
+                        )
                     }
                     
                     SearchView(
@@ -44,7 +56,13 @@ struct ContentView: View {
                         articles: articles
                     )
                     .tabItem {
-                        Label("Search", systemImage: "magnifyingglass")
+                        Label(
+                            LocalizationManager.shared.getTranslation(
+                                key: "Поиск",
+                                language: selectedLanguage
+                            ),
+                            systemImage: "magnifyingglass"
+                        )
                     }
                     
                     FavoritesView(
@@ -52,12 +70,24 @@ struct ContentView: View {
                         articles: articles
                     )
                     .tabItem {
-                        Label("Favorites", systemImage: "star.fill")
+                        Label(
+                            LocalizationManager.shared.getTranslation(
+                                key: "Избранное",
+                                language: selectedLanguage
+                            ),
+                            systemImage: "star.fill"
+                        )
                     }
                     
                     SettingsView()
                         .tabItem {
-                            Label("Settings", systemImage: "gear")
+                            Label(
+                                LocalizationManager.shared.getTranslation(
+                                    key: "Настройки",
+                                    language: selectedLanguage
+                                ),
+                                systemImage: "gear"
+                            )
                         }
                 }
                 .preferredColorScheme(isDarkMode ? .dark : .light)
@@ -72,9 +102,8 @@ struct ContentView: View {
     }
     
     private func loadData() async {
-        let dataService = DataService.shared
-        articles = await dataService.loadArticles()
-        categories = await dataService.loadCategories()
+        articles = await DataService.shared.loadArticles()
+        categories = await DataService.shared.loadCategories()
         isLoading = false
     }
     
