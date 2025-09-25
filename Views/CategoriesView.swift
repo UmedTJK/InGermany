@@ -17,7 +17,6 @@ struct CategoriesView: View {
                     )
                 } label: {
                     HStack(spacing: 12) {
-                        // 🔹 Цветная иконка категории
                         ZStack {
                             Circle()
                                 .fill(Color(hex: category.colorHex) ?? .blue)
@@ -39,24 +38,13 @@ struct CategoriesView: View {
         }
     }
 
-    // Локализация заголовка
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Категории": [
-                "ru": "Категории",
-                "en": "Categories",
-                "de": "Kategorien",
-                "tj": "Категорияҳо"
+                "ru": "Категории", "en": "Categories", "de": "Kategorien", "tj": "Категорияҳо",
+                "fa": "دسته‌ها", "ar": "الفئات", "uk": "Категорії"
             ]
         ]
         return translations[key]?[language] ?? key
     }
-}
-
-#Preview {
-    CategoriesView(
-        categories: Category.sampleCategories,
-        articles: [Article.sampleArticle],
-        favoritesManager: FavoritesManager()
-    )
 }

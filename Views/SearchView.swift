@@ -50,8 +50,36 @@ struct SearchView: View {
                 }
                 .listStyle(.plain)
             }
-            .navigationTitle("Поиск")
-            .searchable(text: $searchText, prompt: "Искать по статьям или категориям")
+            .navigationTitle(getTranslation(key: "Поиск", language: selectedLanguage))
+            .searchable(
+                text: $searchText,
+                prompt: getTranslation(key: "Искать по статьям или категориям", language: selectedLanguage)
+            )
         }
+    }
+
+    // MARK: - Translation
+    private func getTranslation(key: String, language: String) -> String {
+        let translations: [String: [String: String]] = [
+            "Поиск": [
+                "ru": "Поиск",
+                "en": "Search",
+                "de": "Suche",
+                "tj": "Ҷустуҷӯ",
+                "fa": "جستجو",
+                "ar": "بحث",
+                "uk": "Пошук"
+            ],
+            "Искать по статьям или категориям": [
+                "ru": "Искать по статьям или категориям",
+                "en": "Search articles or categories",
+                "de": "Artikel oder Kategorien suchen",
+                "tj": "Ҷустуҷӯ аз рӯи мақолаҳо ё категорияҳо",
+                "fa": "جستجو در مقالات یا دسته‌ها",
+                "ar": "ابحث في المقالات أو الفئات",
+                "uk": "Шукати за статтями чи категоріями"
+            ]
+        ]
+        return translations[key]?[language] ?? key
     }
 }

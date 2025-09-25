@@ -51,7 +51,7 @@ struct ArticleDetailView: View {
                             .replacingOccurrences(of: " ", with: "_")
                     )
                 } label: {
-                    Label("Экспорт в PDF", systemImage: "square.and.arrow.down")
+                    Label(getTranslation(key: "Экспорт в PDF", language: selectedLanguage), systemImage: "square.and.arrow.down")
                         .font(.headline)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -62,7 +62,7 @@ struct ArticleDetailView: View {
                 // 🔹 Открытие PDF
                 if let pdfFileName = article.pdfFileName {
                     NavigationLink(destination: PDFViewer(fileName: pdfFileName)) {
-                        Label("Открыть PDF", systemImage: "doc.richtext")
+                        Label(getTranslation(key: "Открыть PDF", language: selectedLanguage), systemImage: "doc.richtext")
                             .font(.headline)
                             .padding()
                             .frame(maxWidth: .infinity)
@@ -75,7 +75,7 @@ struct ArticleDetailView: View {
             }
             .padding()
         }
-        .navigationTitle("Статья")
+        .navigationTitle(getTranslation(key: "Статья", language: selectedLanguage))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             Button {
@@ -84,5 +84,24 @@ struct ArticleDetailView: View {
                 Image(systemName: favoritesManager.isFavorite(id: article.id) ? "heart.fill" : "heart")
             }
         }
+    }
+
+    // MARK: - Translation
+    private func getTranslation(key: String, language: String) -> String {
+        let translations: [String: [String: String]] = [
+            "Статья": [
+                "ru": "Статья", "en": "Article", "de": "Artikel", "tj": "Мақола",
+                "fa": "مقاله", "ar": "مقالة", "uk": "Стаття"
+            ],
+            "Экспорт в PDF": [
+                "ru": "Экспорт в PDF", "en": "Export to PDF", "de": "Als PDF exportieren", "tj": "Содирот ба PDF",
+                "fa": "خروجی به PDF", "ar": "تصدير إلى PDF", "uk": "Експорт у PDF"
+            ],
+            "Открыть PDF": [
+                "ru": "Открыть PDF", "en": "Open PDF", "de": "PDF öffnen", "tj": "Кушодани PDF",
+                "fa": "باز کردن PDF", "ar": "فتح PDF", "uk": "Відкрити PDF"
+            ]
+        ]
+        return translations[key]?[language] ?? key
     }
 }

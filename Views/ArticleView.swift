@@ -28,7 +28,6 @@ struct ArticleView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    // 🔹 Картинка статьи (загрузка из Bundle)
                     if let imageName = article.image,
                        let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
                         Image(uiImage: uiImage)
@@ -38,7 +37,6 @@ struct ArticleView: View {
                             .clipped()
                             .cornerRadius(12)
                     } else {
-                        // fallback
                         Image("Logo")
                             .resizable()
                             .scaledToFill()
@@ -47,7 +45,6 @@ struct ArticleView: View {
                             .cornerRadius(12)
                     }
 
-                    // 🔹 Прогресс-бар
                     ReadingProgressBar(
                         progress: progressTracker.scrollProgress,
                         height: 6,
@@ -55,16 +52,13 @@ struct ArticleView: View {
                     )
                     .padding(.bottom, 8)
                     
-                    // 🔹 Заголовок
                     Text(article.localizedTitle(for: selectedLanguage))
                         .font(.title)
                         .bold()
                         .id("articleTop")
 
-                    // 🔹 Метаданные
                     ArticleMetaView(article: article)
 
-                    // 🔹 Время чтения и индикаторы
                     HStack {
                         Image(systemName: "clock")
                             .foregroundColor(.secondary)
@@ -87,7 +81,6 @@ struct ArticleView: View {
                         }
                     }
 
-                    // 🔹 Контент
                     Text(article.localizedContent(for: selectedLanguage))
                         .font(textSizeManager.isCustomTextSizeEnabled ?
                               textSizeManager.currentFont : .body)
@@ -95,7 +88,6 @@ struct ArticleView: View {
                         .trackReadingProgress(progressTracker)
                         .lineSpacing(4)
 
-                    // 🔹 Рейтинг
                     VStack(alignment: .leading, spacing: 4) {
                         Text(getTranslation(key: "Оцените статью", language: selectedLanguage))
                             .font(.subheadline)
@@ -112,7 +104,6 @@ struct ArticleView: View {
                     }
                     .padding(.top)
 
-                    // 🔹 Поделиться
                     ShareLink(
                         item: "\(article.localizedTitle(for: selectedLanguage))\n\n\(article.localizedContent(for: selectedLanguage))",
                         subject: Text(article.localizedTitle(for: selectedLanguage)),
@@ -125,7 +116,6 @@ struct ArticleView: View {
                         .padding(.top)
                     }
 
-                    // 🔹 Похожие статьи
                     if !relatedArticles.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(getTranslation(key: "Похожие статьи", language: selectedLanguage))
@@ -206,35 +196,22 @@ struct ArticleView: View {
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Оцените статью": [
-                "ru": "Оцените статью",
-                "en": "Rate this article",
-                "de": "Artikel bewerten",
-                "tj": "Мақоларо баҳогузорӣ кунед"
+                "ru": "Оцените статью", "en": "Rate this article", "de": "Artikel bewerten", "tj": "Мақоларо баҳогузорӣ кунед",
+                "fa": "به این مقاله امتیاز دهید", "ar": "قيّم هذه المقالة", "uk": "Оцініть статтю"
             ],
             "Поделитесь этой статьёй": [
-                "ru": "Поделитесь этой статьёй",
-                "en": "Share this article",
-                "de": "Artikel teilen",
-                "tj": "Ин мақоларо мубодила кунед"
+                "ru": "Поделитесь этой статьёй", "en": "Share this article", "de": "Artikel teilen", "tj": "Ин мақоларо мубодила кунед",
+                "fa": "این مقاله را به اشتراک بگذارید", "ar": "شارك هذه المقالة", "uk": "Поділіться цією статтею"
             ],
             "Поделиться статьёй": [
-                "ru": "Поделиться статьёй",
-                "en": "Share article",
-                "de": "Artikel teilen",
-                "tj": "Мақоларо мубодила кунед"
+                "ru": "Поделиться статьёй", "en": "Share article", "de": "Artikel teilen", "tj": "Мақоларо мубодила кунед",
+                "fa": "اشتراک‌گذاری مقاله", "ar": "مشاركة المقالة", "uk": "Поділитися статтею"
+            ],
+            "Похожие статьи": [
+                "ru": "Похожие статьи", "en": "Related articles", "de": "Ähnliche Artikel", "tj": "Мақолаҳои монанд",
+                "fa": "مقالات مشابه", "ar": "مقالات مشابهة", "uk": "Схожі статті"
             ]
         ]
         return translations[key]?[language] ?? key
-    }
-}
-
-#Preview {
-    NavigationView {
-        ArticleView(
-            article: Article.sampleArticle,
-            allArticles: [Article.sampleArticle],
-            favoritesManager: FavoritesManager()
-        )
-        .environmentObject(CategoriesStore.shared)
     }
 }

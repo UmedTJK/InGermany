@@ -281,17 +281,44 @@ struct HomeView: View {
 
     // MARK: - Локализация заголовков
 
+
+
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
-            "Главная": ["ru": "Главная", "en": "Home", "de": "Startseite", "tj": "Саҳифаи асосӣ"],
-            "Полезные инструменты": ["ru": "Полезные инструменты", "en": "Useful tools", "de": "Nützliche Werkzeuge", "tj": "Асбобҳои муфид"],
-            "Карта": ["ru": "Карта", "en": "Map", "de": "Karte", "tj": "Харита"],
-            "PDF Документы": ["ru": "PDF Документы", "en": "PDF Documents", "de": "PDF-Dokumente", "tj": "Ҳуҷҷатҳои PDF"],
-            "Случайная статья": ["ru": "Случайная статья", "en": "Random article", "de": "Zufälliger Artikel", "tj": "Мақолаи тасодуфӣ"],
-            "Недавно прочитанное": ["ru": "Недавно прочитанное", "en": "Recently read", "de": "Kürzlich gelesen", "tj": "Мақолаҳои охир хондашуда"],
-            "Избранное": ["ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда"],
-            "Все статьи": ["ru": "Все статьи", "en": "All articles", "de": "Alle Artikel", "tj": "Ҳамаи мақолаҳо"]
+            "Главная": [
+                "ru": "Главная", "en": "Home", "de": "Startseite", "tj": "Саҳифаи асосӣ",
+                "fa": "خانه", "ar": "الرئيسية", "uk": "Головна"
+            ],
+            "Полезные инструменты": [
+                "ru": "Полезные инструменты", "en": "Useful tools", "de": "Nützliche Werkzeuge", "tj": "Асбобҳои муфид",
+                "fa": "ابزارهای مفید", "ar": "أدوات مفيدة", "uk": "Корисні інструменти"
+            ],
+            "Карта": [
+                "ru": "Карта", "en": "Map", "de": "Karte", "tj": "Харита",
+                "fa": "نقشه", "ar": "خريطة", "uk": "Карта"
+            ],
+            "PDF Документы": [
+                "ru": "PDF Документы", "en": "PDF Documents", "de": "PDF-Dokumente", "tj": "Ҳуҷҷатҳои PDF",
+                "fa": "اسناد PDF", "ar": "مستندات PDF", "uk": "PDF документи"
+            ],
+            "Случайная статья": [
+                "ru": "Случайная статья", "en": "Random article", "de": "Zufälliger Artikel", "tj": "Мақолаи тасодуфӣ",
+                "fa": "مقاله تصادفی", "ar": "مقالة عشوائية", "uk": "Випадкова стаття"
+            ],
+            "Недавно прочитанное": [
+                "ru": "Недавно прочитанное", "en": "Recently read", "de": "Kürzlich gelesen", "tj": "Мақолаҳои охир хондашуда",
+                "fa": "اخیراً خوانده شده", "ar": "تمت قراءته مؤخراً", "uk": "Нещодавно прочитане"
+            ],
+            "Избранное": [
+                "ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда",
+                "fa": "علاقه‌مندی‌ها", "ar": "المفضلة", "uk": "Вибране"
+            ],
+            "Все статьи": [
+                "ru": "Все статьи", "en": "All articles", "de": "Alle Artikel", "tj": "Ҳамаи мақолаҳо",
+                "fa": "همه مقالات", "ar": "جميع المقالات", "uk": "Усі статті"
+            ]
         ]
         return translations[key]?[language] ?? key
     }
+
 }

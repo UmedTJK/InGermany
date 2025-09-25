@@ -21,7 +21,7 @@ struct ReadingProgressBar: View {
         backgroundColor: Color = Color.gray.opacity(0.2),
         foregroundColor: Color = Color.blue
     ) {
-        self.progress = max(0, min(1, progress)) // Ограничиваем от 0 до 1
+        self.progress = max(0, min(1, progress))
         self.height = height
         self.cornerRadius = cornerRadius
         self.backgroundColor = backgroundColor
@@ -31,13 +31,11 @@ struct ReadingProgressBar: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                // Фон прогресс-бара
                 Rectangle()
                     .fill(backgroundColor)
                     .frame(height: height)
                     .cornerRadius(cornerRadius)
                 
-                // Заполненная часть
                 Rectangle()
                     .fill(
                         LinearGradient(
@@ -67,17 +65,13 @@ class ReadingProgressTracker: ObservableObject {
     func updateProgress(contentOffset: CGPoint, contentSize: CGSize, visibleSize: CGSize) {
         contentHeight = contentSize.height
         visibleHeight = visibleSize.height
-        
-        // Рассчитываем прогресс чтения
         let maxOffset = max(0, contentHeight - visibleHeight)
         
         if maxOffset > 0 {
             scrollProgress = max(0, min(1, contentOffset.y / maxOffset))
         } else {
-            scrollProgress = 1 // Весь контент виден
+            scrollProgress = 1
         }
-        
-        // Считаем, что пользователь читает, если прогресс больше 5%
         isReading = scrollProgress > 0.05
     }
     
@@ -87,7 +81,7 @@ class ReadingProgressTracker: ObservableObject {
     }
 }
 
-// MARK: - Scroll Tracking View Modifier
+// MARK: - Scroll Tracking Modifier
 
 struct ScrollTrackingModifier: ViewModifier {
     @ObservedObject var progressTracker: ReadingProgressTracker
@@ -104,25 +98,17 @@ struct ScrollTrackingModifier: ViewModifier {
                 }
             )
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                // Обновляем прогресс (упрощенная версия)
-                let progress = max(0, min(1, -value.y / 500)) // 500 - примерная высота контента
+                let progress = max(0, min(1, -value.y / 500))
                 progressTracker.scrollProgress = progress
                 progressTracker.isReading = progress > 0.05
             }
     }
 }
 
-// MARK: - Preference Key для отслеживания скролла
-
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGPoint = .zero
-    
-    static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) {
-        value = nextValue()
-    }
+    static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) { value = nextValue() }
 }
-
-// MARK: - View Extension
 
 extension View {
     func trackReadingProgress(_ progressTracker: ReadingProgressTracker) -> some View {
@@ -130,7 +116,7 @@ extension View {
     }
 }
 
-// MARK: - Reading Progress View (для использования в ArticleView)
+// MARK: - Reading Progress View
 
 struct ReadingProgressView: View {
     @ObservedObject var progressTracker: ReadingProgressTracker
@@ -158,7 +144,6 @@ struct ReadingProgressView: View {
                 foregroundColor: progressTracker.isReading ? .green : .blue
             )
             
-            // Дополнительная информация
             HStack(spacing: 16) {
                 HStack(spacing: 4) {
                     Image(systemName: "clock")
@@ -195,84 +180,21 @@ struct ReadingProgressView: View {
                 "ru": "Прогресс чтения",
                 "en": "Reading Progress",
                 "de": "Lesefortschritt",
-                "tj": "Пешравии хондан"
+                "tj": "Пешравии хондан",
+                "fa": "پیشرفت مطالعه",
+                "ar": "تقدّم القراءة",
+                "uk": "Прогрес читання"
             ],
             "Читаете": [
                 "ru": "Читаете",
                 "en": "Reading",
                 "de": "Lesen",
-                "tj": "Хонед"
+                "tj": "Хонед",
+                "fa": "در حال خواندن",
+                "ar": "تقرأ",
+                "uk": "Читаєте"
             ]
         ]
         return translations[key]?[language] ?? key
     }
-}
-
-// MARK: - Circular Progress (альтернативный стиль)
-
-struct CircularReadingProgress: View {
-    let progress: CGFloat
-    let size: CGFloat
-    let lineWidth: CGFloat
-    let backgroundColor: Color
-    let foregroundColor: Color
-    
-    init(
-        progress: CGFloat,
-        size: CGFloat = 40,
-        lineWidth: CGFloat = 4,
-        backgroundColor: Color = Color.gray.opacity(0.2),
-        foregroundColor: Color = Color.blue
-    ) {
-        self.progress = max(0, min(1, progress))
-        self.size = size
-        self.lineWidth = lineWidth
-        self.backgroundColor = backgroundColor
-        self.foregroundColor = foregroundColor
-    }
-    
-    var body: some View {
-        ZStack {
-            // Фон круга
-            Circle()
-                .stroke(backgroundColor, lineWidth: lineWidth)
-            
-            // Прогресс
-            Circle()
-                .trim(from: 0, to: progress)
-                .stroke(
-                    foregroundColor,
-                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                )
-                .rotationEffect(.degrees(-90))
-                .animation(.easeInOut(duration: 0.3), value: progress)
-            
-            // Текст с процентами (опционально)
-            Text("\(Int(progress * 100))%")
-                .font(.system(size: size * 0.25, weight: .medium))
-                .foregroundColor(foregroundColor)
-        }
-        .frame(width: size, height: size)
-    }
-}
-
-#Preview {
-    VStack(spacing: 20) {
-        ReadingProgressBar(progress: 0.3)
-        
-        ReadingProgressBar(
-            progress: 0.7,
-            height: 8,
-            foregroundColor: .green
-        )
-        
-        CircularReadingProgress(progress: 0.65)
-        
-        CircularReadingProgress(
-            progress: 0.9,
-            size: 60,
-            foregroundColor: .orange
-        )
-    }
-    .padding()
 }

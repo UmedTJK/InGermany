@@ -14,12 +14,35 @@ struct TextSizeSettingsPanel: View {
     
     private func localizedText(_ key: String) -> String {
         let translations: [String: [String: String]] = [
-            "Размер текста": ["ru": "Размер текста", "en": "Text Size", "de": "Textgröße", "tj": "Андозаи матн"],
-            "Настройки текста": ["ru": "Настройки текста", "en": "Text Settings", "de": "Texteinstellungen", "tj": "Танзимоти матн"],
-            "Сбросить": ["ru": "Сбросить", "en": "Reset", "de": "Zurücksetzen", "tj": "Бекор кардан"],
-            "Пример текста": ["ru": "Пример текста для предпросмотра размера шрифта", "en": "Sample text for font size preview", "de": "Beispieltext zur Vorschau der Schriftgröße", "tj": "Матни намуна барои дида барои андозаи ҳарф"],
-            "Пользовательский размер": ["ru": "Пользовательский размер", "en": "Custom Size", "de": "Benutzerdefinierte Größe", "tj": "Андозаи фардӣ"],
-            "Готово": ["ru": "Готово", "en": "Done", "de": "Fertig", "tj": "Омода"]
+            "Размер текста": [
+                "ru": "Размер текста", "en": "Text Size", "de": "Textgröße", "tj": "Андозаи матн",
+                "fa": "اندازه متن", "ar": "حجم النص", "uk": "Розмір тексту"
+            ],
+            "Настройки текста": [
+                "ru": "Настройки текста", "en": "Text Settings", "de": "Texteinstellungen", "tj": "Танзимоти матн",
+                "fa": "تنظیمات متن", "ar": "إعدادات النص", "uk": "Налаштування тексту"
+            ],
+            "Сбросить": [
+                "ru": "Сбросить", "en": "Reset", "de": "Zurücksetzen", "tj": "Бекор кардан",
+                "fa": "بازنشانی", "ar": "إعادة تعيين", "uk": "Скинути"
+            ],
+            "Пример текста": [
+                "ru": "Пример текста для предпросмотра размера шрифта",
+                "en": "Sample text for font size preview",
+                "de": "Beispieltext zur Vorschau der Schriftgröße",
+                "tj": "Матни намуна барои дида барои андозаи ҳарф",
+                "fa": "متن نمونه برای پیش‌نمایش اندازه فونت",
+                "ar": "نص تجريبي لمعاينة حجم الخط",
+                "uk": "Приклад тексту для перегляду розміру шрифту"
+            ],
+            "Пользовательский размер": [
+                "ru": "Пользовательский размер", "en": "Custom Size", "de": "Benutzerdefinierte Größe", "tj": "Андозаи фардӣ",
+                "fa": "اندازه سفارشی", "ar": "حجم مخصص", "uk": "Користувацький розмір"
+            ],
+            "Готово": [
+                "ru": "Готово", "en": "Done", "de": "Fertig", "tj": "Омода",
+                "fa": "انجام شد", "ar": "تم", "uk": "Готово"
+            ]
         ]
         return translations[key]?[selectedLanguage] ?? key
     }
@@ -42,7 +65,6 @@ struct TextSizeSettingsPanel: View {
                                 step: 1
                             )
                             
-                            // Быстрые пресеты
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 8) {
                                     ForEach(textSizeManager.presetSizes, id: \.self) { size in

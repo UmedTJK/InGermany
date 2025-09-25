@@ -34,6 +34,7 @@ struct MapView: View {
     @State private var locations: [Location] = []
     @StateObject private var locationManager = LocationManager()
     @State private var isLoading = true
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 50.4250, longitude: 10.7317),
@@ -44,7 +45,7 @@ struct MapView: View {
         NavigationStack {
             Group {
                 if isLoading {
-                    ProgressView("Загрузка карты...")
+                    ProgressView(getTranslation(key: "Загрузка карты...", language: selectedLanguage))
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     Group {
@@ -80,7 +81,7 @@ struct MapView: View {
                     }
                 }
             }
-            .navigationTitle("Карта")
+            .navigationTitle(getTranslation(key: "Карта", language: selectedLanguage))
             .edgesIgnoringSafeArea(.all)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -90,7 +91,7 @@ struct MapView: View {
                             region.span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
                         }
                     }) {
-                        Label("Моё местоположение", systemImage: "location.fill")
+                        Label(getTranslation(key: "Моё местоположение", language: selectedLanguage), systemImage: "location.fill")
                     }
                 }
                 
@@ -100,7 +101,7 @@ struct MapView: View {
                             await refreshLocations()
                         }
                     }) {
-                        Label("Обновить", systemImage: "arrow.clockwise")
+                        Label(getTranslation(key: "Обновить", language: selectedLanguage), systemImage: "arrow.clockwise")
                     }
                 }
             }
@@ -120,5 +121,48 @@ struct MapView: View {
         await DataService.shared.refreshData()
         locations = await DataService.shared.loadLocations()
         isLoading = false
+    }
+
+    // MARK: - Translation
+    private func getTranslation(key: String, language: String) -> String {
+        let translations: [String: [String: String]] = [
+            "Загрузка карты...": [
+                "ru": "Загрузка карты...",
+                "en": "Loading map...",
+                "de": "Karte wird geladen...",
+                "tj": "Боркунии харита...",
+                "fa": "در حال بارگذاری نقشه...",
+                "ar": "جارٍ تحميل الخريطة...",
+                "uk": "Завантаження карти..."
+            ],
+            "Карта": [
+                "ru": "Карта",
+                "en": "Map",
+                "de": "Karte",
+                "tj": "Харита",
+                "fa": "نقشه",
+                "ar": "خريطة",
+                "uk": "Карта"
+            ],
+            "Моё местоположение": [
+                "ru": "Моё местоположение",
+                "en": "My location",
+                "de": "Mein Standort",
+                "tj": "Ҷойгиршавии ман",
+                "fa": "مکان من",
+                "ar": "موقعي",
+                "uk": "Моє місцезнаходження"
+            ],
+            "Обновить": [
+                "ru": "Обновить",
+                "en": "Refresh",
+                "de": "Aktualisieren",
+                "tj": "Навсозӣ",
+                "fa": "به‌روزرسانی",
+                "ar": "تحديث",
+                "uk": "Оновити"
+            ]
+        ]
+        return translations[key]?[language] ?? key
     }
 }
