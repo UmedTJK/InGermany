@@ -33,12 +33,22 @@ struct SettingsView: View {
             Form {
                 // Язык приложения
                 Section(header: Text(getTranslation(key: "Язык приложения", language: selectedLanguage))) {
-                    Picker(getTranslation(key: "Выберите язык", language: selectedLanguage), selection: $selectedLanguage) {
-                        ForEach(languages, id: \.0) { code, name in
-                            Text(name).tag(code)
+                    ForEach(languages, id: \.0) { code, name in
+                        HStack {
+                            Text(flag(for: code))
+                            Text(name)
+                                .font(.body)
+                            Spacer()
+                            if selectedLanguage == code {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selectedLanguage = code
                         }
                     }
-                    .pickerStyle(.segmented)
                 }
                 
                 // Внешний вид
@@ -135,29 +145,34 @@ struct SettingsView: View {
     
     // MARK: - Helper Methods
     
+    private func flag(for code: String) -> String {
+        switch code {
+        case "ru": return "🇷🇺"
+        case "en": return "🇬🇧"
+        case "tj": return "🇹🇯"
+        case "de": return "🇩🇪"
+        case "fa": return "🇮🇷"
+        case "ar": return "🇸🇦"
+        case "uk": return "🇺🇦"
+        default:   return "🌐"
+        }
+    }
+    
     private func formatReadingTime(_ minutes: Int, language: String) -> String {
         switch language {
-        case "en":
-            return minutes == 1 ? "1 minute" : "\(minutes) minutes"
-        case "de":
-            return minutes == 1 ? "1 Minute" : "\(minutes) Minuten"
-        case "tj":
-            return minutes == 1 ? "1 дақиқа" : "\(minutes) дақиқа"
-        case "fa":
-            return minutes == 1 ? "1 دقیقه" : "\(minutes) دقیقه"
-        case "ar":
-            return minutes == 1 ? "دقيقة واحدة" : "\(minutes) دقائق"
-        case "uk":
-            return minutes == 1 ? "1 хвилина" : "\(minutes) хвилин"
-        default: // "ru"
-            return minutes == 1 ? "1 минута" : "\(minutes) минут"
+        case "en": return minutes == 1 ? "1 minute" : "\(minutes) minutes"
+        case "de": return minutes == 1 ? "1 Minute" : "\(minutes) Minuten"
+        case "tj": return minutes == 1 ? "1 дақиқа" : "\(minutes) дақиқа"
+        case "fa": return minutes == 1 ? "1 دقیقه" : "\(minutes) دقیقه"
+        case "ar": return minutes == 1 ? "دقيقة واحدة" : "\(minutes) دقائق"
+        case "uk": return minutes == 1 ? "1 хвилина" : "\(minutes) хвилин"
+        default:   return minutes == 1 ? "1 минута" : "\(minutes) минут"
         }
     }
     
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Язык приложения": ["ru": "Язык приложения", "en": "App Language", "de": "App-Sprache", "tj": "Забони барнома", "fa": "زبان برنامه", "ar": "لغة التطبيق", "uk": "Мова застосунку"],
-            "Выберите язык": ["ru": "Выберите язык", "en": "Choose language", "de": "Sprache wählen", "tj": "Забонро интихоб кунед", "fa": "انتخاب زبان", "ar": "اختر اللغة", "uk": "Виберіть мову"],
             "Внешний вид": ["ru": "Внешний вид", "en": "Appearance", "de": "Erscheinungsbild", "tj": "Намуди зоҳирӣ", "fa": "ظاهر", "ar": "المظهر", "uk": "Зовнішній вигляд"],
             "Тёмная тема": ["ru": "Тёмная тема", "en": "Dark theme", "de": "Dunkles Theme", "tj": "Мавзӯи торик", "fa": "حالت تاریک", "ar": "الوضع الداكن", "uk": "Темна тема"],
             "Размер текста": ["ru": "Размер текста", "en": "Text Size", "de": "Textgröße", "tj": "Андозаи матн", "fa": "اندازه متن", "ar": "حجم النص", "uk": "Розмір тексту"],
