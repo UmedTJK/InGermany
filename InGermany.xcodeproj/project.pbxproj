@@ -7,35 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD0826D32E85A50A009C30CC /* .swiftlint.yml */; };
 		AD38F5852E76891600E36EA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5842E76890C00E36EA4 /* .gitignore */; };
 		AD38F5872E76899D00E36EA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5862E76899600E36EA4 /* README.md */; };
 		AD38F5892E76C15600E36EA4 /* update.sh in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5882E76C15000E36EA4 /* update.sh */; };
 		AD40EEF02E75C3DC00866648 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C82E75B4C4003D3826 /* categories.json */; };
 		AD40EEF12E75C3DC00866648 /* articles.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C72E75B4AF003D3826 /* articles.json */; };
 		AD40EEFD2E75F3DB00866648 /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD40EEFC2E75F3D900866648 /* CategoryManager.swift */; };
-		AD52FCEB2E846E7600CC9F61 /* CLEAN_CODE_CHECKLIST.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FCEA2E846E6800CC9F61 /* CLEAN_CODE_CHECKLIST.md */; };
-		AD52FCF12E84705600CC9F61 /* nano .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD52FCF02E84705400CC9F61 /* nano .swiftlint.yml */; };
-		AD52FD4F2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */; };
-		AD52FD502E8585B300CC9F61 /* project_tree.txt in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD4C2E8585B300CC9F61 /* project_tree.txt */; };
-		AD52FD512E8585B300CC9F61 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD452E8585B300CC9F61 /* CHANGELOG.md */; };
-		AD52FD522E8585B300CC9F61 /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD482E8585B300CC9F61 /* git_snapshot.md */; };
-		AD52FD532E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */; };
-		AD52FD542E8585B300CC9F61 /* Git_Mini_Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */; };
-		AD52FD552E8585B300CC9F61 /* project_tree.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD4B2E8585B300CC9F61 /* project_tree.md */; };
-		AD52FD562E8585B300CC9F61 /* Project_Brief.docx in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD492E8585B300CC9F61 /* Project_Brief.docx */; };
-		AD52FD572E8585B300CC9F61 /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD442E8585B300CC9F61 /* AI_CONTEXT.md */; };
-		AD52FD582E8585B300CC9F61 /* PROJECT_STRUCTURE.md in Resources */ = {isa = PBXBuildFile; fileRef = AD52FD4A2E8585B300CC9F61 /* PROJECT_STRUCTURE.md */; };
 		AD6275082E7BB059003D7FA9 /* ReadingTimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6275072E7BB055003D7FA9 /* ReadingTimeCalculator.swift */; };
 		AD6275112E7BB377003D7FA9 /* ExportToPDF.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */; };
 		AD6275122E7BB377003D7FA9 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6275102E7BB377003D7FA9 /* ProgressBar.swift */; };
 		AD6C1E142E76C73D00EA59A7 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E132E76C73800EA59A7 /* Animations.swift */; };
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
-		AD732DED2E79D674009855C3 /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */; };
 		AD7454632E7E617F001FC732 /* TextSizeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7454622E7E617C001FC732 /* TextSizeManager.swift */; };
 		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
 		AD74546E2E7E8E6A001FC732 /* CategoriesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */; };
-		AD7454732E7E9B45001FC732 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454722E7E9B43001FC732 /* CHANGELOG.md */; };
-		AD7454752E7EC9CF001FC732 /* PROMPTS_FOR_AI_AGENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */; };
 		AD7454FB2E7EEEF6001FC732 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */; };
 		AD7455462E7FD154001FC732 /* CardSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7455452E7FD152001FC732 /* CardSize.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
@@ -47,28 +33,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AD0826D32E85A50A009C30CC /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD38F5882E76C15000E36EA4 /* update.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update.sh; sourceTree = "<group>"; };
 		AD40EEFC2E75F3D900866648 /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
 		AD52FCEA2E846E6800CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
-		AD52FCF02E84705400CC9F61 /* nano .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "nano .swiftlint.yml"; sourceTree = "<group>"; };
-		AD52FD442E8585B300CC9F61 /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
 		AD52FD452E8585B300CC9F61 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
-		AD52FD482E8585B300CC9F61 /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
 		AD52FD492E8585B300CC9F61 /* Project_Brief.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Project_Brief.docx; sourceTree = "<group>"; };
 		AD52FD4A2E8585B300CC9F61 /* PROJECT_STRUCTURE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROJECT_STRUCTURE.md; sourceTree = "<group>"; };
-		AD52FD4B2E8585B300CC9F61 /* project_tree.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = project_tree.md; sourceTree = "<group>"; };
-		AD52FD4C2E8585B300CC9F61 /* project_tree.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = project_tree.txt; sourceTree = "<group>"; };
 		AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROMPTS_FOR_AI_AGENTS.md; sourceTree = "<group>"; };
 		AD6275072E7BB055003D7FA9 /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
 		AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportToPDF.swift; sourceTree = "<group>"; };
 		AD6275102E7BB377003D7FA9 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		AD6C1E132E76C73800EA59A7 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
-		AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
 		AD7454622E7E617C001FC732 /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
 		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesStore.swift; sourceTree = "<group>"; };
@@ -129,15 +110,11 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
-				AD52FD442E8585B300CC9F61 /* AI_CONTEXT.md */,
 				AD52FD452E8585B300CC9F61 /* CHANGELOG.md */,
 				AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */,
 				AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */,
-				AD52FD482E8585B300CC9F61 /* git_snapshot.md */,
 				AD52FD492E8585B300CC9F61 /* Project_Brief.docx */,
 				AD52FD4A2E8585B300CC9F61 /* PROJECT_STRUCTURE.md */,
-				AD52FD4B2E8585B300CC9F61 /* project_tree.md */,
-				AD52FD4C2E8585B300CC9F61 /* project_tree.txt */,
 				AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */,
 			);
 			path = Docs;
@@ -146,12 +123,11 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD0826D32E85A50A009C30CC /* .swiftlint.yml */,
 				AD52FD4E2E8585B300CC9F61 /* Docs */,
-				AD52FCF02E84705400CC9F61 /* nano .swiftlint.yml */,
 				AD52FCEA2E846E6800CC9F61 /* CLEAN_CODE_CHECKLIST.md */,
 				AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */,
 				AD7454722E7E9B43001FC732 /* CHANGELOG.md */,
-				AD732DEC2E79D674009855C3 /* AI_CONTEXT.md */,
 				AD38F5882E76C15000E36EA4 /* update.sh */,
 				AD38F5862E76899600E36EA4 /* README.md */,
 				AD38F5842E76890C00E36EA4 /* .gitignore */,
@@ -284,27 +260,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD38F5872E76899D00E36EA4 /* README.md in Resources */,
-				AD52FD4F2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md in Resources */,
-				AD52FD502E8585B300CC9F61 /* project_tree.txt in Resources */,
-				AD52FD512E8585B300CC9F61 /* CHANGELOG.md in Resources */,
-				AD52FD522E8585B300CC9F61 /* git_snapshot.md in Resources */,
-				AD52FD532E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md in Resources */,
-				AD52FD542E8585B300CC9F61 /* Git_Mini_Guide.md in Resources */,
-				AD52FD552E8585B300CC9F61 /* project_tree.md in Resources */,
-				AD52FD562E8585B300CC9F61 /* Project_Brief.docx in Resources */,
-				AD52FD572E8585B300CC9F61 /* AI_CONTEXT.md in Resources */,
-				AD52FD582E8585B300CC9F61 /* PROJECT_STRUCTURE.md in Resources */,
-				AD7454732E7E9B45001FC732 /* CHANGELOG.md in Resources */,
 				AD38F5852E76891600E36EA4 /* .gitignore in Resources */,
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
+				AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
-				AD732DED2E79D674009855C3 /* AI_CONTEXT.md in Resources */,
-				AD7454752E7EC9CF001FC732 /* PROMPTS_FOR_AI_AGENTS.md in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
 				AD38F5892E76C15600E36EA4 /* update.sh in Resources */,
-				AD52FCF12E84705600CC9F61 /* nano .swiftlint.yml in Resources */,
-				AD52FCEB2E846E7600CC9F61 /* CLEAN_CODE_CHECKLIST.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
