@@ -1,99 +1,189 @@
-# InGermany
+# InGermany · AI_CONTEXT_v2.md
 
-iOS SwiftUI приложение-справочник о жизни в Германии. Поддерживает мультиязычность (RU, EN, TJ), работу с избранным, оффлайн-доступ и интеграцию с GitHub Pages.
-
----
-
-## 🚀 Функциональность
-
-- 📚 **Статьи** с категориями, тегами и поиском
-- ⭐️ **Избранное** для быстрых закладок
-- 🌓 **Поддержка тёмной темы**
-- 🌐 **Мультиязычность**: русский, английский, таджикский
-- 📍 **Карта** с локациями (Apple Maps)
-- 📄 **PDF Viewer** для документов
-- 🔄 **Синхронизация** статей и категорий через GitHub Pages
-- 🧩 **Модульная архитектура** (Core, Models, Views, Services, Utils)
+> Единый контекст для ИИ-агентов. Задача — обеспечить моментальное понимание проекта и выпуск **релевантного, безопасного и соответствующего стандартам** кода. Документ публикуется в репозитории и прикладывается ко всем запросам к ИИ-агентам.
 
 ---
 
-## 📡 Архитектура загрузки данных
+## 0) Мета
 
-В приложении реализована стратегия **offline-first** для статей, категорий и локаций.  
-Это соответствует рекомендациям Apple по работе с сетью и жизненным циклом приложения.
-
-### 🔑 Принципы работы
-1. **Кэш в памяти**  
-   - Повторные запросы обслуживаются напрямую из `DataService` без обращения к сети или файлу.  
-
-2. **Локальный JSON (fallback)**  
-   - При первом запуске данные загружаются из `Resources/*.json` (articles, categories, locations).  
-   - Это гарантирует мгновенный вывод интерфейса без подвисаний.  
-
-3. **Фоновое обновление из сети**  
-   - Параллельно запускается загрузка с GitHub Pages (через `NetworkService`).  
-   - При успешном ответе кэш обновляется, а UI подтягивает актуальные данные.  
-
-4. **Pull-to-refresh**  
-   - При ручном обновлении (`refreshable`) кэш очищается, и данные пересобираются: сначала локальные, потом сетевые.  
-
-5. **Отладка**  
-   - В `DataService` добавлены логи, чтобы в консоли Xcode было видно источник данных:  
-     - `📦 ... из памяти (cache)`  
-     - `📂 ... из локального JSON`  
-     - `🌐 ... обновлены из сети`  
-     - `🗑️ Кэш очищен`
-
-### 🟩 Источник данных в UI
-В `HomeView` сверху отображается цветная полоска-индикатор:
-- 🟩 `network` — данные из сети  
-- 🟦 `memory_cache` — данные из кэша в памяти  
-- 🟧 `local` — данные из локального JSON  
-- ⬜️ `unknown` — источник не определён
+* **Проект:** InGermany (iOS, SwiftUI, iOS 17+)
+* **Репозиторий:** [https://github.com/UmedTJK/InGermany](https://github.com/UmedTJK/InGermany)
+* **Локальный путь:** `~/Desktop/InGermany`
+* **Ветка по умолчанию:** `main`
+* **CI/Lint:** SwiftLint (локально), Xcode build
+* **Языки контента:** ru / en / tj / de (локализация через словари)
+* **Цель:** showcase-приложение для портфолио (App Store-стиль UI), офлайн-first + обновление данных из GitHub Pages
 
 ---
 
-## 📦 Установка
+## 1) Принципы (обязательны для кода и ответов ИИ)
+
+1. **Безопасность и надёжность прежде фич**.
+2. **Прозрачная актуальность**: проверка `git status` и структуры проекта.
+3. **Один шаг = один коммит** (Conventional Commits).
+4. **Строгие контракты данных** (см. §3).
+5. **Concurrency-чистота**.
+6. **UI = Apple HIG**.
+7. **Документируемое изменение**.
+
+---
+
+## 2) Архитектура и структура проекта
+
+* **Core/**: `InGermanyApp.swift`, `ContentView.swift`
+* **Models/**: `Article.swift`, `Category.swift`, `Location.swift`
+* **Services/**: `DataService.swift`, `NetworkService.swift`, `ShareService.swift`, `AuthService.swift`
+* **Utils/**: `LocalizationManager.swift`, `CategoryManager.swift`, `CategoriesStore.swift`, `ReadingTimeCalculator.swift`, `ExportToPDF.swift`, `Theme.swift`, `Animations.swift`, `CardSize.swift`, `Color+Hex.swift`, `TextSizeManager.swift`
+* **Views/**: `HomeView`, `SearchView`, `FavoritesView`, `CategoriesView`, `ArticlesByCategoryView`, `ArticlesByTagView`, `ArticleDetailView`, `SettingsView`, `AboutView`, `MapView`
+* **Views/Components/**: `ArticleCardView`, `ArticleRow`, `ArticleMetaView`, `ArticleCompactCard`, `FavoriteCard`, `RecentArticleCard`, `ToolCard`, `EmptyFavoritesView`, `CategoryFilterButton`, `TagFilterView`, `TextSizeSettingsPanel`, `ReadingProgressBar`, `ReadingProgressView`, `CircularReadingProgress`, `PDFViewer`
+* **Resources/**: `articles.json`, `categories.json`, `locations.json`
+* **Docs/**: `Docs/AI_CONTEXT_v2.md`, `Docs/CHANGELOG.md`, `Docs/PROMPTS_FOR_AI_AGENTS.md`, `Docs/Git_Mini_Guide.md`, `Docs/CLEAN_CODE_CHECKLIST.md`, `Docs/git_snapshot.md`, `Docs/project_tree.md`
+* **Docs (архив)**: `Docs/PROJECT_STRUCTURE.md`, `Docs/Project_Brief.docx`
+* **Корень**: `.swiftlint.yml`, `README.md`, `update.sh`
+
+---
+
+## 2a) Структура проекта (актуальная)
+
+Полное дерево проекта хранится в файле: `Docs/project_tree.md`
+
+> ⚠️ Обновляется вручную командой:
+>
+> ```bash
+> cd ~/Desktop/InGermany
+> tree -L 3 > Docs/project_tree.md
+> ```
+
+---
+
+## 2b) Потоки данных и хранение
+
+* **Articles**: JSON → Codable `Article`. Хранение: DataService → Cache / Bundle / Network.
+* **Categories**: JSON → Codable `Category`. Хранение через CategoryManager + CategoriesStore.
+* **Locations**: JSON → Codable `Location`. Для карты.
+* **Favorites**: `@AppStorage("favoriteArticles")` как JSON `Set<String>`.
+* **Rating**: `UserDefaults` (`rating_<articleId>`).
+* **ReadingHistory**: `@AppStorage("readingHistory")` JSON → массив `ReadingHistoryEntry`.
+* **Text size**: `UserDefaults` (`textSize` + toggle).
+
+---
+
+## 2c) Публичные интерфейсы
+
+2c) Публичные интерфейсы
+
+Models
+
+Article: id, title/content локализованные, categoryId, tags, pdfFileName?, createdAt/updatedAt, image?. Методы: localizedTitle, localizedContent, formattedCreatedDate, readingTime.
+
+Category: id, name локализованные, icon (SF Symbol), colorHex.
+
+Location: id, name, latitude, longitude.
+
+Services
+
+DataService (actor): loadArticles(), loadCategories(), loadLocations(), refreshData(), clearCache(), getLastDataSource().
+
+NetworkService: loadJSON<T>(), loadJSONSync<T>(), clearCache().
+
+ShareService: shareArticle(_:language:).
+
+AuthService: (заглушка).
+
+Managers
+
+FavoritesManager: isFavorite(id:), toggleFavorite(id:), favoriteArticles(from:).
+
+RatingManager: rating(for:), setRating(_:for:).
+
+ReadingHistoryManager: addReadingEntry, recentlyReadArticles, isRead, lastReadDate, totalReadingTimeMinutes, totalArticlesRead, clearHistory.
+
+ReadingTracker: startReading, finishReading, currentReadingTime.
+
+CategoryManager (actor): loadCategories(), allCategories(), category(for:), refreshCategories().
+
+CategoriesStore: bootstrap(), refresh(), category(for:), categoryName(for:).
+
+TextSizeManager: Published fontSize (Double), toggle, presetSizes, resetToDefault(), currentFont.
+
+Utils
+
+LocalizationManager: getTranslation(key:lang:).
+
+ReadingTimeCalculator: estimateReadingTime(for:lang:), formatReadingTime(_:lang:).
+
+ExportToPDF: export(title:content:fileName:).
+
+Theme: card/tint/background colors, spacing.
+
+Animations: cardStyle, scaleOnAppear, shimmer, slideInAnimation, haptic feedback.
+
+CardSize: width(for:), height(for:screenHeight:screenWidth:).
+
+Color+Hex: init?(hex:).
+
+UI Components
+
+ArticleCardView: article → карточка.
+
+ArticleCompactCard: article → горизонтальная карточка.
+
+ArticleRow: article → строка списка.
+
+ArticleMetaView: article (+ CategoriesStore env).
+
+FavoriteCard: article → избранное.
+
+RecentArticleCard: article → компакт.
+
+ToolCard: (title, systemImage, color).
+
+EmptyFavoritesView: (hasFilters, lang, translationFn).
+
+CategoryFilterButton: (title, isSelected, systemImage, action).
+
+TagFilterView: (tags, onTagSelected).
+
+TextSizeSettingsPanel: экран настроек текста.
+
+ReadingProgressBar / ReadingProgressView / CircularReadingProgress: прогресс чтения.
+
+PDFViewer: fileName → PDFKit.
+
+CategoriesView: categories + articles + favoritesManager.
+
+ArticlesByTagView: tag + articles + favoritesManager.
+
+ArticleDetailView: article + favoritesManager, PDF, избранное.
+
+---
+
+## 5) Рабочий цикл ИИ-агента
 
 ```bash
-# Клонируем репозиторий
-git clone https://github.com/UmedTJK/InGermany.git
-cd InGermany
-
-# Открываем проект
-open InGermany.xcodeproj
+cd ~/Desktop/InGermany
+swiftlint lint --strict || true
+git status
+git log --oneline --graph -n 10
 ```
 
-Запусти на симуляторе или устройстве через Xcode (`⌘R`).
+* Если есть незакоммиченные правки → спросить решение.
+* Коммит только Conventional Commits.
+* Всегда пуш в GitHub.
+
+Снимок git-истории смотри: `Docs/git_snapshot.md`
 
 ---
 
-## 🗂️ Структура проекта
+## 6) Roadmap
 
-- **Core**: базовые файлы приложения (`ContentView`, `InGermanyApp`)
-- **Models**: модели данных (`Article`, `Category`, `Location`)
-- **Views**: интерфейс (экраны, компоненты)
-- **Services**: сетевые и локальные сервисы (`DataService`, `NetworkService`)
-- **Utils**: утилиты и менеджеры (`FavoritesManager`, `LocalizationManager`)
-- **Resources**: JSON-данные, локализация, ассеты
+См. раздел Roadmap в README.md и CHANGELOG.md.
+Основные планы: улучшение UI, поддержка сетевой загрузки, тесты ViewModel, расширение контента.
 
 ---
 
-## 🛠 Технологии
+## 7) Обновление документа
 
-- SwiftUI
-- Async/Await + Concurrency
-- GitHub Pages (для синхронизации данных)
-- MVVM-подход
-
----
-
-## 📌 Roadmap
-
-- [ ] Экспорт статей в PDF
-- [ ] История прочтения (UI)
-- [ ] Индикатор прогресса чтения
-- [ ] Настройки размера шрифта
-- [ ] Улучшенный редактор контента
-
----
+* Меняется модель/интерфейс → правим §2b/2c.
+* Фиксируем в `Docs/CHANGELOG.md`.
+* Коммит: `docs(context): обновлён AI_CONTEXT_v2`.
