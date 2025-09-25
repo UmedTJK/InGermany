@@ -6,6 +6,11 @@
 //
 
 # Changelog
+## [1.6.1] - 2025-09-25
+### Fixed
+- Исправлен баг с переключателем тёмной темы: теперь параметр `isDarkMode` из `@AppStorage` применяется глобально через `.preferredColorScheme` в `InGermanyApp`.
+- Удалены дублирующиеся ссылки на документы в Xcode project.
+
 
 ### Fixed
 - Исправлен баг с переключателем тёмной темы: параметр `isDarkMode` из `@AppStorage` теперь применяется глобально через `.preferredColorScheme` в `InGermanyApp`.
