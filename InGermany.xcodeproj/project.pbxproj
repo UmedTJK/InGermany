@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD0826D32E85A50A009C30CC /* .swiftlint.yml */; };
 		AD38F5852E76891600E36EA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5842E76890C00E36EA4 /* .gitignore */; };
 		AD38F5872E76899D00E36EA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5862E76899600E36EA4 /* README.md */; };
 		AD38F5892E76C15600E36EA4 /* update.sh in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5882E76C15000E36EA4 /* update.sh */; };
 		AD40EEF02E75C3DC00866648 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C82E75B4C4003D3826 /* categories.json */; };
 		AD40EEF12E75C3DC00866648 /* articles.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C72E75B4AF003D3826 /* articles.json */; };
 		AD40EEFD2E75F3DB00866648 /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD40EEFC2E75F3D900866648 /* CategoryManager.swift */; };
-		AD52FCF12E84705600CC9F61 /* nano .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD52FCF02E84705400CC9F61 /* nano .swiftlint.yml */; };
 		AD6275082E7BB059003D7FA9 /* ReadingTimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6275072E7BB055003D7FA9 /* ReadingTimeCalculator.swift */; };
 		AD6275112E7BB377003D7FA9 /* ExportToPDF.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */; };
 		AD6275122E7BB377003D7FA9 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6275102E7BB377003D7FA9 /* ProgressBar.swift */; };
@@ -33,12 +33,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AD0826D32E85A50A009C30CC /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD38F5882E76C15000E36EA4 /* update.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update.sh; sourceTree = "<group>"; };
 		AD40EEFC2E75F3D900866648 /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
 		AD52FCEA2E846E6800CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
-		AD52FCF02E84705400CC9F61 /* nano .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "nano .swiftlint.yml"; sourceTree = "<group>"; };
 		AD52FD452E8585B300CC9F61 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
@@ -123,8 +123,8 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD0826D32E85A50A009C30CC /* .swiftlint.yml */,
 				AD52FD4E2E8585B300CC9F61 /* Docs */,
-				AD52FCF02E84705400CC9F61 /* nano .swiftlint.yml */,
 				AD52FCEA2E846E6800CC9F61 /* CLEAN_CODE_CHECKLIST.md */,
 				AD7454742E7EC9BA001FC732 /* PROMPTS_FOR_AI_AGENTS.md */,
 				AD7454722E7E9B43001FC732 /* CHANGELOG.md */,
@@ -263,10 +263,10 @@
 				AD38F5852E76891600E36EA4 /* .gitignore in Resources */,
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
+				AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
 				AD38F5892E76C15600E36EA4 /* update.sh in Resources */,
-				AD52FCF12E84705600CC9F61 /* nano .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
