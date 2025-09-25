@@ -11,6 +11,7 @@ import SwiftUI
 struct InGermanyApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var categoriesStore = CategoriesStore.shared
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false   // 🔹 добавлено
 
     var body: some Scene {
         WindowGroup {
@@ -21,6 +22,7 @@ struct InGermanyApp: App {
                 } else {
                     ContentView()
                         .environmentObject(categoriesStore)
+                        .preferredColorScheme(isDarkMode ? .dark : .light)  // 🔹 применяем тему
                 }
             }
             .task {
