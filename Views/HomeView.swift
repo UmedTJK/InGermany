@@ -21,7 +21,6 @@ struct HomeView: View {
     @State private var isShowingRandomArticle = false
     @State private var randomArticle: Article?
 
-    // Категории берём из CategoriesStore
     private var allCategories: [Category] {
         categoriesStore.categories
     }
@@ -33,7 +32,6 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Полоска источника данных (network/cache/local)
                 Rectangle()
                     .fill(getDataSourceColor())
                     .frame(height: 3)
@@ -167,23 +165,24 @@ struct HomeView: View {
                         .padding(.horizontal)
 
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
+                        LazyHStack(spacing: 16) {
                             ForEach(recentlyRead) { article in
-                                NavigationLink(destination: ArticleView(
-                                    article: article,
-                                    allArticles: articles,
-                                    favoritesManager: favoritesManager
-                                )) {
-                                    RecentArticleCard(
+                                NavigationLink {
+                                    ArticleView(
                                         article: article,
+                                        allArticles: articles,
                                         favoritesManager: favoritesManager
                                     )
+                                } label: {
+                                    ArticleCompactCard(article: article) // ✅ единый стиль
                                 }
                             }
                         }
                         .padding(.horizontal)
+                        .padding(.vertical, 4)
                     }
                 }
+                .padding(.bottom, 24)
             }
         }
     }
@@ -200,28 +199,30 @@ struct HomeView: View {
                         .padding(.horizontal)
 
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
+                        LazyHStack(spacing: 16) {
                             ForEach(favoriteArticles) { article in
-                                NavigationLink(destination: ArticleView(
-                                    article: article,
-                                    allArticles: articles,
-                                    favoritesManager: favoritesManager
-                                )) {
-                                    FavoriteCard(
+                                NavigationLink {
+                                    ArticleView(
                                         article: article,
+                                        allArticles: articles,
                                         favoritesManager: favoritesManager
                                     )
+                                } label: {
+                                    ArticleCompactCard(article: article) // ✅ единый стиль
                                 }
                             }
                         }
                         .padding(.horizontal)
+                        .padding(.vertical, 4)
                     }
                 }
+                .padding(.bottom, 24)
             }
         }
     }
 
-    // MARK: - Категории (с цветом из colorHex)
+    // MARK: - Категории
+
     private func categorySection(category: Category, articles: [Article]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(category.localizedName(for: selectedLanguage))
@@ -229,28 +230,27 @@ struct HomeView: View {
                 .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(articles.prefix(5)) { article in
-                        NavigationLink(destination: ArticleView(
-                            article: article,
-                            allArticles: self.articles,
-                            favoritesManager: favoritesManager
-                        )) {
-                            FavoriteCard(
+                LazyHStack(spacing: 16) {
+                    ForEach(articles.prefix(10)) { article in
+                        NavigationLink {
+                            ArticleView(
                                 article: article,
+                                allArticles: self.articles,
                                 favoritesManager: favoritesManager
                             )
+                        } label: {
+                            ArticleCompactCard(article: article)   // ✅ только article
                         }
                     }
                 }
                 .padding(.horizontal)
+                .padding(.vertical, 4)
             }
         }
+        .padding(.bottom, 24)
     }
 
-    // MARK: - Все статьи (в стиле карточек)
-
-    // MARK: - Все статьи (горизонтальные карточки)
+    // MARK: - Все статьи
 
     private var allArticlesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -259,25 +259,25 @@ struct HomeView: View {
                 .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(articles.prefix(10)) { article in
-                        NavigationLink(destination: ArticleView(
-                            article: article,
-                            allArticles: articles,
-                            favoritesManager: favoritesManager
-                        )) {
-                            FavoriteCard(
+                LazyHStack(spacing: 16) {
+                    ForEach(articles) { article in
+                        NavigationLink {
+                            ArticleView(
                                 article: article,
+                                allArticles: articles,
                                 favoritesManager: favoritesManager
                             )
+                        } label: {
+                            ArticleCompactCard(article: article)   // ✅ только article
                         }
                     }
                 }
                 .padding(.horizontal)
+                .padding(.vertical, 4)
             }
         }
+        .padding(.bottom, 24)
     }
-
 
     // MARK: - Локализация заголовков
 
@@ -293,77 +293,5 @@ struct HomeView: View {
             "Все статьи": ["ru": "Все статьи", "en": "All articles", "de": "Alle Artikel", "tj": "Ҳамаи мақолаҳо"]
         ]
         return translations[key]?[language] ?? key
-    }
-}
-
-// MARK: - ArticleRowWithReadingInfo
-
-struct ArticleRowWithReadingInfo: View {
-    let article: Article
-    let favoritesManager: FavoritesManager
-    let isRead: Bool
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-
-    @EnvironmentObject private var categoriesStore: CategoriesStore
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            ZStack(alignment: .topTrailing) {
-                Image("Logo")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(8)
-                    .clipped()
-
-                if isRead {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 16))
-                        .foregroundColor(.green)
-                        .background(Color(.systemBackground))
-                        .clipShape(Circle())
-                        .offset(x: 4, y: -4)
-                }
-            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(article.localizedTitle(for: selectedLanguage))
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
-
-                HStack(spacing: 12) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "folder")
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-
-                        Text(
-                            categoriesStore.categoryName(for: article.categoryId,
-                                                         language: selectedLanguage)
-                        )
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    }
-
-                    Spacer()
-
-                    HStack(spacing: 4) {
-                        Image(systemName: "clock")
-                            .font(.caption)
-                            .foregroundColor(.orange)
-                        Text(article.formattedReadingTime(for: selectedLanguage))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-
-            Spacer()
-
-            Image(systemName: favoritesManager.isFavorite(article: article) ? "star.fill" : "star")
-                .foregroundColor(.yellow)
-        }
-        .padding(.vertical, 8)
     }
 }

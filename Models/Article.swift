@@ -2,7 +2,7 @@
 //  Article.swift
 //  InGermany
 //
-//  Updated with dates and reading time functionality
+//  Updated with dates, reading time functionality and image support
 //
 
 import Foundation
@@ -16,6 +16,7 @@ struct Article: Identifiable, Codable, Hashable {
     let pdfFileName: String?
     let createdAt: Date?
     let updatedAt: Date?
+    let image: String?   // 🔹 Новое поле для фото статьи
     
     // MARK: - Initializers
     
@@ -27,7 +28,8 @@ struct Article: Identifiable, Codable, Hashable {
         tags: [String] = [],
         pdfFileName: String? = nil,
         createdAt: Date? = nil,
-        updatedAt: Date? = nil
+        updatedAt: Date? = nil,
+        image: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -37,12 +39,13 @@ struct Article: Identifiable, Codable, Hashable {
         self.pdfFileName = pdfFileName
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.image = image
     }
     
     // MARK: - Coding Keys
     
     enum CodingKeys: String, CodingKey {
-        case id, title, content, categoryId, tags, pdfFileName, createdAt, updatedAt
+        case id, title, content, categoryId, tags, pdfFileName, createdAt, updatedAt, image
     }
     
     // MARK: - Custom Decoding (для совместимости со старыми JSON)
@@ -56,6 +59,7 @@ struct Article: Identifiable, Codable, Hashable {
         categoryId = try container.decode(String.self, forKey: .categoryId)
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         pdfFileName = try container.decodeIfPresent(String.self, forKey: .pdfFileName)
+        image = try container.decodeIfPresent(String.self, forKey: .image)
         
         // Пытаемся декодировать даты (если их нет в JSON, ставим nil)
         if let createdAtString = try container.decodeIfPresent(String.self, forKey: .createdAt) {
@@ -82,8 +86,8 @@ struct Article: Identifiable, Codable, Hashable {
         try container.encode(categoryId, forKey: .categoryId)
         try container.encode(tags, forKey: .tags)
         try container.encodeIfPresent(pdfFileName, forKey: .pdfFileName)
+        try container.encodeIfPresent(image, forKey: .image)
         
-        // Кодируем даты в ISO8601 формат
         if let createdAt = createdAt {
             try container.encode(ISO8601DateFormatter().string(from: createdAt), forKey: .createdAt)
         }
@@ -113,6 +117,12 @@ struct Article: Identifiable, Codable, Hashable {
         content[language] ?? content["en"] ?? content.values.first ?? "No content"
     }
     
+    // MARK: - Image fallback
+    
+    var imageName: String {
+        image ?? "Logo"
+    }
+    
     // MARK: - Date Formatting
     
     func formattedCreatedDate(for language: String = "ru") -> String {
@@ -125,14 +135,10 @@ struct Article: Identifiable, Codable, Hashable {
         formatter.timeStyle = .none
         
         switch language {
-        case "en":
-            formatter.locale = Locale(identifier: "en_US")
-        case "de":
-            formatter.locale = Locale(identifier: "de_DE")
-        case "tj":
-            formatter.locale = Locale(identifier: "ru_RU") // Используем русский формат
-        default:
-            formatter.locale = Locale(identifier: "ru_RU")
+        case "en": formatter.locale = Locale(identifier: "en_US")
+        case "de": formatter.locale = Locale(identifier: "de_DE")
+        case "tj": formatter.locale = Locale(identifier: "ru_RU")
+        default: formatter.locale = Locale(identifier: "ru_RU")
         }
         
         return formatter.string(from: createdAt)
@@ -148,20 +154,15 @@ struct Article: Identifiable, Codable, Hashable {
         formatter.timeStyle = .none
         
         switch language {
-        case "en":
-            formatter.locale = Locale(identifier: "en_US")
-        case "de":
-            formatter.locale = Locale(identifier: "de_DE")
-        case "tj":
-            formatter.locale = Locale(identifier: "ru_RU")
-        default:
-            formatter.locale = Locale(identifier: "ru_RU")
+        case "en": formatter.locale = Locale(identifier: "en_US")
+        case "de": formatter.locale = Locale(identifier: "de_DE")
+        case "tj": formatter.locale = Locale(identifier: "ru_RU")
+        default: formatter.locale = Locale(identifier: "ru_RU")
         }
         
         return formatter.string(from: updatedAt)
     }
     
-    // Относительное время (например, "2 дня назад")
     func relativeCreatedDate(for language: String = "ru") -> String {
         guard let createdAt = createdAt else {
             return getTranslation(key: "Дата неизвестна", language: language)
@@ -171,14 +172,10 @@ struct Article: Identifiable, Codable, Hashable {
         formatter.unitsStyle = .full
         
         switch language {
-        case "en":
-            formatter.locale = Locale(identifier: "en_US")
-        case "de":
-            formatter.locale = Locale(identifier: "de_DE")
-        case "tj":
-            formatter.locale = Locale(identifier: "ru_RU")
-        default:
-            formatter.locale = Locale(identifier: "ru_RU")
+        case "en": formatter.locale = Locale(identifier: "en_US")
+        case "de": formatter.locale = Locale(identifier: "de_DE")
+        case "tj": formatter.locale = Locale(identifier: "ru_RU")
+        default: formatter.locale = Locale(identifier: "ru_RU")
         }
         
         return formatter.localizedString(for: createdAt, relativeTo: Date())
@@ -188,17 +185,17 @@ struct Article: Identifiable, Codable, Hashable {
     
     var wordCount: Int {
         let allContent = content.values.joined(separator: " ")
-        return ReadingTimeCalculator.estimateReadingTime(for: allContent) * 200 // примерная оценка
+        return ReadingTimeCalculator.estimateReadingTime(for: allContent) * 200
     }
     
     var isNew: Bool {
         guard let createdAt = createdAt else { return false }
-        return Date().timeIntervalSince(createdAt) < 7 * 24 * 60 * 60 // 7 дней
+        return Date().timeIntervalSince(createdAt) < 7 * 24 * 60 * 60
     }
     
     var isUpdatedRecently: Bool {
         guard let updatedAt = updatedAt else { return false }
-        return Date().timeIntervalSince(updatedAt) < 3 * 24 * 60 * 60 // 3 дня
+        return Date().timeIntervalSince(updatedAt) < 3 * 24 * 60 * 60
     }
     
     // MARK: - Helper Methods
@@ -225,13 +222,11 @@ struct Article: Identifiable, Codable, Hashable {
 // MARK: - Reading Time Extension
 
 extension Article {
-    /// Рассчитывает время чтения для текущей статьи на указанном языке
     func readingTime(for language: String) -> Int {
         let content = localizedContent(for: language)
         return ReadingTimeCalculator.estimateReadingTime(for: content, language: language)
     }
     
-    /// Форматированное время чтения
     func formattedReadingTime(for language: String) -> String {
         let minutes = readingTime(for: language)
         return ReadingTimeCalculator.formatReadingTime(minutes, language: language)
@@ -257,7 +252,8 @@ extension Article {
         tags: ["финансы", "банк", "кредит"],
         pdfFileName: "Test_Document",
         createdAt: Calendar.current.date(byAdding: .day, value: -5, to: Date()),
-        updatedAt: Calendar.current.date(byAdding: .day, value: -2, to: Date())
+        updatedAt: Calendar.current.date(byAdding: .day, value: -2, to: Date()),
+        image: "bank_account.jpg"
     )
     
     static let sampleArticles: [Article] = [
@@ -276,7 +272,8 @@ extension Article {
             ],
             categoryId: "22222222-2222-2222-2222-bbbbbbbbbbbb",
             tags: ["работа", "резюме", "собеседование"],
-            createdAt: Calendar.current.date(byAdding: .day, value: -10, to: Date())
+            createdAt: Calendar.current.date(byAdding: .day, value: -10, to: Date()),
+            image: "job_search.jpg"
         )
     ]
 }

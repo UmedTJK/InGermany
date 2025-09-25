@@ -9,21 +9,18 @@ struct ArticlesByCategoryView: View {
     let category: Category
     let articles: [Article] // Все статьи
     @ObservedObject var favoritesManager: FavoritesManager
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru" // Используем AppStorage
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink {
                 ArticleView(
                     article: article,
-                    allArticles: articles, // ✅ передаем все статьи
+                    allArticles: articles,
                     favoritesManager: favoritesManager
                 )
             } label: {
-                ArticleRow( // Используем существующий компонент
-                    article: article,
-                    favoritesManager: favoritesManager
-                )
+                ArticleRow(article: article) // ✅ без favoritesManager
             }
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))
@@ -40,10 +37,9 @@ struct ArticlesByCategoryView: View {
             id: "11111111-1111-1111-1111-aaaaaaaaaaaa",
             name: ["ru": "Финансы", "en": "Finance", "de": "Finanzen", "tj": "Молия"],
             icon: "banknote",
-            colorHex: "#4A90E2"   // ✅ добавили цвет
+            colorHex: "#4A90E2"
         ),
-        articles: [], // Пустой массив для preview
+        articles: [],
         favoritesManager: FavoritesManager()
     )
 }
-
