@@ -18,6 +18,7 @@ included:
 excluded:
   - Pods
   - Carthage
+  - Docs
 
 line_length:
   warning: 120
@@ -35,4 +36,3 @@ identifier_name:
     - x
     - y
     - to
-
