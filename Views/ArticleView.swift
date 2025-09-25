@@ -2,13 +2,6 @@
 //  ArticleView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
-
-//
-//  ArticleView.swift
-//  InGermany
-//
 
 import SwiftUI
 
@@ -35,6 +28,25 @@ struct ArticleView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    // 🔹 Картинка статьи (загрузка из Bundle)
+                    if let imageName = article.image,
+                       let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: .infinity, maxHeight: 220)
+                            .clipped()
+                            .cornerRadius(12)
+                    } else {
+                        // fallback
+                        Image("Logo")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: .infinity, maxHeight: 220)
+                            .clipped()
+                            .cornerRadius(12)
+                    }
+
                     // 🔹 Прогресс-бар
                     ReadingProgressBar(
                         progress: progressTracker.scrollProgress,
@@ -220,7 +232,7 @@ struct ArticleView: View {
     NavigationView {
         ArticleView(
             article: Article.sampleArticle,
-            allArticles: [Article.sampleArticle], // ✅ мок-данные вместо async вызова,
+            allArticles: [Article.sampleArticle],
             favoritesManager: FavoritesManager()
         )
         .environmentObject(CategoriesStore.shared)

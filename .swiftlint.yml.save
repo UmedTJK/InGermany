@@ -1,0 +1,38 @@
+disabled_rules: # правила, которые можно отключить
+  - trailing_whitespace
+  - line_length
+  - todo
+
+opt_in_rules: # включаемые вручную
+  - empty_count
+  - explicit_init
+  - fatal_error_message
+
+included: # проверяем только папки проекта
+  - Core
+  - Views
+  - Models
+  - Services
+  - Utils
+
+excluded: # игнорируем
+  - Pods
+  - Carthage
+
+line_length:
+  warning: 120
+  error: 160
+
+type_name:
+  min_length: 3
+  max_length: 40
+
+identifier_name:
+  min_length: 2
+  max_length: 40
+  excluded:
+    - id
+    - x
+    - y
+    - to
+

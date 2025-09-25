@@ -45,10 +45,7 @@ struct SearchView: View {
                             favoritesManager: favoritesManager
                         )
                     } label: {
-                        ArticleRow(
-                            article: article,
-                            favoritesManager: favoritesManager
-                        )
+                        ArticleRow(article: article) // ✅ убрал favoritesManager
                     }
                 }
                 .listStyle(.plain)

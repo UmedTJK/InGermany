@@ -20,7 +20,8 @@
       "account"
     ],
     "createdAt": "2025-09-20T10:00:00Z",
-    "updatedAt": "2025-09-20T10:00:00Z"
+    "updatedAt": "2025-09-20T10:00:00Z",
+    "image": "germany2.jpg"
   },
   {
     "id": "d6c7aa7a-0f3a-4bcd-bbbb-ccccddddeeee",
@@ -43,7 +44,8 @@
       "life"
     ],
     "createdAt": "2025-09-20T12:00:00Z",
-    "updatedAt": "2025-09-20T12:00:00Z"
+    "updatedAt": "2025-09-20T12:00:00Z",
+    "image": "germany3.jpg"
   },
   {
     "id": "7a6d0c9b-94d1-46e0-9f77-1111aaaabbbb",
@@ -66,7 +68,8 @@
       "application"
     ],
     "createdAt": "2025-09-20T14:00:00Z",
-    "updatedAt": "2025-09-20T14:00:00Z"
+    "updatedAt": "2025-09-20T14:00:00Z",
+    "image": "germany4.jpg"
   },
   {
     "id": "88d5c71b-21b7-4c56-8ef5-2222bbbbcccc",
@@ -89,7 +92,8 @@
       "anmeldung"
     ],
     "createdAt": "2025-09-20T15:00:00Z",
-    "updatedAt": "2025-09-20T15:00:00Z"
+    "updatedAt": "2025-09-20T15:00:00Z",
+    "image": "germany5.jpg"
   },
   
   {
@@ -109,7 +113,8 @@
     "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
     "tags": ["housing", "rent", "wohnung"],
     "createdAt": "2025-09-21T10:00:00Z",
-    "updatedAt": "2025-09-21T10:00:00Z"
+    "updatedAt": "2025-09-21T10:00:00Z",
+    "image": "germany6.jpg"
   },
   {
     "id": "cc45d8ef-1f22-4a2e-aaaa-cccc2222dddd",
@@ -128,7 +133,8 @@
     "categoryId": "44444444-4444-4444-4444-dddddddddddd",
     "tags": ["tax", "steuer-id", "bureaucracy"],
     "createdAt": "2025-09-21T12:00:00Z",
-    "updatedAt": "2025-09-21T12:00:00Z"
+    "updatedAt": "2025-09-21T12:00:00Z",
+    "image": "germany7.jpg"
   },
   
   {
@@ -148,7 +154,8 @@
     "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
     "tags": ["transport", "ticket", "deutschlandticket"],
     "createdAt": "2025-09-21T14:00:00Z",
-    "updatedAt": "2025-09-21T14:00:00Z"
+    "updatedAt": "2025-09-21T14:00:00Z",
+    "image": "germany8.jpg"
   },
   
   {
@@ -168,7 +175,9 @@
     "categoryId": "55555555-5555-5555-5555-eeeeeeeeeeee",
     "tags": ["kindergeld", "benefits", "family"],
     "createdAt": "2025-09-21T16:00:00Z",
-    "updatedAt": "2025-09-21T16:00:00Z"
+    "updatedAt": "2025-09-21T16:00:00Z",
+    "image": "germany9.jpg"
+    
   },
   
   {
@@ -188,7 +197,8 @@
     "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
     "tags": ["work", "job", "arbeitsvertrag"],
     "createdAt": "2025-09-21T18:00:00Z",
-    "updatedAt": "2025-09-21T18:00:00Z"
+    "updatedAt": "2025-09-21T18:00:00Z",
+    "image": "germany10.jpg"
   },
   
   {
@@ -208,7 +218,8 @@
     "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
     "tags": ["work", "probezeit", "job"],
     "createdAt": "2025-09-21T20:00:00Z",
-    "updatedAt": "2025-09-21T20:00:00Z"
+    "updatedAt": "2025-09-21T20:00:00Z",
+    "image": "germany11.jpg"
   },
   
   {
@@ -228,7 +239,8 @@
     "categoryId": "22222222-2222-2222-2222-bbbbbbbbbbbb",
     "tags": ["work", "job", "kündigungsfrist"],
     "createdAt": "2025-09-21T22:00:00Z",
-    "updatedAt": "2025-09-21T22:00:00Z"
+    "updatedAt": "2025-09-21T22:00:00Z",
+    "image": "germany12.jpg"
   },
   
   {
@@ -248,7 +260,8 @@
     "categoryId": "33333333-3333-3333-3333-cccccccccccc",
     "tags": ["health", "insurance", "krankenkasse"],
     "createdAt": "2025-09-22T08:00:00Z",
-    "updatedAt": "2025-09-22T08:00:00Z"
+    "updatedAt": "2025-09-22T08:00:00Z",
+    "image": "germany13.jpg"
   }
 
 
