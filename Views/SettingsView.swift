@@ -6,112 +6,88 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
-    @AppStorage("textSize") private var textSize: Double = 16
-    @AppStorage("useRelativeDates") private var useRelativeDates: Bool = true
-
-    @State private var articlesRead: Int = 42
-    @State private var totalReadingTime: Int = 135
-    @State private var avgTimePerArticle: Double = 3.2
-    @State private var readingStreak: Int = 5
-
+    @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
+    @AppStorage("relativeDates") private var relativeDates: Bool = true
+    
+    @ObservedObject private var historyManager = ReadingHistoryManager.shared
+    
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text(t("settings_language_title"))) {
+                // 🔤 Язык
+                Section {
                     LanguagePickerView()
                 }
-
+                
+                // 🎨 Внешний вид
                 Section(header: Text(t("settings_appearance_title"))) {
                     Toggle(isOn: $isDarkMode) {
                         Text(t("settings_dark_mode"))
                     }
-                    Stepper(value: $textSize, in: 12...24, step: 1) {
-                        Text("\(t("settings_text_size")): \(Int(textSize))")
-                    }
                 }
-                Section(header: Text("Стиль карточек")) {
-                    Picker("Фото", selection: $cardImageStyle) {
+                
+                // 🖼 Стиль карточек
+                Section(header: Text(t("settings_card_style"))) {
+                    Picker(t("settings_card_style_photo"), selection: $cardImageStyle) {
                         ForEach(CardImageStyle.allCases) { style in
                             Text(style.title).tag(style)
                         }
                     }
                     .pickerStyle(.segmented)
                 }
-
-
-                Section(header: Text(t("settings_date_format"))) {
-                    Toggle(isOn: $useRelativeDates) {
+                
+                // 📅 Формат дат
+                Section(header: Text(t("settings_date_format_title"))) {
+                    Toggle(isOn: $relativeDates) {
                         Text(t("settings_relative_dates"))
                     }
                 }
+                
+                // 📊 Статистика чтения
+                Section(header: Text(t("settings_stats_title"))) {
+                    let stats = ReadingStats(from: historyManager.history)
 
-                Section(header: Text(t("settings_reading_stats"))) {
                     HStack {
                         Text(t("settings_articles_read"))
                         Spacer()
-                        Text("\(articlesRead)")
+                        Text("\(stats.totalArticlesRead)")
                     }
                     HStack {
                         Text(t("settings_total_time"))
                         Spacer()
-                        Text("\(totalReadingTime) \(unitMinutes())")
+                        Text("\(stats.totalReadingTimeMinutes) \(t("settings_minutes"))")
                     }
                     HStack {
-                        Text(t("settings_avg_time"))
+                        Text(t("settings_average_time"))
                         Spacer()
-                        Text(String(format: "%.1f \(unitMinutes())", avgTimePerArticle))
+                        Text(String(format: "%.1f %@", stats.averageReadingTimeMinutes, t("settings_minutes")))
                     }
                     HStack {
                         Text(t("settings_streak"))
                         Spacer()
-                        Text("\(readingStreak)")
+                        Text("\(stats.readingStreak)")
                     }
                 }
-
+                
+                // ℹ️ О приложении
+                Section {
+                    NavigationLink(destination: AboutView()) {
+                        Text(t("settings_about_title"))
+                    }
+                }
+                
+                // 🧹 Очистка истории
                 Section {
                     Button(role: .destructive) {
-                        clearHistory()
+                        historyManager.clearHistory()
                     } label: {
                         Text(t("settings_clear_history"))
                     }
                 }
-
-                Section(header: Text(t("settings_about"))) {
-                    Text(t("about_description"))
-                    NavigationLink(destination: AboutView()) {
-                        Text(t("tab_about"))
-                    }
-                }
             }
-            .navigationTitle(t("Настройки")) // используем ключ из LocalizationManager
-        }
-    }
-
-    private func clearHistory() {
-        articlesRead = 0
-        totalReadingTime = 0
-        avgTimePerArticle = 0
-        readingStreak = 0
-    }
-
-    // 🔹 Удобный шорткат для перевода
-    private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
-    }
-
-    // 🔹 Перевод единиц измерения для минут
-    private func unitMinutes() -> String {
-        switch selectedLanguage {
-        case "en": return "min"
-        case "de": return "Min."
-        case "tj": return "дақ"
-        case "fa": return "دقیقه"
-        case "ar": return "دقيقة"
-        case "uk": return "хв"
-        default: return "мин"
+            .navigationTitle(t("settings_title"))
         }
     }
 }

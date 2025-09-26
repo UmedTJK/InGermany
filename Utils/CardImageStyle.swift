@@ -4,10 +4,6 @@
 //
 //  Created by SUM TJK on 26.09.25.
 //
-//
-//  CardImageStyle.swift
-//  InGermany
-//
 
 import Foundation
 
@@ -20,10 +16,15 @@ enum CardImageStyle: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .allCorners: return "Все углы"
-        case .bottomCorners: return "Снизу"
-        case .fullWidth: return "Во всю ширину"
+        case .allCorners:
+            return LocalizationManager.shared.getTranslation(key: "card_style_all",
+                                                             language: LocalizationManager.shared.selectedLanguage)
+        case .bottomCorners:
+            return LocalizationManager.shared.getTranslation(key: "card_style_bottom",
+                                                             language: LocalizationManager.shared.selectedLanguage)
+        case .fullWidth:
+            return LocalizationManager.shared.getTranslation(key: "card_style_full",
+                                                             language: LocalizationManager.shared.selectedLanguage)
         }
     }
 }
-
