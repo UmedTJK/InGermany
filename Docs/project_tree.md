@@ -1,68 +1,47 @@
-# Project Tree · InGermany
+# 📁 Структура проекта
 
-> Актуальная структура проекта. Обновляется вручную:
-> ```bash
-> cd ~/Desktop/InGermany
-> tree -L 3 > Docs/project_tree.md
-> ```
-
-```
+```bash
 .
-├── AI_CONTEXT.md
 ├── Assets.xcassets
-├── CHANGELOG.md
-├── CLEAN_CODE_CHECKLIST.md
 ├── Core
 │   ├── ContentView.swift
 │   └── InGermanyApp.swift
-├── Git_Mini_Guide.md
+├── Docs
+│   ├── AI_CONTEXT.md
+│   ├── CHANGELOG.md
+│   ├── CLEAN_CODE_CHECKLIST.md
+│   ├── Git_Mini_Guide.md
+│   ├── PROJECT_STRUCTURE.md
+│   ├── PROMPTS_FOR_AI_AGENTS.md
+│   ├── Project_Brief.docx
+│   ├── git_snapshot.md
+│   ├── project_tree.md
+│   └── project_tree.txt
 ├── InGermany
 │   ├── Assets.xcassets
-│   │   ├── AccentColor.colorset
-│   │   ├── AppIcon.appiconset
-│   │   ├── Contents.json
-│   │   └── Logo.imageset
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
 │   └── Preview Content
-│       └── Preview Assets.xcassets
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
-│   │   ├── contents.xcworkspacedata
-│   │   ├── xcshareddata
-│   │   └── xcuserdata
 │   └── xcuserdata
-│       └── sumtjk.xcuserdatad
-├── LogoLight.png
+├── Managers
+│   ├── CategoryManager.swift
+│   ├── FavoritesManager.swift
+│   ├── LocalizationManager.swift
+│   ├── RatingManager.swift
+│   ├── ReadingHistoryManager.swift
+│   └── TextSizeManager.swift
 ├── Models
 │   ├── Article.swift
 │   ├── Category.swift
-│   ├── Location.swift
-│   ├── RatingManager.swift
-│   └── ReadingHistoryManager.swift
-├── PROJECT_STRUCTURE.md
-├── PROMPTS_FOR_AI_AGENTS.md
-├── Project_Brief.docx
+│   └── Location.swift
 ├── README.md
 ├── Resources
 │   ├── Images
-│   │   ├── Base.lproj
-│   │   ├── en.lproj
-│   │   ├── germany10.jpg
-│   │   ├── germany11.jpg
-│   │   ├── germany12.jpg
-│   │   ├── germany13.jpg
-│   │   ├── germany2.jpg
-│   │   ├── germany3.avif
-│   │   ├── germany4.jpg
-│   │   ├── germany5.jpg
-│   │   ├── germany6.avif
-│   │   ├── germany6.jpg
-│   │   ├── germany7.jpg
-│   │   ├── germany8.jpg
-│   │   └── germany9.jpg
+│   ├── Localizable.xcstrings
 │   ├── Test_Document.pdf
 │   ├── articles.json
 │   ├── burgergeld.pdf
@@ -84,15 +63,15 @@
 │   └── ShareService.swift
 ├── Utils
 │   ├── Animations.swift
+│   ├── CardImageStyle.swift
 │   ├── CardSize.swift
 │   ├── CategoriesStore.swift
-│   ├── CategoryManager.swift
 │   ├── Color+Hex.swift
 │   ├── ExportToPDF.swift
-│   ├── LocalizationManager.swift
 │   ├── ProgressBar.swift
+│   ├── ReadingProgressHelper.swift
+│   ├── ReadingProgressTracker.swift
 │   ├── ReadingTimeCalculator.swift
-│   ├── TextSizeManager.swift
 │   └── Theme.swift
 ├── Views
 │   ├── AboutView.swift
@@ -101,30 +80,14 @@
 │   ├── ArticlesByCategoryView.swift
 │   ├── ArticlesByTagView.swift
 │   ├── Cards
-│   │   └── ArticleCompactCard.swift
 │   ├── CategoriesView.swift
 │   ├── Components
-│   │   ├── ArticleCardView.swift
-│   │   ├── ArticleMetaView.swift
-│   │   ├── ArticleRow.swift
-│   │   ├── Components.swift
-│   │   ├── FavoriteCard.swift
-│   │   ├── PDFViewer.swift
-│   │   ├── ReadingProgressBar.swift
-│   │   ├── TagFilterView.swift
-│   │   └── TextSizeSettingsPanel.swift
-│   ├── FavoritesManager.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
 │   ├── SearchView.swift
 │   └── SettingsView.swift
-├── nano .swiftlint.yml
-├── nano .swiftlint.yml 20-47-48-630.yml
-├── project_structure.txt
-├── project_tree.txt
-├── structure.txt
 └── update.sh
 
-27 directories, 91 files
+20 directories, 67 files
 ```
