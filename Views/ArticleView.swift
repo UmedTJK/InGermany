@@ -9,209 +9,137 @@ struct ArticleView: View {
     let article: Article
     let allArticles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
-    @ObservedObject var ratingManager = RatingManager.shared
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    
-    @StateObject private var readingTracker = ReadingTracker()
-    @StateObject private var progressTracker = ReadingProgressTracker()
+    @StateObject private var tracker = ReadingProgressTracker.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
-    @State private var showTextSizePanel = false
-
-    private var relatedArticles: [Article] {
-        allArticles
-            .filter { $0.categoryId == article.categoryId && $0.id != article.id }
-            .prefix(3)
-            .map { $0 }
+    @ObservedObject private var ratingManager = RatingManager.shared
+    
+    @State private var scrollOffset: CGFloat = 0
+    @State private var contentHeight: CGFloat = 1
+    @State private var viewHeight: CGFloat = 1
+    
+    private var readingTime: String {
+        let minutes = ReadingTimeCalculator.estimateReadingTime(
+            for: article.localizedContent(for: selectedLanguage),
+            language: selectedLanguage
+        )
+        return ReadingTimeCalculator.formatReadingTime(minutes, language: selectedLanguage)
     }
-
+    
+    private var relatedArticles: [Article] {
+        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
+    }
+    
     var body: some View {
-        ScrollViewReader { proxy in
+        VStack(spacing: 0) {
             ScrollView {
+                GeometryReader { geo in
+                    Color.clear
+                        .preference(key: ScrollOffsetPreferenceKey.self,
+                                    value: geo.frame(in: .named("scroll")).minY)
+                }
+                .frame(height: 0)
+                
                 VStack(alignment: .leading, spacing: 16) {
-                    if let imageName = article.image,
-                       let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(maxWidth: .infinity, maxHeight: 220)
-                            .clipped()
-                            .cornerRadius(12)
-                    } else {
-                        Image("Logo")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(maxWidth: .infinity, maxHeight: 220)
-                            .clipped()
-                            .cornerRadius(12)
-                    }
-
-                    ReadingProgressBar(
-                        progress: progressTracker.scrollProgress,
-                        height: 6,
-                        foregroundColor: progressTracker.isReading ? .green : .blue
-                    )
-                    .padding(.bottom, 8)
-                    
+                    // Заголовок
                     Text(article.localizedTitle(for: selectedLanguage))
                         .font(.title)
                         .bold()
-                        .id("articleTop")
-
-                    ArticleMetaView(article: article)
-
-                    HStack {
-                        Image(systemName: "clock")
-                            .foregroundColor(.secondary)
-                        Text(article.formattedReadingTime(for: selectedLanguage))
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        if ReadingHistoryManager.shared.isRead(article.id) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                                .font(.subheadline)
-                        }
-                        
-                        if progressTracker.isReading {
-                            Image(systemName: "eye.fill")
-                                .foregroundColor(.green)
-                                .font(.subheadline)
-                        }
-                    }
-
+                    
+                    // Время чтения
+                    Text(readingTime)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    // Контент статьи
                     Text(article.localizedContent(for: selectedLanguage))
-                        .font(textSizeManager.isCustomTextSizeEnabled ?
-                              textSizeManager.currentFont : .body)
+                        .font(textSizeManager.currentFont)
                         .foregroundColor(.primary)
-                        .trackReadingProgress(progressTracker)
-                        .lineSpacing(4)
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(getTranslation(key: "Оцените статью", language: selectedLanguage))
+                        .multilineTextAlignment(.leading)
+                        .background(GeometryReader { proxy in
+                            Color.clear.onAppear {
+                                contentHeight = proxy.size.height
+                            }
+                        })
+                    
+                    // Рейтинг
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(t("Оцените статью"))
                             .font(.subheadline)
-                        HStack {
-                            ForEach(1..<6) { star in
-                                Image(systemName: star <= ratingManager.rating(for: article.id) ? "star.fill" : "star")
-                                    .foregroundColor(.yellow)
-                                    .onTapGesture {
-                                        ratingManager.setRating(star, for: article.id)
-                                        HapticFeedback.medium()
-                                    }
+                            .bold()
+                        StarRatingView(
+                            rating: Binding(
+                                get: { ratingManager.rating(for: article.id) },
+                                set: { ratingManager.setRating($0, for: article.id) }
+                            )
+                        )
+                    }
+                    .padding(.top)
+                    
+                    // Рекомендации
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(t("Вам может понравиться"))
+                            .font(.headline)
+                        
+                        ForEach(relatedArticles, id: \.id) { related in
+                            NavigationLink(destination: ArticleView(article: related,
+                                                                   allArticles: allArticles,
+                                                                   favoritesManager: favoritesManager)) {
+                                Text(related.localizedTitle(for: selectedLanguage))
+                                    .foregroundColor(.blue)
+                                    .padding(.vertical, 4)
                             }
                         }
                     }
                     .padding(.top)
-
-                    ShareLink(
-                        item: "\(article.localizedTitle(for: selectedLanguage))\n\n\(article.localizedContent(for: selectedLanguage))",
-                        subject: Text(article.localizedTitle(for: selectedLanguage)),
-                        message: Text(getTranslation(key: "Поделитесь этой статьёй", language: selectedLanguage))
-                    ) {
-                        Label(
-                            getTranslation(key: "Поделиться статьёй", language: selectedLanguage),
-                            systemImage: "square.and.arrow.up"
-                        )
-                        .padding(.top)
-                    }
-
-                    if !relatedArticles.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(getTranslation(key: "Похожие статьи", language: selectedLanguage))
-                                .font(.headline)
-                                .padding(.top)
-
-                            ForEach(relatedArticles) { related in
-                                NavigationLink(destination: ArticleView(
-                                    article: related,
-                                    allArticles: allArticles,
-                                    favoritesManager: favoritesManager
-                                )) {
-                                    VStack(alignment: .leading) {
-                                        Text(related.localizedTitle(for: selectedLanguage))
-                                            .font(.subheadline)
-                                            .bold()
-                                        Text(related.localizedContent(for: selectedLanguage))
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                            .lineLimit(2)
-                                    }
-                                    .padding(.vertical, 4)
-                                }
-                            }
-                        }
-                    }
                 }
                 .padding()
             }
-            .navigationTitle(article.localizedTitle(for: selectedLanguage))
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button {
-                        showTextSizePanel.toggle()
-                        HapticFeedback.medium()
-                    } label: {
-                        Image(systemName: "textformat.size")
-                            .foregroundColor(.blue)
-                    }
-                    
-                    Button {
-                        favoritesManager.toggleFavorite(article: article)
-                        HapticFeedback.medium()
-                    } label: {
-                        Image(
-                            systemName: favoritesManager.isFavorite(article: article)
-                            ? "star.fill"
-                            : "star"
-                        )
-                        .foregroundColor(.yellow)
-                    }
-                    
-                    Button {
-                        withAnimation {
-                            proxy.scrollTo("articleTop", anchor: .top)
-                        }
-                        HapticFeedback.light()
-                    } label: {
-                        Image(systemName: "arrow.up.to.line.compact")
-                            .foregroundColor(.blue)
-                    }
+            .coordinateSpace(name: "scroll")
+            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                scrollOffset = -value
+                let progress = scrollOffset / max(contentHeight - viewHeight, 1)
+                Task { @MainActor in
+                    tracker.updateProgress(for: article.id, value: progress)
                 }
             }
-            .sheet(isPresented: $showTextSizePanel) {
-                TextSizeSettingsPanel()
+            .background(GeometryReader { proxy in
+                Color.clear.onAppear {
+                    viewHeight = proxy.size.height
+                }
+            })
+            
+            // Прогресс-бар
+            let progress = tracker.progressForArticle(article.id)
+            ReadingProgressHelper.progressView(progress: progress, language: selectedLanguage)
+        }
+        .navigationTitle(t("Статья"))
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: TextSizeSettingsPanel()) {
+                    Image(systemName: "textformat.size")
+                }
             }
-            .onAppear {
-                readingTracker.startReading(articleId: article.id)
-                progressTracker.reset()
-            }
-            .onDisappear {
-                readingTracker.finishReading()
-                progressTracker.reset()
+            ToolbarItem(placement: .navigationBarTrailing) {
+                ShareLink(
+                    item: article.localizedTitle(for: selectedLanguage) + "\n\n" +
+                          article.localizedContent(for: selectedLanguage),
+                    preview: SharePreview(article.localizedTitle(for: selectedLanguage))
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                }
             }
         }
     }
     
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Оцените статью": [
-                "ru": "Оцените статью", "en": "Rate this article", "de": "Artikel bewerten", "tj": "Мақоларо баҳогузорӣ кунед",
-                "fa": "به این مقاله امتیاز دهید", "ar": "قيّم هذه المقالة", "uk": "Оцініть статтю"
-            ],
-            "Поделитесь этой статьёй": [
-                "ru": "Поделитесь этой статьёй", "en": "Share this article", "de": "Artikel teilen", "tj": "Ин мақоларо мубодила кунед",
-                "fa": "این مقاله را به اشتراک بگذارید", "ar": "شارك هذه المقالة", "uk": "Поділіться цією статтею"
-            ],
-            "Поделиться статьёй": [
-                "ru": "Поделиться статьёй", "en": "Share article", "de": "Artikel teilen", "tj": "Мақоларо мубодила кунед",
-                "fa": "اشتراک‌گذاری مقاله", "ar": "مشاركة المقالة", "uk": "Поділитися статтею"
-            ],
-            "Похожие статьи": [
-                "ru": "Похожие статьи", "en": "Related articles", "de": "Ähnliche Artikel", "tj": "Мақолаҳои монанд",
-                "fa": "مقالات مشابه", "ar": "مقالات مشابهة", "uk": "Схожі статті"
-            ]
-        ]
-        return translations[key]?[language] ?? key
+    private func t(_ key: String) -> String {
+        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+    }
+}
+
+private struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }

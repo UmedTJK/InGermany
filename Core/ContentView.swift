@@ -11,16 +11,12 @@ struct ContentView: View {
             HomeView(favoritesManager: favoritesManager)
                 .tabItem {
                     Label(
-                        LocalizationManager.shared.getTranslation(
-                            key: "Главная",
-                            language: selectedLanguage
-                        ),
+                        NSLocalizedString("tab_home", comment: ""),
                         systemImage: "house.fill"
                     )
                 }
                 .tag(0)
             
-            // 🔹 Категории теперь сразу после Главной
             CategoriesView(
                 categories: CategoriesStore.shared.categories,
                 articles: articles,
@@ -28,10 +24,7 @@ struct ContentView: View {
             )
             .tabItem {
                 Label(
-                    LocalizationManager.shared.getTranslation(
-                        key: "Категории",
-                        language: selectedLanguage
-                    ),
+                    NSLocalizedString("tab_categories", comment: ""),
                     systemImage: "square.grid.2x2.fill"
                 )
             }
@@ -40,10 +33,7 @@ struct ContentView: View {
             SearchView(favoritesManager: favoritesManager, articles: articles)
                 .tabItem {
                     Label(
-                        LocalizationManager.shared.getTranslation(
-                            key: "Поиск",
-                            language: selectedLanguage
-                        ),
+                        NSLocalizedString("tab_search", comment: ""),
                         systemImage: "magnifyingglass"
                     )
                 }
@@ -52,10 +42,7 @@ struct ContentView: View {
             FavoritesView(favoritesManager: favoritesManager)
                 .tabItem {
                     Label(
-                        LocalizationManager.shared.getTranslation(
-                            key: "Избранное",
-                            language: selectedLanguage
-                        ),
+                        NSLocalizedString("tab_favorites", comment: ""),
                         systemImage: "star.fill"
                     )
                 }
@@ -64,10 +51,7 @@ struct ContentView: View {
             SettingsView()
                 .tabItem {
                     Label(
-                        LocalizationManager.shared.getTranslation(
-                            key: "Настройки",
-                            language: selectedLanguage
-                        ),
+                        NSLocalizedString("tab_settings", comment: ""), // ← ИСПРАВЛЕНО
                         systemImage: "gearshape.fill"
                     )
                 }

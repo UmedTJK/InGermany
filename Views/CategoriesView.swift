@@ -33,11 +33,17 @@ struct CategoriesView: View {
                     .padding(.vertical, 6)
                 }
             }
-            .navigationTitle(getTranslation(key: "Категории", language: selectedLanguage))
+            .navigationTitle(t("Категории"))
             .listStyle(PlainListStyle())
         }
     }
 
+    // 🔹 Удобный шорткат для перевода
+    private func t(_ key: String) -> String {
+        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+    }
+
+    // 🔹 Старый метод (оставлен для совместимости, но больше не используется)
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Категории": [

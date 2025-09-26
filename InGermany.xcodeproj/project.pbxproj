@@ -30,6 +30,9 @@
 		AD8552D22E75BB62003D3826 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552CA2E75B541003D3826 /* Theme.swift */; };
 		ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */ = {isa = PBXBuildFile; fileRef = ADA942002E78930B008D1364 /* Test_Document.pdf */; };
 		ADA942092E78950F008D1364 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = ADA942082E78950B008D1364 /* locations.json */; };
+		ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */; };
+		ADF338802E86799000AE4CBF /* ReadingProgressTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF3387F2E86798E00AE4CBF /* ReadingProgressTracker.swift */; };
+		ADF338822E86CA6A00AE4CBF /* ReadingProgressHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF338812E86CA6600AE4CBF /* ReadingProgressHelper.swift */; };
 		ADFDC50E2E85B3AF004EC7ED /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +67,9 @@
 		AD8552CB2E75B54D003D3826 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		ADA942002E78930B008D1364 /* Test_Document.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = Test_Document.pdf; sourceTree = "<group>"; };
 		ADA942082E78950B008D1364 /* locations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
+		ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
+		ADF3387F2E86798E00AE4CBF /* ReadingProgressTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTracker.swift; sourceTree = "<group>"; };
+		ADF338812E86CA6600AE4CBF /* ReadingProgressHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressHelper.swift; sourceTree = "<group>"; };
 		ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */,
+				ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */,
 				AD52FD452E8585B300CC9F61 /* CHANGELOG.md */,
 				AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */,
 				AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */,
@@ -173,6 +180,8 @@
 		AD8552C92E75B506003D3826 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				ADF338812E86CA6600AE4CBF /* ReadingProgressHelper.swift */,
+				ADF3387F2E86798E00AE4CBF /* ReadingProgressTracker.swift */,
 				AD7455452E7FD152001FC732 /* CardSize.swift */,
 				AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */,
 				AD74546D2E7E8E68001FC732 /* CategoriesStore.swift */,
@@ -238,6 +247,12 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
+				uk,
+				"tg-TJ",
+				ar,
+				fa,
+				de,
 			);
 			mainGroup = AD8552892E75ABEB003D3826;
 			minimizedProjectReferenceProxies = 1;
@@ -261,6 +276,7 @@
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
 				AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */,
+				ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */,
 				ADFDC50E2E85B3AF004EC7ED /* AI_CONTEXT.md in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
@@ -282,6 +298,8 @@
 				AD6275112E7BB377003D7FA9 /* ExportToPDF.swift in Sources */,
 				AD6275122E7BB377003D7FA9 /* ProgressBar.swift in Sources */,
 				AD8552D22E75BB62003D3826 /* Theme.swift in Sources */,
+				ADF338802E86799000AE4CBF /* ReadingProgressTracker.swift in Sources */,
+				ADF338822E86CA6A00AE4CBF /* ReadingProgressHelper.swift in Sources */,
 				AD6C1E142E76C73D00EA59A7 /* Animations.swift in Sources */,
 				AD40EEFD2E75F3DB00866648 /* CategoryManager.swift in Sources */,
 				AD6275082E7BB059003D7FA9 /* ReadingTimeCalculator.swift in Sources */,
@@ -355,6 +373,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -411,6 +430,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

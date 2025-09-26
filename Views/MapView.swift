@@ -45,7 +45,7 @@ struct MapView: View {
         NavigationStack {
             Group {
                 if isLoading {
-                    ProgressView(getTranslation(key: "Загрузка карты...", language: selectedLanguage))
+                    ProgressView(t("Загрузка карты..."))
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     Group {
@@ -81,7 +81,7 @@ struct MapView: View {
                     }
                 }
             }
-            .navigationTitle(getTranslation(key: "Карта", language: selectedLanguage))
+            .navigationTitle(t("Карта"))
             .edgesIgnoringSafeArea(.all)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -91,7 +91,7 @@ struct MapView: View {
                             region.span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
                         }
                     }) {
-                        Label(getTranslation(key: "Моё местоположение", language: selectedLanguage), systemImage: "location.fill")
+                        Label(t("Моё местоположение"), systemImage: "location.fill")
                     }
                 }
                 
@@ -101,7 +101,7 @@ struct MapView: View {
                             await refreshLocations()
                         }
                     }) {
-                        Label(getTranslation(key: "Обновить", language: selectedLanguage), systemImage: "arrow.clockwise")
+                        Label(t("Обновить"), systemImage: "arrow.clockwise")
                     }
                 }
             }
@@ -123,7 +123,12 @@ struct MapView: View {
         isLoading = false
     }
 
-    // MARK: - Translation
+    // 🔹 Удобный шорткат для нового менеджера
+    private func t(_ key: String) -> String {
+        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+    }
+
+    // 🔹 Старый метод (оставлен для совместимости)
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Загрузка карты...": [

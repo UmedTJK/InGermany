@@ -1,3 +1,7 @@
+//
+//  ArticleDetailView.swift
+//  InGermany
+//
 import SwiftUI
 
 struct SearchView: View {
@@ -45,20 +49,25 @@ struct SearchView: View {
                             favoritesManager: favoritesManager
                         )
                     } label: {
-                        ArticleRow(article: article) // ✅ убрал favoritesManager
+                        ArticleRow(article: article)
                     }
                 }
                 .listStyle(.plain)
             }
-            .navigationTitle(getTranslation(key: "Поиск", language: selectedLanguage))
+            .navigationTitle(t("Поиск"))
             .searchable(
                 text: $searchText,
-                prompt: getTranslation(key: "Искать по статьям или категориям", language: selectedLanguage)
+                prompt: t("Искать по статьям или категориям")
             )
         }
     }
 
-    // MARK: - Translation
+    // 🔹 Шорткат для нового менеджера
+    private func t(_ key: String) -> String {
+        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+    }
+
+    // 🔹 Старый метод (оставлен для совместимости)
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Поиск": [

@@ -2,8 +2,6 @@
 //  ArticlesByTagView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 14.09.25.
-//
 
 import SwiftUI
 
@@ -14,27 +12,38 @@ struct ArticlesByTagView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
-        List(filteredArticles) { article in
-            NavigationLink {
-                ArticleDetailView(
-                    article: article,
-                    favoritesManager: favoritesManager
-                )
-            } label: {
-                ArticleRow(article: article) // ✅ без favoritesManager
+        List {
+            ForEach(filteredArticles, id: \.id) { article in
+                NavigationLink {
+                    ArticleDetailView(
+                        article: article,
+                        allArticles: articles,
+                        favoritesManager: favoritesManager
+                    )
+                } label: {
+                    ArticleRow(article: article)
+                }
             }
         }
         .navigationTitle("#\(tag)")
     }
 
+    // Локально переводим теги и фильтруем по локализованному/сырому значению
     private var filteredArticles: [Article] {
-        articles.filter { $0.tags.contains(tag) }
+        articles.filter { article in
+            let localized = article.tags.map { t($0) }
+            return localized.contains(tag) || article.tags.contains(tag)
+        }
+    }
+
+    private func t(_ key: String) -> String {
+        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 #Preview {
     ArticlesByTagView(
-        tag: "финансы",
+        tag: "Финансы",
         articles: [Article.sampleArticle],
         favoritesManager: FavoritesManager()
     )

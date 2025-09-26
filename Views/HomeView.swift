@@ -39,7 +39,7 @@ struct HomeView: View {
 
                 Group {
                     if isLoading {
-                        ProgressView("Загрузка данных...")
+                        ProgressView(t("Загрузка данных..."))
                             .progressViewStyle(CircularProgressViewStyle())
                     } else {
                         ScrollView {
@@ -65,7 +65,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle(getTranslation(key: "Главная", language: selectedLanguage))
+            .navigationTitle(t("Главная"))
             .background(Color(.systemGroupedBackground))
             .navigationDestination(isPresented: $isShowingRandomArticle) {
                 if let randomArticle {
@@ -113,7 +113,7 @@ struct HomeView: View {
 
     private var usefulToolsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(getTranslation(key: "Полезные инструменты", language: selectedLanguage))
+            Text(t("Полезные инструменты"))
                 .font(.headline)
                 .padding(.horizontal)
 
@@ -121,7 +121,7 @@ struct HomeView: View {
                 HStack(spacing: 16) {
                     NavigationLink(destination: MapView()) {
                         ToolCard(
-                            title: getTranslation(key: "Карта", language: selectedLanguage),
+                            title: t("Карта"),
                             systemImage: "map",
                             color: .blue
                         )
@@ -129,7 +129,7 @@ struct HomeView: View {
 
                     NavigationLink(destination: PDFViewer(fileName: "sample")) {
                         ToolCard(
-                            title: getTranslation(key: "PDF Документы", language: selectedLanguage),
+                            title: t("PDF Документы"),
                             systemImage: "doc.richtext",
                             color: .green
                         )
@@ -142,7 +142,7 @@ struct HomeView: View {
                         }
                     } label: {
                         ToolCard(
-                            title: getTranslation(key: "Случайная статья", language: selectedLanguage),
+                            title: t("Случайная статья"),
                             systemImage: "shuffle",
                             color: .orange
                         )
@@ -160,7 +160,7 @@ struct HomeView: View {
         return Group {
             if !recentlyRead.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(getTranslation(key: "Недавно прочитанное", language: selectedLanguage))
+                    Text(t("Недавно прочитанное"))
                         .font(.headline)
                         .padding(.horizontal)
 
@@ -194,7 +194,7 @@ struct HomeView: View {
         return Group {
             if !favoriteArticles.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(getTranslation(key: "Избранное", language: selectedLanguage))
+                    Text(t("Избранное"))
                         .font(.headline)
                         .padding(.horizontal)
 
@@ -254,7 +254,7 @@ struct HomeView: View {
 
     private var allArticlesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(getTranslation(key: "Все статьи", language: selectedLanguage))
+            Text(t("Все статьи"))
                 .font(.headline)
                 .padding(.horizontal)
 
@@ -281,8 +281,12 @@ struct HomeView: View {
 
     // MARK: - Локализация заголовков
 
+    // 🔹 Шорткат для нового менеджера
+    private func t(_ key: String) -> String {
+        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+    }
 
-
+    // 🔹 Старый метод (оставлен для совместимости)
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Главная": [
@@ -316,9 +320,12 @@ struct HomeView: View {
             "Все статьи": [
                 "ru": "Все статьи", "en": "All articles", "de": "Alle Artikel", "tj": "Ҳамаи мақолаҳо",
                 "fa": "همه مقالات", "ar": "جميع المقالات", "uk": "Усі статті"
+            ],
+            "Загрузка данных...": [
+                "ru": "Загрузка данных...", "en": "Loading data...", "de": "Daten werden geladen...", "tj": "Боркунии маълумот...",
+                "fa": "در حال بارگذاری داده‌ها...", "ar": "جارٍ تحميل البيانات...", "uk": "Завантаження даних..."
             ]
         ]
         return translations[key]?[language] ?? key
     }
-
 }
