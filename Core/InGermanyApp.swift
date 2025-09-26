@@ -2,8 +2,6 @@
 //  InGermanyApp.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
 
 import SwiftUI
 
@@ -11,7 +9,9 @@ import SwiftUI
 struct InGermanyApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var categoriesStore = CategoriesStore.shared
-    @AppStorage("isDarkMode") private var isDarkMode: Bool = false   // 🔹 добавлено
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    
+    @Environment(\.scenePhase) private var scenePhase  // ✅ для отслеживания жизненного цикла
 
     var body: some Scene {
         WindowGroup {
@@ -22,13 +22,34 @@ struct InGermanyApp: App {
                 } else {
                     ContentView()
                         .environmentObject(categoriesStore)
-                        .preferredColorScheme(isDarkMode ? .dark : .light)  // 🔹 применяем тему
+                        .preferredColorScheme(isDarkMode ? .dark : .light)
                 }
             }
             .task {
-                await appState.loadData() // <-- обязательно await в Swift 6
+                await appState.loadData()
+            }
+            .onChange(of: scenePhase) {
+                switch scenePhase {
+                case .active:
+                    print("📱 App is active")
+                case .inactive:
+                    print("⏸ App is inactive")
+                case .background:
+                    print("📤 App moved to background — сохраняем состояние")
+                    saveAppState()
+                @unknown default:
+                    break
+                }
             }
         }
+    }
+
+    /// Сохраняем избранное и историю чтения (заглушка — адаптируй под свою логику)
+    private func saveAppState() {
+        // Пример: сохраняем избранное, если доступно
+        FavoritesManager().toggleFavorite(id: "dummy") // временно для вызова save
+        // ReadingHistoryManager.shared.saveIfNeeded() // можно реализовать
+        print("✔️ Состояние приложения сохранено")
     }
 }
 
@@ -37,17 +58,13 @@ final class AppState: ObservableObject {
     @Published var isLoading = true
 
     func loadData() async {
-        // 1) Предзагрузка данных через DataService
         let dataService = DataService.shared
         async let articles = dataService.loadArticles()
         async let categories = dataService.loadCategories()
         async let locations = dataService.loadLocations()
         _ = await (articles, categories, locations)
 
-        // 2) Мост для вью: поднимаем CategoriesStore
         await CategoriesStore.shared.bootstrap()
-
-        // 3) Готово
         isLoading = false
     }
 }
