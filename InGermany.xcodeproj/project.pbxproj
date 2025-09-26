@@ -33,6 +33,7 @@
 		ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */; };
 		ADF338802E86799000AE4CBF /* ReadingProgressTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF3387F2E86798E00AE4CBF /* ReadingProgressTracker.swift */; };
 		ADF338822E86CA6A00AE4CBF /* ReadingProgressHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF338812E86CA6600AE4CBF /* ReadingProgressHelper.swift */; };
+		ADF338872E86FE4C00AE4CBF /* CardImageStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF338862E86F39700AE4CBF /* CardImageStyle.swift */; };
 		ADFDC50E2E85B3AF004EC7ED /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,7 @@
 		ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
 		ADF3387F2E86798E00AE4CBF /* ReadingProgressTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTracker.swift; sourceTree = "<group>"; };
 		ADF338812E86CA6600AE4CBF /* ReadingProgressHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressHelper.swift; sourceTree = "<group>"; };
+		ADF338862E86F39700AE4CBF /* CardImageStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageStyle.swift; sourceTree = "<group>"; };
 		ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -180,6 +182,7 @@
 		AD8552C92E75B506003D3826 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				ADF338862E86F39700AE4CBF /* CardImageStyle.swift */,
 				ADF338812E86CA6600AE4CBF /* ReadingProgressHelper.swift */,
 				ADF3387F2E86798E00AE4CBF /* ReadingProgressTracker.swift */,
 				AD7455452E7FD152001FC732 /* CardSize.swift */,
@@ -291,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADF338872E86FE4C00AE4CBF /* CardImageStyle.swift in Sources */,
 				AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */,
 				AD7454FB2E7EEEF6001FC732 /* Color+Hex.swift in Sources */,
 				AD7455462E7FD154001FC732 /* CardSize.swift in Sources */,

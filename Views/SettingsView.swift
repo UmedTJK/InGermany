@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @AppStorage("textSize") private var textSize: Double = 16
@@ -31,6 +32,15 @@ struct SettingsView: View {
                         Text("\(t("settings_text_size")): \(Int(textSize))")
                     }
                 }
+                Section(header: Text("Стиль карточек")) {
+                    Picker("Фото", selection: $cardImageStyle) {
+                        ForEach(CardImageStyle.allCases) { style in
+                            Text(style.title).tag(style)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
 
                 Section(header: Text(t("settings_date_format"))) {
                     Toggle(isOn: $useRelativeDates) {

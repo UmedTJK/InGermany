@@ -1,58 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "#%@" : {
-
-    },
-    "%@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@"
-          }
-        }
-      }
-    },
-    "%@: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$@"
-          }
-        }
-      }
-    },
-    "%@: %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$lld"
-          }
-        }
-      }
-    },
-    "%lld" : {
-
-    },
-    "%lld %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld %2$@"
-          }
-        }
-      }
-    },
-    "%lld/5" : {
-
-    },
-    "%lld%%" : {
-
-    },
     "about_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -193,9 +141,6 @@
           }
         }
       }
-    },
-    "InGermany" : {
-
     },
     "settings_about" : {
       "extractionState" : "manual",
@@ -1183,12 +1128,6 @@
           }
         }
       }
-    },
-    "Загрузка данных..." : {
-
-    },
-    "Загрузка избранного..." : {
-
     }
   },
   "version" : "1.0"
