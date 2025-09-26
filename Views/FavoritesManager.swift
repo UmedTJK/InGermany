@@ -2,17 +2,12 @@
 //  FavoritesManager.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
-
-//
-//  FavoritesManager.swift
-//  InGermany
-//
 
 import SwiftUI
 
 class FavoritesManager: ObservableObject {
+    static let shared = FavoritesManager()  // ✅ Добавлен синглтон
+
     @AppStorage("favoriteArticles") private var storedFavorites: Data = Data()
     @Published private(set) var favoriteIDs: Set<String> = [] // Теперь String
 
@@ -26,7 +21,7 @@ class FavoritesManager: ObservableObject {
         }
     }
 
-    private func saveFavorites() {
+    public func saveFavorites() {  // ✅ Сделан публичным
         if let data = try? JSONEncoder().encode(favoriteIDs) {
             storedFavorites = data
         }
@@ -48,12 +43,12 @@ class FavoritesManager: ObservableObject {
     func favoriteArticles(from articles: [Article]) -> [Article] {
         articles.filter { favoriteIDs.contains($0.id) }
     }
-    
+
     // Методы для Article
     func isFavorite(article: Article) -> Bool {
         favoriteIDs.contains(article.id)
     }
-    
+
     func toggleFavorite(article: Article) {
         toggleFavorite(id: article.id)
     }
