@@ -69,7 +69,7 @@ struct HomeView: View {
             .background(Color(.systemGroupedBackground))
             .navigationDestination(isPresented: $isShowingRandomArticle) {
                 if let randomArticle {
-                    ArticleView(
+                    ArticleDetailView(
                         article: randomArticle,
                         allArticles: articles,
                         favoritesManager: favoritesManager
@@ -168,7 +168,7 @@ struct HomeView: View {
                         LazyHStack(spacing: 16) {
                             ForEach(recentlyRead) { article in
                                 NavigationLink {
-                                    ArticleView(
+                                    ArticleDetailView(
                                         article: article,
                                         allArticles: articles,
                                         favoritesManager: favoritesManager
@@ -202,13 +202,13 @@ struct HomeView: View {
                         LazyHStack(spacing: 16) {
                             ForEach(favoriteArticles) { article in
                                 NavigationLink {
-                                    ArticleView(
+                                    ArticleDetailView(
                                         article: article,
                                         allArticles: articles,
                                         favoritesManager: favoritesManager
                                     )
                                 } label: {
-                                    ArticleCompactCard(article: article) // ✅ единый стиль
+                                    ArticleCompactCard(article: article)
                                 }
                             }
                         }
@@ -233,9 +233,9 @@ struct HomeView: View {
                 LazyHStack(spacing: 16) {
                     ForEach(articles.prefix(10)) { article in
                         NavigationLink {
-                            ArticleView(
+                            ArticleDetailView(
                                 article: article,
-                                allArticles: self.articles,
+                                allArticles: articles,
                                 favoritesManager: favoritesManager
                             )
                         } label: {
@@ -262,7 +262,7 @@ struct HomeView: View {
                 LazyHStack(spacing: 16) {
                     ForEach(articles) { article in
                         NavigationLink {
-                            ArticleView(
+                            ArticleDetailView(
                                 article: article,
                                 allArticles: articles,
                                 favoritesManager: favoritesManager

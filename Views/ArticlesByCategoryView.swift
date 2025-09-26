@@ -14,7 +14,7 @@ struct ArticlesByCategoryView: View {
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink {
-                ArticleView(
+                ArticleDetailView(
                     article: article,
                     allArticles: articles,
                     favoritesManager: favoritesManager

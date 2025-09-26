@@ -13,17 +13,15 @@ struct ArticleDetailView: View {
     @StateObject private var tracker = ReadingProgressTracker.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
     @ObservedObject private var ratingManager = RatingManager.shared
+    @StateObject private var readingTracker = ReadingTracker()
     
     @State private var scrollOffset: CGFloat = 0
     @State private var contentHeight: CGFloat = 1
     @State private var viewHeight: CGFloat = 1
+    @State private var showRelatedArticles = false
     
     private var readingTime: String {
-        let minutes = ReadingTimeCalculator.estimateReadingTime(
-            for: article.localizedContent(for: selectedLanguage),
-            language: selectedLanguage
-        )
-        return ReadingTimeCalculator.formatReadingTime(minutes, language: selectedLanguage)
+        article.formattedReadingTime(for: selectedLanguage)
     }
     
     private var relatedArticles: [Article] {
@@ -33,29 +31,37 @@ struct ArticleDetailView: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                GeometryReader { geo in
-                    Color.clear
-                        .preference(key: ScrollOffsetPreferenceKey.self,
-                                    value: geo.frame(in: .named("scroll")).minY)
-                }
-                .frame(height: 0)
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    // Заголовок
-                    Text(article.localizedTitle(for: selectedLanguage))
-                        .font(.title)
-                        .bold()
+                LazyVStack(alignment: .leading, spacing: 20) {
+                    // Изображение статьи
+                    if let imageName = article.image,
+                       let uiImage = UIImage(named: imageName, in: .main, with: nil) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity)
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+                    }
                     
-                    // Время чтения
-                    Text(readingTime)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    // Заголовок и мета-информация
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(article.localizedTitle(for: selectedLanguage))
+                            .font(.title)
+                            .bold()
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        // 🔹 ИСПРАВЛЕНО: убран лишний параметр language
+                        ArticleMetaView(article: article)
+                            .environmentObject(CategoriesStore.shared)
+                    }
+                    .padding(.horizontal)
                     
                     // Контент статьи
                     Text(article.localizedContent(for: selectedLanguage))
                         .font(textSizeManager.currentFont)
-                        .foregroundColor(.primary)
+                        .lineSpacing(6)
                         .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
                         .background(GeometryReader { proxy in
                             Color.clear.onAppear {
                                 contentHeight = proxy.size.height
@@ -63,10 +69,10 @@ struct ArticleDetailView: View {
                         })
                     
                     // Рейтинг
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 12) {
                         Text(t("Оцените статью"))
-                            .font(.subheadline)
-                            .bold()
+                            .font(.headline)
+                        
                         StarRatingView(
                             rating: Binding(
                                 get: { ratingManager.rating(for: article.id) },
@@ -74,31 +80,54 @@ struct ArticleDetailView: View {
                             )
                         )
                     }
-                    .padding(.top)
+                    .padding(.horizontal)
+                    .padding(.vertical)
                     
-                    // Рекомендации
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(t("Вам может понравиться"))
-                            .font(.headline)
-                        
-                        ForEach(relatedArticles, id: \.id) { related in
-                            NavigationLink(destination: ArticleDetailView(article: related,
-                                                                         allArticles: allArticles,
-                                                                         favoritesManager: favoritesManager)) {
-                                Text(related.localizedTitle(for: selectedLanguage))
-                                    .foregroundColor(.blue)
-                                    .padding(.vertical, 4)
+                    // Рекомендуемые статьи
+                    if !relatedArticles.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Text(t("Вам может понравиться"))
+                                    .font(.headline)
+                                
+                                Spacer()
+                                
+                                Button(showRelatedArticles ? t("Скрыть") : t("Показать")) {
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        showRelatedArticles.toggle()
+                                    }
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(.blue)
+                            }
+                            
+                            if showRelatedArticles {
+                                LazyVStack(spacing: 12) {
+                                    ForEach(relatedArticles, id: \.id) { relatedArticle in
+                                        NavigationLink {
+                                            ArticleDetailView(
+                                                article: relatedArticle,
+                                                allArticles: allArticles,
+                                                favoritesManager: favoritesManager
+                                            )
+                                        } label: {
+                                            ArticleRow(article: relatedArticle)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                    }
+                                }
                             }
                         }
+                        .padding(.horizontal)
+                        .padding(.vertical)
                     }
-                    .padding(.top)
                 }
-                .padding()
+                .padding(.vertical)
             }
             .coordinateSpace(name: "scroll")
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                 scrollOffset = -value
-                let progress = scrollOffset / max(contentHeight - viewHeight, 1)
+                let progress = max(0, min(scrollOffset / max(contentHeight - viewHeight, 1), 1))
                 Task { @MainActor in
                     tracker.updateProgress(for: article.id, value: progress)
                 }
@@ -111,25 +140,67 @@ struct ArticleDetailView: View {
             
             // Прогресс-бар
             let progress = tracker.progressForArticle(article.id)
-            ReadingProgressHelper.progressView(progress: progress, language: selectedLanguage)
+            ReadingProgressBar(
+                progress: progress,
+                height: 4,
+                foregroundColor: .blue,
+                isReading: true
+            )
+            .padding(.horizontal)
+            .padding(.bottom, 8)
         }
-        .navigationTitle(t("Статья"))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                // Кнопка избранного
+                // 🔹 ИСПРАВЛЕНО: добавлен параметр id:
+                Button {
+                    favoritesManager.toggleFavorite(id: article.id)
+                } label: {
+                    Image(systemName: favoritesManager.isFavorite(id: article.id) ? "star.fill" : "star")
+                        .foregroundColor(favoritesManager.isFavorite(id: article.id) ? .yellow : .primary)
+                }
+                
+                // Кнопка настроек текста
                 NavigationLink(destination: TextSizeSettingsPanel()) {
                     Image(systemName: "textformat.size")
                 }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
+                
+                // Кнопка поделиться
                 ShareLink(
-                    item: article.localizedTitle(for: selectedLanguage) + "\n\n" +
-                          article.localizedContent(for: selectedLanguage),
-                    preview: SharePreview(article.localizedTitle(for: selectedLanguage))
+                    item: shareContent(),
+                    preview: SharePreview(
+                        article.localizedTitle(for: selectedLanguage),
+                        image: Image(systemName: "doc.text")
+                    )
                 ) {
                     Image(systemName: "square.and.arrow.up")
                 }
             }
         }
+        .onAppear {
+            // Начинаем отслеживание времени чтения
+            readingTracker.startReading(articleId: article.id)
+        }
+        .onDisappear {
+            // Завершаем отслеживание времени чтения
+            readingTracker.finishReading()
+        }
+    }
+    
+    private func shareContent() -> String {
+        let title = article.localizedTitle(for: selectedLanguage)
+        let content = article.localizedContent(for: selectedLanguage)
+        let readingTime = article.formattedReadingTime(for: selectedLanguage)
+        
+        return """
+        \(title)
+        
+        \(content)
+        
+        \(t("Время чтения")): \(readingTime)
+        \(t("Опубликовано")): \(article.formattedCreatedDate(for: selectedLanguage))
+        """
     }
     
     private func t(_ key: String) -> String {
@@ -137,7 +208,7 @@ struct ArticleDetailView: View {
     }
 }
 
-// 🔹 PreferenceKey для отслеживания скролла
+// Вспомогательная структура для отслеживания скролла
 private struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {

@@ -43,7 +43,7 @@ struct SearchView: View {
                 }
                 List(filteredArticles) { article in
                     NavigationLink {
-                        ArticleView(
+                        ArticleDetailView(
                             article: article,
                             allArticles: articles,
                             favoritesManager: favoritesManager

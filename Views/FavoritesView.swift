@@ -63,13 +63,13 @@ struct FavoritesView: View {
     private var favoritesList: some View {
         List(filteredFavoriteArticles) { article in
             NavigationLink {
-                ArticleView(
+                ArticleDetailView(
                     article: article,
                     allArticles: articles,
                     favoritesManager: favoritesManager
                 )
             } label: {
-                ArticleRow(article: article) // ✅ без favoritesManager
+                ArticleRow(article: article)
             }
         }
         .listStyle(PlainListStyle())

@@ -2,7 +2,7 @@
 //  ArticleView.swift
 //  InGermany
 //
-
+/*
 import SwiftUI
 
 struct ArticleView: View {
@@ -143,3 +143,4 @@ private struct ScrollOffsetPreferenceKey: PreferenceKey {
         value = nextValue()
     }
 }
+*/
