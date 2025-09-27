@@ -25,8 +25,8 @@ struct TextSizeSettingsPanel: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .onChange(of: selectedSize) { newSize in
-                    textSizeManager.setTextSize(newSize) // ← ИСПРАВЛЕНО: используем метод
+                .onChange(of: selectedSize) {
+                    textSizeManager.setTextSize(selectedSize)
                 }
                 
                 HStack {

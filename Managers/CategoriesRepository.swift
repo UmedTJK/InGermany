@@ -24,15 +24,9 @@ final class CategoriesRepository: ObservableObject {
 
     /// Инициализирующая загрузка категорий
     func bootstrap() async {
-        do {
-            let list = try await DataService.shared.loadCategories()
-            categories = list
-            byId = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
-        } catch {
-            print("❌ Ошибка загрузки категорий: \(error)")
-            categories = []
-            byId = [:]
-        }
+        let list = await DataService.shared.loadCategories()
+        categories = list
+        byId = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
     }
 
     /// Обновление данных

@@ -8,9 +8,15 @@ import Combine
 
 /// Запись о прочтении статьи
 struct ReadingHistoryEntry: Codable, Identifiable {
-    let id = UUID()
+    let id: UUID
     let articleId: String
     let date: Date
+    
+    init(articleId: String, date: Date = Date()) {
+        self.id = UUID()
+        self.articleId = articleId
+        self.date = date
+    }
 }
 
 /// Статистика по истории чтения
