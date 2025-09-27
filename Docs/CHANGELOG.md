@@ -7,6 +7,37 @@
 
 # Changelog
 
+
+## [v1.8.8] - 2025-09-27
+
+### Fixed
+- **Массовое исправление после рефакторинга менеджеров:**
+  - Заменён `CategoriesStore` на `CategoriesRepository` во всех View
+  - Исправлены API вызовы менеджеров (`FavoritesManager`, `RatingManager`, `TextSizeManager`)
+  - Удалён `ReadingTracker` и устаревшие методы
+  - Обновлены Preview с использованием `.shared` инстансов
+  - Исправлен `TextSizeSettingsPanel` для работы с новым `TextSizeManager` API
+  - Добавлены недостающие методы в менеджеры для совместимости
+
+### Refactored
+- **Архитектура менеджеров:**
+  - Все менеджеры переведены на использование общего `DefaultsStorage`
+  - Унифицированный стиль синглтонов (`static let shared`, приватные ключи)
+  - Введён `CategoriesRepository`, объединивший `CategoryManager` и `CategoriesStore`
+  - Создана папка `Managers/` для централизованного хранения менеджеров
+
+### Updated
+- **Совместимость с iOS 17+:**
+  - Исправлен deprecated `onChange` в `TextSizeSettingsPanel`
+  - Код соответствует современным стандартам Apple
+  - Обновлены модели данных для корректного `Codable`
+
+### Technical
+- **Структура проекта:**
+  - Обновлена документация `AI_CONTEXT.md`
+  - Актуализировано дерево проекта в `Docs/project_tree.md`
+  - Очищены ссылки на удалённые файлы в Xcode project
+  
 ## [Unreleased]
 
 ### Refactored
