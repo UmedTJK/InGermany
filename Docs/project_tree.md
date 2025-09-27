@@ -1,21 +1,16 @@
-# Project Tree · InGermany
-
-> Актуальная структура проекта. Обновляется вручную:
-> ```bash
-> cd ~/Desktop/InGermany
-> tree -L 3 > Docs/project_tree.md
-> ```
-
-```
 .
-├── AI_CONTEXT.md
 ├── Assets.xcassets
-├── CHANGELOG.md
-├── CLEAN_CODE_CHECKLIST.md
 ├── Core
 │   ├── ContentView.swift
 │   └── InGermanyApp.swift
-├── Git_Mini_Guide.md
+├── Docs
+│   ├── AI_CONTEXT.md
+│   ├── CHANGELOG.md
+│   ├── CLEAN_CODE_CHECKLIST.md
+│   ├── Git_Mini_Guide.md
+│   ├── PROMPTS_FOR_AI_AGENTS.md
+│   ├── git_snapshot.md
+│   └── project_tree.md
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
@@ -35,16 +30,17 @@
 │   │   └── xcuserdata
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
-├── LogoLight.png
+├── Managers
+│   ├── CategoriesStore.swift
+│   ├── CategoryManager.swift
+│   ├── FavoritesManager.swift
+│   ├── RatingManager.swift
+│   ├── ReadingHistoryManager.swift
+│   └── TextSizeManager.swift
 ├── Models
 │   ├── Article.swift
 │   ├── Category.swift
-│   ├── Location.swift
-│   ├── RatingManager.swift
-│   └── ReadingHistoryManager.swift
-├── PROJECT_STRUCTURE.md
-├── PROMPTS_FOR_AI_AGENTS.md
-├── Project_Brief.docx
+│   └── Location.swift
 ├── README.md
 ├── Resources
 │   ├── Images
@@ -63,6 +59,7 @@
 │   │   ├── germany7.jpg
 │   │   ├── germany8.jpg
 │   │   └── germany9.jpg
+│   ├── Localizable.xcstrings
 │   ├── Test_Document.pdf
 │   ├── articles.json
 │   ├── burgergeld.pdf
@@ -84,15 +81,15 @@
 │   └── ShareService.swift
 ├── Utils
 │   ├── Animations.swift
+│   ├── CardImageStyle.swift
 │   ├── CardSize.swift
-│   ├── CategoriesStore.swift
-│   ├── CategoryManager.swift
 │   ├── Color+Hex.swift
 │   ├── ExportToPDF.swift
 │   ├── LocalizationManager.swift
 │   ├── ProgressBar.swift
+│   ├── ReadingProgressHelper.swift
+│   ├── ReadingProgressTracker.swift
 │   ├── ReadingTimeCalculator.swift
-│   ├── TextSizeManager.swift
 │   └── Theme.swift
 ├── Views
 │   ├── AboutView.swift
@@ -109,22 +106,17 @@
 │   │   ├── ArticleRow.swift
 │   │   ├── Components.swift
 │   │   ├── FavoriteCard.swift
+│   │   ├── LanguagePickerView.swift
 │   │   ├── PDFViewer.swift
 │   │   ├── ReadingProgressBar.swift
+│   │   ├── StarRatingView.swift
 │   │   ├── TagFilterView.swift
 │   │   └── TextSizeSettingsPanel.swift
-│   ├── FavoritesManager.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
 │   ├── SearchView.swift
 │   └── SettingsView.swift
-├── nano .swiftlint.yml
-├── nano .swiftlint.yml 20-47-48-630.yml
-├── project_structure.txt
-├── project_tree.txt
-├── structure.txt
 └── update.sh
 
-27 directories, 91 files
-```
+29 directories, 91 files
