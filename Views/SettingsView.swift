@@ -47,8 +47,8 @@ struct SettingsView: View {
                 
                 // 📊 Статистика чтения
                 Section(header: Text(t("settings_stats_title"))) {
-                    let stats = ReadingStats(from: historyManager.history)
-
+                    let stats = historyManager.getStats()
+                    
                     HStack {
                         Text(t("settings_articles_read"))
                         Spacer()
@@ -62,7 +62,7 @@ struct SettingsView: View {
                     HStack {
                         Text(t("settings_average_time"))
                         Spacer()
-                        Text(String(format: "%.1f %@", stats.averageReadingTimeMinutes, t("settings_minutes")))
+                        Text(String(format: "%.1f %@", stats.totalArticlesRead > 0 ? Double(stats.totalReadingTimeMinutes) / Double(stats.totalArticlesRead) : 0.0, t("settings_minutes")))
                     }
                     HStack {
                         Text(t("settings_streak"))

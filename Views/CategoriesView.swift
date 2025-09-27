@@ -1,18 +1,23 @@
+//
+//  CategoriesView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct CategoriesView: View {
-    let categories: [Category]
+    @StateObject private var repo = CategoriesRepository.shared
     let articles: [Article]
     @ObservedObject var favoritesManager: FavoritesManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
         NavigationView {
-            List(categories) { category in
+            List(repo.categories) { category in
                 NavigationLink {
                     ArticlesByCategoryView(
                         category: category,
-                        articles: articles,
+                        articles: articles,                  // ⬅️ передаём как есть
                         favoritesManager: favoritesManager
                     )
                 } label: {
@@ -25,7 +30,6 @@ struct CategoriesView: View {
                                 .foregroundColor(.white)
                                 .font(.system(size: 16))
                         }
-
                         Text(category.localizedName(for: selectedLanguage))
                             .font(.headline)
                             .foregroundColor(.primary)
@@ -35,22 +39,13 @@ struct CategoriesView: View {
             }
             .navigationTitle(t("Категории"))
             .listStyle(PlainListStyle())
+            .task {                                  // ⬅️ загрузка категорий
+                await repo.bootstrap()
+            }
         }
     }
 
-    // 🔹 Удобный шорткат для перевода
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
-    }
-
-    // 🔹 Старый метод (оставлен для совместимости, но больше не используется)
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Категории": [
-                "ru": "Категории", "en": "Categories", "de": "Kategorien", "tj": "Категорияҳо",
-                "fa": "دسته‌ها", "ar": "الفئات", "uk": "Категорії"
-            ]
-        ]
-        return translations[key]?[language] ?? key
     }
 }

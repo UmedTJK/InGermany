@@ -3,53 +3,40 @@
 //  InGermany
 //
 
-import SwiftUI
+import Foundation
+import Combine
 
-class FavoritesManager: ObservableObject {
-    static let shared = FavoritesManager()  // ✅ Добавлен синглтон
+/// Унифицированный менеджер избранных статей.
+/// Использует DefaultsStorage для сохранения и загрузки.
+@MainActor
+final class FavoritesManager: ObservableObject {
+    static let shared = FavoritesManager()
 
-    @AppStorage("favoriteArticles") private var storedFavorites: Data = Data()
-    @Published private(set) var favoriteIDs: Set<String> = [] // Теперь String
+    @Published private(set) var favorites: Set<String> = []
 
-    init() {
-        loadFavorites()
-    }
+    private let key = "favorites"
 
-    private func loadFavorites() {
-        if let ids = try? JSONDecoder().decode(Set<String>.self, from: storedFavorites) {
-            favoriteIDs = ids
+    private init() {
+        // Загружаем сохранённые данные
+        if let saved: [String] = DefaultsStorage.load(key, as: [String].self) {
+            favorites = Set(saved)
         }
     }
 
-    public func saveFavorites() {  // ✅ Сделан публичным
-        if let data = try? JSONEncoder().encode(favoriteIDs) {
-            storedFavorites = data
-        }
-    }
-
-    func isFavorite(id: String) -> Bool {
-        favoriteIDs.contains(id)
-    }
-
-    func toggleFavorite(id: String) {
-        if favoriteIDs.contains(id) {
-            favoriteIDs.remove(id)
+    func toggleFavorite(for articleId: String) {
+        if favorites.contains(articleId) {
+            favorites.remove(articleId)
         } else {
-            favoriteIDs.insert(id)
+            favorites.insert(articleId)
         }
-        saveFavorites()
+        save()
     }
 
-    func favoriteArticles(from articles: [Article]) -> [Article] {
-        articles.filter { favoriteIDs.contains($0.id) }
+    func isFavorite(_ articleId: String) -> Bool {
+        favorites.contains(articleId)
     }
 
-    // Методы для Article
-    func isFavorite(article: Article) -> Bool {
-        favoriteIDs.contains(article.id)
-    }
-
-    func toggleFavorite(article: Article) {
-        toggleFavorite(id: article.id)
+    private func save() {
+        DefaultsStorage.save(Array(favorites), for: key)
     }
 }

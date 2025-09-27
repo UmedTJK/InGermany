@@ -2,48 +2,45 @@
 //  TextSizeManager.swift
 //  InGermany
 //
-//  Created by Umed Sabzaev on 20.09.25.
-//
 
-import SwiftUI
+import Foundation
+import Combine
 
-class TextSizeManager: ObservableObject {
+/// Размер текста в приложении
+enum TextSize: String, Codable, CaseIterable {
+    case small, medium, large
+
+    var scale: Double {
+        switch self {
+        case .small: return 0.85
+        case .medium: return 1.0
+        case .large: return 1.25
+        }
+    }
+}
+
+/// Менеджер для хранения и управления размером текста.
+/// Использует DefaultsStorage для сохранения и загрузки.
+@MainActor
+final class TextSizeManager: ObservableObject {
     static let shared = TextSizeManager()
-    
-    private let defaults = UserDefaults.standard
-    private let fontSizeKey = "articleFontSize"
-    private let isEnabledKey = "isCustomTextSizeEnabled"
-    
-    @Published var fontSize: CGFloat {
-        didSet {
-            defaults.set(Double(fontSize), forKey: fontSizeKey)
+
+    @Published private(set) var textSize: TextSize = .medium
+
+    private let key = "textSize"
+
+    private init() {
+        if let saved: TextSize = DefaultsStorage.load(key, as: TextSize.self) {
+            textSize = saved
         }
     }
-    
-    @Published var isCustomTextSizeEnabled: Bool {
-        didSet {
-            defaults.set(isCustomTextSizeEnabled, forKey: isEnabledKey)
-        }
+
+    func setTextSize(_ size: TextSize) {
+        textSize = size
+        save()
     }
-    
-    init() {
-        // Инициализируем из UserDefaults
-        let storedSize = defaults.double(forKey: fontSizeKey)
-        let storedIsEnabled = defaults.bool(forKey: isEnabledKey)
-        
-        self.fontSize = storedSize > 0 ? CGFloat(storedSize) : 16.0
-        self.isCustomTextSizeEnabled = storedIsEnabled
-    }
-    
-    // Предустановленные размеры
-    let presetSizes: [CGFloat] = [14, 16, 18, 20, 22, 24]
-    
-    func resetToDefault() {
-        fontSize = 16
-        isCustomTextSizeEnabled = false
-    }
-    
-    var currentFont: Font {
-        .system(size: fontSize)
+
+    private func save() {
+        DefaultsStorage.save(textSize, for: key)
     }
 }
