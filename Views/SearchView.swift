@@ -11,7 +11,7 @@ struct SearchView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var searchText: String = ""
     @State private var selectedTag: String? = nil
-    @EnvironmentObject private var categoriesStore: CategoriesStore
+    @StateObject private var categoriesRepository = CategoriesRepository.shared
 
     private var filteredArticles: [Article] {
         var results = articles
@@ -23,9 +23,9 @@ struct SearchView: View {
             results = results.filter { article in
                 article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
                 article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
-                categoriesStore.categoryName(for: article.categoryId, language: selectedLanguage)
+                categoriesRepository.category(by: article.categoryId)?.localizedName(for: selectedLanguage)
                     .lowercased()
-                    .contains(lowercased)
+                    .contains(lowercased) ?? false
             }
         }
         return results

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var favoritesManager = FavoritesManager()
+    @StateObject private var favoritesManager = FavoritesManager.shared
     @State private var selectedTab = 0
     @State private var articles: [Article] = []
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
@@ -17,8 +17,7 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            CategoriesView(
-                categories: CategoriesStore.shared.categories,
+            CategoriesView( // ← УБРАТЬ параметр categories
                 articles: articles,
                 favoritesManager: favoritesManager
             )
@@ -51,7 +50,7 @@ struct ContentView: View {
             SettingsView()
                 .tabItem {
                     Label(
-                        NSLocalizedString("tab_settings", comment: ""), // ← ИСПРАВЛЕНО
+                        NSLocalizedString("tab_settings", comment: ""),
                         systemImage: "gearshape.fill"
                     )
                 }

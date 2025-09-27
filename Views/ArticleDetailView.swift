@@ -13,7 +13,7 @@ struct ArticleDetailView: View {
     @StateObject private var tracker = ReadingProgressTracker.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
     @ObservedObject private var ratingManager = RatingManager.shared
-    @StateObject private var readingTracker = ReadingTracker()
+
     
     @State private var scrollOffset: CGFloat = 0
     @State private var contentHeight: CGFloat = 1
@@ -26,6 +26,13 @@ struct ArticleDetailView: View {
     
     private var relatedArticles: [Article] {
         Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
+    }
+    
+    // ИСПРАВЛЕНО: вычисляемое свойство для размера шрифта
+    private var currentFont: Font {
+        let baseSize: CGFloat = 17
+        let scaledSize = baseSize * textSizeManager.textSize.scale
+        return .system(size: scaledSize)
     }
     
     var body: some View {
@@ -50,15 +57,13 @@ struct ArticleDetailView: View {
                             .bold()
                             .fixedSize(horizontal: false, vertical: true)
                         
-                        // 🔹 ИСПРАВЛЕНО: убран лишний параметр language
                         ArticleMetaView(article: article)
-                            .environmentObject(CategoriesStore.shared)
                     }
                     .padding(.horizontal)
                     
-                    // Контент статьи
+                    // Контент статьи - ИСПРАВЛЕНО: используем вычисляемое свойство
                     Text(article.localizedContent(for: selectedLanguage))
-                        .font(textSizeManager.currentFont)
+                        .font(currentFont) // ← ИСПРАВЛЕНО
                         .lineSpacing(6)
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
@@ -75,7 +80,7 @@ struct ArticleDetailView: View {
                         
                         StarRatingView(
                             rating: Binding(
-                                get: { ratingManager.rating(for: article.id) },
+                                get: { ratingManager.getRating(for: article.id) }, // ← ИСПРАВЛЕНО
                                 set: { ratingManager.setRating($0, for: article.id) }
                             )
                         )
@@ -152,13 +157,12 @@ struct ArticleDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                // Кнопка избранного
-                // 🔹 ИСПРАВЛЕНО: добавлен параметр id:
+                // Кнопка избранного - ИСПРАВЛЕНО: правильные имена методов
                 Button {
-                    favoritesManager.toggleFavorite(id: article.id)
+                    favoritesManager.toggleFavorite(for: article.id) // ← ИСПРАВЛЕНО
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite(id: article.id) ? "star.fill" : "star")
-                        .foregroundColor(favoritesManager.isFavorite(id: article.id) ? .yellow : .primary)
+                    Image(systemName: favoritesManager.isFavorite(article.id) ? "star.fill" : "star") // ← ИСПРАВЛЕНО
+                        .foregroundColor(favoritesManager.isFavorite(article.id) ? .yellow : .primary) // ← ИСПРАВЛЕНО
                 }
                 
                 // Кнопка настроек текста
@@ -177,14 +181,6 @@ struct ArticleDetailView: View {
                     Image(systemName: "square.and.arrow.up")
                 }
             }
-        }
-        .onAppear {
-            // Начинаем отслеживание времени чтения
-            readingTracker.startReading(articleId: article.id)
-        }
-        .onDisappear {
-            // Завершаем отслеживание времени чтения
-            readingTracker.finishReading()
         }
     }
     

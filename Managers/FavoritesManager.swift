@@ -39,4 +39,16 @@ final class FavoritesManager: ObservableObject {
     private func save() {
         DefaultsStorage.save(Array(favorites), for: key)
     }
+    
+
+    func favoriteArticles(from articles: [Article]) -> [Article] {
+        articles.filter { favorites.contains($0.id) }
+    }
+
+    // Для совместимости со старым кодом
+    func isFavorite(id: String) -> Bool {
+        isFavorite(id)
+    }
 }
+
+

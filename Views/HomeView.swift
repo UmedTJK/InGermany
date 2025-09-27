@@ -2,8 +2,6 @@
 //  HomeView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.09.25.
-//
 
 import SwiftUI
 
@@ -11,8 +9,7 @@ struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @ObservedObject var favoritesManager: FavoritesManager
     @ObservedObject private var readingHistoryManager = ReadingHistoryManager.shared
-
-    @EnvironmentObject private var categoriesStore: CategoriesStore
+    @StateObject private var categoriesRepository = CategoriesRepository.shared
 
     @State private var articles: [Article] = []
     @State private var isLoading = true
@@ -21,8 +18,9 @@ struct HomeView: View {
     @State private var isShowingRandomArticle = false
     @State private var randomArticle: Article?
 
+    // ИСПРАВЛЕНО: заменить allCategories на вызов метода
     private var allCategories: [Category] {
-        categoriesStore.categories
+        categoriesRepository.allCategories() // ← ИСПРАВЛЕНО
     }
 
     private var articlesByCategory: [String: [Article]] {
@@ -48,6 +46,7 @@ struct HomeView: View {
                                 recentlyReadSection
                                 favoritesSection
 
+                                // ИСПРАВЛЕНО: теперь allCategories - computed property
                                 ForEach(allCategories, id: \.id) { category in
                                     if let categoryArticles = articlesByCategory[category.id],
                                        !categoryArticles.isEmpty {

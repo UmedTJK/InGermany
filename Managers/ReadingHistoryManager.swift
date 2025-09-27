@@ -82,4 +82,9 @@ final class ReadingHistoryManager: ObservableObject {
     private func save() {
         DefaultsStorage.save(history, for: key)
     }
+
+    func recentlyReadArticles(from articles: [Article]) -> [Article] {
+        let recentArticleIds = history.map { $0.articleId }
+        return articles.filter { recentArticleIds.contains($0.id) }
+    }
 }

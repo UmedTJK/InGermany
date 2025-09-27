@@ -45,6 +45,6 @@ struct ArticlesByTagView: View {
     ArticlesByTagView(
         tag: "Финансы",
         articles: [Article.sampleArticle],
-        favoritesManager: FavoritesManager()
+        favoritesManager: FavoritesManager.shared // ← ИСПРАВЛЕНО
     )
 }

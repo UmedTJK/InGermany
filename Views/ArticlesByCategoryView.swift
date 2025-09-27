@@ -40,6 +40,6 @@ struct ArticlesByCategoryView: View {
             colorHex: "#4A90E2"
         ),
         articles: [],
-        favoritesManager: FavoritesManager()
+        favoritesManager: FavoritesManager.shared // ← ИСПРАВЛЕНО
     )
 }

@@ -23,6 +23,7 @@
 │   └── Preview Content
 │       └── Preview Assets.xcassets
 ├── InGermany.xcodeproj
+│   ├── New Group
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
@@ -31,8 +32,7 @@
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
 ├── Managers
-│   ├── CategoriesStore.swift
-│   ├── CategoryManager.swift
+│   ├── CategoriesRepository.swift
 │   ├── FavoritesManager.swift
 │   ├── RatingManager.swift
 │   ├── ReadingHistoryManager.swift
@@ -84,6 +84,7 @@
 │   ├── CardImageStyle.swift
 │   ├── CardSize.swift
 │   ├── Color+Hex.swift
+│   ├── DefaultsStorage.swift
 │   ├── ExportToPDF.swift
 │   ├── LocalizationManager.swift
 │   ├── ProgressBar.swift
@@ -119,4 +120,4 @@
 │   └── SettingsView.swift
 └── update.sh
 
-29 directories, 91 files
+30 directories, 91 files
