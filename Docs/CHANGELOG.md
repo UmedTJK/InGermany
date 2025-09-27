@@ -9,6 +9,12 @@
 
 ## [Unreleased]
 
+## [Unreleased]
+
+### Fixed
+- Исправлена ошибка сборки `Multiple commands produce` из-за дублирующихся ссылок на `TextSizeManager.swift` в проекте.
+
+
 ### Refactored
 - Все менеджеры (FavoritesManager, RatingManager, ReadingHistoryManager, TextSizeManager) переведены на использование общего `DefaultsStorage`.
 - Приведен единый стиль синглтонов (`static let shared`, приватные ключи).
