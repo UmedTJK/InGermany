@@ -63,7 +63,7 @@ struct ArticleDetailView: View {
                     
                     // Контент статьи - ИСПРАВЛЕНО: используем вычисляемое свойство
                     Text(article.localizedContent(for: selectedLanguage))
-                        .font(currentFont) // ← ИСПРАВЛЕНО
+                        .font(currentFont)
                         .lineSpacing(6)
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
@@ -80,7 +80,7 @@ struct ArticleDetailView: View {
                         
                         StarRatingView(
                             rating: Binding(
-                                get: { ratingManager.getRating(for: article.id) }, // ← ИСПРАВЛЕНО
+                                get: { ratingManager.getRating(for: article.id) },
                                 set: { ratingManager.setRating($0, for: article.id) }
                             )
                         )
@@ -159,10 +159,10 @@ struct ArticleDetailView: View {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 // Кнопка избранного - ИСПРАВЛЕНО: правильные имена методов
                 Button {
-                    favoritesManager.toggleFavorite(for: article.id) // ← ИСПРАВЛЕНО
+                    favoritesManager.toggleFavorite(for: article.id)
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite(article.id) ? "star.fill" : "star") // ← ИСПРАВЛЕНО
-                        .foregroundColor(favoritesManager.isFavorite(article.id) ? .yellow : .primary) // ← ИСПРАВЛЕНО
+                    Image(systemName: favoritesManager.isFavorite(article.id) ? "star.fill" : "star")
+                        .foregroundColor(favoritesManager.isFavorite(article.id) ? .yellow : .primary)
                 }
                 
                 // Кнопка настроек текста
@@ -181,6 +181,11 @@ struct ArticleDetailView: View {
                     Image(systemName: "square.and.arrow.up")
                 }
             }
+        }
+        // ДОБАВЛЕНО: запись в историю чтения при открытии статьи
+        .onAppear {
+            // Добавляем запись в историю чтения
+            ReadingHistoryManager.shared.addEntry(articleId: article.id)
         }
     }
     
