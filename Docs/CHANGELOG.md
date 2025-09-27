@@ -7,6 +7,13 @@
 
 # Changelog
 
+## [Unreleased]
+
+### Refactored
+- Все менеджеры (FavoritesManager, RatingManager, ReadingHistoryManager, TextSizeManager) переведены на использование общего `DefaultsStorage`.
+- Приведен единый стиль синглтонов (`static let shared`, приватные ключи).
+- Введён новый `CategoriesRepository`, объединивший функционал `CategoryManager` и `CategoriesStore`.
+
 
 ## [v1.8.5] - 2025-09-27
 
