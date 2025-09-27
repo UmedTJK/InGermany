@@ -54,11 +54,10 @@ final class ReadingHistoryManager: ObservableObject {
     }
 
     func getStats() -> ReadingStats {
-        let totalArticles = history.count
-        // Заглушка: пока просто считаем время = 3 минуты на статью
-        let totalTime = totalArticles * 3
+        let totalArticles = Set(history.map { $0.articleId }).count // Уникальные статьи
+        let totalTime = ReadingTimeTracker.shared.getTotalReadingTime() // Реальное время
         let streak = calculateStreak()
-
+        
         return ReadingStats(
             totalArticlesRead: totalArticles,
             totalReadingTimeMinutes: totalTime,

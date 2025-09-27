@@ -1,4 +1,4 @@
-//
+
 //  ArticleDetailView.swift
 //  InGermany
 //
@@ -13,6 +13,7 @@ struct ArticleDetailView: View {
     @StateObject private var tracker = ReadingProgressTracker.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
     @ObservedObject private var ratingManager = RatingManager.shared
+    @StateObject private var readingTimeTracker = ReadingTimeTracker.shared // ← ДОБАВЛЕНО
 
     
     @State private var scrollOffset: CGFloat = 0
@@ -182,10 +183,16 @@ struct ArticleDetailView: View {
                 }
             }
         }
-        // ДОБАВЛЕНО: запись в историю чтения при открытии статьи
+        // ДОБАВЛЕНО: трекинг времени чтения
         .onAppear {
             // Добавляем запись в историю чтения
             ReadingHistoryManager.shared.addEntry(articleId: article.id)
+            // Начинаем отслеживание времени
+            readingTimeTracker.startSession(articleId: article.id)
+        }
+        .onDisappear {
+            // Завершаем отслеживание времени
+            readingTimeTracker.endSession(articleId: article.id)
         }
     }
     
@@ -216,3 +223,4 @@ private struct ScrollOffsetPreferenceKey: PreferenceKey {
         value = nextValue()
     }
 }
+
