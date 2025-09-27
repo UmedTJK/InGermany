@@ -46,8 +46,6 @@
 		AD52FD452E8585B300CC9F61 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
-		AD52FD492E8585B300CC9F61 /* Project_Brief.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Project_Brief.docx; sourceTree = "<group>"; };
-		AD52FD4A2E8585B300CC9F61 /* PROJECT_STRUCTURE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROJECT_STRUCTURE.md; sourceTree = "<group>"; };
 		AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROMPTS_FOR_AI_AGENTS.md; sourceTree = "<group>"; };
 		AD6275072E7BB055003D7FA9 /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
 		AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportToPDF.swift; sourceTree = "<group>"; };
@@ -122,8 +120,6 @@
 				AD52FD452E8585B300CC9F61 /* CHANGELOG.md */,
 				AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */,
 				AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */,
-				AD52FD492E8585B300CC9F61 /* Project_Brief.docx */,
-				AD52FD4A2E8585B300CC9F61 /* PROJECT_STRUCTURE.md */,
 				AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */,
 			);
 			path = Docs;
@@ -133,10 +129,10 @@
 			isa = PBXGroup;
 			children = (
 				AD0826D32E85A50A009C30CC /* .swiftlint.yml */,
-				AD52FD4E2E8585B300CC9F61 /* Docs */,
 				AD38F5882E76C15000E36EA4 /* update.sh */,
 				AD38F5862E76899600E36EA4 /* README.md */,
 				AD38F5842E76890C00E36EA4 /* .gitignore */,
+				AD52FD4E2E8585B300CC9F61 /* Docs */,
 				AD8552A72E75AEBF003D3826 /* Core */,
 				AD8552B62E75B300003D3826 /* Views */,
 				AD8552BC2E75B417003D3826 /* Models */,
