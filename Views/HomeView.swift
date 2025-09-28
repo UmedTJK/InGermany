@@ -18,9 +18,8 @@ struct HomeView: View {
     @State private var isShowingRandomArticle = false
     @State private var randomArticle: Article?
 
-    // ИСПРАВЛЕНО: заменить allCategories на вызов метода
     private var allCategories: [Category] {
-        categoriesRepository.allCategories() // ← ИСПРАВЛЕНО
+        categoriesRepository.allCategories()
     }
 
     private var articlesByCategory: [String: [Article]] {
@@ -42,25 +41,45 @@ struct HomeView: View {
                     } else {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 28) {
-                                usefulToolsSection
-                                recentlyReadSection
-                                favoritesSection
+                                UsefulToolsSection(
+                                    articles: articles,
+                                    onRandomArticleSelected: { article in
+                                        randomArticle = article
+                                        isShowingRandomArticle = true
+                                    }
+                                )
 
-                                // ИСПРАВЛЕНО: теперь allCategories - computed property
+                                RecentlyReadSection(
+                                    articles: articles,
+                                    favoritesManager: favoritesManager,
+                                    readingHistoryManager: readingHistoryManager
+                                )
+
+                                FavoritesSection(
+                                    articles: articles,
+                                    favoritesManager: favoritesManager
+                                )
+
                                 ForEach(allCategories, id: \.id) { category in
                                     if let categoryArticles = articlesByCategory[category.id],
                                        !categoryArticles.isEmpty {
-                                        categorySection(category: category, articles: categoryArticles)
+                                        CategorySection(
+                                            category: category,
+                                            articles: categoryArticles,
+                                            favoritesManager: favoritesManager,
+                                            language: selectedLanguage
+                                        )
                                     }
                                 }
 
-                                allArticlesSection
+                                AllArticlesSection(
+                                    articles: articles,
+                                    favoritesManager: favoritesManager
+                                )
                             }
                             .padding(.vertical)
                         }
-                        .refreshable {
-                            await refreshData()
-                        }
+                        .refreshable { await refreshData() }
                     }
                 }
             }
@@ -75,9 +94,7 @@ struct HomeView: View {
                     )
                 }
             }
-            .task {
-                await loadData()
-            }
+            .task { await loadData() }
         }
     }
 
@@ -108,223 +125,9 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Полезные инструменты
+    // MARK: - Localization
 
-    private var usefulToolsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(t("Полезные инструменты"))
-                .font(.headline)
-                .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    NavigationLink(destination: MapView()) {
-                        ToolCard(
-                            title: t("Карта"),
-                            systemImage: "map",
-                            color: .blue
-                        )
-                    }
-
-                    NavigationLink(destination: PDFViewer(fileName: "sample")) {
-                        ToolCard(
-                            title: t("PDF Документы"),
-                            systemImage: "doc.richtext",
-                            color: .green
-                        )
-                    }
-
-                    Button {
-                        if let random = articles.randomElement() {
-                            randomArticle = random
-                            isShowingRandomArticle = true
-                        }
-                    } label: {
-                        ToolCard(
-                            title: t("Случайная статья"),
-                            systemImage: "shuffle",
-                            color: .orange
-                        )
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
-    }
-
-    // MARK: - Недавно прочитанное
-    private var recentlyReadSection: some View {
-        let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
-
-        return Group {
-            if !recentlyRead.isEmpty {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(t("Недавно прочитанное"))
-                        .font(.headline)
-                        .padding(.horizontal)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(spacing: 16) {
-                            ForEach(recentlyRead) { article in
-                                NavigationLink {
-                                    ArticleDetailView(
-                                        article: article,
-                                        allArticles: articles,
-                                        favoritesManager: favoritesManager
-                                    )
-                                } label: {
-                                    ArticleCompactCard(article: article) // ✅ единый стиль
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
-                    }
-                }
-                .padding(.bottom, 24)
-            }
-        }
-    }
-
-    // MARK: - Избранное
-    private var favoritesSection: some View {
-        let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
-
-        return Group {
-            if !favoriteArticles.isEmpty {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(t("Избранное"))
-                        .font(.headline)
-                        .padding(.horizontal)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(spacing: 16) {
-                            ForEach(favoriteArticles) { article in
-                                NavigationLink {
-                                    ArticleDetailView(
-                                        article: article,
-                                        allArticles: articles,
-                                        favoritesManager: favoritesManager
-                                    )
-                                } label: {
-                                    ArticleCompactCard(article: article)
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
-                    }
-                }
-                .padding(.bottom, 24)
-            }
-        }
-    }
-
-    // MARK: - Категории
-
-    private func categorySection(category: Category, articles: [Article]) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(category.localizedName(for: selectedLanguage))
-                .font(.headline)
-                .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
-                    ForEach(articles.prefix(10)) { article in
-                        NavigationLink {
-                            ArticleDetailView(
-                                article: article,
-                                allArticles: articles,
-                                favoritesManager: favoritesManager
-                            )
-                        } label: {
-                            ArticleCompactCard(article: article)   // ✅ только article
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 4)
-            }
-        }
-        .padding(.bottom, 24)
-    }
-
-    // MARK: - Все статьи
-
-    private var allArticlesSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(t("Все статьи"))
-                .font(.headline)
-                .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
-                    ForEach(articles) { article in
-                        NavigationLink {
-                            ArticleDetailView(
-                                article: article,
-                                allArticles: articles,
-                                favoritesManager: favoritesManager
-                            )
-                        } label: {
-                            ArticleCompactCard(article: article)   // ✅ только article
-                        }
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 4)
-            }
-        }
-        .padding(.bottom, 24)
-    }
-
-    // MARK: - Локализация заголовков
-
-    // 🔹 Шорткат для нового менеджера
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
-    }
-
-    // 🔹 Старый метод (оставлен для совместимости)
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Главная": [
-                "ru": "Главная", "en": "Home", "de": "Startseite", "tj": "Саҳифаи асосӣ",
-                "fa": "خانه", "ar": "الرئيسية", "uk": "Головна"
-            ],
-            "Полезные инструменты": [
-                "ru": "Полезные инструменты", "en": "Useful tools", "de": "Nützliche Werkzeuge", "tj": "Асбобҳои муфид",
-                "fa": "ابزارهای مفید", "ar": "أدوات مفيدة", "uk": "Корисні інструменти"
-            ],
-            "Карта": [
-                "ru": "Карта", "en": "Map", "de": "Karte", "tj": "Харита",
-                "fa": "نقشه", "ar": "خريطة", "uk": "Карта"
-            ],
-            "PDF Документы": [
-                "ru": "PDF Документы", "en": "PDF Documents", "de": "PDF-Dokumente", "tj": "Ҳуҷҷатҳои PDF",
-                "fa": "اسناد PDF", "ar": "مستندات PDF", "uk": "PDF документи"
-            ],
-            "Случайная статья": [
-                "ru": "Случайная статья", "en": "Random article", "de": "Zufälliger Artikel", "tj": "Мақолаи тасодуфӣ",
-                "fa": "مقاله تصادفی", "ar": "مقالة عشوائية", "uk": "Випадкова стаття"
-            ],
-            "Недавно прочитанное": [
-                "ru": "Недавно прочитанное", "en": "Recently read", "de": "Kürzlich gelesen", "tj": "Мақолаҳои охир хондашуда",
-                "fa": "اخیراً خوانده شده", "ar": "تمت قراءته مؤخراً", "uk": "Нещодавно прочитане"
-            ],
-            "Избранное": [
-                "ru": "Избранное", "en": "Favorites", "de": "Favoriten", "tj": "Интихобшуда",
-                "fa": "علاقه‌مندی‌ها", "ar": "المفضلة", "uk": "Вибране"
-            ],
-            "Все статьи": [
-                "ru": "Все статьи", "en": "All articles", "de": "Alle Artikel", "tj": "Ҳамаи мақолаҳо",
-                "fa": "همه مقالات", "ar": "جميع المقالات", "uk": "Усі статті"
-            ],
-            "Загрузка данных...": [
-                "ru": "Загрузка данных...", "en": "Loading data...", "de": "Daten werden geladen...", "tj": "Боркунии маълумот...",
-                "fa": "در حال بارگذاری داده‌ها...", "ar": "جارٍ تحميل البيانات...", "uk": "Завантаження даних..."
-            ]
-        ]
-        return translations[key]?[language] ?? key
     }
 }
