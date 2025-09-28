@@ -57,12 +57,15 @@ struct SettingsView: View {
                     HStack {
                         Text(t("settings_total_time"))
                         Spacer()
-                        Text("\(stats.totalReadingTimeMinutes) \(t("settings_minutes"))")
+                        Text(formatHMS(fromSeconds: stats.totalReadingTimeSeconds))
                     }
                     HStack {
                         Text(t("settings_average_time"))
                         Spacer()
-                        Text(String(format: "%.1f %@", stats.totalArticlesRead > 0 ? Double(stats.totalReadingTimeMinutes) / Double(stats.totalArticlesRead) : 0.0, t("settings_minutes")))
+                        let avgSeconds = stats.totalArticlesRead > 0
+                            ? Double(stats.totalReadingTimeSeconds) / Double(stats.totalArticlesRead)
+                            : 0.0
+                        Text(formatHMS(fromSeconds: Int(avgSeconds)))
                     }
                     HStack {
                         Text(t("settings_streak"))
@@ -88,6 +91,19 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle(t("settings_title"))
+        }
+    }
+    
+    /// Форматирование времени чтения в ЧЧ:ММ:СС (или ММ:СС, если меньше часа)
+    private func formatHMS(fromSeconds totalSeconds: Int) -> String {
+        let hours = totalSeconds / 3600
+        let mins = (totalSeconds % 3600) / 60
+        let secs = totalSeconds % 60
+        
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, mins, secs)
+        } else {
+            return String(format: "%02d:%02d", mins, secs)
         }
     }
 }

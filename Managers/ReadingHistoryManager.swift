@@ -22,7 +22,7 @@ struct ReadingHistoryEntry: Codable, Identifiable {
 /// Статистика по истории чтения
 struct ReadingStats {
     let totalArticlesRead: Int
-    let totalReadingTimeMinutes: Int
+    let totalReadingTimeSeconds: Int
     let readingStreak: Int
 }
 
@@ -42,29 +42,35 @@ final class ReadingHistoryManager: ObservableObject {
         }
     }
 
+    /// Добавить новую запись в историю
     func addEntry(articleId: String) {
         let entry = ReadingHistoryEntry(articleId: articleId, date: Date())
         history.insert(entry, at: 0) // новые записи сверху
         save()
     }
 
+    /// Очистить историю и время чтения
     func clearHistory() {
         history.removeAll()
         save()
+        // синхронизируем с трекером времени
+        ReadingTimeTracker.shared.clearSessions()
     }
 
+    /// Получить статистику чтения
     func getStats() -> ReadingStats {
-        let totalArticles = Set(history.map { $0.articleId }).count // Уникальные статьи
-        let totalTime = ReadingTimeTracker.shared.getTotalReadingTime() // Реальное время
+        let totalArticles = Set(history.map { $0.articleId }).count
+        let totalSeconds = ReadingTimeTracker.shared.getTotalReadingTimeInSeconds()
         let streak = calculateStreak()
         
         return ReadingStats(
             totalArticlesRead: totalArticles,
-            totalReadingTimeMinutes: totalTime,
+            totalReadingTimeSeconds: totalSeconds,
             readingStreak: streak
         )
     }
 
+    /// Вычисление серии подряд идущих дней чтения
     private func calculateStreak() -> Int {
         guard !history.isEmpty else { return 0 }
 
@@ -88,6 +94,7 @@ final class ReadingHistoryManager: ObservableObject {
         DefaultsStorage.save(history, for: key)
     }
 
+    /// Получить список недавно прочитанных статей
     func recentlyReadArticles(from articles: [Article]) -> [Article] {
         let recentArticleIds = history.map { $0.articleId }
         return articles.filter { recentArticleIds.contains($0.id) }

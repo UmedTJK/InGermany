@@ -44,24 +44,22 @@ final class ReadingTimeTracker: ObservableObject {
         session.endTime = Date()
         activeSessions.removeValue(forKey: articleId)
         
-        // Сохраняем только сессии длительностью более 10 секунд
-        if let duration = session.duration, duration > 10 {
+        // Сохраняем только сессии длительностью более 3 секунд
+        if let duration = session.duration, duration > 3 {
             completedSessions.append(session)
             save()
         }
-    }
-    
-    /// Получить общее время чтения для статьи (в минутах)
-    func getTotalReadingTime(for articleId: String) -> Int {
-        let articleSessions = completedSessions.filter { $0.articleId == articleId }
-        let totalSeconds = articleSessions.compactMap { $0.duration }.reduce(0, +)
-        return Int(totalSeconds / 60) // Конвертируем в минуты
     }
     
     /// Получить общее время чтения всех статей (в минутах)
     func getTotalReadingTime() -> Int {
         let totalSeconds = completedSessions.compactMap { $0.duration }.reduce(0, +)
         return Int(totalSeconds / 60)
+    }
+    
+    /// Получить общее время чтения всех статей (в секундах)
+    func getTotalReadingTimeInSeconds() -> Int {
+        Int(completedSessions.compactMap { $0.duration }.reduce(0, +))
     }
     
     /// Получить время чтения за последние N дней
@@ -82,4 +80,3 @@ final class ReadingTimeTracker: ObservableObject {
         DefaultsStorage.save(completedSessions, for: key)
     }
 }
-
