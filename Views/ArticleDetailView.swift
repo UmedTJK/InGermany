@@ -1,4 +1,4 @@
-
+//
 //  ArticleDetailView.swift
 //  InGermany
 //
@@ -13,34 +13,32 @@ struct ArticleDetailView: View {
     @StateObject private var tracker = ReadingProgressTracker.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
     @ObservedObject private var ratingManager = RatingManager.shared
-    @StateObject private var readingTimeTracker = ReadingTimeTracker.shared // ← ДОБАВЛЕНО
+    @StateObject private var readingTimeTracker = ReadingTimeTracker.shared
 
-    
     @State private var scrollOffset: CGFloat = 0
     @State private var contentHeight: CGFloat = 1
     @State private var viewHeight: CGFloat = 1
     @State private var showRelatedArticles = false
-    
+
     private var readingTime: String {
         article.formattedReadingTime(for: selectedLanguage)
     }
-    
+
     private var relatedArticles: [Article] {
         Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
     }
-    
-    // ИСПРАВЛЕНО: вычисляемое свойство для размера шрифта
+
+    // Новый способ расчёта шрифта
     private var currentFont: Font {
         let baseSize: CGFloat = 17
-        let scaledSize = baseSize * textSizeManager.textSize.scale
+        let scaledSize = baseSize * textSizeManager.customScale
         return .system(size: scaledSize)
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20) {
-                    // Изображение статьи
                     if let imageName = article.image,
                        let uiImage = UIImage(named: imageName, in: .main, with: nil) {
                         Image(uiImage: uiImage)
@@ -50,19 +48,17 @@ struct ArticleDetailView: View {
                             .cornerRadius(12)
                             .padding(.horizontal)
                     }
-                    
-                    // Заголовок и мета-информация
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text(article.localizedTitle(for: selectedLanguage))
                             .font(.title)
                             .bold()
                             .fixedSize(horizontal: false, vertical: true)
-                        
+
                         ArticleMetaView(article: article)
                     }
                     .padding(.horizontal)
-                    
-                    // Контент статьи - ИСПРАВЛЕНО: используем вычисляемое свойство
+
                     Text(article.localizedContent(for: selectedLanguage))
                         .font(currentFont)
                         .lineSpacing(6)
@@ -73,12 +69,11 @@ struct ArticleDetailView: View {
                                 contentHeight = proxy.size.height
                             }
                         })
-                    
-                    // Рейтинг
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text(t("Оцените статью"))
                             .font(.headline)
-                        
+
                         StarRatingView(
                             rating: Binding(
                                 get: { ratingManager.getRating(for: article.id) },
@@ -88,16 +83,15 @@ struct ArticleDetailView: View {
                     }
                     .padding(.horizontal)
                     .padding(.vertical)
-                    
-                    // Рекомендуемые статьи
+
                     if !relatedArticles.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
                                 Text(t("Вам может понравиться"))
                                     .font(.headline)
-                                
+
                                 Spacer()
-                                
+
                                 Button(showRelatedArticles ? t("Скрыть") : t("Показать")) {
                                     withAnimation(.easeInOut(duration: 0.3)) {
                                         showRelatedArticles.toggle()
@@ -106,7 +100,7 @@ struct ArticleDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.blue)
                             }
-                            
+
                             if showRelatedArticles {
                                 LazyVStack(spacing: 12) {
                                     ForEach(relatedArticles, id: \.id) { relatedArticle in
@@ -143,8 +137,7 @@ struct ArticleDetailView: View {
                     viewHeight = proxy.size.height
                 }
             })
-            
-            // Прогресс-бар
+
             let progress = tracker.progressForArticle(article.id)
             ReadingProgressBar(
                 progress: progress,
@@ -158,20 +151,17 @@ struct ArticleDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                // Кнопка избранного - ИСПРАВЛЕНО: правильные имена методов
                 Button {
                     favoritesManager.toggleFavorite(for: article.id)
                 } label: {
                     Image(systemName: favoritesManager.isFavorite(article.id) ? "star.fill" : "star")
                         .foregroundColor(favoritesManager.isFavorite(article.id) ? .yellow : .primary)
                 }
-                
-                // Кнопка настроек текста
+
                 NavigationLink(destination: TextSizeSettingsPanel()) {
                     Image(systemName: "textformat.size")
                 }
-                
-                // Кнопка поделиться
+
                 ShareLink(
                     item: shareContent(),
                     preview: SharePreview(
@@ -183,44 +173,38 @@ struct ArticleDetailView: View {
                 }
             }
         }
-        // ДОБАВЛЕНО: трекинг времени чтения
         .onAppear {
-            // Добавляем запись в историю чтения
             ReadingHistoryManager.shared.addEntry(articleId: article.id)
-            // Начинаем отслеживание времени
             readingTimeTracker.startSession(articleId: article.id)
         }
         .onDisappear {
-            // Завершаем отслеживание времени
             readingTimeTracker.endSession(articleId: article.id)
         }
     }
-    
+
     private func shareContent() -> String {
         let title = article.localizedTitle(for: selectedLanguage)
         let content = article.localizedContent(for: selectedLanguage)
         let readingTime = article.formattedReadingTime(for: selectedLanguage)
-        
+
         return """
         \(title)
-        
+
         \(content)
-        
+
         \(t("Время чтения")): \(readingTime)
         \(t("Опубликовано")): \(article.formattedCreatedDate(for: selectedLanguage))
         """
     }
-    
+
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
-// Вспомогательная структура для отслеживания скролла
 private struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = nextValue()
     }
 }
-

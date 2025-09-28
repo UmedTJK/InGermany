@@ -56,7 +56,6 @@
 		AD6275102E7BB377003D7FA9 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		AD6C1E132E76C73800EA59A7 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
-		AD7454622E7E617C001FC732 /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
 		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		AD7455452E7FD152001FC732 /* CardSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSize.swift; sourceTree = "<group>"; };
@@ -194,7 +193,6 @@
 				ADF3387F2E86798E00AE4CBF /* ReadingProgressTracker.swift */,
 				AD7455452E7FD152001FC732 /* CardSize.swift */,
 				AD7454FA2E7EEEF4001FC732 /* Color+Hex.swift */,
-				AD7454622E7E617C001FC732 /* TextSizeManager.swift */,
 				AD62750F2E7BB377003D7FA9 /* ExportToPDF.swift */,
 				AD6275102E7BB377003D7FA9 /* ProgressBar.swift */,
 				AD6275072E7BB055003D7FA9 /* ReadingTimeCalculator.swift */,
@@ -484,7 +482,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = umedsbz.InGermany;
+				PRODUCT_BUNDLE_IDENTIFIER = umedsbz.InGermany2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -515,7 +513,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = umedsbz.InGermany;
+				PRODUCT_BUNDLE_IDENTIFIER = umedsbz.InGermany2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

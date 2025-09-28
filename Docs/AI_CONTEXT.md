@@ -45,6 +45,16 @@
 * **Services/**: `DataService.swift`, `NetworkService.swift`, `ShareService.swift`, `AuthService.swift`  
 * **Utils/**: `LocalizationManager.swift`, `CategoryManager.swift`, `CategoriesStore.swift`, `ReadingTimeCalculator.swift`, `ExportToPDF.swift`, `Theme.swift`, `Animations.swift`, `CardSize.swift`, `Color+Hex.swift`, `TextSizeManager.swift`  
 * **Views/**: `HomeView`, `SearchView`, `FavoritesView`, `CategoriesView`, `ArticlesByCategoryView`, `ArticlesByTagView`, `ArticleDetailView`, `SettingsView`, `AboutView`, `MapView`  
+
+- **HomeView.swift** — оболочка для главного экрана: отвечает за загрузку/обновление данных и навигацию. 
+- **Sections/** — новые компоненты для секций главного экрана:
+  - `UsefulToolsSection.swift` — блок «Полезные инструменты».
+  - `RecentlyReadSection.swift` — блок «Недавно прочитанное».
+  - `FavoritesSection.swift` — блок «Избранное».
+  - `CategorySection.swift` — горизонтальные ленты статей по категориям.
+  - `AllArticlesSection.swift` — блок со всеми статьями.
+> Начиная с v1.8.7, `HomeView` больше не содержит внутреннюю разметку секций. Все UI-блоки вынесены в отдельные вью для упрощения сопровождения и работы ИИ-агентов.
+
 * **Views/Components/**: `ArticleCardView`, `ArticleRow`, `ArticleMetaView`, `ArticleCompactCard`, `FavoriteCard`, `RecentArticleCard`, `ToolCard`, `EmptyFavoritesView`, `CategoryFilterButton`, `TagFilterView`, `TextSizeSettingsPanel`, `ReadingProgressBar`, `ReadingProgressView`, `CircularReadingProgress`, `PDFViewer`  
 * **Resources/**: `articles.json`, `categories.json`, `locations.json`  
 * **Docs/**: `AI_CONTEXT_v2.md`, `CHANGELOG.md`, `PROMPTS_FOR_AI_AGENTS.md`, `Git_Mini_Guide.md`, `CLEAN_CODE_CHECKLIST.md`, `git_snapshot.md`, `project_tree.md`  
@@ -95,7 +105,7 @@
   Хранение: `@AppStorage("readingHistory")` JSON массив `ReadingHistoryEntry`.  
   Методы: `addReadingEntry`, `recentlyReadArticles`, `isRead`, `lastReadDate`, `clearHistory`.  
   Ограничение: максимум 100 записей.  
-  Вспомогательные: `ReadingTracker`, `ReadingStats`.
+  Вспомогательные: `ReadingTracker`, `ReadingStats`. let totalReadingTimeSeconds: Int   // учитываются секунды
 
 - **CategoryManager (actor)**  
   Методы: `loadCategories()`, `allCategories()`, `category(for id:)`, `category(for name:language:)`, `refreshCategories()`.
