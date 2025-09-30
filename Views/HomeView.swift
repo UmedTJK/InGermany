@@ -7,25 +7,8 @@ import SwiftUI
 
 struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @ObservedObject var favoritesManager: FavoritesManager
-    @ObservedObject private var readingHistoryManager = ReadingHistoryManager.shared
-    @StateObject private var categoriesRepository = CategoriesRepository.shared
-
-    @State private var articles: [Article] = []
-    @State private var isLoading = true
-    @State private var dataSource: String = "unknown"
-
-    @State private var isShowingRandomArticle = false
-    @State private var randomArticle: Article?
-
-    private var allCategories: [Category] {
-        categoriesRepository.allCategories()
-    }
-
-    private var articlesByCategory: [String: [Article]] {
-        Dictionary(grouping: articles) { $0.categoryId }
-    }
-
+    @StateObject private var viewModel = HomeViewModel()
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -35,97 +18,76 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity)
 
                 Group {
-                    if isLoading {
+                    if viewModel.isLoading {
                         ProgressView(t("Загрузка данных..."))
                             .progressViewStyle(CircularProgressViewStyle())
                     } else {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 28) {
                                 UsefulToolsSection(
-                                    articles: articles,
-                                    onRandomArticleSelected: { article in
-                                        randomArticle = article
-                                        isShowingRandomArticle = true
+                                    articles: viewModel.articles,
+                                    onRandomArticleSelected: { _ in
+                                        viewModel.selectRandomArticle()
                                     }
                                 )
 
                                 RecentlyReadSection(
-                                    articles: articles,
-                                    favoritesManager: favoritesManager,
-                                    readingHistoryManager: readingHistoryManager
+                                    articles: viewModel.articles,
+                                    favoritesManager: viewModel.favoritesManager,
+                                    readingHistoryManager: viewModel.readingHistoryManager
                                 )
 
                                 FavoritesSection(
-                                    articles: articles,
-                                    favoritesManager: favoritesManager
+                                    articles: viewModel.articles,
+                                    favoritesManager: viewModel.favoritesManager
                                 )
 
-                                ForEach(allCategories, id: \.id) { category in
-                                    if let categoryArticles = articlesByCategory[category.id],
+                                ForEach(viewModel.allCategories, id: \.id) { category in
+                                    if let categoryArticles = viewModel.articlesByCategory[category.id],
                                        !categoryArticles.isEmpty {
                                         CategorySection(
                                             category: category,
                                             articles: categoryArticles,
-                                            favoritesManager: favoritesManager,
+                                            favoritesManager: viewModel.favoritesManager,
                                             language: selectedLanguage
                                         )
                                     }
                                 }
 
                                 AllArticlesSection(
-                                    articles: articles,
-                                    favoritesManager: favoritesManager
+                                    articles: viewModel.articles,
+                                    favoritesManager: viewModel.favoritesManager
                                 )
                             }
                             .padding(.vertical)
                         }
-                        .refreshable { await refreshData() }
+                        .refreshable { await viewModel.refreshData() }
                     }
                 }
             }
             .navigationTitle(t("Главная"))
             .background(Color(.systemGroupedBackground))
-            .navigationDestination(isPresented: $isShowingRandomArticle) {
-                if let randomArticle {
+            .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
+                if let article = viewModel.randomArticle {
                     ArticleDetailView(
-                        article: randomArticle,
-                        allArticles: articles,
-                        favoritesManager: favoritesManager
+                        article: article,
+                        allArticles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager
                     )
                 }
             }
-            .task { await loadData() }
+            .task { await viewModel.loadData() }
         }
     }
 
-    // MARK: - Data loading
-
-    private func loadData() async {
-        articles = await DataService.shared.loadArticles()
-        let sources = await DataService.shared.getLastDataSource()
-        dataSource = sources["articles"] ?? "unknown"
-        isLoading = false
-    }
-
-    private func refreshData() async {
-        isLoading = true
-        await DataService.shared.refreshData()
-        articles = await DataService.shared.loadArticles()
-        let sources = await DataService.shared.getLastDataSource()
-        dataSource = sources["articles"] ?? "unknown"
-        isLoading = false
-    }
-
     private func getDataSourceColor() -> Color {
-        switch dataSource {
+        switch viewModel.dataSource {
         case "network": return .green
         case "memory_cache": return .blue
         case "local": return .orange
         default: return .gray
         }
     }
-
-    // MARK: - Localization
 
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
