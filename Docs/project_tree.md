@@ -1,5 +1,4 @@
 .
-├── Assets.xcassets
 ├── Core
 │   ├── ContentView.swift
 │   └── InGermanyApp.swift
@@ -14,28 +13,41 @@
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
 │   │   ├── AppIcon.appiconset
+│   │   │   ├── Contents.json
+│   │   │   ├── Logo 1.png
+│   │   │   └── Logo.png
 │   │   ├── Contents.json
 │   │   └── Logo.imageset
+│   │       ├── Contents.json
+│   │       └── Logo.png
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
 │   └── Preview Content
 │       └── Preview Assets.xcassets
+│           ├── Contents.json
+│           ├── LogoDark.imageset
+│           └── LogoLight.imageset
 ├── InGermany.xcodeproj
-│   ├── New Group
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
 │   │   ├── xcshareddata
+│   │   │   └── swiftpm
 │   │   └── xcuserdata
+│   │       └── sumtjk.xcuserdatad
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
+│           ├── xcdebugger
+│           └── xcschemes
 ├── Managers
 │   ├── CategoriesRepository.swift
 │   ├── FavoritesManager.swift
 │   ├── RatingManager.swift
 │   ├── ReadingHistoryManager.swift
+│   ├── ReadingTimeTracker.swift
 │   └── TextSizeManager.swift
 ├── Models
 │   ├── Article.swift
@@ -45,7 +57,9 @@
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
+│   │   │   └── bank_account.jpg
 │   │   ├── en.lproj
+│   │   │   └── bank_account.jpg
 │   │   ├── germany10.jpg
 │   │   ├── germany11.jpg
 │   │   ├── germany12.jpg
@@ -95,7 +109,6 @@
 ├── Views
 │   ├── AboutView.swift
 │   ├── ArticleDetailView.swift
-│   ├── ArticleView.swift
 │   ├── ArticlesByCategoryView.swift
 │   ├── ArticlesByTagView.swift
 │   ├── Cards
@@ -117,7 +130,13 @@
 │   ├── HomeView.swift
 │   ├── MapView.swift
 │   ├── SearchView.swift
+│   ├── Sections
+│   │   ├── AllArticlesSection.swift
+│   │   ├── CategorySection.swift
+│   │   ├── FavoritesSection.swift
+│   │   ├── RecentlyReadSection.swift
+│   │   └── UsefulToolsSection.swift
 │   └── SettingsView.swift
 └── update.sh
 
-30 directories, 91 files
+35 directories, 105 files
