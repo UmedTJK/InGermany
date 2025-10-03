@@ -6,12 +6,15 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
     @AppStorage("relativeDates") private var relativeDates: Bool = true
     
-    @ObservedObject private var historyManager = ReadingHistoryManager.shared
+    @StateObject private var viewModel: SettingsViewModel
+    
+    init(viewModel: SettingsViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeSettingsViewModel())
+    }
     
     var body: some View {
         NavigationView {
@@ -47,7 +50,7 @@ struct SettingsView: View {
                 
                 // 📊 Статистика чтения
                 Section(header: Text(t("settings_stats_title"))) {
-                    let stats = historyManager.getStats()
+                    let stats = viewModel.getStats()
                     
                     HStack {
                         Text(t("settings_articles_read"))
@@ -84,7 +87,7 @@ struct SettingsView: View {
                 // 🧹 Очистка истории
                 Section {
                     Button(role: .destructive) {
-                        historyManager.clearHistory()
+                        viewModel.clearHistory()
                     } label: {
                         Text(t("settings_clear_history"))
                     }

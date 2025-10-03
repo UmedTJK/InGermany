@@ -55,4 +55,9 @@ final class AppContainer {
             articlesRepo: articlesRepo
         )
     }
+    
+    func makeSettingsViewModel() -> SettingsViewModel {
+        SettingsViewModel(historyManager: historyManager)
+    }
+
 }
