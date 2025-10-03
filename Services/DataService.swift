@@ -33,6 +33,7 @@ actor DataService {
             articlesCache = localArticles
             lastDataSource["articles"] = "local"
             print("📂 Articles из локального JSON")
+            print("🔎 Preview первых 3 статей:", Array(localArticles.prefix(3)))
         }
 
         Task {
@@ -41,6 +42,7 @@ actor DataService {
                 self.articlesCache = articles
                 self.lastDataSource["articles"] = "network"
                 print("🌐 Articles обновлены из сети")
+                print("🔎 Preview первых 3 статей (network):", Array(articles.prefix(3)))
             } catch {
                 print("⚠️ Ошибка загрузки Articles из сети: \(error)")
             }

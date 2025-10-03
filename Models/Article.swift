@@ -120,7 +120,19 @@ struct Article: Identifiable, Codable, Hashable {
     // MARK: - Image fallback
     
     var imageName: String {
-        image ?? "Logo"
+        guard var img = image else { return "Logo" }
+        
+        // AVIF → JPG
+        if img.hasSuffix(".avif") {
+            img = img.replacingOccurrences(of: ".avif", with: ".jpg")
+        }
+        
+        // Если без расширения — добавляем .jpg
+        if !img.contains(".") {
+            img += ".jpg"
+        }
+        
+        return img
     }
     
     // MARK: - Date Formatting

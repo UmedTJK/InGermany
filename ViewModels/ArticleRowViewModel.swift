@@ -17,6 +17,7 @@ import SwiftUI
 class ArticleRowViewModel: ObservableObject {
     @Published var isFavorite: Bool
     @Published var rating: Int
+    @Published var imageName: String?
     
     let article: Article
     
@@ -32,6 +33,7 @@ class ArticleRowViewModel: ObservableObject {
         
         self.isFavorite = favoritesManager.isFavorite(article.id)
         self.rating = ratingManager.getRating(for: article.id)
+        self.imageName = article.image
     }
     
     convenience init(article: Article) {
