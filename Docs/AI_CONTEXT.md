@@ -61,7 +61,28 @@
 * **Docs (архив)**: `PROJECT_STRUCTURE.md`, `Project_Brief.docx`  
 * **Корень**: `.swiftlint.yml`, `README.md`, `update.sh`
 
----
+### Dependency Injection и AppContainer (с версии v1.10.0)
+
+Для управления зависимостями используется `AppContainer` (Composition Root), помеченный `@MainActor`.  
+AppContainer создаёт экземпляры ViewModel и менеджеров, централизуя конфигурацию приложения.
+
+- **AppContainer**
+  - `articlesRepo: ArticlesRepository` → реализован через `ArticlesRepositoryImpl`
+  - `categoriesRepo: CategoriesRepository` → singleton `.shared`
+  - `favoritesManager: FavoritesManager` → singleton `.shared`
+  - `historyManager: ReadingHistoryManager` → singleton `.shared`
+  - `makeHomeViewModel()` → возвращает готовый `HomeViewModel`
+
+- **HomeViewModel**
+  - Теперь зависит от `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`
+  - Основной init принимает все зависимости
+  - Есть `convenience init()` для старых вызовов и превью
+  - Методы `loadData()` и `refreshData()` используют `articlesRepo`, а не напрямую `DataService`
+
+- **HomeView**
+  - Не создаёт VM напрямую.
+  - При инициализации по умолчанию использует `AppContainer.shared.makeHomeViewModel()`
+  - В тестах/превью может принимать кастомный VM.
 
 ## 2a) Структура проекта (актуальная)
 

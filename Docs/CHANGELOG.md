@@ -5,7 +5,20 @@
 //  Created by SUM TJK on 20.09.25.
 //
 
+
 # Changelog
+
+
+## [1.10.0] - 2025-10-03
+### Added
+- Введён `AppContainer` как Composition Root для управления зависимостями (с `@MainActor`).
+
+### Changed
+- `HomeViewModel` переведён на работу через DI (ArticlesRepository и менеджеры).
+- Добавлен `convenience init()` для обратной совместимости.
+- `HomeView` больше не создаёт VM напрямую — теперь получает её из `AppContainer`.
+- Устранены предупреждения Swift 6 о `MainActor`-изоляции (`shared` у менеджеров).
+
 
 ## [Unreleased]
 
