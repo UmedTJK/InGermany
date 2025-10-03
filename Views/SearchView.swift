@@ -5,48 +5,28 @@
 import SwiftUI
 
 struct SearchView: View {
-    @ObservedObject var favoritesManager: FavoritesManager
-    let articles: [Article]
-
+    @StateObject private var viewModel: SearchViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @State private var searchText: String = ""
-    @State private var selectedTag: String? = nil
-    @StateObject private var categoriesRepository = CategoriesRepository.shared
 
-    private var filteredArticles: [Article] {
-        var results = articles
-        if let tag = selectedTag {
-            results = results.filter { $0.tags.contains(tag) }
-        }
-        if !searchText.isEmpty {
-            let lowercased = searchText.lowercased()
-            results = results.filter { article in
-                article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
-                article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
-                categoriesRepository.category(by: article.categoryId)?.localizedName(for: selectedLanguage)
-                    .lowercased()
-                    .contains(lowercased) ?? false
-            }
-        }
-        return results
+    init(viewModel: SearchViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeSearchViewModel())
     }
 
     var body: some View {
         NavigationView {
             VStack {
-                let allTags = Set(articles.flatMap { $0.tags }).sorted()
-                if !allTags.isEmpty {
-                    TagFilterView(tags: allTags) { tag in
-                        selectedTag = (selectedTag == tag) ? nil : tag
+                if !viewModel.allTags.isEmpty {
+                    TagFilterView(tags: viewModel.allTags) { tag in
+                        viewModel.selectedTag = (viewModel.selectedTag == tag) ? nil : tag
                     }
                     .padding(.horizontal)
                 }
-                List(filteredArticles) { article in
+                List(viewModel.filteredArticles) { article in
                     NavigationLink {
                         ArticleDetailView(
                             article: article,
-                            allArticles: articles,
-                            favoritesManager: favoritesManager
+                            allArticles: viewModel.articles,
+                            favoritesManager: viewModel.favoritesManager
                         )
                     } label: {
                         ArticleRow(article: article)
@@ -56,15 +36,18 @@ struct SearchView: View {
             }
             .navigationTitle(t("Поиск"))
             .searchable(
-                text: $searchText,
+                text: $viewModel.searchText,
                 prompt: t("Искать по статьям или категориям")
             )
+            .task {
+                await viewModel.loadArticles()
+            }
         }
     }
 
     // 🔹 Шорткат для нового менеджера
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        LocalizationManager.shared.getTranslation(key: key, language: self.selectedLanguage)
     }
 
     // 🔹 Старый метод (оставлен для совместимости)

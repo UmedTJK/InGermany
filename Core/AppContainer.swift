@@ -39,4 +39,12 @@ final class AppContainer {
             articlesRepo: articlesRepo
         )
     }
+    
+    func makeSearchViewModel() -> SearchViewModel {
+        SearchViewModel(
+            favoritesManager: favoritesManager,
+            categoriesRepo: categoriesRepo,
+            articlesRepo: articlesRepo
+        )
+    }
 }

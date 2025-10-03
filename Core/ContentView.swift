@@ -29,7 +29,7 @@ struct ContentView: View {
             }
             .tag(1)
             
-            SearchView(favoritesManager: favoritesManager, articles: articles)
+            SearchView()
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_search", comment: ""),

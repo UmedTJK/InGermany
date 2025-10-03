@@ -8,6 +8,11 @@
 
 # Changelog
 
+## [1.10.1] - 2025-10-03
+### Changed
+- `FavoritesView` переведён на MVVM с использованием `FavoritesViewModel`.
+- Добавлена фабрика `makeFavoritesViewModel()` в `AppContainer`.
+- Удалена прямая зависимость от `FavoritesManager.shared` во View.
 
 ## [1.10.0] - 2025-10-03
 ### Added
