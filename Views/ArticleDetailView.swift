@@ -6,9 +6,7 @@
 import SwiftUI
 
 struct ArticleDetailView: View {
-    let article: Article
-    let allArticles: [Article]
-    @ObservedObject var favoritesManager: FavoritesManager
+    @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var tracker = ReadingProgressTracker.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
@@ -21,11 +19,11 @@ struct ArticleDetailView: View {
     @State private var showRelatedArticles = false
 
     private var readingTime: String {
-        article.formattedReadingTime(for: selectedLanguage)
+        viewModel.article.formattedReadingTime(for: selectedLanguage)
     }
 
     private var relatedArticles: [Article] {
-        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
+        Array(viewModel.allArticles.filter { $0.categoryId == viewModel.article.categoryId && $0.id != viewModel.article.id }.prefix(3))
     }
 
     // Новый способ расчёта шрифта
@@ -35,11 +33,15 @@ struct ArticleDetailView: View {
         return .system(size: scaledSize)
     }
 
+    init(article: Article, allArticles: [Article]) {
+        _viewModel = StateObject(wrappedValue: AppContainer.shared.makeArticleDetailViewModel(article: article, allArticles: allArticles))
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20) {
-                    if let imageName = article.image,
+                    if let imageName = viewModel.article.image,
                        let uiImage = UIImage(named: imageName, in: .main, with: nil) {
                         Image(uiImage: uiImage)
                             .resizable()
@@ -50,16 +52,16 @@ struct ArticleDetailView: View {
                     }
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(article.localizedTitle(for: selectedLanguage))
+                        Text(viewModel.article.localizedTitle(for: selectedLanguage))
                             .font(.title)
                             .bold()
                             .fixedSize(horizontal: false, vertical: true)
 
-                        ArticleMetaView(article: article)
+                        ArticleMetaView(article: viewModel.article)
                     }
                     .padding(.horizontal)
 
-                    Text(article.localizedContent(for: selectedLanguage))
+                    Text(viewModel.article.localizedContent(for: selectedLanguage))
                         .font(currentFont)
                         .lineSpacing(6)
                         .multilineTextAlignment(.leading)
@@ -76,8 +78,8 @@ struct ArticleDetailView: View {
 
                         StarRatingView(
                             rating: Binding(
-                                get: { ratingManager.getRating(for: article.id) },
-                                set: { ratingManager.setRating($0, for: article.id) }
+                                get: { ratingManager.getRating(for: viewModel.article.id) },
+                                set: { ratingManager.setRating($0, for: viewModel.article.id) }
                             )
                         )
                     }
@@ -107,8 +109,7 @@ struct ArticleDetailView: View {
                                         NavigationLink {
                                             ArticleDetailView(
                                                 article: relatedArticle,
-                                                allArticles: allArticles,
-                                                favoritesManager: favoritesManager
+                                                allArticles: viewModel.allArticles
                                             )
                                         } label: {
                                             ArticleRow(article: relatedArticle)
@@ -129,7 +130,7 @@ struct ArticleDetailView: View {
                 scrollOffset = -value
                 let progress = max(0, min(scrollOffset / max(contentHeight - viewHeight, 1), 1))
                 Task { @MainActor in
-                    tracker.updateProgress(for: article.id, value: progress)
+                    tracker.updateProgress(for: viewModel.article.id, value: progress)
                 }
             }
             .background(GeometryReader { proxy in
@@ -138,7 +139,7 @@ struct ArticleDetailView: View {
                 }
             })
 
-            let progress = tracker.progressForArticle(article.id)
+            let progress = tracker.progressForArticle(viewModel.article.id)
             ReadingProgressBar(
                 progress: progress,
                 height: 4,
@@ -152,10 +153,10 @@ struct ArticleDetailView: View {
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
-                    favoritesManager.toggleFavorite(for: article.id)
+                    viewModel.toggleFavorite()
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite(article.id) ? "star.fill" : "star")
-                        .foregroundColor(favoritesManager.isFavorite(article.id) ? .yellow : .primary)
+                    Image(systemName: viewModel.isFavorite ? "star.fill" : "star")
+                        .foregroundColor(viewModel.isFavorite ? .yellow : .primary)
                 }
 
                 NavigationLink(destination: TextSizeSettingsPanel()) {
@@ -165,7 +166,7 @@ struct ArticleDetailView: View {
                 ShareLink(
                     item: shareContent(),
                     preview: SharePreview(
-                        article.localizedTitle(for: selectedLanguage),
+                        viewModel.article.localizedTitle(for: selectedLanguage),
                         image: Image(systemName: "doc.text")
                     )
                 ) {
@@ -174,18 +175,18 @@ struct ArticleDetailView: View {
             }
         }
         .onAppear {
-            ReadingHistoryManager.shared.addEntry(articleId: article.id)
-            readingTimeTracker.startSession(articleId: article.id)
+            viewModel.markAsRead()
+            readingTimeTracker.startSession(articleId: viewModel.article.id)
         }
         .onDisappear {
-            readingTimeTracker.endSession(articleId: article.id)
+            readingTimeTracker.endSession(articleId: viewModel.article.id)
         }
     }
 
     private func shareContent() -> String {
-        let title = article.localizedTitle(for: selectedLanguage)
-        let content = article.localizedContent(for: selectedLanguage)
-        let readingTime = article.formattedReadingTime(for: selectedLanguage)
+        let title = viewModel.article.localizedTitle(for: selectedLanguage)
+        let content = viewModel.article.localizedContent(for: selectedLanguage)
+        let readingTime = viewModel.article.formattedReadingTime(for: selectedLanguage)
 
         return """
         \(title)
@@ -193,7 +194,7 @@ struct ArticleDetailView: View {
         \(content)
 
         \(t("Время чтения")): \(readingTime)
-        \(t("Опубликовано")): \(article.formattedCreatedDate(for: selectedLanguage))
+        \(t("Опубликовано")): \(viewModel.article.formattedCreatedDate(for: selectedLanguage))
         """
     }
 

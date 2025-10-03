@@ -25,8 +25,7 @@ struct SearchView: View {
                     NavigationLink {
                         ArticleDetailView(
                             article: article,
-                            allArticles: viewModel.articles,
-                            favoritesManager: viewModel.favoritesManager
+                            allArticles: viewModel.articles
                         )
                     } label: {
                         ArticleRow(article: article)

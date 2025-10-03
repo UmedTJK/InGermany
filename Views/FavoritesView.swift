@@ -67,8 +67,7 @@ struct FavoritesView: View {
             NavigationLink {
                 ArticleDetailView(
                     article: article,
-                    allArticles: viewModel.allArticles,
-                    favoritesManager: viewModel.favoritesManager
+                    allArticles: viewModel.allArticles
                 )
             } label: {
                 ArticleRow(article: article)

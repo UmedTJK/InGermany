@@ -81,8 +81,7 @@ struct HomeView: View {
                 if let article = viewModel.randomArticle {
                     ArticleDetailView(
                         article: article,
-                        allArticles: viewModel.articles,
-                        favoritesManager: viewModel.favoritesManager
+                        allArticles: viewModel.articles
                     )
                 }
             }

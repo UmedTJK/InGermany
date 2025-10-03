@@ -16,8 +16,7 @@ struct ArticlesByCategoryView: View {
             NavigationLink {
                 ArticleDetailView(
                     article: article,
-                    allArticles: articles,
-                    favoritesManager: favoritesManager
+                    allArticles: articles
                 )
             } label: {
                 ArticleRow(article: article) // ✅ без favoritesManager

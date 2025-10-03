@@ -24,8 +24,7 @@ struct CategorySection: View {
                         NavigationLink {
                             ArticleDetailView(
                                 article: article,
-                                allArticles: articles,
-                                favoritesManager: favoritesManager
+                                allArticles: articles
                             )
                         } label: {
                             ArticleCompactCard(article: article)

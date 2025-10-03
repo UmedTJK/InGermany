@@ -59,5 +59,14 @@ final class AppContainer {
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(historyManager: historyManager)
     }
+    
+    func makeArticleDetailViewModel(article: Article, allArticles: [Article]) -> ArticleDetailViewModel {
+        ArticleDetailViewModel(
+            article: article,
+            allArticles: allArticles,
+            favoritesManager: favoritesManager,
+            historyManager: historyManager
+        )
+    }
 
 }
