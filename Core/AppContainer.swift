@@ -72,5 +72,13 @@ final class AppContainer {
     func makeAboutViewModel() -> AboutViewModel {
         AboutViewModel()
     }
+    
+    func makeCategoriesViewModel() -> CategoriesViewModel {
+        CategoriesViewModel(
+            favoritesManager: favoritesManager,
+            categoriesRepo: categoriesRepo,
+            articlesRepo: articlesRepo
+        )
+    }
 
 }
