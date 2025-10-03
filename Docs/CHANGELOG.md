@@ -8,7 +8,18 @@
 
 # Changelog
 
-# Changelog
+## [1.12.0] - 2025-10-03
+### Changed
+- Проектная структура оптимизирована под SOLID и MVVM:
+  - Удалена папка `Utils/`.
+  - Файлы перемещены в новые пакеты:
+    - `Protocols/` — для интерфейсов (ArticlesRepository, CategoriesRepository, KeyValueStore).
+    - `Services/` — для реализаций (ArticlesRepositoryImpl, DataService, NetworkService, ShareService, AuthService, DefaultsStore, ExportToPDF, LocalizationManager).
+    - `Managers/` — для state-менеджеров (FavoritesManager, RatingManager, ReadingHistoryManager, ReadingTimeTracker, TextSizeManager, ReadingProgressHelper, ReadingProgressTracker, ReadingTimeCalculator).
+    - `UIUtils/` — для утилит UI (CardImageStyle, CardSize, Color+Hex, Theme, Animations, ProgressBar).
+    - `Formatters/` — для сервисов форматирования (ArticleMetaFormatter и др.).
+
+
 
 ## [1.11.6] - 2025-10-03
 ### Added

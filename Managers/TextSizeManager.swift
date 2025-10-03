@@ -20,7 +20,7 @@ enum TextSize: String, Codable, CaseIterable {
 }
 
 /// Менеджер для хранения и управления размером текста.
-/// Использует DefaultsStorage для сохранения и загрузки.
+/// Использует DefaultsStore для сохранения и загрузки.
 @MainActor
 final class TextSizeManager: ObservableObject {
     static let shared = TextSizeManager()
@@ -34,10 +34,10 @@ final class TextSizeManager: ObservableObject {
     private let customKey = "customTextScale"
 
     private init() {
-        if let saved: TextSize = DefaultsStorage.load(key, as: TextSize.self) {
+        if let saved: TextSize = DefaultsStore.load(key, as: TextSize.self) {
             textSize = saved
         }
-        if let savedScale: Double = DefaultsStorage.load(customKey, as: Double.self) {
+        if let savedScale: Double = DefaultsStore.load(customKey, as: Double.self) {
             customScale = savedScale
         } else {
             customScale = textSize.scale
@@ -51,11 +51,11 @@ final class TextSizeManager: ObservableObject {
     }
 
     private func save() {
-        DefaultsStorage.save(textSize, for: key)
-        DefaultsStorage.save(customScale, for: customKey)
+        DefaultsStore.save(textSize, for: key)
+        DefaultsStore.save(customScale, for: customKey)
     }
 
     private func saveCustomScale() {
-        DefaultsStorage.save(customScale, for: customKey)
+        DefaultsStore.save(customScale, for: customKey)
     }
 }

@@ -42,17 +42,46 @@
 
 * **Core/**: `InGermanyApp.swift`, `ContentView.swift`  
 * **Models/**: `Article.swift`, `Category.swift`, `Location.swift`  
-* **Services/**: `DataService.swift`, `NetworkService.swift`, `ShareService.swift`, `AuthService.swift`  
-* **Utils/**: `LocalizationManager.swift`, `CategoryManager.swift`, `CategoriesStore.swift`, `ReadingTimeCalculator.swift`, `ExportToPDF.swift`, `Theme.swift`, `Animations.swift`, `CardSize.swift`, `Color+Hex.swift`, `TextSizeManager.swift`  
+* **Services/**:  
+  - `DataService.swift`  
+  - `NetworkService.swift`  
+  - `ShareService.swift`  
+  - `AuthService.swift`  
+  - `DefaultsStore.swift`  
+  - `ExportToPDF.swift`  
+  - `LocalizationManager.swift`  
+* **Managers/**:  
+  - `FavoritesManager.swift`  
+  - `RatingManager.swift`  
+  - `ReadingHistoryManager.swift`  
+  - `ReadingTimeTracker.swift`  
+  - `TextSizeManager.swift`  
+  - `ReadingProgressHelper.swift`  
+  - `ReadingProgressTracker.swift`  
+  - `ReadingTimeCalculator.swift`  
+* **Protocols/**:  
+  - `ArticlesRepository.swift`  
+  - `CategoriesRepository.swift`  
+  - (другие протоколы для сервисов, менеджеров и репозиториев)  
+* **UIUtils/**:  
+  - `Theme.swift`  
+  - `Animations.swift`  
+  - `CardSize.swift`  
+  - `Color+Hex.swift`  
+  - `ProgressBar.swift`  
+* **Formatters/**:  
+  - `DateFormatter+Localized.swift`  
+  - `ReadingTimeFormatter.swift`  
+  - (другие форматтеры для дат, времени, текста)  
 * **Views/**: `HomeView`, `SearchView`, `FavoritesView`, `CategoriesView`, `ArticlesByCategoryView`, `ArticlesByTagView`, `ArticleDetailView`, `SettingsView`, `AboutView`, `MapView`  
 
-- **HomeView.swift** — оболочка для главного экрана: отвечает за загрузку/обновление данных и навигацию. 
-- **Sections/** — новые компоненты для секций главного экрана:
-  - `UsefulToolsSection.swift` — блок «Полезные инструменты».
-  - `RecentlyReadSection.swift` — блок «Недавно прочитанное».
-  - `FavoritesSection.swift` — блок «Избранное».
-  - `CategorySection.swift` — горизонтальные ленты статей по категориям.
-  - `AllArticlesSection.swift` — блок со всеми статьями.
+  - **HomeView.swift** — оболочка для главного экрана: отвечает за загрузку/обновление данных и навигацию. 
+  - **Sections/** — новые компоненты для секций главного экрана:
+    - `UsefulToolsSection.swift` — блок «Полезные инструменты».
+    - `RecentlyReadSection.swift` — блок «Недавно прочитанное».
+    - `FavoritesSection.swift` — блок «Избранное».
+    - `CategorySection.swift` — горизонтальные ленты статей по категориям.
+    - `AllArticlesSection.swift` — блок со всеми статьями.
 > Начиная с v1.8.7, `HomeView` больше не содержит внутреннюю разметку секций. Все UI-блоки вынесены в отдельные вью для упрощения сопровождения и работы ИИ-агентов.
 
 * **Views/Components/**: `ArticleCardView`, `ArticleRow`, `ArticleMetaView`, `ArticleCompactCard`, `FavoriteCard`, `RecentArticleCard`, `ToolCard`, `EmptyFavoritesView`, `CategoryFilterButton`, `TagFilterView`, `TextSizeSettingsPanel`, `ReadingProgressBar`, `ReadingProgressView`, `CircularReadingProgress`, `PDFViewer`  
@@ -187,16 +216,25 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 
 ---
 
-### Утилиты
 
-- **Theme.swift** — цвета, градиенты, spacing, `sectionCardStyle()`.  
-- **ReadingTimeCalculator** — оценка времени чтения (слова / скорость).  
-- **ProgressBar.swift** — горизонтальный бар.  
-- **LocalizationManager** — локализация UI-ключей.  
-- **ExportToPDF** — экспорт статьи в PDF.  
-- **Color+Hex.swift** — инициализация `Color` из HEX.  
-- **CardSize.swift** — вычисление размеров карточек.  
-- **Animations.swift** — стили, анимации, haptics.
+### Новые папки и их содержимое
+
+- **Protocols/**  
+  - `ArticlesRepository.swift`  
+  - `CategoriesRepository.swift`  
+  - (другие протоколы для сервисов, менеджеров и репозиториев)
+
+- **UIUtils/**  
+  - `Theme.swift`  
+  - `Animations.swift`  
+  - `CardSize.swift`  
+  - `Color+Hex.swift`  
+  - `ProgressBar.swift`
+
+- **Formatters/**  
+  - `DateFormatter+Localized.swift`  
+  - `ReadingTimeFormatter.swift`  
+  - (другие форматтеры для дат, времени, текста)
 
 ---
 

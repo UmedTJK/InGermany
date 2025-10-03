@@ -27,7 +27,7 @@ final class ReadingTimeTracker: ObservableObject {
     
     private init() {
         // Загружаем завершённые сессии
-        if let saved: [ReadingSession] = DefaultsStorage.load(key, as: [ReadingSession].self) {
+        if let saved: [ReadingSession] = DefaultsStore.load(key, as: [ReadingSession].self) {
             completedSessions = saved
         }
     }
@@ -77,6 +77,6 @@ final class ReadingTimeTracker: ObservableObject {
     }
     
     private func save() {
-        DefaultsStorage.save(completedSessions, for: key)
+        DefaultsStore.save(completedSessions, for: key)
     }
 }

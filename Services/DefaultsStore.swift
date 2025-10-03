@@ -12,7 +12,7 @@
 
 import Foundation
 
-enum DefaultsStorage {
+enum DefaultsStore {
     static func load<T: Codable>(_ key: String, as type: T.Type) -> T? {
         guard let data = UserDefaults.standard.data(forKey: key) else { return nil }
         return try? JSONDecoder().decode(T.self, from: data)

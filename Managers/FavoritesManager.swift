@@ -7,7 +7,7 @@ import Foundation
 import Combine
 
 /// Унифицированный менеджер избранных статей.
-/// Использует DefaultsStorage для сохранения и загрузки.
+/// Использует DefaultsStore для сохранения и загрузки.
 @MainActor
 final class FavoritesManager: ObservableObject {
     static let shared = FavoritesManager()
@@ -18,7 +18,7 @@ final class FavoritesManager: ObservableObject {
 
     private init() {
         // Загружаем сохранённые данные
-        if let saved: [String] = DefaultsStorage.load(key, as: [String].self) {
+        if let saved: [String] = DefaultsStore.load(key, as: [String].self) {
             favorites = Set(saved)
         }
     }
@@ -37,7 +37,7 @@ final class FavoritesManager: ObservableObject {
     }
 
     private func save() {
-        DefaultsStorage.save(Array(favorites), for: key)
+        DefaultsStore.save(Array(favorites), for: key)
     }
     
 
