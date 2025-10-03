@@ -70,7 +70,7 @@ struct FavoritesView: View {
                     allArticles: viewModel.allArticles
                 )
             } label: {
-                ArticleRow(article: article)
+                ArticleRow(viewModel: ArticleRowViewModel(article: article))
             }
         }
         .listStyle(PlainListStyle())

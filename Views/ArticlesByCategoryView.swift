@@ -19,7 +19,7 @@ struct ArticlesByCategoryView: View {
                     allArticles: articles
                 )
             } label: {
-                ArticleRow(article: article) // ✅ без favoritesManager
+                ArticleRow(viewModel: ArticleRowViewModel(article: article))
             }
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))
