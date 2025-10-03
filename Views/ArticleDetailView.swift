@@ -8,7 +8,7 @@ import SwiftUI
 struct ArticleDetailView: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @StateObject private var tracker = ReadingProgressTracker.shared
+    @StateObject private var tracker: ReadingProgressTracker = .shared
     @StateObject private var textSizeManager = TextSizeManager.shared
     @ObservedObject private var ratingManager = RatingManager.shared
     @StateObject private var readingTimeTracker = ReadingTimeTracker.shared
