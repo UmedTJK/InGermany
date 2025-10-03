@@ -38,7 +38,7 @@ struct ContentView: View {
                 }
                 .tag(2)
             
-            FavoritesView(favoritesManager: favoritesManager)
+            FavoritesView()
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_favorites", comment: ""),

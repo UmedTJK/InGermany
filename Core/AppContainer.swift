@@ -32,4 +32,11 @@ final class AppContainer {
             articlesRepo: articlesRepo
         )
     }
+    
+    func makeFavoritesViewModel() -> FavoritesViewModel {
+        FavoritesViewModel(
+            favoritesManager: favoritesManager,
+            articlesRepo: articlesRepo
+        )
+    }
 }
