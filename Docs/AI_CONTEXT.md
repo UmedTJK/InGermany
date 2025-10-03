@@ -249,7 +249,7 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 - **Animations.swift**: `.cardStyle()`, `.scaleOnAppear()`, `.shimmer()`, haptic feedback.  
 - **ArticleCardView** — карточка статьи в сетке.  
 - **ArticleMetaView** — категория, даты, бейджи.  
-- **ArticleRow** — строка списка статей.  
+- **ArticleRow** — строка списка статей, работает через `ArticleRowViewModel` (MVVM).
 - **ArticleCompactCard** — компактная карточка статьи, используемая в списках и секциях.
   Включает:
   - изображение статьи (с поддержкой стиля через `CardImageStyle`),
@@ -313,6 +313,16 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
   - Состояния: `article`, `allArticles`, `isFavorite`.
   - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
+    - Теперь работает с `ArticleDetailViewModel`.
+  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
+  - Оптимизирован: вынесены вычисляемые свойства (`ratingBinding`, `articleContent`).
+  - Для связанных статей теперь используется `ArticleRow(viewModel:)`.
+  
+- **ArticleRowViewModel**
+  - Управляет отображением строки статьи (`ArticleRow`).
+  - Зависимости: `FavoritesManager`, `RatingManager`.
+  - Состояния: `isFavorite`, `rating`, `title`, `subtitle`, `metaInfo`.
+  - Методы: `toggleFavorite()`, `setRating(_:)`.
 
 - **AboutViewModel**
   - Управляет экраном «О приложении».
