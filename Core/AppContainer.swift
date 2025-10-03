@@ -68,5 +68,9 @@ final class AppContainer {
             historyManager: historyManager
         )
     }
+    
+    func makeAboutViewModel() -> AboutViewModel {
+        AboutViewModel()
+    }
 
 }
