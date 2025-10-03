@@ -42,17 +42,46 @@
 
 * **Core/**: `InGermanyApp.swift`, `ContentView.swift`  
 * **Models/**: `Article.swift`, `Category.swift`, `Location.swift`  
-* **Services/**: `DataService.swift`, `NetworkService.swift`, `ShareService.swift`, `AuthService.swift`  
-* **Utils/**: `LocalizationManager.swift`, `CategoryManager.swift`, `CategoriesStore.swift`, `ReadingTimeCalculator.swift`, `ExportToPDF.swift`, `Theme.swift`, `Animations.swift`, `CardSize.swift`, `Color+Hex.swift`, `TextSizeManager.swift`  
+* **Services/**:  
+  - `DataService.swift`  
+  - `NetworkService.swift`  
+  - `ShareService.swift`  
+  - `AuthService.swift`  
+  - `DefaultsStore.swift`  
+  - `ExportToPDF.swift`  
+  - `LocalizationManager.swift`  
+* **Managers/**:  
+  - `FavoritesManager.swift`  
+  - `RatingManager.swift`  
+  - `ReadingHistoryManager.swift`  
+  - `ReadingTimeTracker.swift`  
+  - `TextSizeManager.swift`  
+  - `ReadingProgressHelper.swift`  
+  - `ReadingProgressTracker.swift`  
+  - `ReadingTimeCalculator.swift`  
+* **Protocols/**:  
+  - `ArticlesRepository.swift`  
+  - `CategoriesRepository.swift`  
+  - (другие протоколы для сервисов, менеджеров и репозиториев)  
+* **UIUtils/**:  
+  - `Theme.swift`  
+  - `Animations.swift`  
+  - `CardSize.swift`  
+  - `Color+Hex.swift`  
+  - `ProgressBar.swift`  
+* **Formatters/**:  
+  - `DateFormatter+Localized.swift`  
+  - `ReadingTimeFormatter.swift`  
+  - (другие форматтеры для дат, времени, текста)  
 * **Views/**: `HomeView`, `SearchView`, `FavoritesView`, `CategoriesView`, `ArticlesByCategoryView`, `ArticlesByTagView`, `ArticleDetailView`, `SettingsView`, `AboutView`, `MapView`  
 
-- **HomeView.swift** — оболочка для главного экрана: отвечает за загрузку/обновление данных и навигацию. 
-- **Sections/** — новые компоненты для секций главного экрана:
-  - `UsefulToolsSection.swift` — блок «Полезные инструменты».
-  - `RecentlyReadSection.swift` — блок «Недавно прочитанное».
-  - `FavoritesSection.swift` — блок «Избранное».
-  - `CategorySection.swift` — горизонтальные ленты статей по категориям.
-  - `AllArticlesSection.swift` — блок со всеми статьями.
+  - **HomeView.swift** — оболочка для главного экрана: отвечает за загрузку/обновление данных и навигацию. 
+  - **Sections/** — новые компоненты для секций главного экрана:
+    - `UsefulToolsSection.swift` — блок «Полезные инструменты».
+    - `RecentlyReadSection.swift` — блок «Недавно прочитанное».
+    - `FavoritesSection.swift` — блок «Избранное».
+    - `CategorySection.swift` — горизонтальные ленты статей по категориям.
+    - `AllArticlesSection.swift` — блок со всеми статьями.
 > Начиная с v1.8.7, `HomeView` больше не содержит внутреннюю разметку секций. Все UI-блоки вынесены в отдельные вью для упрощения сопровождения и работы ИИ-агентов.
 
 * **Views/Components/**: `ArticleCardView`, `ArticleRow`, `ArticleMetaView`, `ArticleCompactCard`, `FavoriteCard`, `RecentArticleCard`, `ToolCard`, `EmptyFavoritesView`, `CategoryFilterButton`, `TagFilterView`, `TextSizeSettingsPanel`, `ReadingProgressBar`, `ReadingProgressView`, `CircularReadingProgress`, `PDFViewer`  
@@ -145,7 +174,10 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 
 - **RatingManager**  
   Хранение: `UserDefaults` (`rating_<articleId>`)  
-  Методы: `rating(for:)`, `setRating(_:for:)`.
+  Методы:  
+  - `getRating(for:) -> Int` — получить рейтинг статьи  
+  - `setRating(_:for:)` — установить рейтинг  
+  Используется в `ArticleCardView`, `ArticleCompactCard`, `ArticleMetaView` через биндинги в `StarRatingView`.
 
 - **ReadingHistoryManager**  
   Хранение: `@AppStorage("readingHistory")` JSON массив `ReadingHistoryEntry`.  
@@ -184,16 +216,25 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 
 ---
 
-### Утилиты
 
-- **Theme.swift** — цвета, градиенты, spacing, `sectionCardStyle()`.  
-- **ReadingTimeCalculator** — оценка времени чтения (слова / скорость).  
-- **ProgressBar.swift** — горизонтальный бар.  
-- **LocalizationManager** — локализация UI-ключей.  
-- **ExportToPDF** — экспорт статьи в PDF.  
-- **Color+Hex.swift** — инициализация `Color` из HEX.  
-- **CardSize.swift** — вычисление размеров карточек.  
-- **Animations.swift** — стили, анимации, haptics.
+### Новые папки и их содержимое
+
+- **Protocols/**  
+  - `ArticlesRepository.swift`  
+  - `CategoriesRepository.swift`  
+  - (другие протоколы для сервисов, менеджеров и репозиториев)
+
+- **UIUtils/**  
+  - `Theme.swift`  
+  - `Animations.swift`  
+  - `CardSize.swift`  
+  - `Color+Hex.swift`  
+  - `ProgressBar.swift`
+
+- **Formatters/**  
+  - `DateFormatter+Localized.swift`  
+  - `ReadingTimeFormatter.swift`  
+  - (другие форматтеры для дат, времени, текста)
 
 ---
 
@@ -208,16 +249,18 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 - **Animations.swift**: `.cardStyle()`, `.scaleOnAppear()`, `.shimmer()`, haptic feedback.  
 - **ArticleCardView** — карточка статьи в сетке.  
 - **ArticleMetaView** — категория, даты, бейджи.  
-- **ArticleRow** — строка списка статей.  
-- **ArticleCompactCard** — компактная карточка.  
-    Карточка статьи для списков и превью. Содержит:
-   - изображение статьи (или логотип по умолчанию),
-   - заголовок статьи (2 строки, выравнивание по левому краю),
-   - короткий анонс (2 строки из начала текста, выравнивание по левому краю),
-   - блок метаданных: рейтинг из `RatingManager` и время чтения (`Article.formattedReadingTime`).
-
-Размер карточки: фиксированная ширина 320pt и высота изображения 280pt.  
-Фон — `systemBackground`, закругление углов и тень для визуальной глубины.
+- **ArticleRow** — строка списка статей, работает через `ArticleRowViewModel` (MVVM).
+- **ArticleCompactCard** — компактная карточка статьи, используемая в списках и секциях.
+  Включает:
+  - изображение статьи (с поддержкой стиля через `CardImageStyle`),
+  - заголовок (2 строки, выравнивание по левому краю),
+  - короткий анонс (до 2 строк из начала текста),
+  - блок метаданных:
+    - рейтинг из `RatingManager` (через `StarRatingView`),
+    - прогресс чтения через `ReadingProgressTracker`,
+    - время чтения (`Article.formattedReadingTime`).
+  Поддерживает динамический размер текста через `TextSizeManager`.
+  Размер: ширина 320pt, высота изображения 280pt, фон `systemBackground`, скруглённые углы и тень.
 
 
 ### MVVM + Dependency Injection (с версии v1.11.0)
@@ -270,6 +313,16 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
   - Состояния: `article`, `allArticles`, `isFavorite`.
   - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
+    - Теперь работает с `ArticleDetailViewModel`.
+  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
+  - Оптимизирован: вынесены вычисляемые свойства (`ratingBinding`, `articleContent`).
+  - Для связанных статей теперь используется `ArticleRow(viewModel:)`.
+  
+- **ArticleRowViewModel**
+  - Управляет отображением строки статьи (`ArticleRow`).
+  - Зависимости: `FavoritesManager`, `RatingManager`.
+  - Состояния: `isFavorite`, `rating`, `title`, `subtitle`, `metaInfo`.
+  - Методы: `toggleFavorite()`, `setRating(_:)`.
 
 - **AboutViewModel**
   - Управляет экраном «О приложении».

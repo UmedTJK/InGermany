@@ -104,6 +104,11 @@ class ReadingHistoryManager: ObservableObject {
         history.removeAll()
         saveHistory()
     }
+
+    /// Возвращает статистику чтения
+    func getStats() -> ReadingStats {
+        return ReadingStats(from: history)
+    }
 }
 
 // MARK: - Трекер времени чтения

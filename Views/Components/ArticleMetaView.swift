@@ -29,12 +29,13 @@ struct ArticleMetaView: View {
                 }
 
                 // 🔹 Рейтинг
-                if ratingManager.getRating(for: article.id) > 0 { // ← ИСПРАВЛЕНО
+                let currentRating = ratingManager.getRating(for: article.id)
+                if currentRating > 0 {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
                             .font(.caption)
-                        Text("\(ratingManager.getRating(for: article.id))/5") // ← ИСПРАВЛЕНО
+                        Text("\(currentRating)/5")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

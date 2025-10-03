@@ -8,6 +8,50 @@
 
 # Changelog
 
+
+### Changed
+- ArticleDetailView упрощён и оптимизирован (разбиение сложных выражений, вынесены биндинги).
+- ArticleRow теперь использует ArticleRowViewModel (MVVM).
+### Changed
+- ArticleRow переведён на MVVM через ArticleRowViewModel.
+- ArticleDetailView оптимизирован: вынесены вычисляемые свойства (ratingBinding, articleContent), упрощены выражения.
+## [Unreleased]
+
+### Technical
+- chore(article-detail): технический коммит — рефакторинг ArticleDetailView и интеграция ArticleRowViewModel.  
+  ⚠️ Временные отклонения будут исправлены в следующих коммитах.
+
+### Fixed
+- Восстановлен полный код `ArticleCompactCard` из стабильной версии (03.10.2025):
+  - Поддержка отображения заголовка, категории, анонса.
+  - Интеграция с `StarRatingView` и `RatingManager` для управления рейтингом.
+  - Интеграция с `ReadingProgressTracker` для отображения прогресса чтения.
+  - Поддержка изменения размера текста через `TextSizeManager`.
+  - Отображение стиля карточки через `CardImageStyle`.
+- Обновлён проектный файл `InGermany.xcodeproj` для корректной сборки.
+- Исправлен `ArticleDetailView` для согласованности с новой логикой прогресса чтения.
+
+## [1.12.0] - 2025-10-03
+### Changed
+- Проектная структура оптимизирована под SOLID и MVVM:
+  - Удалена папка `Utils/`.
+  - Файлы перемещены в новые пакеты:
+    - `Protocols/` — для интерфейсов (ArticlesRepository, CategoriesRepository, KeyValueStore).
+    - `Services/` — для реализаций (ArticlesRepositoryImpl, DataService, NetworkService, ShareService, AuthService, DefaultsStore, ExportToPDF, LocalizationManager).
+    - `Managers/` — для state-менеджеров (FavoritesManager, RatingManager, ReadingHistoryManager, ReadingTimeTracker, TextSizeManager, ReadingProgressHelper, ReadingProgressTracker, ReadingTimeCalculator).
+    - `UIUtils/` — для утилит UI (CardImageStyle, CardSize, Color+Hex, Theme, Animations, ProgressBar).
+    - `Formatters/` — для сервисов форматирования (ArticleMetaFormatter и др.).
+
+
+
+## [1.11.6] - 2025-10-03
+### Added
+- Отображение и редактирование рейтинга статей в `ArticleCardView` через `StarRatingView`.
+- Интеграция `StarRatingView` в `ArticleCompactCard` и `ArticleMetaView` с использованием `RatingManager`.
+
+### Fixed
+- Устранена ошибка вызова несуществующего свойства `rating` в `ArticleMetaView` и `ArticleCompactCard`, заменено на корректный метод `getRating(for:)`.
+
 ## [1.11.5] - 2025-10-03
 ### Changed
 - `CategoriesView` переведён на MVVM через `CategoriesViewModel`.

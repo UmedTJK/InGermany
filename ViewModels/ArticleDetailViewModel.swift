@@ -50,6 +50,6 @@ class ArticleDetailViewModel: ObservableObject {
 
     // MARK: - Reading History
     func markAsRead() {
-        historyManager.addEntry(articleId: article.id)
+        historyManager.addReadingEntry(articleId: article.id, readingTime: 0)
     }
 }

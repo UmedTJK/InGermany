@@ -48,6 +48,6 @@ struct CategoriesView: View {
     }
 
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        return LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 }

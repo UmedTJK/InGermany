@@ -28,7 +28,7 @@ struct SearchView: View {
                             allArticles: viewModel.articles
                         )
                     } label: {
-                        ArticleRow(article: article)
+                        ArticleRow(viewModel: ArticleRowViewModel(article: article))
                     }
                 }
                 .listStyle(.plain)

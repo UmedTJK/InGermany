@@ -49,8 +49,11 @@ struct SettingsView: View {
                 }
                 
                 // 📊 Статистика чтения
-                Section(header: Text(t("settings_stats_title"))) {
+                Section {
                     let stats = viewModel.getStats()
+                    let avgMinutes = stats.totalArticlesRead > 0
+                        ? Double(stats.totalReadingTimeMinutes) / Double(stats.totalArticlesRead)
+                        : 0.0
                     
                     HStack {
                         Text(t("settings_articles_read"))
@@ -60,22 +63,23 @@ struct SettingsView: View {
                     HStack {
                         Text(t("settings_total_time"))
                         Spacer()
-                        Text(formatHMS(fromSeconds: stats.totalReadingTimeSeconds))
+                        Text(formatHMS(fromSeconds: stats.totalReadingTimeMinutes * 60))
                     }
                     HStack {
                         Text(t("settings_average_time"))
                         Spacer()
-                        let avgSeconds = stats.totalArticlesRead > 0
-                            ? Double(stats.totalReadingTimeSeconds) / Double(stats.totalArticlesRead)
-                            : 0.0
-                        Text(formatHMS(fromSeconds: Int(avgSeconds)))
+                        Text(formatHMS(fromSeconds: Int(avgMinutes * 60)))
                     }
                     HStack {
                         Text(t("settings_streak"))
                         Spacer()
                         Text("\(stats.readingStreak)")
                     }
+                } header: {
+                    Text(t("settings_stats_title"))
                 }
+                
+                
                 
                 // ℹ️ О приложении
                 Section {
@@ -109,4 +113,4 @@ struct SettingsView: View {
             return String(format: "%02d:%02d", mins, secs)
         }
     }
-}
+    }

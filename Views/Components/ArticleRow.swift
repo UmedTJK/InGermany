@@ -6,37 +6,41 @@
 import SwiftUI
 
 struct ArticleRow: View {
-    let article: Article
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @ObservedObject var viewModel: ArticleRowViewModel
     
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            if let imageName = article.image,
-               let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(8)
-                    .clipped()
-            } else {
-                Image("Logo")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(8)
-                    .clipped()
-            }
-            
-            VStack(alignment: .leading, spacing: 6) {
-                Text(article.localizedTitle(for: selectedLanguage))
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(viewModel.title)
                     .font(.headline)
+                    .lineLimit(2)
                 
-                Text(article.localizedContent(for: selectedLanguage))
+                Text(viewModel.subtitle)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                    .lineLimit(2)
+                
+                if !viewModel.metaInfo.isEmpty {
+                    Text(viewModel.metaInfo)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
             }
+            Spacer()
+            
+            // Favorite button
+            Button(action: { viewModel.toggleFavorite() }) {
+                Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                    .foregroundColor(.red)
+            }
+            
+            // Rating (если используешь звёзды)
+            StarRatingView(rating: $viewModel.rating)
+                .frame(width: 100)
         }
+        .padding(.vertical, 8)
     }
+}
+
+#Preview {
+    ArticleRow(viewModel: ArticleRowViewModel(article: Article.sampleArticle))
 }

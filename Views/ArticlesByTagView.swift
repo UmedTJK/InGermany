@@ -20,7 +20,7 @@ struct ArticlesByTagView: View {
                         allArticles: articles
                     )
                 } label: {
-                    ArticleRow(article: article)
+                    ArticleRow(viewModel: ArticleRowViewModel(article: article))
                 }
             }
         }
