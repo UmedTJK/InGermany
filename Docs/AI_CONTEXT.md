@@ -145,7 +145,10 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 
 - **RatingManager**  
   Хранение: `UserDefaults` (`rating_<articleId>`)  
-  Методы: `rating(for:)`, `setRating(_:for:)`.
+  Методы:  
+  - `getRating(for:) -> Int` — получить рейтинг статьи  
+  - `setRating(_:for:)` — установить рейтинг  
+  Используется в `ArticleCardView`, `ArticleCompactCard`, `ArticleMetaView` через биндинги в `StarRatingView`.
 
 - **ReadingHistoryManager**  
   Хранение: `@AppStorage("readingHistory")` JSON массив `ReadingHistoryEntry`.  
