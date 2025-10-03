@@ -8,6 +8,43 @@
 
 # Changelog
 
+## [1.11.5] - 2025-10-03
+### Changed
+- `CategoriesView` переведён на MVVM через `CategoriesViewModel`.
+- Все зависимости теперь предоставляются через `AppContainer`.
+- `FavoritesView` полностью переведён на MVVM через `FavoritesViewModel`, убран прямой доступ к `FavoritesManager.shared`.
+
+## [1.11.4] - 2025-10-03
+### Added
+- Новый `AboutViewModel` для экрана «О приложении».
+- Фабрика `makeAboutViewModel()` добавлена в `AppContainer`.
+
+### Changed
+- `AboutView` переведён на MVVM и теперь получает данные (версия, билд, репозиторий) из ViewModel.
+
+## [1.11.3] - 2025-10-03
+### Added
+- Новый `ArticleDetailViewModel` для управления экраном статьи.
+- Фабрика `makeArticleDetailViewModel()` добавлена в `AppContainer`.
+
+### Changed
+- `ArticleDetailView` переведён на MVVM через `ArticleDetailViewModel`.
+- Убрана передача `FavoritesManager` во все вызовы `ArticleDetailView`.
+- Все секции и экраны, открывающие статьи, обновлены под новый DI.
+
+## [1.11.2] - 2025-10-03
+### Added
+- Новый `SettingsViewModel` для управления настройками и историей чтения.
+
+### Changed
+- `SettingsView` переведён на MVVM через `SettingsViewModel`.
+- Зависимости теперь предоставляются через `AppContainer`.
+
+## [1.11.1] - 2025-10-03
+### Changed
+- `CategoriesView` переведён на MVVM через `CategoriesViewModel`.
+- Добавлена фабрика `makeCategoriesViewModel()` в `AppContainer`.
+- `ContentView` упрощён: вызов `CategoriesView()` теперь без параметров.
 
 ## [1.11.0] - 2025-10-03
 ### Added

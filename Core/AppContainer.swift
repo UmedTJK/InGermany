@@ -33,12 +33,6 @@ final class AppContainer {
         )
     }
     
-    func makeFavoritesViewModel() -> FavoritesViewModel {
-        FavoritesViewModel(
-            favoritesManager: favoritesManager,
-            articlesRepo: articlesRepo
-        )
-    }
     
     func makeSearchViewModel() -> SearchViewModel {
         SearchViewModel(
@@ -73,10 +67,9 @@ final class AppContainer {
         AboutViewModel()
     }
     
-    func makeCategoriesViewModel() -> CategoriesViewModel {
-        CategoriesViewModel(
+    func makeFavoritesViewModel() -> FavoritesViewModel {
+        FavoritesViewModel(
             favoritesManager: favoritesManager,
-            categoriesRepo: categoriesRepo,
             articlesRepo: articlesRepo
         )
     }

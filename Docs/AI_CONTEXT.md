@@ -72,6 +72,9 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   - `favoritesManager: FavoritesManager` → singleton `.shared`
   - `historyManager: ReadingHistoryManager` → singleton `.shared`
   - `makeHomeViewModel()` → возвращает готовый `HomeViewModel`
+  - `makeSettingsViewModel()` → возвращает готовый `SettingsViewModel`
+  - `makeArticleDetailViewModel()` → возвращает готовый `ArticleDetailViewModel`
+  - `makeAboutViewModel()` → возвращает готовый `AboutViewModel`
 
 - **HomeViewModel**
   - Теперь зависит от `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`
@@ -79,10 +82,32 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   - Есть `convenience init()` для старых вызовов и превью
   - Методы `loadData()` и `refreshData()` используют `articlesRepo`, а не напрямую `DataService`
 
+- **SettingsViewModel**
+  - Управляет настройками и историей чтения.
+  - Зависимости: `ReadingHistoryManager`.
+  - Состояния: `selectedLanguage`, `isHistoryCleared`.
+  - Методы: `clearHistory()`, `changeLanguage(to:)`.
+
+- **ArticleDetailViewModel**
+  - Управляет состоянием экрана статьи.
+  - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
+  - Состояния: `article`, `allArticles`, `isFavorite`.
+  - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
+
 - **HomeView**
   - Не создаёт VM напрямую.
   - При инициализации по умолчанию использует `AppContainer.shared.makeHomeViewModel()`
   - В тестах/превью может принимать кастомный VM.
+
+- **SettingsView**
+  - Теперь работает с `SettingsViewModel`.
+  - Управление настройками и очисткой истории вынесено во ViewModel.
+
+- **ArticleDetailView**
+  - Теперь работает с `ArticleDetailViewModel`.
+  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
+
+---
 
 ## 2a) Структура проекта (актуальная)
 
@@ -206,6 +231,9 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   - `makeHomeViewModel()`
   - `makeFavoritesViewModel()`
   - `makeSearchViewModel()`
+  - `makeCategoriesViewModel()`
+  - `makeSettingsViewModel()`
+  - `makeArticleDetailViewModel()`
 
 #### ViewModels
 - **HomeViewModel**
@@ -225,13 +253,37 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   - Состояния: `articles`, `searchText`, `selectedTag`, `isLoading`, `dataSource`.
   - Вычисляемые свойства: `filteredArticles`, `allTags`.
 
+- **CategoriesViewModel**
+  - Управляет загрузкой категорий и связанных статей.
+  - Зависимости: `CategoriesRepository`, `ArticlesRepository`, `FavoritesManager`.
+  - Методы: `loadData()`.
+  - Состояния: `categories`, `articles`, `isLoading`.
+
+- **SettingsViewModel**
+  - Управляет настройками и историей чтения.
+  - Зависимости: `ReadingHistoryManager`.
+  - Состояния: `selectedLanguage`, `isHistoryCleared`.
+  - Методы: `clearHistory()`, `changeLanguage(to:)`.
+
+- **ArticleDetailViewModel**
+  - Управляет состоянием экрана статьи.
+  - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
+  - Состояния: `article`, `allArticles`, `isFavorite`.
+  - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
+
+- **AboutViewModel**
+  - Управляет экраном «О приложении».
+  - Состояния: `appVersion`, `buildNumber`, `repositoryURL`.
+  - Локализация выполняется через `LocalizationManager`.
+
 #### Views
 - **HomeView**
   - Получает `HomeViewModel` из `AppContainer`.
   - ViewModel полностью управляет данными и состоянием.
 
 - **FavoritesView**
-  - Работает с `FavoritesViewModel`.
+  - Теперь работает через `FavoritesViewModel`.
+  - Управление избранным (загрузка, фильтрация, добавление/удаление) вынесено во ViewModel.
   - ViewModel отвечает за фильтрацию и загрузку избранных статей.
 
 - **SearchView**
@@ -239,10 +291,26 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   - Фильтрация по тегам и поисковому тексту вынесена во ViewModel.
   - View остаётся чисто декларативной.
 
+- **CategoriesView**
+  - Работает с `CategoriesViewModel`.
+  - Не принимает параметры `articles` и `favoritesManager` напрямую, получает их через DI.
+
+- **SettingsView**
+  - Теперь работает с `SettingsViewModel`.
+  - Управление настройками и очисткой истории вынесено во ViewModel.
+
+- **ArticleDetailView**
+  - Теперь работает с `ArticleDetailViewModel`.
+  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
+
 #### ContentView
 - Убран вызов `SearchView(favoritesManager:, articles:)`.
 - Теперь используется просто `SearchView()`, так как зависимости берутся через DI.
-- `CategoriesView` пока ещё требует параметры, будет переведён на MVVM в следующем шаге.
+- `CategoriesView` теперь также переведён на MVVM через DI.
+
+- **AboutView**
+  - Теперь работает через `AboutViewModel`.
+  - Отображает описание приложения, версию, билд и ссылку на GitHub.
 
 ---
 
@@ -263,10 +331,11 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
   Использует: `TagFilterView`, `ArticleRow`.
 
 
-
 - **SettingsView**  
-- Управление настройками приложения (тема, размер текста, формат даты, история чтения, About).
-- ✅ Язык интерфейса теперь выбирается из списка с флагами и названием языка, текущий язык отмечен галочкой.
+  Управление настройками приложения (тема, размер текста, формат даты, история чтения, About).
+  ✅ Язык интерфейса теперь выбирается из списка с флагами и названием языка, текущий язык отмечен галочкой.
+  Теперь работает с `SettingsViewModel`.
+  Управление настройками и очисткой истории вынесено во ViewModel.
 
 - **ArticleDetailView**  
   Полный экран статьи.  
@@ -274,7 +343,10 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 
 - **ArticlesByTagView** — список по тегу.  
 - **CategoriesView** — список категорий.  
-- **FavoritesView** — избранные статьи.  
+- **FavoritesView**  
+  - Теперь работает с `FavoritesViewModel`.
+  - Загружает и фильтрует избранные статьи через ViewModel.
+  - View остаётся декларативным, вся логика вынесена во ViewModel.
 - **AboutView** — информация о проекте.  
 
 ---
@@ -338,4 +410,3 @@ git log --oneline --graph -n 10
   ```bash
   git commit -m "docs(context): обновлён AI_CONTEXT"
   ```
-
