@@ -113,8 +113,13 @@ struct ArticleCompactCard: View {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
                             .font(.caption)
-                        // ИСПРАВЛЕНО: используем правильное имя метода
-                        Text("\(ratingManager.getRating(for: article.id))/5")
+                        // Исправлено: используем Binding с get/set для рейтинга
+                        StarRatingView(
+                            rating: Binding(
+                                get: { ratingManager.getRating(for: article.id) },
+                                set: { newValue in ratingManager.setRating(newValue, for: article.id) }
+                            )
+                        )
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

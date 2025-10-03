@@ -8,6 +8,7 @@ import SwiftUI
 struct ArticleCardView: View {
     let article: Article
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @ObservedObject private var ratingManager = RatingManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -31,6 +32,20 @@ struct ArticleCardView: View {
             Text(article.localizedTitle(for: selectedLanguage))
                 .font(.headline)
                 .lineLimit(2)
+            
+            HStack(spacing: 4) {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.yellow)
+                    .font(.caption)
+                StarRatingView(
+                    rating: Binding(
+                        get: { ratingManager.getRating(for: article.id) },
+                        set: { newValue in ratingManager.setRating(newValue, for: article.id) }
+                    )
+                )
+                .font(.caption)
+                .foregroundColor(.secondary)
+            }
             
             Text(article.localizedContent(for: selectedLanguage))
                 .font(.subheadline)

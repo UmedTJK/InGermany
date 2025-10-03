@@ -15,7 +15,7 @@ final class RatingManager: ObservableObject {
         loadRatings()
     }
 
-    func rating(for articleId: String) -> Int {
+    func getRating(for articleId: String) -> Int {
         ratings[articleId] ?? 0
     }
 
