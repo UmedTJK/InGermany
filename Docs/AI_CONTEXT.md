@@ -463,3 +463,12 @@ git log --oneline --graph -n 10
   ```bash
   git commit -m "docs(context): обновлён AI_CONTEXT"
   ```
+
+### Documentation
+- [2025-10-03] Добавлены `///` doc-комментарии ко всем основным моделям и менеджерам:
+  - `Article`
+  - `DataService`
+  - `FavoritesManager`
+  - `CategoryManager`
+  - `LocalizationManager`
+- Обновлён `CLEAN_CODE_CHECKLIST.md` — теперь пункт про обязательные `///` комментарии у публичных классов и методов.
