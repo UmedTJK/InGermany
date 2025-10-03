@@ -8,6 +8,18 @@
 
 # Changelog
 
+
+## [1.11.0] - 2025-10-03
+### Added
+- `AppContainer` как Composition Root для DI.
+- Фабрики: `makeHomeViewModel`, `makeFavoritesViewModel`, `makeSearchViewModel`.
+- Новые ViewModels: `FavoritesViewModel`, `SearchViewModel`.
+
+### Changed
+- `HomeView`, `FavoritesView`, `SearchView` переведены на MVVM через DI.
+- Убраны прямые вызовы `FavoritesManager.shared` и `DataService` из Views.
+- `ContentView` обновлён: `SearchView` теперь без параметров.
+
 ## [1.10.1] - 2025-10-03
 ### Changed
 - `FavoritesView` переведён на MVVM с использованием `FavoritesViewModel`.

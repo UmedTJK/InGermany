@@ -195,7 +195,58 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 Фон — `systemBackground`, закругление углов и тень для визуальной глубины.
 
 
+### MVVM + Dependency Injection (с версии v1.11.0)
+
+Архитектура проекта переведена на использование централизованного DI через `AppContainer` и MVVM для основных экранов.
+
+#### AppContainer
+- Реализован как Composition Root, помечен `@MainActor`.
+- Отвечает за создание и хранение зависимостей.
+- Методы-фабрики:
+  - `makeHomeViewModel()`
+  - `makeFavoritesViewModel()`
+  - `makeSearchViewModel()`
+
+#### ViewModels
+- **HomeViewModel**
+  - Управляет данными главного экрана.
+  - Работает с `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`.
+  - Методы: `loadData()`, `refreshData()`, `selectRandomArticle()`.
+
+- **FavoritesViewModel**
+  - Управляет списком избранного.
+  - Зависимости: `FavoritesManager`, `ArticlesRepository`.
+  - Методы: `loadFavorites()`, `toggleFavorite(for:)`.
+  - Публичные состояния: `favoriteArticles`, `allArticles`, `isLoading`, `dataSource`.
+
+- **SearchViewModel**
+  - Управляет логикой поиска и фильтрации.
+  - Зависимости: `FavoritesManager`, `CategoriesRepository`, `ArticlesRepository`.
+  - Состояния: `articles`, `searchText`, `selectedTag`, `isLoading`, `dataSource`.
+  - Вычисляемые свойства: `filteredArticles`, `allTags`.
+
+#### Views
+- **HomeView**
+  - Получает `HomeViewModel` из `AppContainer`.
+  - ViewModel полностью управляет данными и состоянием.
+
+- **FavoritesView**
+  - Работает с `FavoritesViewModel`.
+  - ViewModel отвечает за фильтрацию и загрузку избранных статей.
+
+- **SearchView**
+  - Работает с `SearchViewModel`.
+  - Фильтрация по тегам и поисковому тексту вынесена во ViewModel.
+  - View остаётся чисто декларативной.
+
+#### ContentView
+- Убран вызов `SearchView(favoritesManager:, articles:)`.
+- Теперь используется просто `SearchView()`, так как зависимости берутся через DI.
+- `CategoriesView` пока ещё требует параметры, будет переведён на MVVM в следующем шаге.
+
 ---
+
+📌 Важно: теперь весь код соответствует принципам **SOLID** и паттерну **MVVM**, зависимости централизованы, Views максимально «тонкие».
 
 ### Экраны
 
