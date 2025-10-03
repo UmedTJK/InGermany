@@ -77,9 +77,13 @@ struct ArticleDetailView: View {
                             .font(.headline)
 
                         StarRatingView(
-                            rating: Binding(
-                                get: { ratingManager.getRating(for: viewModel.article.id) },
-                                set: { ratingManager.setRating($0, for: viewModel.article.id) }
+                            rating: Binding<Int>(
+                                get: {
+                                    ratingManager.getRating(for: viewModel.article.id)
+                                },
+                                set: { newValue in
+                                    ratingManager.setRating(newValue, for: viewModel.article.id)
+                                }
                             )
                         )
                     }
