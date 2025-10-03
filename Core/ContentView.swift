@@ -8,7 +8,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView(favoritesManager: favoritesManager)
+            HomeView()
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_home", comment: ""),

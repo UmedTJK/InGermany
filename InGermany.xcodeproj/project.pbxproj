@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD0826D32E85A50A009C30CC /* .swiftlint.yml */; };
 		AD2A625A2E8893BC006A94DD /* ReadingTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */; };
+		AD2A64952E8F8969006A94DD /* ArticlesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64942E8F8969006A94DD /* ArticlesRepository.swift */; };
+		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD38F5852E76891600E36EA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5842E76890C00E36EA4 /* .gitignore */; };
 		AD38F5872E76899D00E36EA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5862E76899600E36EA4 /* README.md */; };
 		AD38F5892E76C15600E36EA4 /* update.sh in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5882E76C15000E36EA4 /* update.sh */; };
@@ -44,6 +46,8 @@
 /* Begin PBXFileReference section */
 		AD0826D32E85A50A009C30CC /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeTracker.swift; sourceTree = "<group>"; };
+		AD2A64942E8F8969006A94DD /* ArticlesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepository.swift; sourceTree = "<group>"; };
+		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD38F5882E76C15000E36EA4 /* update.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update.sh; sourceTree = "<group>"; };
@@ -82,6 +86,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		AD2A63B12E8C1AE4006A94DD /* ViewModels */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		AD52FCF22E84765A00CC9F61 /* Images */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Images;
@@ -136,6 +145,7 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD2A63B12E8C1AE4006A94DD /* ViewModels */,
 				AD0826D32E85A50A009C30CC /* .swiftlint.yml */,
 				AD38F5882E76C15000E36EA4 /* update.sh */,
 				AD38F5862E76899600E36EA4 /* README.md */,
@@ -164,6 +174,7 @@
 		AD8552C32E75B452003D3826 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */,
 				AD74546B2E7E7937001FC732 /* NetworkService.swift */,
 				AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */,
 				AD8552C42E75B463003D3826 /* DataService.swift */,
@@ -206,6 +217,7 @@
 		ADF339482E8850FA00AE4CBF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				AD2A64942E8F8969006A94DD /* ArticlesRepository.swift */,
 				AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */,
 				ADF3394F2E88545D00AE4CBF /* CategoriesRepository.swift */,
 				ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */,
@@ -232,6 +244,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				AD2A63B12E8C1AE4006A94DD /* ViewModels */,
 				AD52FCF22E84765A00CC9F61 /* Images */,
 				AD8552942E75ABEC003D3826 /* InGermany */,
 				AD8552A72E75AEBF003D3826 /* Core */,
@@ -310,6 +323,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD2A64952E8F8969006A94DD /* ArticlesRepository.swift in Sources */,
 				ADF338872E86FE4C00AE4CBF /* CardImageStyle.swift in Sources */,
 				AD8552D12E75BB62003D3826 /* LocalizationManager.swift in Sources */,
 				AD7454FB2E7EEEF6001FC732 /* Color+Hex.swift in Sources */,
@@ -317,6 +331,7 @@
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
 				AD6275112E7BB377003D7FA9 /* ExportToPDF.swift in Sources */,
 				AD6275122E7BB377003D7FA9 /* ProgressBar.swift in Sources */,
+				AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */,
 				AD8552D22E75BB62003D3826 /* Theme.swift in Sources */,
 				ADF338802E86799000AE4CBF /* ReadingProgressTracker.swift in Sources */,
 				ADF339502E88545F00AE4CBF /* CategoriesRepository.swift in Sources */,

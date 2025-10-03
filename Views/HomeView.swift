@@ -7,8 +7,18 @@ import SwiftUI
 
 struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @StateObject private var viewModel = HomeViewModel()
-    
+    @StateObject private var viewModel: HomeViewModel
+
+    // MARK: - Init
+    init(viewModel: HomeViewModel? = nil) {
+        if let vm = viewModel {
+            _viewModel = StateObject(wrappedValue: vm)
+        } else {
+            _viewModel = StateObject(wrappedValue: AppContainer.shared.makeHomeViewModel())
+        }
+    }
+
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -80,6 +90,7 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - Helpers
     private func getDataSourceColor() -> Color {
         switch viewModel.dataSource {
         case "network": return .green
