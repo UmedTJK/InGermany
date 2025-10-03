@@ -1,5 +1,6 @@
 .
 ├── Core
+│   ├── AppContainer.swift
 │   ├── ContentView.swift
 │   └── InGermanyApp.swift
 ├── Docs
@@ -10,41 +11,32 @@
 │   ├── PROMPTS_FOR_AI_AGENTS.md
 │   ├── git_snapshot.md
 │   └── project_tree.md
+├── HomeView_Context.zip
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
-│   │   │   └── Contents.json
 │   │   ├── AppIcon.appiconset
-│   │   │   ├── Contents.json
-│   │   │   ├── Logo 1.png
-│   │   │   └── Logo.png
 │   │   ├── Contents.json
 │   │   └── Logo.imageset
-│   │       ├── Contents.json
-│   │       └── Logo.png
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
 │   └── Preview Content
 │       └── Preview Assets.xcassets
-│           ├── Contents.json
-│           ├── LogoDark.imageset
-│           └── LogoLight.imageset
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
 │   │   ├── xcshareddata
-│   │   │   └── swiftpm
 │   │   └── xcuserdata
-│   │       └── sumtjk.xcuserdatad
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
-│           ├── xcdebugger
-│           └── xcschemes
 ├── Managers
+│   ├── ArticlesRepository.swift
 │   ├── CategoriesRepository.swift
+│   ├── CategoryManager.swift
 │   ├── FavoritesManager.swift
+│   ├── LocalizationManager.swift
 │   ├── RatingManager.swift
 │   ├── ReadingHistoryManager.swift
 │   ├── ReadingTimeTracker.swift
@@ -57,9 +49,7 @@
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
-│   │   │   └── bank_account.jpg
 │   │   ├── en.lproj
-│   │   │   └── bank_account.jpg
 │   │   ├── germany10.jpg
 │   │   ├── germany11.jpg
 │   │   ├── germany12.jpg
@@ -89,6 +79,7 @@
 │   ├── search.png
 │   └── settings.png
 ├── Services
+│   ├── ArticlesRepositoryImpl.swift
 │   ├── AuthService.swift
 │   ├── DataService.swift
 │   ├── NetworkService.swift
@@ -100,12 +91,20 @@
 │   ├── Color+Hex.swift
 │   ├── DefaultsStorage.swift
 │   ├── ExportToPDF.swift
-│   ├── LocalizationManager.swift
 │   ├── ProgressBar.swift
 │   ├── ReadingProgressHelper.swift
 │   ├── ReadingProgressTracker.swift
 │   ├── ReadingTimeCalculator.swift
 │   └── Theme.swift
+├── ViewModels
+│   ├── AboutViewModel.swift
+│   ├── ArticleDetailViewModel.swift
+│   ├── CategoriesViewModel.swift
+│   ├── FavoritesViewModel.swift
+│   ├── HomeViewModel.swift
+│   ├── SearchViewModel.swift
+│   ├── SettingsViewModel.swift
+│   └── ViewModels.swift
 ├── Views
 │   ├── AboutView.swift
 │   ├── ArticleDetailView.swift
@@ -139,4 +138,4 @@
 │   └── SettingsView.swift
 └── update.sh
 
-35 directories, 105 files
+30 directories, 109 files

@@ -2,101 +2,188 @@
 //  ReadingHistoryManager.swift
 //  InGermany
 //
+//  Created by AI Assistant on 18.09.25.
+//
 
 import Foundation
-import Combine
+import SwiftUI
 
-/// Запись о прочтении статьи
+/// Модель записи истории чтения
 struct ReadingHistoryEntry: Codable, Identifiable {
-    let id: UUID
+    let id: String
     let articleId: String
-    let date: Date
+    let readAt: Date
+    let readingTimeSeconds: TimeInterval
     
-    init(articleId: String, date: Date = Date()) {
-        self.id = UUID()
+    init(articleId: String, readingTimeSeconds: TimeInterval) {
+        self.id = UUID().uuidString
         self.articleId = articleId
-        self.date = date
+        self.readAt = Date()
+        self.readingTimeSeconds = readingTimeSeconds
     }
 }
 
-/// Статистика по истории чтения
-struct ReadingStats {
-    let totalArticlesRead: Int
-    let totalReadingTimeSeconds: Int
-    let readingStreak: Int
-}
-
-/// Менеджер истории прочтения статей.
-/// Использует DefaultsStorage для сохранения и загрузки.
-@MainActor
-final class ReadingHistoryManager: ObservableObject {
+/// Менеджер для отслеживания истории чтения статей
+class ReadingHistoryManager: ObservableObject {
     static let shared = ReadingHistoryManager()
-
+    
     @Published private(set) var history: [ReadingHistoryEntry] = []
-
-    private let key = "readingHistory"
-
+    @AppStorage("readingHistory") private var storedHistory: Data = Data()
+    
+    // Максимальное количество записей в истории
+    private let maxHistoryEntries = 100
+    
     private init() {
-        if let saved: [ReadingHistoryEntry] = DefaultsStorage.load(key, as: [ReadingHistoryEntry].self) {
-            history = saved
+        loadHistory()
+    }
+    
+    /// Загружает историю из UserDefaults
+    private func loadHistory() {
+        if let entries = try? JSONDecoder().decode([ReadingHistoryEntry].self, from: storedHistory) {
+            history = entries.sorted { $0.readAt > $1.readAt }
         }
     }
-
-    /// Добавить новую запись в историю
-    func addEntry(articleId: String) {
-        let entry = ReadingHistoryEntry(articleId: articleId, date: Date())
-        history.insert(entry, at: 0) // новые записи сверху
-        save()
+    
+    /// Сохраняет историю в UserDefaults
+    private func saveHistory() {
+        if let data = try? JSONEncoder().encode(history) {
+            storedHistory = data
+        }
     }
-
-    /// Очистить историю и время чтения
+    
+    /// Добавляет запись о прочтении статьи
+    /// - Parameters:
+    ///   - articleId: ID статьи
+    ///   - readingTime: Время чтения в секундах
+    func addReadingEntry(articleId: String, readingTime: TimeInterval) {
+        // Удаляем старые записи для той же статьи (оставляем только последнюю)
+        history.removeAll { $0.articleId == articleId }
+        
+        let entry = ReadingHistoryEntry(articleId: articleId, readingTimeSeconds: readingTime)
+        history.insert(entry, at: 0)
+        
+        // Ограничиваем размер истории
+        if history.count > maxHistoryEntries {
+            history = Array(history.prefix(maxHistoryEntries))
+        }
+        
+        saveHistory()
+    }
+    
+    /// Возвращает последние прочитанные статьи
+    func recentlyReadArticles(from allArticles: [Article], limit: Int = 5) -> [Article] {
+        let recentIds = Array(history.prefix(limit).map { $0.articleId })
+        return recentIds.compactMap { id in
+            allArticles.first { $0.id == id }
+        }
+    }
+    
+    /// Проверяет, была ли статья прочитана
+    func isRead(_ articleId: String) -> Bool {
+        return history.contains { $0.articleId == articleId }
+    }
+    
+    /// Возвращает время последнего чтения статьи
+    func lastReadDate(for articleId: String) -> Date? {
+        return history.first { $0.articleId == articleId }?.readAt
+    }
+    
+    /// Возвращает общее время чтения всех статей (в минутах)
+    var totalReadingTimeMinutes: Int {
+        let totalSeconds = history.reduce(0) { $0 + $1.readingTimeSeconds }
+        return Int(totalSeconds / 60)
+    }
+    
+    /// Возвращает количество прочитанных статей
+    var totalArticlesRead: Int {
+        return Set(history.map { $0.articleId }).count
+    }
+    
+    /// Очищает историю чтения
     func clearHistory() {
         history.removeAll()
-        save()
-        // синхронизируем с трекером времени
-        ReadingTimeTracker.shared.clearSessions()
+        saveHistory()
     }
+}
 
-    /// Получить статистику чтения
-    func getStats() -> ReadingStats {
-        let totalArticles = Set(history.map { $0.articleId }).count
-        let totalSeconds = ReadingTimeTracker.shared.getTotalReadingTimeInSeconds()
-        let streak = calculateStreak()
+// MARK: - Трекер времени чтения
+class ReadingTracker: ObservableObject {
+    private var startTime: Date?
+    private var articleId: String?
+    
+    /// Начинает отслеживание чтения статьи
+    func startReading(articleId: String) {
+        self.articleId = articleId
+        self.startTime = Date()
+    }
+    
+    /// Завершает отслеживание и сохраняет результат
+    func finishReading() {
+        guard let startTime = startTime,
+              let articleId = articleId else { return }
         
-        return ReadingStats(
-            totalArticlesRead: totalArticles,
-            totalReadingTimeSeconds: totalSeconds,
-            readingStreak: streak
-        )
+        let readingTime = Date().timeIntervalSince(startTime)
+        
+        // Записываем только если пользователь читал хотя бы 10 секунд
+        if readingTime >= 10 {
+            ReadingHistoryManager.shared.addReadingEntry(
+                articleId: articleId,
+                readingTime: readingTime
+            )
+        }
+        
+        self.startTime = nil
+        self.articleId = nil
     }
+    
+    /// Получает текущее время чтения
+    var currentReadingTime: TimeInterval {
+        guard let startTime = startTime else { return 0 }
+        return Date().timeIntervalSince(startTime)
+    }
+}
 
-    /// Вычисление серии подряд идущих дней чтения
-    private func calculateStreak() -> Int {
-        guard !history.isEmpty else { return 0 }
-
-        var streak = 1
+// MARK: - Статистика чтения
+struct ReadingStats {
+    let totalArticlesRead: Int
+    let totalReadingTimeMinutes: Int
+    let averageReadingTimeMinutes: Double
+    let readingStreak: Int // дни подряд с чтением
+    
+    init(from history: [ReadingHistoryEntry]) {
+        self.totalArticlesRead = Set(history.map { $0.articleId }).count
+        
+        let totalSeconds = history.reduce(0) { $0 + $1.readingTimeSeconds }
+        self.totalReadingTimeMinutes = Int(totalSeconds / 60)
+        
+        self.averageReadingTimeMinutes = totalArticlesRead > 0
+            ? Double(totalReadingTimeMinutes) / Double(totalArticlesRead)
+            : 0
+        
+        // Расчет streak (упрощенный)
+        self.readingStreak = ReadingStats.calculateStreak(from: history)
+    }
+    
+    private static func calculateStreak(from history: [ReadingHistoryEntry]) -> Int {
         let calendar = Calendar.current
-
-        for i in 1..<history.count {
-            let prev = history[i - 1].date
-            let curr = history[i].date
-            if let diff = calendar.dateComponents([.day], from: curr, to: prev).day,
-               diff == 1 {
+        let today = Date()
+        var streak = 0
+        var currentDate = today
+        
+        for i in 0..<7 { // Проверяем последние 7 дней
+            let hasReadingThisDay = history.contains { entry in
+                calendar.isDate(entry.readAt, inSameDayAs: currentDate)
+            }
+            
+            if hasReadingThisDay {
                 streak += 1
-            } else {
+            } else if i > 0 { // Пропускаем сегодня, если сегодня не читали
                 break
             }
+            
+            currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
         }
+        
         return streak
-    }
-
-    private func save() {
-        DefaultsStorage.save(history, for: key)
-    }
-
-    /// Получить список недавно прочитанных статей
-    func recentlyReadArticles(from articles: [Article]) -> [Article] {
-        let recentArticleIds = history.map { $0.articleId }
-        return articles.filter { recentArticleIds.contains($0.id) }
     }
 }

@@ -50,5 +50,3 @@ final class FavoritesManager: ObservableObject {
         isFavorite(id)
     }
 }
-
-
