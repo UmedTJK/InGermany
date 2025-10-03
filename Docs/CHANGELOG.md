@@ -8,7 +8,18 @@
 
 # Changelog
 
+
+### Changed
+- ArticleDetailView упрощён и оптимизирован (разбиение сложных выражений, вынесены биндинги).
+- ArticleRow теперь использует ArticleRowViewModel (MVVM).
+### Changed
+- ArticleRow переведён на MVVM через ArticleRowViewModel.
+- ArticleDetailView оптимизирован: вынесены вычисляемые свойства (ratingBinding, articleContent), упрощены выражения.
 ## [Unreleased]
+
+### Technical
+- chore(article-detail): технический коммит — рефакторинг ArticleDetailView и интеграция ArticleRowViewModel.  
+  ⚠️ Временные отклонения будут исправлены в следующих коммитах.
 
 ### Fixed
 - Восстановлен полный код `ArticleCompactCard` из стабильной версии (03.10.2025):
