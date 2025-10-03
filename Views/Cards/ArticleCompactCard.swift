@@ -9,9 +9,11 @@ struct ArticleCompactCard: View {
     let article: Article
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @ObservedObject private var ratingManager = RatingManager.shared
-    @ObservedObject private var readingProgressTracker = ReadingProgressTracker.shared
-    @EnvironmentObject private var categoriesStore: CategoriesStore
+    
+    // Используем StateObject для менеджеров вместо ObservedObject
+    @StateObject private var ratingManager = RatingManager.shared
+    @StateObject private var readingProgressTracker = ReadingProgressTracker.shared
+    @StateObject private var categoriesRepository = CategoriesRepository.shared
     
     @Environment(\.screenSize) private var screenSize
     
@@ -57,7 +59,7 @@ struct ArticleCompactCard: View {
                 }
                 
                 // 🏷 Категория
-                if let category = categoriesStore.byId[article.categoryId],
+                if let category = categoriesRepository.category(by: article.categoryId),
                    let color = Color(hex: category.colorHex) {
                     HStack(spacing: 4) {
                         Image(systemName: category.icon)
@@ -111,7 +113,8 @@ struct ArticleCompactCard: View {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
                             .font(.caption)
-                        Text("\(ratingManager.rating(for: article.id))/5")
+                        // ИСПРАВЛЕНО: используем правильное имя метода
+                        Text("\(ratingManager.getRating(for: article.id))/5")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }

@@ -2,16 +2,13 @@
 //  RatingManager.swift
 //  InGermany
 //
-//  Created by SUM TJK on 16.09.25.
-//
 import Foundation
 
-class RatingManager: ObservableObject {
+final class RatingManager: ObservableObject {
     static let shared = RatingManager()
     
     private let keyPrefix = "rating_"
     
-    // Храним оценки в оперативной памяти (для быстрого отображения)
     @Published private var ratings: [String: Int] = [:]
     
     private init() {

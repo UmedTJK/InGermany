@@ -6,12 +6,15 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
     @AppStorage("relativeDates") private var relativeDates: Bool = true
     
-    @ObservedObject private var historyManager = ReadingHistoryManager.shared
+    @StateObject private var viewModel: SettingsViewModel
+    
+    init(viewModel: SettingsViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeSettingsViewModel())
+    }
     
     var body: some View {
         NavigationView {
@@ -47,8 +50,8 @@ struct SettingsView: View {
                 
                 // 📊 Статистика чтения
                 Section(header: Text(t("settings_stats_title"))) {
-                    let stats = ReadingStats(from: historyManager.history)
-
+                    let stats = viewModel.getStats()
+                    
                     HStack {
                         Text(t("settings_articles_read"))
                         Spacer()
@@ -57,12 +60,15 @@ struct SettingsView: View {
                     HStack {
                         Text(t("settings_total_time"))
                         Spacer()
-                        Text("\(stats.totalReadingTimeMinutes) \(t("settings_minutes"))")
+                        Text(formatHMS(fromSeconds: stats.totalReadingTimeSeconds))
                     }
                     HStack {
                         Text(t("settings_average_time"))
                         Spacer()
-                        Text(String(format: "%.1f %@", stats.averageReadingTimeMinutes, t("settings_minutes")))
+                        let avgSeconds = stats.totalArticlesRead > 0
+                            ? Double(stats.totalReadingTimeSeconds) / Double(stats.totalArticlesRead)
+                            : 0.0
+                        Text(formatHMS(fromSeconds: Int(avgSeconds)))
                     }
                     HStack {
                         Text(t("settings_streak"))
@@ -81,13 +87,26 @@ struct SettingsView: View {
                 // 🧹 Очистка истории
                 Section {
                     Button(role: .destructive) {
-                        historyManager.clearHistory()
+                        viewModel.clearHistory()
                     } label: {
                         Text(t("settings_clear_history"))
                     }
                 }
             }
             .navigationTitle(t("settings_title"))
+        }
+    }
+    
+    /// Форматирование времени чтения в ЧЧ:ММ:СС (или ММ:СС, если меньше часа)
+    private func formatHMS(fromSeconds totalSeconds: Int) -> String {
+        let hours = totalSeconds / 3600
+        let mins = (totalSeconds % 3600) / 60
+        let secs = totalSeconds % 60
+        
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, mins, secs)
+        } else {
+            return String(format: "%02d:%02d", mins, secs)
         }
     }
 }

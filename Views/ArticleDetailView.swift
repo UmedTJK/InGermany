@@ -6,34 +6,42 @@
 import SwiftUI
 
 struct ArticleDetailView: View {
-    let article: Article
-    let allArticles: [Article]
-    @ObservedObject var favoritesManager: FavoritesManager
+    @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var tracker = ReadingProgressTracker.shared
     @StateObject private var textSizeManager = TextSizeManager.shared
     @ObservedObject private var ratingManager = RatingManager.shared
-    @StateObject private var readingTracker = ReadingTracker()
-    
+    @StateObject private var readingTimeTracker = ReadingTimeTracker.shared
+
     @State private var scrollOffset: CGFloat = 0
     @State private var contentHeight: CGFloat = 1
     @State private var viewHeight: CGFloat = 1
     @State private var showRelatedArticles = false
-    
+
     private var readingTime: String {
-        article.formattedReadingTime(for: selectedLanguage)
+        viewModel.article.formattedReadingTime(for: selectedLanguage)
     }
-    
+
     private var relatedArticles: [Article] {
-        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
+        Array(viewModel.allArticles.filter { $0.categoryId == viewModel.article.categoryId && $0.id != viewModel.article.id }.prefix(3))
     }
-    
+
+    // Новый способ расчёта шрифта
+    private var currentFont: Font {
+        let baseSize: CGFloat = 17
+        let scaledSize = baseSize * textSizeManager.customScale
+        return .system(size: scaledSize)
+    }
+
+    init(article: Article, allArticles: [Article]) {
+        _viewModel = StateObject(wrappedValue: AppContainer.shared.makeArticleDetailViewModel(article: article, allArticles: allArticles))
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20) {
-                    // Изображение статьи
-                    if let imageName = article.image,
+                    if let imageName = viewModel.article.image,
                        let uiImage = UIImage(named: imageName, in: .main, with: nil) {
                         Image(uiImage: uiImage)
                             .resizable()
@@ -42,23 +50,19 @@ struct ArticleDetailView: View {
                             .cornerRadius(12)
                             .padding(.horizontal)
                     }
-                    
-                    // Заголовок и мета-информация
+
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(article.localizedTitle(for: selectedLanguage))
+                        Text(viewModel.article.localizedTitle(for: selectedLanguage))
                             .font(.title)
                             .bold()
                             .fixedSize(horizontal: false, vertical: true)
-                        
-                        // 🔹 ИСПРАВЛЕНО: убран лишний параметр language
-                        ArticleMetaView(article: article)
-                            .environmentObject(CategoriesStore.shared)
+
+                        ArticleMetaView(article: viewModel.article)
                     }
                     .padding(.horizontal)
-                    
-                    // Контент статьи
-                    Text(article.localizedContent(for: selectedLanguage))
-                        .font(textSizeManager.currentFont)
+
+                    Text(viewModel.article.localizedContent(for: selectedLanguage))
+                        .font(currentFont)
                         .lineSpacing(6)
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
@@ -67,31 +71,29 @@ struct ArticleDetailView: View {
                                 contentHeight = proxy.size.height
                             }
                         })
-                    
-                    // Рейтинг
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text(t("Оцените статью"))
                             .font(.headline)
-                        
+
                         StarRatingView(
                             rating: Binding(
-                                get: { ratingManager.rating(for: article.id) },
-                                set: { ratingManager.setRating($0, for: article.id) }
+                                get: { ratingManager.getRating(for: viewModel.article.id) },
+                                set: { ratingManager.setRating($0, for: viewModel.article.id) }
                             )
                         )
                     }
                     .padding(.horizontal)
                     .padding(.vertical)
-                    
-                    // Рекомендуемые статьи
+
                     if !relatedArticles.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
                                 Text(t("Вам может понравиться"))
                                     .font(.headline)
-                                
+
                                 Spacer()
-                                
+
                                 Button(showRelatedArticles ? t("Скрыть") : t("Показать")) {
                                     withAnimation(.easeInOut(duration: 0.3)) {
                                         showRelatedArticles.toggle()
@@ -100,15 +102,14 @@ struct ArticleDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.blue)
                             }
-                            
+
                             if showRelatedArticles {
                                 LazyVStack(spacing: 12) {
                                     ForEach(relatedArticles, id: \.id) { relatedArticle in
                                         NavigationLink {
                                             ArticleDetailView(
                                                 article: relatedArticle,
-                                                allArticles: allArticles,
-                                                favoritesManager: favoritesManager
+                                                allArticles: viewModel.allArticles
                                             )
                                         } label: {
                                             ArticleRow(article: relatedArticle)
@@ -129,7 +130,7 @@ struct ArticleDetailView: View {
                 scrollOffset = -value
                 let progress = max(0, min(scrollOffset / max(contentHeight - viewHeight, 1), 1))
                 Task { @MainActor in
-                    tracker.updateProgress(for: article.id, value: progress)
+                    tracker.updateProgress(for: viewModel.article.id, value: progress)
                 }
             }
             .background(GeometryReader { proxy in
@@ -137,9 +138,8 @@ struct ArticleDetailView: View {
                     viewHeight = proxy.size.height
                 }
             })
-            
-            // Прогресс-бар
-            let progress = tracker.progressForArticle(article.id)
+
+            let progress = tracker.progressForArticle(viewModel.article.id)
             ReadingProgressBar(
                 progress: progress,
                 height: 4,
@@ -152,25 +152,21 @@ struct ArticleDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                // Кнопка избранного
-                // 🔹 ИСПРАВЛЕНО: добавлен параметр id:
                 Button {
-                    favoritesManager.toggleFavorite(id: article.id)
+                    viewModel.toggleFavorite()
                 } label: {
-                    Image(systemName: favoritesManager.isFavorite(id: article.id) ? "star.fill" : "star")
-                        .foregroundColor(favoritesManager.isFavorite(id: article.id) ? .yellow : .primary)
+                    Image(systemName: viewModel.isFavorite ? "star.fill" : "star")
+                        .foregroundColor(viewModel.isFavorite ? .yellow : .primary)
                 }
-                
-                // Кнопка настроек текста
+
                 NavigationLink(destination: TextSizeSettingsPanel()) {
                     Image(systemName: "textformat.size")
                 }
-                
-                // Кнопка поделиться
+
                 ShareLink(
                     item: shareContent(),
                     preview: SharePreview(
-                        article.localizedTitle(for: selectedLanguage),
+                        viewModel.article.localizedTitle(for: selectedLanguage),
                         image: Image(systemName: "doc.text")
                     )
                 ) {
@@ -179,36 +175,34 @@ struct ArticleDetailView: View {
             }
         }
         .onAppear {
-            // Начинаем отслеживание времени чтения
-            readingTracker.startReading(articleId: article.id)
+            viewModel.markAsRead()
+            readingTimeTracker.startSession(articleId: viewModel.article.id)
         }
         .onDisappear {
-            // Завершаем отслеживание времени чтения
-            readingTracker.finishReading()
+            readingTimeTracker.endSession(articleId: viewModel.article.id)
         }
     }
-    
+
     private func shareContent() -> String {
-        let title = article.localizedTitle(for: selectedLanguage)
-        let content = article.localizedContent(for: selectedLanguage)
-        let readingTime = article.formattedReadingTime(for: selectedLanguage)
-        
+        let title = viewModel.article.localizedTitle(for: selectedLanguage)
+        let content = viewModel.article.localizedContent(for: selectedLanguage)
+        let readingTime = viewModel.article.formattedReadingTime(for: selectedLanguage)
+
         return """
         \(title)
-        
+
         \(content)
-        
+
         \(t("Время чтения")): \(readingTime)
-        \(t("Опубликовано")): \(article.formattedCreatedDate(for: selectedLanguage))
+        \(t("Опубликовано")): \(viewModel.article.formattedCreatedDate(for: selectedLanguage))
         """
     }
-    
+
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
-// Вспомогательная структура для отслеживания скролла
 private struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {

@@ -8,10 +8,10 @@ import SwiftUI
 @main
 struct InGermanyApp: App {
     @StateObject private var appState = AppState()
-    @StateObject private var categoriesStore = CategoriesStore.shared
+    @StateObject private var categoriesRepository = CategoriesRepository.shared // ← ИСПРАВЛЕНО
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
 
-    @Environment(\.scenePhase) private var scenePhase  // 🔹 отслеживание жизненного цикла
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -21,7 +21,7 @@ struct InGermanyApp: App {
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     ContentView()
-                        .environmentObject(categoriesStore)
+                        .environmentObject(categoriesRepository) // ← ИСПРАВЛЕНО
                         .preferredColorScheme(isDarkMode ? .dark : .light)
                 }
             }
@@ -44,10 +44,8 @@ struct InGermanyApp: App {
         }
     }
 
-    /// Сохраняем избранное и историю чтения
     private func saveAppState() {
-        FavoritesManager.shared.saveFavorites()
-        // TODO: добавить ReadingHistoryManager.shared.saveIfNeeded(), если понадобится
+        // FavoritesManager теперь автоматически сохраняется
         print("✔️ Состояние приложения сохранено")
     }
 }
@@ -63,7 +61,7 @@ final class AppState: ObservableObject {
         async let locations = dataService.loadLocations()
         _ = await (articles, categories, locations)
 
-        await CategoriesStore.shared.bootstrap()
+        await CategoriesRepository.shared.bootstrap() // ← ИСПРАВЛЕНО
         isLoading = false
     }
 }

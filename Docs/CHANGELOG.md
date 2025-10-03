@@ -5,7 +5,137 @@
 //  Created by SUM TJK on 20.09.25.
 //
 
+
 # Changelog
+
+## [1.11.5] - 2025-10-03
+### Changed
+- `CategoriesView` переведён на MVVM через `CategoriesViewModel`.
+- Все зависимости теперь предоставляются через `AppContainer`.
+- `FavoritesView` полностью переведён на MVVM через `FavoritesViewModel`, убран прямой доступ к `FavoritesManager.shared`.
+
+## [1.11.4] - 2025-10-03
+### Added
+- Новый `AboutViewModel` для экрана «О приложении».
+- Фабрика `makeAboutViewModel()` добавлена в `AppContainer`.
+
+### Changed
+- `AboutView` переведён на MVVM и теперь получает данные (версия, билд, репозиторий) из ViewModel.
+
+## [1.11.3] - 2025-10-03
+### Added
+- Новый `ArticleDetailViewModel` для управления экраном статьи.
+- Фабрика `makeArticleDetailViewModel()` добавлена в `AppContainer`.
+
+### Changed
+- `ArticleDetailView` переведён на MVVM через `ArticleDetailViewModel`.
+- Убрана передача `FavoritesManager` во все вызовы `ArticleDetailView`.
+- Все секции и экраны, открывающие статьи, обновлены под новый DI.
+
+## [1.11.2] - 2025-10-03
+### Added
+- Новый `SettingsViewModel` для управления настройками и историей чтения.
+
+### Changed
+- `SettingsView` переведён на MVVM через `SettingsViewModel`.
+- Зависимости теперь предоставляются через `AppContainer`.
+
+## [1.11.1] - 2025-10-03
+### Changed
+- `CategoriesView` переведён на MVVM через `CategoriesViewModel`.
+- Добавлена фабрика `makeCategoriesViewModel()` в `AppContainer`.
+- `ContentView` упрощён: вызов `CategoriesView()` теперь без параметров.
+
+## [1.11.0] - 2025-10-03
+### Added
+- `AppContainer` как Composition Root для DI.
+- Фабрики: `makeHomeViewModel`, `makeFavoritesViewModel`, `makeSearchViewModel`.
+- Новые ViewModels: `FavoritesViewModel`, `SearchViewModel`.
+
+### Changed
+- `HomeView`, `FavoritesView`, `SearchView` переведены на MVVM через DI.
+- Убраны прямые вызовы `FavoritesManager.shared` и `DataService` из Views.
+- `ContentView` обновлён: `SearchView` теперь без параметров.
+
+## [1.10.1] - 2025-10-03
+### Changed
+- `FavoritesView` переведён на MVVM с использованием `FavoritesViewModel`.
+- Добавлена фабрика `makeFavoritesViewModel()` в `AppContainer`.
+- Удалена прямая зависимость от `FavoritesManager.shared` во View.
+
+## [1.10.0] - 2025-10-03
+### Added
+- Введён `AppContainer` как Composition Root для управления зависимостями (с `@MainActor`).
+
+### Changed
+- `HomeViewModel` переведён на работу через DI (ArticlesRepository и менеджеры).
+- Добавлен `convenience init()` для обратной совместимости.
+- `HomeView` больше не создаёт VM напрямую — теперь получает её из `AppContainer`.
+- Устранены предупреждения Swift 6 о `MainActor`-изоляции (`shared` у менеджеров).
+
+
+## [Unreleased]
+
+### Added
+- Ползунок для изменения размера текста с диапазоном от 80% до 150% и отображением текущего значения в процентах.  
+- Визуальные маркеры (маленькая и большая буква «A») для более наглядного выбора.
+
+### Changed
+- Фиксированные варианты размера текста (Мелкий/Средний/Крупный) заменены на гибкий ползунок.  
+- Сброс возвращает размер текста к стандартному значению (100%, Medium).
+
+
+## [v1.8.9] - 2025-09-28
+
+### Added
+- Статистика чтения теперь учитывает секунды и отображается в формате ЧЧ:ММ:СС.
+
+### Fixed
+- Очистка истории чтения теперь синхронизируется с трекером времени (`ReadingTimeTracker`).
+- Добавлены вызовы `startSession` и `endSession` в ArticleDetailView для корректного трекинга времени.
+
+
+## [v1.8.8] - 2025-09-27
+
+### Fixed
+- **Массовое исправление после рефакторинга менеджеров:**
+  - Заменён `CategoriesStore` на `CategoriesRepository` во всех View
+  - Исправлены API вызовы менеджеров (`FavoritesManager`, `RatingManager`, `TextSizeManager`)
+  - Удалён `ReadingTracker` и устаревшие методы
+  - Обновлены Preview с использованием `.shared` инстансов
+  - Исправлен `TextSizeSettingsPanel` для работы с новым `TextSizeManager` API
+  - Добавлены недостающие методы в менеджеры для совместимости
+
+### Refactored
+- **Архитектура менеджеров:**
+  - Все менеджеры переведены на использование общего `DefaultsStorage`
+  - Унифицированный стиль синглтонов (`static let shared`, приватные ключи)
+  - Введён `CategoriesRepository`, объединивший `CategoryManager` и `CategoriesStore`
+  - Создана папка `Managers/` для централизованного хранения менеджеров
+
+### Updated
+- **Совместимость с iOS 17+:**
+  - Исправлен deprecated `onChange` в `TextSizeSettingsPanel`
+  - Код соответствует современным стандартам Apple
+  - Обновлены модели данных для корректного `Codable`
+
+### Technical
+
+## [Unreleased]
+### Changed
+- refactor(home): вынесены секции HomeView в отдельные компоненты (`Views/Sections/*`)
+
+- **Структура проекта:**
+  - Обновлена документация `AI_CONTEXT.md`
+  - Актуализировано дерево проекта в `Docs/project_tree.md`
+  - Очищены ссылки на удалённые файлы в Xcode project
+  
+## [Unreleased]
+
+### Refactored
+- Все менеджеры (FavoritesManager, RatingManager, ReadingHistoryManager, TextSizeManager) переведены на использование общего `DefaultsStorage`.
+- Приведен единый стиль синглтонов (`static let shared`, приватные ключи).
+- Введён новый `CategoriesRepository`, объединивший функционал `CategoryManager` и `CategoriesStore`.
 
 
 ## [v1.8.5] - 2025-09-27

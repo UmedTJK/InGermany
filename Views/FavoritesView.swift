@@ -8,16 +8,14 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @ObservedObject var favoritesManager: FavoritesManager
+    @StateObject private var viewModel: FavoritesViewModel
+    
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
     @State private var searchText = ""
-    @State private var articles: [Article] = []
-    @State private var isLoading = true
-    @State private var dataSource: String = "unknown"
     
     private var filteredFavoriteArticles: [Article] {
-        let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
+        let favoriteArticles = viewModel.favoriteArticles
         if searchText.isEmpty {
             return favoriteArticles
         } else {
@@ -25,6 +23,10 @@ struct FavoritesView: View {
                 $0.localizedTitle(for: selectedLanguage).localizedCaseInsensitiveContains(searchText)
             }
         }
+    }
+    
+    init(viewModel: FavoritesViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeFavoritesViewModel())
     }
     
     var body: some View {
@@ -35,7 +37,7 @@ struct FavoritesView: View {
                     .frame(height: 3)
                     .frame(maxWidth: .infinity)
                 
-                if isLoading {
+                if viewModel.isLoading {
                     ProgressView("Загрузка избранного...")
                         .progressViewStyle(CircularProgressViewStyle())
                         .padding()
@@ -54,7 +56,7 @@ struct FavoritesView: View {
                         placement: .navigationBarDrawer(displayMode: .always),
                         prompt: getTranslation(key: "Поиск в избранном", language: selectedLanguage))
             .task {
-                await loadData()
+                await viewModel.loadFavorites()
             }
         }
     }
@@ -65,8 +67,7 @@ struct FavoritesView: View {
             NavigationLink {
                 ArticleDetailView(
                     article: article,
-                    allArticles: articles,
-                    favoritesManager: favoritesManager
+                    allArticles: viewModel.allArticles
                 )
             } label: {
                 ArticleRow(article: article)
@@ -75,16 +76,8 @@ struct FavoritesView: View {
         .listStyle(PlainListStyle())
     }
     
-    // MARK: - Data loading
-    private func loadData() async {
-        articles = await DataService.shared.loadArticles()
-        let sources = await DataService.shared.getLastDataSource()
-        dataSource = sources["articles"] ?? "unknown"
-        isLoading = false
-    }
-    
     private func getDataSourceColor() -> Color {
-        switch dataSource {
+        switch viewModel.dataSource {
         case "network": return .green
         case "memory_cache": return .blue
         case "local": return .orange

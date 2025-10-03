@@ -17,8 +17,7 @@ struct ArticlesByTagView: View {
                 NavigationLink {
                     ArticleDetailView(
                         article: article,
-                        allArticles: articles,
-                        favoritesManager: favoritesManager
+                        allArticles: articles
                     )
                 } label: {
                     ArticleRow(article: article)
@@ -45,6 +44,6 @@ struct ArticlesByTagView: View {
     ArticlesByTagView(
         tag: "Финансы",
         articles: [Article.sampleArticle],
-        favoritesManager: FavoritesManager()
+        favoritesManager: FavoritesManager.shared // ← ИСПРАВЛЕНО
     )
 }

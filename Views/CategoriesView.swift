@@ -1,19 +1,26 @@
+//
+//  CategoriesView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct CategoriesView: View {
-    let categories: [Category]
-    let articles: [Article]
-    @ObservedObject var favoritesManager: FavoritesManager
+    @StateObject private var viewModel: CategoriesViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+
+    init(viewModel: CategoriesViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeCategoriesViewModel())
+    }
 
     var body: some View {
         NavigationView {
-            List(categories) { category in
+            List(viewModel.categories) { category in
                 NavigationLink {
                     ArticlesByCategoryView(
                         category: category,
-                        articles: articles,
-                        favoritesManager: favoritesManager
+                        articles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager
                     )
                 } label: {
                     HStack(spacing: 12) {
@@ -25,7 +32,6 @@ struct CategoriesView: View {
                                 .foregroundColor(.white)
                                 .font(.system(size: 16))
                         }
-
                         Text(category.localizedName(for: selectedLanguage))
                             .font(.headline)
                             .foregroundColor(.primary)
@@ -35,22 +41,13 @@ struct CategoriesView: View {
             }
             .navigationTitle(t("Категории"))
             .listStyle(PlainListStyle())
+            .task {
+                await viewModel.loadData()
+            }
         }
     }
 
-    // 🔹 Удобный шорткат для перевода
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
-    }
-
-    // 🔹 Старый метод (оставлен для совместимости, но больше не используется)
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Категории": [
-                "ru": "Категории", "en": "Categories", "de": "Kategorien", "tj": "Категорияҳо",
-                "fa": "دسته‌ها", "ar": "الفئات", "uk": "Категорії"
-            ]
-        ]
-        return translations[key]?[language] ?? key
     }
 }

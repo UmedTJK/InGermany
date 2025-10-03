@@ -45,11 +45,67 @@
 * **Services/**: `DataService.swift`, `NetworkService.swift`, `ShareService.swift`, `AuthService.swift`  
 * **Utils/**: `LocalizationManager.swift`, `CategoryManager.swift`, `CategoriesStore.swift`, `ReadingTimeCalculator.swift`, `ExportToPDF.swift`, `Theme.swift`, `Animations.swift`, `CardSize.swift`, `Color+Hex.swift`, `TextSizeManager.swift`  
 * **Views/**: `HomeView`, `SearchView`, `FavoritesView`, `CategoriesView`, `ArticlesByCategoryView`, `ArticlesByTagView`, `ArticleDetailView`, `SettingsView`, `AboutView`, `MapView`  
+
+- **HomeView.swift** — оболочка для главного экрана: отвечает за загрузку/обновление данных и навигацию. 
+- **Sections/** — новые компоненты для секций главного экрана:
+  - `UsefulToolsSection.swift` — блок «Полезные инструменты».
+  - `RecentlyReadSection.swift` — блок «Недавно прочитанное».
+  - `FavoritesSection.swift` — блок «Избранное».
+  - `CategorySection.swift` — горизонтальные ленты статей по категориям.
+  - `AllArticlesSection.swift` — блок со всеми статьями.
+> Начиная с v1.8.7, `HomeView` больше не содержит внутреннюю разметку секций. Все UI-блоки вынесены в отдельные вью для упрощения сопровождения и работы ИИ-агентов.
+
 * **Views/Components/**: `ArticleCardView`, `ArticleRow`, `ArticleMetaView`, `ArticleCompactCard`, `FavoriteCard`, `RecentArticleCard`, `ToolCard`, `EmptyFavoritesView`, `CategoryFilterButton`, `TagFilterView`, `TextSizeSettingsPanel`, `ReadingProgressBar`, `ReadingProgressView`, `CircularReadingProgress`, `PDFViewer`  
 * **Resources/**: `articles.json`, `categories.json`, `locations.json`  
 * **Docs/**: `AI_CONTEXT_v2.md`, `CHANGELOG.md`, `PROMPTS_FOR_AI_AGENTS.md`, `Git_Mini_Guide.md`, `CLEAN_CODE_CHECKLIST.md`, `git_snapshot.md`, `project_tree.md`  
 * **Docs (архив)**: `PROJECT_STRUCTURE.md`, `Project_Brief.docx`  
 * **Корень**: `.swiftlint.yml`, `README.md`, `update.sh`
+
+### Dependency Injection и AppContainer (с версии v1.10.0)
+
+Для управления зависимостями используется `AppContainer` (Composition Root), помеченный `@MainActor`.  
+AppContainer создаёт экземпляры ViewModel и менеджеров, централизуя конфигурацию приложения.
+
+- **AppContainer**
+  - `articlesRepo: ArticlesRepository` → реализован через `ArticlesRepositoryImpl`
+  - `categoriesRepo: CategoriesRepository` → singleton `.shared`
+  - `favoritesManager: FavoritesManager` → singleton `.shared`
+  - `historyManager: ReadingHistoryManager` → singleton `.shared`
+  - `makeHomeViewModel()` → возвращает готовый `HomeViewModel`
+  - `makeSettingsViewModel()` → возвращает готовый `SettingsViewModel`
+  - `makeArticleDetailViewModel()` → возвращает готовый `ArticleDetailViewModel`
+  - `makeAboutViewModel()` → возвращает готовый `AboutViewModel`
+
+- **HomeViewModel**
+  - Теперь зависит от `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`
+  - Основной init принимает все зависимости
+  - Есть `convenience init()` для старых вызовов и превью
+  - Методы `loadData()` и `refreshData()` используют `articlesRepo`, а не напрямую `DataService`
+
+- **SettingsViewModel**
+  - Управляет настройками и историей чтения.
+  - Зависимости: `ReadingHistoryManager`.
+  - Состояния: `selectedLanguage`, `isHistoryCleared`.
+  - Методы: `clearHistory()`, `changeLanguage(to:)`.
+
+- **ArticleDetailViewModel**
+  - Управляет состоянием экрана статьи.
+  - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
+  - Состояния: `article`, `allArticles`, `isFavorite`.
+  - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
+
+- **HomeView**
+  - Не создаёт VM напрямую.
+  - При инициализации по умолчанию использует `AppContainer.shared.makeHomeViewModel()`
+  - В тестах/превью может принимать кастомный VM.
+
+- **SettingsView**
+  - Теперь работает с `SettingsViewModel`.
+  - Управление настройками и очисткой истории вынесено во ViewModel.
+
+- **ArticleDetailView**
+  - Теперь работает с `ArticleDetailViewModel`.
+  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
 
 ---
 
@@ -95,7 +151,7 @@
   Хранение: `@AppStorage("readingHistory")` JSON массив `ReadingHistoryEntry`.  
   Методы: `addReadingEntry`, `recentlyReadArticles`, `isRead`, `lastReadDate`, `clearHistory`.  
   Ограничение: максимум 100 записей.  
-  Вспомогательные: `ReadingTracker`, `ReadingStats`.
+  Вспомогательные: `ReadingTracker`, `ReadingStats`. let totalReadingTimeSeconds: Int   // учитываются секунды
 
 - **CategoryManager (actor)**  
   Методы: `loadCategories()`, `allCategories()`, `category(for id:)`, `category(for name:language:)`, `refreshCategories()`.
@@ -164,7 +220,101 @@
 Фон — `systemBackground`, закругление углов и тень для визуальной глубины.
 
 
+### MVVM + Dependency Injection (с версии v1.11.0)
+
+Архитектура проекта переведена на использование централизованного DI через `AppContainer` и MVVM для основных экранов.
+
+#### AppContainer
+- Реализован как Composition Root, помечен `@MainActor`.
+- Отвечает за создание и хранение зависимостей.
+- Методы-фабрики:
+  - `makeHomeViewModel()`
+  - `makeFavoritesViewModel()`
+  - `makeSearchViewModel()`
+  - `makeCategoriesViewModel()`
+  - `makeSettingsViewModel()`
+  - `makeArticleDetailViewModel()`
+
+#### ViewModels
+- **HomeViewModel**
+  - Управляет данными главного экрана.
+  - Работает с `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`.
+  - Методы: `loadData()`, `refreshData()`, `selectRandomArticle()`.
+
+- **FavoritesViewModel**
+  - Управляет списком избранного.
+  - Зависимости: `FavoritesManager`, `ArticlesRepository`.
+  - Методы: `loadFavorites()`, `toggleFavorite(for:)`.
+  - Публичные состояния: `favoriteArticles`, `allArticles`, `isLoading`, `dataSource`.
+
+- **SearchViewModel**
+  - Управляет логикой поиска и фильтрации.
+  - Зависимости: `FavoritesManager`, `CategoriesRepository`, `ArticlesRepository`.
+  - Состояния: `articles`, `searchText`, `selectedTag`, `isLoading`, `dataSource`.
+  - Вычисляемые свойства: `filteredArticles`, `allTags`.
+
+- **CategoriesViewModel**
+  - Управляет загрузкой категорий и связанных статей.
+  - Зависимости: `CategoriesRepository`, `ArticlesRepository`, `FavoritesManager`.
+  - Методы: `loadData()`.
+  - Состояния: `categories`, `articles`, `isLoading`.
+
+- **SettingsViewModel**
+  - Управляет настройками и историей чтения.
+  - Зависимости: `ReadingHistoryManager`.
+  - Состояния: `selectedLanguage`, `isHistoryCleared`.
+  - Методы: `clearHistory()`, `changeLanguage(to:)`.
+
+- **ArticleDetailViewModel**
+  - Управляет состоянием экрана статьи.
+  - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
+  - Состояния: `article`, `allArticles`, `isFavorite`.
+  - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
+
+- **AboutViewModel**
+  - Управляет экраном «О приложении».
+  - Состояния: `appVersion`, `buildNumber`, `repositoryURL`.
+  - Локализация выполняется через `LocalizationManager`.
+
+#### Views
+- **HomeView**
+  - Получает `HomeViewModel` из `AppContainer`.
+  - ViewModel полностью управляет данными и состоянием.
+
+- **FavoritesView**
+  - Теперь работает через `FavoritesViewModel`.
+  - Управление избранным (загрузка, фильтрация, добавление/удаление) вынесено во ViewModel.
+  - ViewModel отвечает за фильтрацию и загрузку избранных статей.
+
+- **SearchView**
+  - Работает с `SearchViewModel`.
+  - Фильтрация по тегам и поисковому тексту вынесена во ViewModel.
+  - View остаётся чисто декларативной.
+
+- **CategoriesView**
+  - Работает с `CategoriesViewModel`.
+  - Не принимает параметры `articles` и `favoritesManager` напрямую, получает их через DI.
+
+- **SettingsView**
+  - Теперь работает с `SettingsViewModel`.
+  - Управление настройками и очисткой истории вынесено во ViewModel.
+
+- **ArticleDetailView**
+  - Теперь работает с `ArticleDetailViewModel`.
+  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
+
+#### ContentView
+- Убран вызов `SearchView(favoritesManager:, articles:)`.
+- Теперь используется просто `SearchView()`, так как зависимости берутся через DI.
+- `CategoriesView` теперь также переведён на MVVM через DI.
+
+- **AboutView**
+  - Теперь работает через `AboutViewModel`.
+  - Отображает описание приложения, версию, билд и ссылку на GitHub.
+
 ---
+
+📌 Важно: теперь весь код соответствует принципам **SOLID** и паттерну **MVVM**, зависимости централизованы, Views максимально «тонкие».
 
 ### Экраны
 
@@ -181,10 +331,11 @@
   Использует: `TagFilterView`, `ArticleRow`.
 
 
-
 - **SettingsView**  
-- Управление настройками приложения (тема, размер текста, формат даты, история чтения, About).
-- ✅ Язык интерфейса теперь выбирается из списка с флагами и названием языка, текущий язык отмечен галочкой.
+  Управление настройками приложения (тема, размер текста, формат даты, история чтения, About).
+  ✅ Язык интерфейса теперь выбирается из списка с флагами и названием языка, текущий язык отмечен галочкой.
+  Теперь работает с `SettingsViewModel`.
+  Управление настройками и очисткой истории вынесено во ViewModel.
 
 - **ArticleDetailView**  
   Полный экран статьи.  
@@ -192,7 +343,10 @@
 
 - **ArticlesByTagView** — список по тегу.  
 - **CategoriesView** — список категорий.  
-- **FavoritesView** — избранные статьи.  
+- **FavoritesView**  
+  - Теперь работает с `FavoritesViewModel`.
+  - Загружает и фильтрует избранные статьи через ViewModel.
+  - View остаётся декларативным, вся логика вынесена во ViewModel.
 - **AboutView** — информация о проекте.  
 
 ---
@@ -203,7 +357,13 @@
 > Формат: **Класс/Файл** → метод/свойство → входные параметры → возвращает → комментарий.  
 > (см. подробные таблицы в подготовленных блоках; при обновлении API фиксировать в этом разделе).
 
----
+#### Управление размером текста
+- Ранее выбор осуществлялся через enum `TextSize` (small/medium/large).  
+- Начиная с v1.9.0 управление перенесено на `Slider` с диапазоном **0.8 ... 1.5** (80%–150%).  
+- Новое поле `TextSizeManager.customScale: Double` хранит текущее значение масштаба и сохраняется в `DefaultsStorage`.  
+- Enum `TextSize` по-прежнему используется для функции «Сбросить» и обратной совместимости.  
+- `ArticleDetailView` и все текстовые представления теперь используют `customScale` вместо жёсткой привязки к `TextSize.scale`.
+
 
 ## 3) Ресурсы
 
@@ -250,4 +410,3 @@ git log --oneline --graph -n 10
   ```bash
   git commit -m "docs(context): обновлён AI_CONTEXT"
   ```
-
