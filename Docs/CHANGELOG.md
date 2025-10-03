@@ -8,6 +8,20 @@
 
 # Changelog
 
+## [Unreleased]
+
+
+### 📖 Documentation
+- Добавлены `///` doc-комментарии к основным моделям и менеджерам:
+  - `Article`
+  - `DataService`
+  - `FavoritesManager`
+  - `CategoryManager`
+  - `LocalizationManager`
+- Обновлён `CLEAN_CODE_CHECKLIST.md` с пунктом о документировании публичных классов и методов.
+
+### Technical
+- В файлах `Article.swift`, `DataService.swift`, `FavoritesManager.swift`, `CategoryManager.swift` и `LocalizationManager.swift` были добавлены doc-комментарии (`///`) для улучшения API-документации.
 
 ## [1.12.1] - 2025-10-03
 
