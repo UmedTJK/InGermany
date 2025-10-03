@@ -47,4 +47,12 @@ final class AppContainer {
             articlesRepo: articlesRepo
         )
     }
+    
+    func makeCategoriesViewModel() -> CategoriesViewModel {
+        CategoriesViewModel(
+            favoritesManager: favoritesManager,
+            categoriesRepo: categoriesRepo,
+            articlesRepo: articlesRepo
+        )
+    }
 }

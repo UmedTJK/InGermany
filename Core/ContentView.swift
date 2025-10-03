@@ -17,10 +17,7 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            CategoriesView( // ← УБРАТЬ параметр categories
-                articles: articles,
-                favoritesManager: favoritesManager
-            )
+            CategoriesView()
             .tabItem {
                 Label(
                     NSLocalizedString("tab_categories", comment: ""),

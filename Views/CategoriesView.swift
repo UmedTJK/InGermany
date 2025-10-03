@@ -6,19 +6,21 @@
 import SwiftUI
 
 struct CategoriesView: View {
-    @StateObject private var repo = CategoriesRepository.shared
-    let articles: [Article]
-    @ObservedObject var favoritesManager: FavoritesManager
+    @StateObject private var viewModel: CategoriesViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+
+    init(viewModel: CategoriesViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeCategoriesViewModel())
+    }
 
     var body: some View {
         NavigationView {
-            List(repo.categories) { category in
+            List(viewModel.categories) { category in
                 NavigationLink {
                     ArticlesByCategoryView(
                         category: category,
-                        articles: articles,                  // ⬅️ передаём как есть
-                        favoritesManager: favoritesManager
+                        articles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager
                     )
                 } label: {
                     HStack(spacing: 12) {
@@ -39,8 +41,8 @@ struct CategoriesView: View {
             }
             .navigationTitle(t("Категории"))
             .listStyle(PlainListStyle())
-            .task {                                  // ⬅️ загрузка категорий
-                await repo.bootstrap()
+            .task {
+                await viewModel.loadData()
             }
         }
     }
