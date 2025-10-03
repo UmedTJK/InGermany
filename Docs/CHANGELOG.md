@@ -8,6 +8,16 @@
 
 # Changelog
 
+# Changelog
+
+## [1.11.6] - 2025-10-03
+### Added
+- Отображение и редактирование рейтинга статей в `ArticleCardView` через `StarRatingView`.
+- Интеграция `StarRatingView` в `ArticleCompactCard` и `ArticleMetaView` с использованием `RatingManager`.
+
+### Fixed
+- Устранена ошибка вызова несуществующего свойства `rating` в `ArticleMetaView` и `ArticleCompactCard`, заменено на корректный метод `getRating(for:)`.
+
 ## [1.11.5] - 2025-10-03
 ### Changed
 - `CategoriesView` переведён на MVVM через `CategoriesViewModel`.
