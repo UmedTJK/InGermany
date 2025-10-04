@@ -3,15 +3,27 @@
 //  InGermany
 //
 
+
 import SwiftUI
 
+/// Менеджер локализации приложения.
+/// Отвечает за хранение выбранного языка и получение переведённых строк из словаря.
 final class LocalizationManager: ObservableObject {
+    /// Глобально доступный синглтон-экземпляр.
     static let shared = LocalizationManager()
     
+    /// Код выбранного языка (например, `"ru"`, `"en"`).
+    /// Сохраняется в `UserDefaults` через `@AppStorage`.
     @AppStorage("selectedLanguage") var selectedLanguage: String = "ru"
     
+    /// Приватный инициализатор, чтобы запретить создание других экземпляров.
     private init() {}
     
+    /// Возвращает перевод для указанного ключа и языка.
+    /// - Parameters:
+    ///   - key: Ключ строки (например, `"Финансы"`, `"settings_language_title"`).
+    ///   - language: Код языка (`ru`, `en`, `de`, `tj`, `fa`, `ar`, `uk`).
+    /// - Returns: Переведённая строка, если найдена, иначе возвращается сам ключ.
     func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             
@@ -442,7 +454,11 @@ final class LocalizationManager: ObservableObject {
         
     }
     
-    /// Упрощённый доступ с автоопределением языка
+    /// Упрощённый доступ к переводу с автоопределением текущего языка.
+    /// - Parameters:
+    ///   - key: Ключ строки для перевода.
+    ///   - language: Необязательный параметр языка; если `nil`, используется выбранный язык.
+    /// - Returns: Переведённая строка или сам ключ, если перевода нет.
     func t(_ key: String, language: String? = nil) -> String {
         let lang = language ?? selectedLanguage
         return getTranslation(key: key, language: lang)
@@ -451,6 +467,9 @@ final class LocalizationManager: ObservableObject {
 
 // MARK: - Шорткат для SwiftUI
 extension View {
+    /// Удобный шорткат для перевода строк прямо во `View`.
+    /// - Parameter key: Ключ для перевода.
+    /// - Returns: Переведённая строка.
     func t(_ key: String) -> String {
         LocalizationManager.shared.t(key)
     }

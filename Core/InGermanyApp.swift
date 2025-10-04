@@ -61,7 +61,23 @@ final class AppState: ObservableObject {
         async let locations = dataService.loadLocations()
         _ = await (articles, categories, locations)
 
-        await CategoriesRepository.shared.bootstrap() // ← ИСПРАВЛЕНО
+        // 🔎 Проверка ресурсов
+        if let resourcePath = Bundle.main.resourcePath {
+            let fm = FileManager.default
+
+            if let files = try? fm.contentsOfDirectory(atPath: resourcePath) {
+                print("📂 Bundle root contains:")
+                files.forEach { print(" - \($0)") }
+            }
+
+            let imagesPath = resourcePath + "/Resources/Images"
+            if let files = try? fm.contentsOfDirectory(atPath: imagesPath) {
+                print("🖼 Images folder contains:")
+                files.forEach { print(" - \($0)") }
+            }
+        }
+
+        await CategoriesRepository.shared.bootstrap()
         isLoading = false
     }
 }

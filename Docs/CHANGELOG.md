@@ -8,13 +8,34 @@
 
 # Changelog
 
+## [Unreleased]
+
+
+### 📖 Documentation
+- Добавлены `///` doc-комментарии к основным моделям и менеджерам:
+  - `Article`
+  - `DataService`
+  - `FavoritesManager`
+  - `CategoryManager`
+  - `LocalizationManager`
+- Обновлён `CLEAN_CODE_CHECKLIST.md` с пунктом о документировании публичных классов и методов.
+
+### Technical
+- В файлах `Article.swift`, `DataService.swift`, `FavoritesManager.swift`, `CategoryManager.swift` и `LocalizationManager.swift` были добавлены doc-комментарии (`///`) для улучшения API-документации.
+
+## [1.12.1] - 2025-10-03
+
+### Fixed
+- Восстановлено отображение миниатюр статей в `SearchView` и `FavoritesView` (загрузка изображений из Bundle вместо Asset Catalog).
+- Исправлено вычисление `imageName` в `Article.swift` (автоматическая подстановка `.jpg`, замена `.avif`).
+- Перенесён блок рейтинга (`StarRatingView`) под дату публикации в `ArticleRow`.
+- Добавлены локализованные изображения `.jpg` в `Resources/Images`, удалены устаревшие `.avif`.
+- Добавлена отладка загрузки статей в `DataService` и проверки ресурсов в `InGermanyApp`.
 
 ### Changed
-- ArticleDetailView упрощён и оптимизирован (разбиение сложных выражений, вынесены биндинги).
-- ArticleRow теперь использует ArticleRowViewModel (MVVM).
-### Changed
-- ArticleRow переведён на MVVM через ArticleRowViewModel.
-- ArticleDetailView оптимизирован: вынесены вычисляемые свойства (ratingBinding, articleContent), упрощены выражения.
+- Визуальное выравнивание блока рейтинга (`StarRatingView`) — теперь он отображается под датой публикации.
+- Небольшие улучшения верстки `ArticleRow` для более аккуратного отображения миниатюры и текста.
+
 ## [Unreleased]
 
 ### Technical

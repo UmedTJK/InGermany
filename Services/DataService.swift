@@ -7,7 +7,9 @@
 
 import Foundation
 
+/// Singleton responsible for loading and caching data (articles, categories, locations) with offline-first strategy.
 actor DataService {
+    /// Provides a globally shared instance of DataService.
     static let shared = DataService()
 
     private let networkService = NetworkService.shared
@@ -21,6 +23,9 @@ actor DataService {
 
     // MARK: - Асинхронные методы (Offline-First)
 
+    /// Loads articles with offline-first strategy: returns cached articles if available,
+    /// otherwise loads from local JSON, then updates from network asynchronously.
+    /// - Returns: Array of Article objects.
     func loadArticles() async -> [Article] {
         if let cached = articlesCache {
             lastDataSource["articles"] = "memory_cache"
@@ -33,6 +38,7 @@ actor DataService {
             articlesCache = localArticles
             lastDataSource["articles"] = "local"
             print("📂 Articles из локального JSON")
+            print("🔎 Preview первых 3 статей:", Array(localArticles.prefix(3)))
         }
 
         Task {
@@ -41,6 +47,7 @@ actor DataService {
                 self.articlesCache = articles
                 self.lastDataSource["articles"] = "network"
                 print("🌐 Articles обновлены из сети")
+                print("🔎 Preview первых 3 статей (network):", Array(articles.prefix(3)))
             } catch {
                 print("⚠️ Ошибка загрузки Articles из сети: \(error)")
             }
@@ -49,6 +56,9 @@ actor DataService {
         return articlesCache ?? []
     }
 
+    /// Loads categories with offline-first strategy: returns cached categories if available,
+    /// otherwise loads from local JSON, then updates from network asynchronously.
+    /// - Returns: Array of Category objects.
     func loadCategories() async -> [Category] {
         if let cached = categoriesCache {
             lastDataSource["categories"] = "memory_cache"
@@ -77,6 +87,9 @@ actor DataService {
         return categoriesCache ?? []
     }
 
+    /// Loads locations with offline-first strategy: returns cached locations if available,
+    /// otherwise loads from local JSON, then updates from network asynchronously.
+    /// - Returns: Array of Location objects.
     func loadLocations() async -> [Location] {
         if let cached = locationsCache {
             lastDataSource["locations"] = "memory_cache"
@@ -163,6 +176,7 @@ actor DataService {
 
     // MARK: - Cache control
 
+    /// Clears all cached data and resets the last data source information.
     func clearCache() {
         articlesCache = nil
         categoriesCache = nil
@@ -172,6 +186,7 @@ actor DataService {
         print("🗑️ Кэш очищен")
     }
 
+    /// Forces a refresh by clearing caches and reloading all data.
     func refreshData() async {
         clearCache()
         _ = await loadArticles()
@@ -182,6 +197,8 @@ actor DataService {
 
     // MARK: - Новый API для UI
 
+    /// Returns a dictionary containing the last used data source information for articles, categories, and locations.
+    /// - Returns: Dictionary with keys as data types and values as the last data source string.
     func getLastDataSource() async -> [String: String] {
         return lastDataSource
     }
