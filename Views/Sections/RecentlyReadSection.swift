@@ -6,11 +6,16 @@
 //
 import SwiftUI
 
+/// Displays a section of recently read articles based on reading history.
 struct RecentlyReadSection: View {
+    /// Список всех доступных статей
     let articles: [Article]
+    /// Менеджер избранного для интеграции с карточками
     let favoritesManager: FavoritesManager
+    /// Менеджер истории чтения для получения недавно прочитанных статей
     let readingHistoryManager: ReadingHistoryManager
 
+    /// Строит секцию с заголовком 'Недавно прочитанное' и горизонтальной прокруткой карточек статей
     var body: some View {
         let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
 
@@ -29,6 +34,7 @@ struct RecentlyReadSection: View {
                                     allArticles: articles
                                 )
                             } label: {
+                                /// Карточка компактного вида статьи, ведущая на экран её деталей
                                 ArticleCompactCard(article: article)
                             }
                         }

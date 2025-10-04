@@ -6,12 +6,18 @@
 //
 import SwiftUI
 
+/// Отображает горизонтально прокручиваемый список статей, отфильтрованных по категории.
 struct CategorySection: View {
+    /// Категория, для которой отображаются статьи
     let category: Category
+    /// Список всех статей, из которых фильтруются по категории
     let articles: [Article]
+    /// Менеджер избранного для интеграции с карточками статей
     let favoritesManager: FavoritesManager
+    /// Код языка для локализации названия категории
     let language: String
 
+    /// Строит секцию с заголовком категории и горизонтальной лентой статей
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(category.localizedName(for: language))
@@ -27,6 +33,7 @@ struct CategorySection: View {
                                 allArticles: articles
                             )
                         } label: {
+                            /// Карточка компактного вида статьи, ведущая на её детальный экран
                             ArticleCompactCard(article: article)
                         }
                     }
