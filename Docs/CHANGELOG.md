@@ -7,7 +7,15 @@
 
 
 # Changelog
+## [1.13.0] — 2025-10-04
+### Added
+- Полное покрытие проекта `///` doc-комментариями для всех уровней:
+  Core, Models, Managers, Services, UIUtils, ViewModels, Views (Components, Cards, Sections, Screens).
+- Обновлён `AI_CONTEXT.md` и добавлен `Docs/locations_README.md`.
 
+### Changed
+- Код соответствует принципам Clean Code и SOLID.
+- Улучшена документация для автогенерации Xcode DocC.
 
 ## [1.12.2] - 2025-10-03
 

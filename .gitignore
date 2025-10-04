@@ -43,3 +43,5 @@ fastlane/test_output
 *.lock
 *.orig
 *.tmp
+
+Docs/next_steps.md

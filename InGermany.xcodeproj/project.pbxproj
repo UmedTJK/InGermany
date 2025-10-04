@@ -28,6 +28,8 @@
 		AD2A65722E8FF39E006A94DD /* ReadingProgressTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */; };
 		AD2A65732E8FF39E006A94DD /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656C2E8FF39E006A94DD /* CategoryManager.swift */; };
 		AD2A66942E90D803006A94DD /* locations_README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A66932E90D7FE006A94DD /* locations_README.md */; };
+		AD2A67B62E90DDF6006A94DD /* next_steps.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A67B52E90DDF0006A94DD /* next_steps.md */; };
+		AD2A67ED2E91027D006A94DD /* DefaultsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65592E8FEF44006A94DD /* DefaultsStore.swift */; };
 		AD38F5852E76891600E36EA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5842E76890C00E36EA4 /* .gitignore */; };
 		AD38F5872E76899D00E36EA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5862E76899600E36EA4 /* README.md */; };
 		AD38F5892E76C15600E36EA4 /* update.sh in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5882E76C15000E36EA4 /* update.sh */; };
@@ -46,6 +48,16 @@
 		ADF3394E2E8850FA00AE4CBF /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339462E8850FA00AE4CBF /* ReadingHistoryManager.swift */; };
 		ADFDC50E2E85B3AF004EC7ED /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AD2A67D02E910028006A94DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD85528A2E75ABEB003D3826 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD8552912E75ABEC003D3826;
+			remoteInfo = InGermany;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		AD0826D32E85A50A009C30CC /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -69,6 +81,8 @@
 		AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTracker.swift; sourceTree = "<group>"; };
 		AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
 		AD2A66932E90D7FE006A94DD /* locations_README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = locations_README.md; sourceTree = "<group>"; };
+		AD2A67B52E90DDF0006A94DD /* next_steps.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = next_steps.md; sourceTree = "<group>"; };
+		AD2A67CC2E910028006A94DD /* InGermanyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InGermanyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD38F5882E76C15000E36EA4 /* update.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update.sh; sourceTree = "<group>"; };
@@ -99,6 +113,11 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		AD2A67CD2E910028006A94DD /* InGermanyTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = InGermanyTests;
+			sourceTree = "<group>";
+		};
 		AD52FCF22E84765A00CC9F61 /* Images */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Images;
@@ -127,6 +146,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AD2A67C92E910028006A94DD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AD85528F2E75ABEC003D3826 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -162,6 +188,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD2A67B52E90DDF0006A94DD /* next_steps.md */,
 				AD2A66932E90D7FE006A94DD /* locations_README.md */,
 				AD2A64D02E8FAD42006A94DD /* git_snapshot.md */,
 				AD2A64D12E8FAD42006A94DD /* project_tree.md */,
@@ -192,6 +219,7 @@
 				ADF339482E8850FA00AE4CBF /* Managers */,
 				AD8552C32E75B452003D3826 /* Services */,
 				AD8552C62E75B48D003D3826 /* Resources */,
+				AD2A67CD2E910028006A94DD /* InGermanyTests */,
 				AD8552932E75ABEC003D3826 /* Products */,
 				AD8552942E75ABEC003D3826 /* InGermany */,
 			);
@@ -201,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				AD8552922E75ABEC003D3826 /* InGermany.app */,
+				AD2A67CC2E910028006A94DD /* InGermanyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -251,6 +280,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AD2A67CB2E910028006A94DD /* InGermanyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD2A67D22E910028006A94DD /* Build configuration list for PBXNativeTarget "InGermanyTests" */;
+			buildPhases = (
+				AD2A67C82E910028006A94DD /* Sources */,
+				AD2A67C92E910028006A94DD /* Frameworks */,
+				AD2A67CA2E910028006A94DD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AD2A67D12E910028006A94DD /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AD2A67CD2E910028006A94DD /* InGermanyTests */,
+			);
+			name = InGermanyTests;
+			packageProductDependencies = (
+			);
+			productName = InGermanyTests;
+			productReference = AD2A67CC2E910028006A94DD /* InGermanyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		AD8552912E75ABEC003D3826 /* InGermany */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD8552A22E75ABEE003D3826 /* Build configuration list for PBXNativeTarget "InGermany" */;
@@ -288,6 +340,10 @@
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					AD2A67CB2E910028006A94DD = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = AD8552912E75ABEC003D3826;
+					};
 					AD8552912E75ABEC003D3826 = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -314,11 +370,19 @@
 			projectRoot = "";
 			targets = (
 				AD8552912E75ABEC003D3826 /* InGermany */,
+				AD2A67CB2E910028006A94DD /* InGermanyTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AD2A67CA2E910028006A94DD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AD8552902E75ABEC003D3826 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -331,6 +395,7 @@
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
 				AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */,
+				AD2A67B62E90DDF6006A94DD /* next_steps.md in Resources */,
 				ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */,
 				ADFDC50E2E85B3AF004EC7ED /* AI_CONTEXT.md in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
@@ -342,6 +407,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AD2A67C82E910028006A94DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD2A67ED2E91027D006A94DD /* DefaultsStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AD85528E2E75ABEC003D3826 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -376,7 +449,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		AD2A67D12E910028006A94DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD8552912E75ABEC003D3826 /* InGermany */;
+			targetProxy = AD2A67D02E910028006A94DD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		AD2A67D32E910028006A94DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y8NF943WMY;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = umedsbz.InGermanyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InGermany.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InGermany";
+			};
+			name = Debug;
+		};
+		AD2A67D42E910028006A94DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y8NF943WMY;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = umedsbz.InGermanyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/InGermany.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/InGermany";
+			};
+			name = Release;
+		};
 		AD8552A02E75ABEE003D3826 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -563,6 +680,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AD2A67D22E910028006A94DD /* Build configuration list for PBXNativeTarget "InGermanyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD2A67D32E910028006A94DD /* Debug */,
+				AD2A67D42E910028006A94DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		AD85528D2E75ABEB003D3826 /* Build configuration list for PBXProject "InGermany" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
