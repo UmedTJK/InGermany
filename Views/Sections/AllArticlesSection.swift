@@ -6,10 +6,14 @@
 //
 import SwiftUI
 
+/// A section view displaying all available articles in a horizontal scrollable list.
 struct AllArticlesSection: View {
+    /// The list of all articles to display in the section.
     let articles: [Article]
+    /// The shared favorites manager (not directly used in this view, but passed for consistency or future use).
     let favoritesManager: FavoritesManager
 
+    /// Builds the UI with a title and a horizontal scrollable list of article cards, each navigable to its detail view.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Все статьи")
