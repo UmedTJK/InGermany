@@ -84,6 +84,13 @@ class ReadingHistoryManager: ObservableObject {
         saveHistory()
     }
     
+    /// Очищает историю чтения для тестирования.
+    func clearForTesting() {
+        history.removeAll()
+        storedHistory = Data()
+        UserDefaults.standard.removeObject(forKey: "readingHistory")
+    }
+    
     /// Возвращает последние прочитанные статьи.
     /// - Parameters:
     ///   - allArticles: Полный список статей.
@@ -131,6 +138,8 @@ class ReadingHistoryManager: ObservableObject {
     func getStats() -> ReadingStats {
         return ReadingStats(from: history)
     }
+    
+    
 }
 
 // MARK: - Трекер времени чтения
@@ -172,6 +181,8 @@ class ReadingTracker: ObservableObject {
         guard let startTime = startTime else { return 0 }
         return Date().timeIntervalSince(startTime)
     }
+    
+
 }
 
 // MARK: - Статистика чтения
@@ -227,3 +238,4 @@ struct ReadingStats {
         return streak
     }
 }
+
