@@ -7,13 +7,18 @@
 
 import SwiftUI
 
+/// Displays the user’s list of favorite articles with search and navigation.
 struct FavoritesView: View {
+    /// Manages favorite articles and loading state.
     @StateObject private var viewModel: FavoritesViewModel
     
+    /// Stores the user’s selected interface language.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
+    /// Holds the current search query for filtering favorites.
     @State private var searchText = ""
     
+    /// Filters the favorites based on the search text and selected language.
     private var filteredFavoriteArticles: [Article] {
         let favoriteArticles = viewModel.favoriteArticles
         if searchText.isEmpty {
@@ -25,10 +30,12 @@ struct FavoritesView: View {
         }
     }
     
+    /// Initializes the view with an injected or default FavoritesViewModel.
     init(viewModel: FavoritesViewModel? = nil) {
         _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeFavoritesViewModel())
     }
     
+    /// Builds the main UI with navigation, search, loading indicator, and favorites list.
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -62,6 +69,7 @@ struct FavoritesView: View {
     }
     
     // MARK: - Favorites List
+    /// Renders a list of favorite articles with navigation to `ArticleDetailView`.
     private var favoritesList: some View {
         List(filteredFavoriteArticles) { article in
             NavigationLink {
@@ -76,6 +84,7 @@ struct FavoritesView: View {
         .listStyle(PlainListStyle())
     }
     
+    /// Returns a color representing the current data source of favorites.
     private func getDataSourceColor() -> Color {
         switch viewModel.dataSource {
         case "network": return .green
@@ -86,6 +95,7 @@ struct FavoritesView: View {
     }
     
     // MARK: - Translation
+    /// Retrieves a localized string for the given key and language.
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Избранное": [

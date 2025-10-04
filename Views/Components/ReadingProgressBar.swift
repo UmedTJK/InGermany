@@ -5,14 +5,20 @@
 
 import SwiftUI
 
+/// Прогресс-бар чтения статьи, показывающий процент прочитанного и статус активности.
 struct ReadingProgressBar: View {
+    /// Текущее значение прогресса чтения (0.0–1.0).
     var progress: CGFloat
+    /// Высота индикатора прогресса.
     var height: CGFloat
+    /// Цвет заполненной части прогресса.
     var foregroundColor: Color
+    /// Флаг, показывающий, читается ли статья в данный момент.
     var isReading: Bool = false
 
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
+    /// Основное содержимое: прогресс-бар и подписи о состоянии чтения.
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             GeometryReader { geometry in
@@ -45,12 +51,12 @@ struct ReadingProgressBar: View {
         .padding(.vertical, 4)
     }
 
-    // 🔹 Шорткат для нового менеджера
+    /// Шорткат для перевода текста через LocalizationManager.
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 
-    // 🔹 Старый метод (оставлен для совместимости)
+    /// Старый метод перевода, оставлен для совместимости.
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Прогресс чтения": [

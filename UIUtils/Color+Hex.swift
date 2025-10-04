@@ -8,6 +8,9 @@
 import SwiftUI
 
 extension Color {
+    /// Creates a `Color` from a hexadecimal string (e.g., "#FF0000" or "FF0000").
+    /// - Parameter hex: Hexadecimal color string (with or without a leading `#`).
+    /// Returns nil if the string is not a valid hex color.
     init?(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")

@@ -1,11 +1,18 @@
 import SwiftUI
 
+
+/// The main entry point of the app UI, containing the tab navigation.
 struct ContentView: View {
+    /// Shared instance for managing favorite articles.
     @StateObject private var favoritesManager = FavoritesManager.shared
+    /// Currently selected tab index.
     @State private var selectedTab = 0
+    /// List of loaded articles.
     @State private var articles: [Article] = []
+    /// User-selected app language.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
+    /// Builds the tabbed interface with Home, Categories, Search, Favorites, and Settings.
     var body: some View {
         TabView(selection: $selectedTab) {
             HomeView()

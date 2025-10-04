@@ -495,7 +495,12 @@ git log --oneline --graph -n 10
   - PR #9 (draft) фиксирует этот этап документации.
 
 ### JSON-данные
-- `articles.json` — список статей (локальный fallback).
-- `categories.json` — категории статей (локальный fallback).
-- `locations.json` — список локаций (например, посольства, Ausländerbehörde, Bürgerämter).
-  Используется в `DataService` для загрузки и отображения на карте.
+
+В проекте используются локальные JSON-файлы как fallback-источники при отсутствии сети.  
+Загружаются через `DataService` (`loadLocalArticles`, `loadLocalCategories`, `loadLocalLocations`).
+
+- **articles.json** — список статей (id, title, content, categoryId, tags, даты, изображения, pdfFileName).  
+- **categories.json** — список категорий (id, локализованные названия, иконки).  
+- **locations.json** — список географических объектов (например, Ausländerbehörde, Bürgeramt, посольства).  
+  - Структура описана в файле [`Docs/locations_README.md`](Docs/locations_README.md).  
+  - Используется для отображения точек на карте (`MapView`) и работы с моделью `Location`.  

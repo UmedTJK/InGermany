@@ -5,16 +5,20 @@
 
 import Foundation
 
+/// The main dependency injection container for the app.
+/// Holds singletons and factories for repositories, managers, and ViewModels.
 @MainActor
 final class AppContainer {
     static let shared = AppContainer()
 
-    // Repositories
+    /// Repository managing all article data access and operations.
     let articlesRepo: ArticlesRepository
+    /// Repository managing all category data access and operations.
     let categoriesRepo: CategoriesRepository
 
-    // Managers
+    /// Manager for handling user's favorite articles.
     let favoritesManager: FavoritesManager
+    /// Manager for handling user's reading history.
     let historyManager: ReadingHistoryManager
 
     private init() {
@@ -24,6 +28,7 @@ final class AppContainer {
         self.historyManager = ReadingHistoryManager.shared
     }
 
+    /// Creates a HomeViewModel with injected favorites manager, reading history manager, categories repository, and articles repository.
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
@@ -33,7 +38,7 @@ final class AppContainer {
         )
     }
     
-    
+    /// Creates a SearchViewModel with injected favorites manager, categories repository, and articles repository.
     func makeSearchViewModel() -> SearchViewModel {
         SearchViewModel(
             favoritesManager: favoritesManager,
@@ -42,6 +47,7 @@ final class AppContainer {
         )
     }
     
+    /// Creates a CategoriesViewModel with injected favorites manager, categories repository, and articles repository.
     func makeCategoriesViewModel() -> CategoriesViewModel {
         CategoriesViewModel(
             favoritesManager: favoritesManager,
@@ -50,10 +56,12 @@ final class AppContainer {
         )
     }
     
+    /// Creates a SettingsViewModel with the reading history manager injected.
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(historyManager: historyManager)
     }
     
+    /// Creates an ArticleDetailViewModel for a specific article and the list of all articles, with favorites and history managers injected.
     func makeArticleDetailViewModel(article: Article, allArticles: [Article]) -> ArticleDetailViewModel {
         ArticleDetailViewModel(
             article: article,
@@ -63,10 +71,12 @@ final class AppContainer {
         )
     }
     
+    /// Creates an AboutViewModel.
     func makeAboutViewModel() -> AboutViewModel {
         AboutViewModel()
     }
     
+    /// Creates a FavoritesViewModel with favorites manager and articles repository injected.
     func makeFavoritesViewModel() -> FavoritesViewModel {
         FavoritesViewModel(
             favoritesManager: favoritesManager,

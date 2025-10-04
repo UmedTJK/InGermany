@@ -5,18 +5,26 @@
 
 import SwiftUI
 
+/// A compact article card view for displaying an article with image, title, tags, rating, and reading progress.
 struct ArticleCompactCard: View {
+    /// The article model displayed in the card.
     let article: Article
+    /// The image corner style preference loaded from AppStorage.
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
+    /// The current language code for localization.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    // Используем StateObject для менеджеров вместо ObservedObject
+    /// Shared rating manager for handling article ratings.
     @StateObject private var ratingManager = RatingManager.shared
+    /// Shared tracker for reading progress.
     @StateObject private var readingProgressTracker = ReadingProgressTracker.shared
+    /// Repository for categories.
     @StateObject private var categoriesRepository = CategoriesRepository.shared
     
+    /// The current screen size from Environment.
     @Environment(\.screenSize) private var screenSize
     
+    /// Builds the UI for the article card with image, title, tags, rating, reading time, and progress.
     var body: some View {
         let cardWidth = CardSize.width(for: screenSize.width)
         let cardHeight = CardSize.height(for: screenSize.height, screenWidth: screenSize.width)
@@ -153,6 +161,7 @@ struct ArticleCompactCard: View {
 }
 
 // MARK: - Экранный размер
+/// Provides the screen size through the Environment.
 private struct ScreenSizeKey: EnvironmentKey {
     static let defaultValue: CGSize = UIScreen.main.bounds.size
 }
@@ -165,6 +174,7 @@ extension EnvironmentValues {
 }
 
 // MARK: - CornerRadius только для выбранных углов
+/// Allows applying corner radius to specific corners only.
 struct RoundedCorner: Shape {
     var radius: CGFloat = .infinity
     var corners: UIRectCorner = .allCorners
@@ -179,6 +189,7 @@ struct RoundedCorner: Shape {
     }
 }
 
+/// Applies rounded corners selectively to specified corners.
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))

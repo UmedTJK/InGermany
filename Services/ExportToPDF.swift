@@ -9,8 +9,10 @@ import Foundation
 import PDFKit
 import SwiftUI
 
+/// Provides functionality to export article content to a PDF file.
 struct ExportToPDF {
     
+    /// Generates and saves a PDF with the given title, body content, and file name.
     static func export(title: String, content: String, fileName: String) {
         let pdfMetaData = [
             kCGPDFContextCreator: "InGermany App",
@@ -22,6 +24,7 @@ struct ExportToPDF {
 
         let pageWidth = 595.2  // A4 size width
         let pageHeight = 841.8 // A4 size height
+        /// Sets the page margins in points for PDF rendering.
         let margin: CGFloat = 20
 
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)

@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+/// Экран 'О приложении'. Отображает информацию о версии, сборке и ссылку на репозиторий проекта.
 struct AboutView: View {
     @StateObject private var viewModel: AboutViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"

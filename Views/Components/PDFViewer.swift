@@ -6,10 +6,14 @@
 import SwiftUI
 import PDFKit
 
+/// Экран для отображения PDF-файлов с использованием PDFKit.
 struct PDFViewer: View {
+    /// Имя PDF-файла из ресурсов Bundle.
     let fileName: String
+    /// Выбранный язык интерфейса для локализации текста.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
+    /// Основное содержимое: PDF-документ, если найден, либо сообщение об ошибке.
     var body: some View {
         VStack {
             if let url = Bundle.main.url(forResource: fileName, withExtension: "pdf"),
@@ -25,12 +29,12 @@ struct PDFViewer: View {
         .navigationTitle(t("PDF"))
     }
 
-    // 🔹 Шорткат для нового менеджера
+    /// Шорткат для получения перевода строки через LocalizationManager.
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 
-    // 🔹 Старый метод (оставлен для совместимости)
+    /// Старый метод перевода, оставлен для совместимости.
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "PDF": [
@@ -46,9 +50,12 @@ struct PDFViewer: View {
     }
 }
 
+/// Обёртка SwiftUI для отображения PDF-документов через PDFKit.
 struct PDFKitView: UIViewRepresentable {
+    /// PDF-документ, отображаемый в представлении.
     let pdfDocument: PDFDocument
 
+    /// Создаёт и настраивает PDFView для отображения документа.
     func makeUIView(context: Context) -> PDFView {
         let pdfView = PDFView()
         pdfView.document = pdfDocument
@@ -56,5 +63,6 @@ struct PDFKitView: UIViewRepresentable {
         return pdfView
     }
 
+    /// Обновляет PDFView (не используется в данном случае).
     func updateUIView(_ uiView: PDFView, context: Context) {}
 }

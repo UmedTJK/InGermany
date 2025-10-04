@@ -5,10 +5,12 @@
 
 import SwiftUI
 
+/// Панель для изменения размера текста
 struct TextSizeSettingsPanel: View {
     @ObservedObject private var textSizeManager = TextSizeManager.shared
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
+    /// Строит пользовательский интерфейс для настройки размера текста с предварительным просмотром, ползунком, сбросом и кнопкой подтверждения
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
@@ -59,6 +61,7 @@ struct TextSizeSettingsPanel: View {
         }
     }
 
+    /// Обрабатывает локализованный поиск перевода для строк пользовательского интерфейса
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }

@@ -13,7 +13,7 @@ struct UsefulToolsSection: View {
     /// Closure called when a random article is selected.
     let onRandomArticleSelected: (Article) -> Void
 
-    /// The content and behavior of the UsefulToolsSection view.
+    /// Builds the "Полезные инструменты" section UI with navigation links and buttons.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(LocalizationManager.shared.getTranslation(key: "Полезные инструменты", language: "ru"))
@@ -22,17 +22,17 @@ struct UsefulToolsSection: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    /// Navigation link to the Map view.
+                    // Navigation link to the Map view.
                     NavigationLink(destination: MapView()) {
                         ToolCard(title: "Карта", systemImage: "map", color: .blue)
                     }
 
-                    /// Navigation link to the PDF viewer with sample documents.
+                    // Navigation link to the PDF viewer with sample documents.
                     NavigationLink(destination: PDFViewer(fileName: "sample")) {
                         ToolCard(title: "PDF Документы", systemImage: "doc.richtext", color: .green)
                     }
 
-                    /// Button to select and display a random article.
+                    // Button to select and display a random article.
                     Button {
                         if let random = articles.randomElement() {
                             onRandomArticleSelected(random)

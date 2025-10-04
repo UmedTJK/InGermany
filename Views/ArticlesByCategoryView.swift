@@ -5,12 +5,19 @@
 
 import SwiftUI
 
+
+/// Displays a list of articles filtered by a specific category.
 struct ArticlesByCategoryView: View {
+    /// The selected category to filter articles.
     let category: Category
-    let articles: [Article] // Все статьи
+    /// All available articles (filtered by category).
+    let articles: [Article]
+    /// Shared favorites manager to track favorite status.
     @ObservedObject var favoritesManager: FavoritesManager
+    /// The current UI language stored in AppStorage.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
+    /// Builds the list UI with navigation to `ArticleDetailView` for each article.
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink {
@@ -25,6 +32,7 @@ struct ArticlesByCategoryView: View {
         .navigationTitle(category.localizedName(for: selectedLanguage))
     }
     
+    /// Filters all articles by the given category.
     private var filteredArticles: [Article] {
         articles.filter { $0.categoryId == category.id }
     }

@@ -24,7 +24,9 @@ class ArticleRowViewModel: ObservableObject {
     /// Статья, для которой создаётся ViewModel.
     let article: Article
     
+    /// Менеджер для управления избранными статьями
     private let favoritesManager: FavoritesManager
+    /// Менеджер для хранения и получения рейтингов статей
     private let ratingManager: RatingManager
     
     /// Основной инициализатор ViewModel.

@@ -9,9 +9,10 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
-// 🔹 Менеджер для получения текущего местоположения
+/// A manager responsible for requesting location permissions and tracking the user's current location.
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
+    /// The current user location coordinates, updated when the location changes.
     @Published var userLocation: CLLocationCoordinate2D?
 
     override init() {
@@ -30,17 +31,23 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 }
 
+/// A view that displays a map with annotations for predefined locations and provides controls for user location and refreshing.
 struct MapView: View {
+    /// The list of locations to be displayed on the map.
     @State private var locations: [Location] = []
+    /// The location manager used to retrieve and observe the user's current location.
     @StateObject private var locationManager = LocationManager()
+    /// A flag indicating whether the map is currently loading data.
     @State private var isLoading = true
+    /// The current language setting used for localizing map UI text.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-
+    /// The current visible region of the map.
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 50.4250, longitude: 10.7317),
         span: MKCoordinateSpan(latitudeDelta: 5.0, longitudeDelta: 5.0)
     )
 
+    /// Builds the main map view with navigation, annotations, and toolbar controls.
     var body: some View {
         NavigationStack {
             Group {
@@ -111,11 +118,13 @@ struct MapView: View {
         }
     }
     
+    /// Loads locations asynchronously from the data service and updates the map.
     private func loadLocations() async {
         locations = await DataService.shared.loadLocations()
         isLoading = false
     }
     
+    /// Refreshes locations by clearing cache, reloading data, and updating the map.
     private func refreshLocations() async {
         isLoading = true
         await DataService.shared.refreshData()
@@ -123,12 +132,12 @@ struct MapView: View {
         isLoading = false
     }
 
-    // 🔹 Удобный шорткат для нового менеджера
+    /// Shortcut helper for retrieving localized translations via LocalizationManager.
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 
-    // 🔹 Старый метод (оставлен для совместимости)
+    /// Legacy translation method kept for compatibility. Provides hardcoded translations for map-related strings.
     private func getTranslation(key: String, language: String) -> String {
         let translations: [String: [String: String]] = [
             "Загрузка карты...": [
