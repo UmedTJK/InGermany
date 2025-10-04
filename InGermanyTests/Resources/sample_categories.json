@@ -1,0 +1,19 @@
+// Sample test categories JSON
+[
+  {
+    "id": "finance",
+    "name": {
+      "en": "Finance"
+    },
+    "icon": "banknote",
+    "colorHex": "#4CAF50"
+  },
+  {
+    "id": "health",
+    "name": {
+      "en": "Health"
+    },
+    "icon": "cross.case",
+    "colorHex": "#2196F3"
+  }
+]

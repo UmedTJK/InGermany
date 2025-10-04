@@ -1,1 +1,31 @@
 // Sample test JSON data
+[
+  {
+    "id": "1",
+    "title": {
+      "en": "Opening a Bank Account in Germany"
+    },
+    "content": {
+      "en": "To open a bank account in Germany, you need a passport, proof of residence (Meldebescheinigung), and sometimes proof of employment or study."
+    },
+    "categoryId": "finance",
+    "tags": ["bank", "finance", "account"],
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-05",
+    "image": "bank_account.jpg"
+  },
+  {
+    "id": "2",
+    "title": {
+      "en": "Health Insurance for Expats"
+    },
+    "content": {
+      "en": "Health insurance is mandatory in Germany. Expats can choose between public (gesetzliche) and private (private) health insurance, depending on their employment status."
+    },
+    "categoryId": "health",
+    "tags": ["health", "insurance", "expats"],
+    "createdAt": "2025-01-10",
+    "updatedAt": "2025-01-15",
+    "image": "health_insurance.jpg"
+  }
+]
