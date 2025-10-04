@@ -8,16 +8,34 @@
 
 # Changelog
 
+
+## [1.12.2] - 2025-10-03
+
+### Fixed
+- Исправлено отображение миниатюр статей, загружаемых из Bundle.
+- Добавлена обработка расширений файлов (.avif → .jpg).
+- Добавлен fallback для изображений без расширения.
+- Улучшена надёжность загрузки миниатюр.
+
 ## [Unreleased]
 
 
 ### 📖 Documentation
-- Добавлены `///` doc-комментарии к основным моделям и менеджерам:
+- Добавлены `///` doc-комментарии к основным моделям, менеджерам, сервисам, утилитам и view model:
   - `Article`
   - `DataService`
   - `FavoritesManager`
   - `CategoryManager`
   - `LocalizationManager`
+  - `RatingManager`
+  - `ReadingHistoryManager`
+  - `ReadingTimeCalculator`
+  - `ReadingTimeTracker`
+  - `DefaultsStore`
+  - `Theme`
+  - `Animations`
+  - `ArticleRowViewModel`
+- Добавлены /// doc-комментарии для секций: AllArticlesSection, FavoritesSection, RecentlyReadSection, CategorySection, UsefulToolsSection.
 - Обновлён `CLEAN_CODE_CHECKLIST.md` с пунктом о документировании публичных классов и методов.
 
 ### Technical

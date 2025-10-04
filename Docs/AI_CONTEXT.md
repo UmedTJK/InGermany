@@ -465,10 +465,31 @@ git log --oneline --graph -n 10
   ```
 
 ### Documentation
-- [2025-10-03] Добавлены `///` doc-комментарии ко всем основным моделям и менеджерам:
+- [2025-10-03] Добавлены `///` doc-комментарии ко всем основным моделям, менеджерам, сервисам, утилитам и view model:
   - `Article`
   - `DataService`
   - `FavoritesManager`
   - `CategoryManager`
   - `LocalizationManager`
+  - `RatingManager`
+  - `ReadingHistoryManager`
+  - `ReadingTimeCalculator`
+  - `ReadingTimeTracker`
+  - `DefaultsStore`
+  - `Theme`
+  - `Animations`
+  - `ArticleRowViewModel`
 - Обновлён `CLEAN_CODE_CHECKLIST.md` — теперь пункт про обязательные `///` комментарии у публичных классов и методов.
+
+- [2025-10-03] v1.12.2 bugfix: восстановлено корректное отображение миниатюр статей из Bundle.
+  - Добавлена поддержка `.avif → .jpg` (автоматическая конвертация расширения).
+  - Добавлен fallback для изображений без расширения.
+  - Улучшена надёжность загрузки миниатюр (thumbnail) для статей.
+
+- [2025-10-04] Добавлены `///` doc-комментарии для всех секций:
+  - `AllArticlesSection`
+  - `FavoritesSection`
+  - `RecentlyReadSection`
+  - `CategorySection`
+  - `UsefulToolsSection`
+  - PR #9 (draft) фиксирует этот этап документации.
