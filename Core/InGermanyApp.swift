@@ -12,7 +12,7 @@ struct InGermanyApp: App {
     /// Глобальное состояние приложения (флаг загрузки и т.п.).
     @StateObject private var appState = AppState()
     /// Репозиторий категорий, предоставляемый через Environment.
-    @StateObject private var categoriesRepository = CategoriesRepository.shared // ← ИСПРАВЛЕНО
+    @StateObject private var categoriesRepository = DefaultCategoriesRepository.shared // ← ИСПРАВЛЕНО
     /// Настройка режима отображения (тёмная/светлая тема), сохраняемая в UserDefaults.
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
 
@@ -88,7 +88,7 @@ final class AppState: ObservableObject {
             }
         }
 
-        await CategoriesRepository.shared.bootstrap()
+        await DefaultCategoriesRepository.shared.bootstrap()
         isLoading = false
     }
 }

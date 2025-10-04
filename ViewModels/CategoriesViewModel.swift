@@ -2,56 +2,53 @@
 //  CategoriesViewModel.swift
 //  InGermany
 //
-//  Created by SUM TJK on 03.10.25.
-//
-//
-//  CategoriesViewModel.swift
-//  InGermany
-//
 
-import SwiftUI
+import Foundation
 
-/// Manages loading and state for categories and related articles.
 @MainActor
-class CategoriesViewModel: ObservableObject {
-    /// The list of available categories.
-    @Published var categories: [Category] = []
-    /// The list of articles associated with categories.
-    @Published var articles: [Article] = []
-    /// Flag indicating whether data is currently being loaded.
-    @Published var isLoading: Bool = true
+final class CategoriesViewModel: ObservableObject {
+    @Published private(set) var categories: [Category] = []
+    @Published private(set) var articles: [Article] = []   // ✅ добавлено хранение статей
 
-    /// Менеджер избранных статей, используемый для пометки статей
-    let favoritesManager: FavoritesManager
     private let categoriesRepo: CategoriesRepository
     private let articlesRepo: ArticlesRepository
 
-    /// Injects dependencies for favorites, categories, and articles repositories.
-    init(
-        favoritesManager: FavoritesManager,
-        categoriesRepo: CategoriesRepository,
-        articlesRepo: ArticlesRepository
-    ) {
-        self.favoritesManager = favoritesManager
+    // Инжекция зависимостей: можно подменять репозитории (например, на моки в тестах)
+    init(categoriesRepo: CategoriesRepository, articlesRepo: ArticlesRepository) {
         self.categoriesRepo = categoriesRepo
         self.articlesRepo = articlesRepo
     }
 
-    /// Uses shared singletons as defaults.
-    convenience init() {
-        self.init(
-            favoritesManager: FavoritesManager.shared,
-            categoriesRepo: CategoriesRepository.shared,
-            articlesRepo: ArticlesRepositoryImpl()
-        )
+    /// Загрузить категории (инициализация)
+    func load() async {
+        await categoriesRepo.bootstrap()
+        categories = categoriesRepo.allCategories()
     }
 
-    /// Загружает категории и статьи асинхронно, обновляет состояние `isLoading`.
+    /// Обновить категории
+    func refresh() async {
+        await categoriesRepo.refresh()
+        categories = categoriesRepo.allCategories()
+    }
+
+    /// Найти категорию по ID
+    func category(by id: String) -> Category? {
+        categoriesRepo.category(by: id)
+    }
+
+    /// Загрузить все статьи (инициализация)
+    func loadArticles() async {
+        articles = await articlesRepo.loadArticles()
+    }
+
+    /// Получить статьи по ID категории
+    func articles(for categoryId: String) -> [Article] {
+        return articles.filter { $0.categoryId == categoryId }
+    }
+
+    /// Совместимость: метод для вызова из старых вью
     func loadData() async {
-        isLoading = true
-        defer { isLoading = false }
-        await categoriesRepo.bootstrap()
-        self.categories = categoriesRepo.categories
-        self.articles = await articlesRepo.loadArticles()
+        await load()
+        await loadArticles()
     }
 }

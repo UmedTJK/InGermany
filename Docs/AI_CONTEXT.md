@@ -533,3 +533,4 @@ git log --oneline --graph -n 10
 #### 4. Интеграция
 - [ ] GitHub Actions workflow для запуска тестов при каждом PR.  
 - [ ] Генерация отчётов о покрытии кода (например, Slather + GitHub Actions).  
+ч

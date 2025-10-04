@@ -16,7 +16,7 @@ struct ArticleMetaView: View {
     /// Менеджер истории чтения (зарезервировано для будущего использования).
     @ObservedObject private var historyManager = ReadingHistoryManager.shared
     /// Репозиторий категорий для получения названия и цвета категории.
-    @StateObject private var categoriesRepository = CategoriesRepository.shared // ← ИСПРАВЛЕНО
+    @StateObject private var categoriesRepository = DefaultCategoriesRepository.shared
 
     /// Основное содержимое: категория, рейтинг, время чтения, даты и бейджи.
     var body: some View {

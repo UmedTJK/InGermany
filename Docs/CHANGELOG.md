@@ -7,6 +7,12 @@
 
 
 # Changelog
+
+## [Unreleased]
+### Added
+- Unit-тесты для CategoryManager (загрузка, поиск по id и имени).
+- Edge-тесты для DataService (articles.json, categories.json).
+
 ## [1.13.0] — 2025-10-04
 ### Added
 - Полное покрытие проекта `///` doc-комментариями для всех уровней:
@@ -561,3 +567,17 @@
 - Мультиязычность (RU/EN/TJ).
 - Избранное.
 - Тёмная тема.
+
+## [1.14.0] — 2025-10-04
+### Added
+- Unit-тесты для `CategoryManager`:
+  - Проверка загрузки категорий.
+  - Поиск по ID и имени.
+  - Обновление списка категорий через refresh.
+- Edge-тесты для `DataService`:
+  - Загрузка пустых JSON.
+  - Обработка битых данных.
+  - Smoke-тест на успешную загрузку `articles.json` и `categories.json`.
+
+### Changed
+- Структура тестов вынесена в отдельные модули `Unit/Managers` и `Unit/Services`.

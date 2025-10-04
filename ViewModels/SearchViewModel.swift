@@ -43,7 +43,7 @@ class SearchViewModel: ObservableObject {
     convenience init() {
         self.init(
             favoritesManager: FavoritesManager.shared,
-            categoriesRepo: CategoriesRepository.shared,
+            categoriesRepo: DefaultCategoriesRepository.shared,
             articlesRepo: ArticlesRepositoryImpl()
         )
     }

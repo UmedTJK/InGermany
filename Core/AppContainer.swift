@@ -23,7 +23,7 @@ final class AppContainer {
 
     private init() {
         self.articlesRepo = ArticlesRepositoryImpl()
-        self.categoriesRepo = CategoriesRepository.shared
+        self.categoriesRepo = DefaultCategoriesRepository.shared
         self.favoritesManager = FavoritesManager.shared
         self.historyManager = ReadingHistoryManager.shared
     }
@@ -47,10 +47,9 @@ final class AppContainer {
         )
     }
     
-    /// Creates a CategoriesViewModel with injected favorites manager, categories repository, and articles repository.
+    /// Creates a CategoriesViewModel with injected categories repository and articles repository.
     func makeCategoriesViewModel() -> CategoriesViewModel {
         CategoriesViewModel(
-            favoritesManager: favoritesManager,
             categoriesRepo: categoriesRepo,
             articlesRepo: articlesRepo
         )

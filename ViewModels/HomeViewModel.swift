@@ -51,7 +51,7 @@ class HomeViewModel: ObservableObject {
         self.init(
             favoritesManager: FavoritesManager.shared,
             readingHistoryManager: ReadingHistoryManager.shared,
-            categoriesRepository: CategoriesRepository.shared,
+            categoriesRepository: DefaultCategoriesRepository.shared,
             articlesRepo: ArticlesRepositoryImpl()
         )
     }

@@ -14,8 +14,17 @@ import Combine
 
 /// Репозиторий категорий, объединяющий загрузку и хранение
 @MainActor
-final class CategoriesRepository: ObservableObject {
-    static let shared = CategoriesRepository()
+protocol CategoriesRepository {
+    var categories: [Category] { get }
+    func bootstrap() async
+    func refresh() async
+    func category(by id: String) -> Category?
+    func allCategories() -> [Category]
+}
+
+@MainActor
+final class DefaultCategoriesRepository: ObservableObject, CategoriesRepository {
+    static let shared = DefaultCategoriesRepository()
 
     @Published private(set) var categories: [Category] = []
     private var byId: [String: Category] = [:]
@@ -44,4 +53,3 @@ final class CategoriesRepository: ObservableObject {
         categories
     }
 }
-

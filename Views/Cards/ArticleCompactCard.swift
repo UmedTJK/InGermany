@@ -19,7 +19,7 @@ struct ArticleCompactCard: View {
     /// Shared tracker for reading progress.
     @StateObject private var readingProgressTracker = ReadingProgressTracker.shared
     /// Repository for categories.
-    @StateObject private var categoriesRepository = CategoriesRepository.shared
+    @StateObject private var categoriesRepository = DefaultCategoriesRepository.shared
     
     /// The current screen size from Environment.
     @Environment(\.screenSize) private var screenSize

@@ -15,6 +15,7 @@ final class InGermanyTests: XCTestCase {
         XCTAssertNotNil(app, "InGermanyApp should be initialized successfully")
     }
 
+    @MainActor
     func testFavoritesManagerSingleton() {
         let manager = FavoritesManager.shared
         XCTAssertNotNil(manager, "FavoritesManager.shared should be accessible")
