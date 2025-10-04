@@ -504,3 +504,32 @@ git log --oneline --graph -n 10
 - **locations.json** — список географических объектов (например, Ausländerbehörde, Bürgeramt, посольства).  
   - Структура описана в файле [`Docs/locations_README.md`](Docs/locations_README.md).  
   - Используется для отображения точек на карте (`MapView`) и работы с моделью `Location`.  
+### Unit Tests (XCTest)
+
+- ✅ **FavoritesManagerTests.swift** — проверка добавления/удаления избранного и фильтрации статей.  
+- ✅ **CategoryManagerTests.swift** — проверка загрузки категорий, поиска по ID/имени, обновления данных.  
+- ✅ **DataServiceTests.swift** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данные.  
+- ✅ **InGermanyTests.swift** — smoke-тесты (инициализация приложения, работа FavoritesManager и DataService).  
+
+📌 **Следующие шаги (roadmap по тестам):**
+
+#### 1. ViewModels
+- [ ] **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи.  
+- [ ] **FavoritesViewModelTests** — загрузка избранных статей, переключение статуса избранного.  
+- [ ] **SearchViewModelTests** — фильтрация по тексту, тегам, категориям, edge-кейсы (пустой ввод).  
+- [ ] **CategoriesViewModelTests** — загрузка категорий и связанных статей, проверка состояния `isLoading`.  
+- [ ] **SettingsViewModelTests** — смена языка, очистка истории, проверка `isHistoryCleared`.  
+- [ ] **ArticleDetailViewModelTests** — избранное, экспорт в PDF, история чтения.  
+
+#### 2. UI / Snapshot
+- [ ] **Snapshot-тесты** для основных экранов (`HomeView`, `SearchView`, `ArticleDetailView`).  
+- [ ] **Accessibility-тесты** (VoiceOver, Dynamic Type).  
+
+#### 3. Services / Managers (расширение)
+- [ ] **NetworkServiceTests** — обработка ошибок сети, кеширование, загрузка JSON.  
+- [ ] **ReadingHistoryManagerTests** — добавление/очистка истории, ограничение в 100 записей.  
+- [ ] **RatingManagerTests** — установка и получение рейтинга, edge-кейсы.  
+
+#### 4. Интеграция
+- [ ] GitHub Actions workflow для запуска тестов при каждом PR.  
+- [ ] Генерация отчётов о покрытии кода (например, Slather + GitHub Actions).  
