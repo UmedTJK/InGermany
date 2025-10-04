@@ -43,13 +43,13 @@ final class FavoritesViewModelTests: XCTestCase {
     }
 
     func testAddToFavorites() async throws {
-        await sut.toggleFavorite(for: "1")
+        sut.toggleFavorite(for: "1")
         XCTAssertEqual(sut.favoriteArticles.count, 1, "After toggling, favorites should contain the article")
     }
 
     func testRemoveFromFavorites() async throws {
-        await sut.toggleFavorite(for: "1")
-        await sut.toggleFavorite(for: "1") // remove again
+        sut.toggleFavorite(for: "1")
+        sut.toggleFavorite(for: "1") // remove again
         XCTAssertTrue(sut.favoriteArticles.isEmpty, "Toggling twice should remove the article from favorites")
     }
 }
