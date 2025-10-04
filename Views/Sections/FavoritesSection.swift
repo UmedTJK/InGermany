@@ -6,10 +6,17 @@
 //
 import SwiftUI
 
+/// Секция, отображающая избранные статьи в горизонтальном списке.
 struct FavoritesSection: View {
+    /// Содержит все статьи.
+    /// Используется для фильтрации и отображения избранных.
     let articles: [Article]
+    /// Управляет списком избранных статей.
+    /// Предоставляет методы для получения избранных из общего списка.
     let favoritesManager: FavoritesManager
 
+    /// Строит UI с заголовком "Избранное" и списком карточек статей.
+    /// Отображает секцию только если есть избранные статьи.
     var body: some View {
         let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
 
@@ -28,6 +35,7 @@ struct FavoritesSection: View {
                                     allArticles: articles
                                 )
                             } label: {
+                                /// Каждая карточка отображает краткий вид статьи и ведёт на её детальный экран.
                                 ArticleCompactCard(article: article)
                             }
                         }

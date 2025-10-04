@@ -5,9 +5,12 @@
 
 import SwiftUI
 
+/// Строка статьи, отображающая изображение, заголовок, метаданные, рейтинг и кнопку избранного.
 struct ArticleRow: View {
+    /// ViewModel строки статьи, содержащая данные об изображении, заголовке, рейтинге и статусе избранного.
     @ObservedObject var viewModel: ArticleRowViewModel
     
+    /// Основное содержимое строки: изображение статьи, текстовые данные, рейтинг и кнопка избранного.
     var body: some View {
         let _ = {
             if let name = viewModel.imageName {
@@ -27,6 +30,7 @@ struct ArticleRow: View {
                     .clipped()
                     .cornerRadius(8)
             } else {
+                /// Запасное изображение по умолчанию, если картинка статьи не найдена.
                 Image("Logo") // запасной вариант
                     .resizable()
                     .scaledToFill()
@@ -58,7 +62,7 @@ struct ArticleRow: View {
             }
             Spacer()
             
-            // Favorite button
+            /// Кнопка для добавления или удаления статьи из избранного.
             Button(action: { viewModel.toggleFavorite() }) {
                 Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                     .foregroundColor(.red)

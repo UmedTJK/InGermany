@@ -79,13 +79,16 @@ struct RecentArticleCard: View {
 }
 
 
-// MARK: - EmptyFavoritesView
-
+/// Экран-заглушка, отображаемый, когда список избранных статей пуст или не найден по фильтрам.
 struct EmptyFavoritesView: View {
+    /// Флаг, указывающий, применены ли фильтры поиска/категории.
     let hasFilters: Bool
+    /// Текущий язык интерфейса, используемый для локализации сообщений.
     let selectedLanguage: String
+    /// Функция перевода строк по ключу для указанного языка.
     let getTranslation: (String, String) -> String
     
+    /// Основное содержимое экрана-заглушки: иконка, сообщение и дополнительный текст при активных фильтрах.
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "star.slash")
@@ -132,4 +135,3 @@ struct CategoryFilterButton: View {
         .buttonStyle(.plain)
     }
 }
-

@@ -6,11 +6,16 @@
 //
 import SwiftUI
 
+/// A view that displays a section of recently read articles based on the user's reading history.
 struct RecentlyReadSection: View {
+    /// All available articles to display from.
     let articles: [Article]
+    /// Manager responsible for handling favorite articles.
     let favoritesManager: FavoritesManager
+    /// Manager responsible for tracking and providing recently read articles.
     let readingHistoryManager: ReadingHistoryManager
 
+    /// Conditionally builds the "Недавно прочитанное" section with horizontally scrollable compact article cards if reading history is not empty.
     var body: some View {
         let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
 
@@ -29,6 +34,7 @@ struct RecentlyReadSection: View {
                                     allArticles: articles
                                 )
                             } label: {
+                                /// Карточка компактного вида статьи, ведущая на экран её деталей
                                 ArticleCompactCard(article: article)
                             }
                         }

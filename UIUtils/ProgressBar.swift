@@ -3,9 +3,12 @@
 
 import SwiftUI
 
+/// Многоразовый компонент прогресс-бара для отображения прогресса чтения или загрузки.
 struct ProgressBar: View {
+    /// Текущее значение прогресса от 0.0 до 1.0
     var value: CGFloat
 
+    /// Строит визуальное представление прогресс-бара с серым фоном и синим индикатором
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {

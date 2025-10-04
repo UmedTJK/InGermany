@@ -4,12 +4,18 @@
 //
 import Foundation
 
+/// Represents an article category with localized names, icon, and color.
 struct Category: Identifiable, Codable {
+    /// Unique identifier of the category.
     let id: String
+    /// Localized names of the category by language code.
     let name: [String: String]
+    /// SF Symbol name representing the category.
     let icon: String
+    /// Hexadecimal color string associated with the category.
     let colorHex: String   // новый параметр
     
+    /// Returns the localized name for the given language, with fallback to English or first available value.
     func localizedName(for language: String) -> String {
         name[language] ?? name["en"] ?? name.values.first ?? "No name"
     }
@@ -17,8 +23,8 @@ struct Category: Identifiable, Codable {
 
 
 // Пример для превью
-// Пример для превью
 extension Category {
+    /// Sample categories for SwiftUI previews and testing.
     static let sampleCategories: [Category] = [
         Category(
             id: "11111111-1111-1111-1111-aaaaaaaaaaaa",
@@ -34,4 +40,3 @@ extension Category {
         )
     ]
 }
-

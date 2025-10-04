@@ -5,17 +5,24 @@
 
 import SwiftUI
 
+/// The settings screen of the app, allowing the user to configure appearance, language, date format, statistics, and history.
 struct SettingsView: View {
+    /// Stores whether dark mode is enabled.
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    /// Stores the preferred card image style.
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
+    /// Stores whether dates should be shown in relative format.
     @AppStorage("relativeDates") private var relativeDates: Bool = true
-    
+
+    /// ViewModel providing reading statistics and history management.
     @StateObject private var viewModel: SettingsViewModel
-    
+
+    /// Initializes the settings view with a provided or default SettingsViewModel.
     init(viewModel: SettingsViewModel? = nil) {
         _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeSettingsViewModel())
     }
-    
+
+    /// Builds the settings screen UI with sections for language, appearance, card style, date format, statistics, about info, and history clearing.
     var body: some View {
         NavigationView {
             Form {
@@ -101,7 +108,7 @@ struct SettingsView: View {
         }
     }
     
-    /// Форматирование времени чтения в ЧЧ:ММ:СС (или ММ:СС, если меньше часа)
+    /// Formats total seconds into HH:MM:SS or MM:SS depending on duration.
     private func formatHMS(fromSeconds totalSeconds: Int) -> String {
         let hours = totalSeconds / 3600
         let mins = (totalSeconds % 3600) / 60

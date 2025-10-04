@@ -11,16 +11,22 @@
 
 import SwiftUI
 
+/// Manages loading and state for categories and related articles.
 @MainActor
 class CategoriesViewModel: ObservableObject {
+    /// The list of available categories.
     @Published var categories: [Category] = []
+    /// The list of articles associated with categories.
     @Published var articles: [Article] = []
+    /// Flag indicating whether data is currently being loaded.
     @Published var isLoading: Bool = true
 
+    /// Менеджер избранных статей, используемый для пометки статей
     let favoritesManager: FavoritesManager
     private let categoriesRepo: CategoriesRepository
     private let articlesRepo: ArticlesRepository
 
+    /// Injects dependencies for favorites, categories, and articles repositories.
     init(
         favoritesManager: FavoritesManager,
         categoriesRepo: CategoriesRepository,
@@ -31,6 +37,7 @@ class CategoriesViewModel: ObservableObject {
         self.articlesRepo = articlesRepo
     }
 
+    /// Uses shared singletons as defaults.
     convenience init() {
         self.init(
             favoritesManager: FavoritesManager.shared,
@@ -39,6 +46,7 @@ class CategoriesViewModel: ObservableObject {
         )
     }
 
+    /// Загружает категории и статьи асинхронно, обновляет состояние `isLoading`.
     func loadData() async {
         isLoading = true
         defer { isLoading = false }

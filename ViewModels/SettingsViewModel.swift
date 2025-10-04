@@ -33,6 +33,7 @@ class SettingsViewModel: ObservableObject {
         selectedLanguage = lang
     }
     
+    /// Возвращает агрегированную статистику чтения (`ReadingStats`), включая общее количество прочитанных статей, общее и среднее время чтения, а также streak.
     public func getStats() -> ReadingStats {
         return historyManager.getStats()
     }

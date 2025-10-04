@@ -7,7 +7,11 @@
 
 import SwiftUI
 
+/// Provides utility methods for calculating card dimensions based on screen size.
 struct CardSize {
+    /// Возвращает рекомендуемую ширину карточки в зависимости от ширины экрана.
+    /// - Parameter screenWidth: Текущая ширина экрана.
+    /// - Returns: Рассчитанная ширина карточки.
     static func width(for screenWidth: CGFloat) -> CGFloat {
         switch screenWidth {
         case 0..<380:   // маленькие iPhone (SE)
@@ -19,6 +23,11 @@ struct CardSize {
         }
     }
     
+    /// Возвращает рекомендуемую высоту карточки в зависимости от размеров экрана.
+    /// - Parameters:
+    ///   - screenHeight: Текущая высота экрана.
+    ///   - screenWidth: Текущая ширина экрана.
+    /// - Returns: Рассчитанная высота карточки.
     static func height(for screenHeight: CGFloat, screenWidth: CGFloat) -> CGFloat {
         switch screenWidth {
         case 0..<380:   // маленькие iPhone

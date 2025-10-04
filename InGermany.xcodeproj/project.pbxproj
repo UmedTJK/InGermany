@@ -27,6 +27,7 @@
 		AD2A65712E8FF39E006A94DD /* ReadingProgressHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */; };
 		AD2A65722E8FF39E006A94DD /* ReadingProgressTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */; };
 		AD2A65732E8FF39E006A94DD /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656C2E8FF39E006A94DD /* CategoryManager.swift */; };
+		AD2A66942E90D803006A94DD /* locations_README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A66932E90D7FE006A94DD /* locations_README.md */; };
 		AD38F5852E76891600E36EA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5842E76890C00E36EA4 /* .gitignore */; };
 		AD38F5872E76899D00E36EA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5862E76899600E36EA4 /* README.md */; };
 		AD38F5892E76C15600E36EA4 /* update.sh in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5882E76C15000E36EA4 /* update.sh */; };
@@ -67,6 +68,7 @@
 		AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressHelper.swift; sourceTree = "<group>"; };
 		AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTracker.swift; sourceTree = "<group>"; };
 		AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
+		AD2A66932E90D7FE006A94DD /* locations_README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = locations_README.md; sourceTree = "<group>"; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD38F5882E76C15000E36EA4 /* update.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update.sh; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD2A66932E90D7FE006A94DD /* locations_README.md */,
 				AD2A64D02E8FAD42006A94DD /* git_snapshot.md */,
 				AD2A64D12E8FAD42006A94DD /* project_tree.md */,
 				AD52FD452E8585B300CC9F61 /* CHANGELOG.md */,
@@ -179,9 +182,9 @@
 				AD38F5882E76C15000E36EA4 /* update.sh */,
 				AD38F5862E76899600E36EA4 /* README.md */,
 				AD38F5842E76890C00E36EA4 /* .gitignore */,
+				AD52FD4E2E8585B300CC9F61 /* Docs */,
 				AD2A65562E8FEBF2006A94DD /* Protocols */,
 				AD2A65652E8FF0D1006A94DD /* UIUtils */,
-				AD52FD4E2E8585B300CC9F61 /* Docs */,
 				AD8552A72E75AEBF003D3826 /* Core */,
 				AD2A63B12E8C1AE4006A94DD /* ViewModels */,
 				AD8552B62E75B300003D3826 /* Views */,
@@ -321,6 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD38F5872E76899D00E36EA4 /* README.md in Resources */,
+				AD2A66942E90D803006A94DD /* locations_README.md in Resources */,
 				AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */,
 				AD2A64D32E8FAD42006A94DD /* project_tree.md in Resources */,
 				AD38F5852E76891600E36EA4 /* .gitignore in Resources */,

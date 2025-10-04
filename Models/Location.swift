@@ -8,12 +8,18 @@
 import Foundation
 import CoreLocation
 
-struct Location: Identifiable, Codable {
-    let id: String
-    let name: String
-    let latitude: Double
-    let longitude: Double
 
+/// Represents a geographic location with coordinates and name.
+struct Location: Identifiable, Codable {
+    /// Unique identifier of the location.
+    let id: String
+    /// Display name of the location.
+    let name: String
+    /// Latitude coordinate of the location.
+    let latitude: Double
+    /// Longitude coordinate of the location.
+    let longitude: Double
+    /// Computed CoreLocation coordinate (latitude and longitude) for use in MapKit.
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }

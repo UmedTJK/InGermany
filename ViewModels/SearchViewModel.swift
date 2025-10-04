@@ -5,19 +5,30 @@
 
 import SwiftUI
 
+/// Manages article search, filtering by text and tags, and provides search results for the UI.
 @MainActor
 class SearchViewModel: ObservableObject {
+    /// List of all articles available for search.
     @Published var articles: [Article] = []
+    /// Current search query text entered by the user.
     @Published var searchText: String = ""
+    /// The tag currently selected for filtering, if any.
     @Published var selectedTag: String? = nil
+    /// Indicates whether articles are being loaded.
     @Published var isLoading: Bool = true
+    /// The last source of article data (cache, local, network).
     @Published var dataSource: String = "unknown"
+    /// Текущий язык интерфейса, используется для локализации поиска
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
+    /// Manager for handling favorite articles.
     let favoritesManager: FavoritesManager
+    /// Repository for retrieving categories.
     private let categoriesRepo: CategoriesRepository
+    /// Repository for loading articles.
     private let articlesRepo: ArticlesRepository
 
+    /// Injects dependencies.
     init(
         favoritesManager: FavoritesManager,
         categoriesRepo: CategoriesRepository,
@@ -28,6 +39,7 @@ class SearchViewModel: ObservableObject {
         self.articlesRepo = articlesRepo
     }
 
+    /// Uses shared singletons for defaults.
     convenience init() {
         self.init(
             favoritesManager: FavoritesManager.shared,
@@ -37,6 +49,7 @@ class SearchViewModel: ObservableObject {
     }
 
     // MARK: - Filtering
+    /// Возвращает статьи, отфильтрованные по выбранному тегу и поисковому запросу
     var filteredArticles: [Article] {
         var results = articles
         if let tag = selectedTag {
@@ -57,11 +70,13 @@ class SearchViewModel: ObservableObject {
     }
 
     // MARK: - Tags
+    /// Возвращает список всех уникальных тегов из статей
     var allTags: [String] {
         Set(articles.flatMap { $0.tags }).sorted()
     }
 
     // MARK: - Data loading
+    /// Загружает статьи из репозитория и обновляет состояние загрузки
     func loadArticles() async {
         isLoading = true
         defer { isLoading = false }

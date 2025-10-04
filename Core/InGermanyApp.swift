@@ -5,14 +5,22 @@
 
 import SwiftUI
 
+/// Главная точка входа в приложение InGermany.
+/// Управляет инициализацией состояния, загрузкой данных и настройкой окружения.
 @main
 struct InGermanyApp: App {
+    /// Глобальное состояние приложения (флаг загрузки и т.п.).
     @StateObject private var appState = AppState()
+    /// Репозиторий категорий, предоставляемый через Environment.
     @StateObject private var categoriesRepository = CategoriesRepository.shared // ← ИСПРАВЛЕНО
+    /// Настройка режима отображения (тёмная/светлая тема), сохраняемая в UserDefaults.
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
 
+    /// Отслеживание жизненного цикла приложения (активно/фоновый режим).
     @Environment(\.scenePhase) private var scenePhase
 
+    /// Основная сцена приложения.
+    /// Содержит ContentView или индикатор загрузки в зависимости от состояния.
     var body: some Scene {
         WindowGroup {
             Group {
@@ -44,16 +52,19 @@ struct InGermanyApp: App {
         }
     }
 
+    /// Сохраняет состояние приложения при переходе в фон.
     private func saveAppState() {
         // FavoritesManager теперь автоматически сохраняется
         print("✔️ Состояние приложения сохранено")
     }
 }
 
+/// Класс состояния приложения: управляет процессом загрузки данных.
 @MainActor
 final class AppState: ObservableObject {
     @Published var isLoading = true
 
+    /// Асинхронная загрузка статей, категорий и локаций, а также проверка ресурсов.
     func loadData() async {
         let dataService = DataService.shared
         async let articles = dataService.loadArticles()

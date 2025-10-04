@@ -5,11 +5,16 @@
 
 import SwiftUI
 
+
+/// The main screen of the app displaying sections like tools, recently read, favorites, categories, and all articles.
 struct HomeView: View {
+    /// Stores the selected interface language.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    /// Manages the state and data for the home screen.
     @StateObject private var viewModel: HomeViewModel
 
     // MARK: - Init
+    /// Initializes the view with an injected or default `HomeViewModel`.
     init(viewModel: HomeViewModel? = nil) {
         if let vm = viewModel {
             _viewModel = StateObject(wrappedValue: vm)
@@ -19,6 +24,7 @@ struct HomeView: View {
     }
 
     // MARK: - Body
+    /// Builds the main navigation stack with dynamic sections.
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -90,6 +96,7 @@ struct HomeView: View {
     }
 
     // MARK: - Helpers
+    /// Returns a color depending on the current data source.
     private func getDataSourceColor() -> Color {
         switch viewModel.dataSource {
         case "network": return .green
@@ -99,6 +106,7 @@ struct HomeView: View {
         }
     }
 
+    /// Retrieves a localized string for a given key.
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }

@@ -5,13 +5,20 @@
 
 import SwiftUI
 
+/// Отображает метаданные статьи: категорию, рейтинг, время чтения, даты публикации и бейджи (новое/обновлено).
 struct ArticleMetaView: View {
+    /// Статья, для которой отображаются метаданные.
     let article: Article
+    /// Выбранный язык интерфейса для локализации.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    /// Менеджер рейтингов для отображения текущего рейтинга статьи.
     @ObservedObject private var ratingManager = RatingManager.shared
+    /// Менеджер истории чтения (зарезервировано для будущего использования).
     @ObservedObject private var historyManager = ReadingHistoryManager.shared
+    /// Репозиторий категорий для получения названия и цвета категории.
     @StateObject private var categoriesRepository = CategoriesRepository.shared // ← ИСПРАВЛЕНО
 
+    /// Основное содержимое: категория, рейтинг, время чтения, даты и бейджи.
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 12) {
@@ -85,11 +92,13 @@ struct ArticleMetaView: View {
         }
     }
     
+    /// Локализует строку по ключу для выбранного языка.
     private func t(_ key: String) -> String {
         LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
+/// Универсальный компонент бейджа с текстом и цветом.
 struct BadgeView: View {
     let text: String
     let color: Color

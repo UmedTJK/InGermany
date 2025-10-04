@@ -5,14 +5,19 @@
 
 import SwiftUI
 
+/// Displays a list of article categories with navigation into category-specific articles.
 struct CategoriesView: View {
+    /// Manages the categories and articles state for the view.
     @StateObject private var viewModel: CategoriesViewModel
+    /// Stores the current UI language.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
+    /// Initializes the view with a provided or default CategoriesViewModel.
     init(viewModel: CategoriesViewModel? = nil) {
         _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeCategoriesViewModel())
     }
 
+    /// Builds a navigation list of categories leading to `ArticlesByCategoryView`.
     var body: some View {
         NavigationView {
             List(viewModel.categories) { category in
@@ -47,6 +52,7 @@ struct CategoriesView: View {
         }
     }
 
+    /// Provides localized strings for UI elements.
     private func t(_ key: String) -> String {
         return LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
     }

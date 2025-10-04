@@ -7,10 +7,14 @@
 
 import SwiftUI
 
+/// A horizontal scrollable view that displays a list of selectable tags as buttons.
 struct TagFilterView: View {
+    /// The collection of tags to be displayed in the filter view.
     let tags: [String]
+    /// A closure called when a tag is selected, passing the selected tag as a parameter.
     var onTagSelected: (String) -> Void
 
+    /// The main view layout displaying tags in a horizontally scrollable list.
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
