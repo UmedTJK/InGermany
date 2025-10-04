@@ -50,8 +50,8 @@ final class AppContainer {
     /// Creates a CategoriesViewModel with injected categories repository and articles repository.
     func makeCategoriesViewModel() -> CategoriesViewModel {
         CategoriesViewModel(
-            categoriesRepo: categoriesRepo,
-            articlesRepo: articlesRepo
+            categoriesRepo: DefaultCategoriesRepository.shared,
+            articlesRepo: ArticlesRepositoryImpl()
         )
     }
     

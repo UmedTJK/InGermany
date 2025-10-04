@@ -63,4 +63,11 @@ final class FavoritesManager: ObservableObject {
     private func save() {
         DefaultsStore.save(Array(favorites), for: key)
     }
+    
+    // В FavoritesManager.swift исправьте метод clearForTesting():
+    func clearForTesting() {
+        // Очистка favorites для тестов
+        favorites.removeAll()
+        save()
+    }
 }
