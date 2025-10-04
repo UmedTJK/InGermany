@@ -493,3 +493,9 @@ git log --oneline --graph -n 10
   - `CategorySection`
   - `UsefulToolsSection`
   - PR #9 (draft) фиксирует этот этап документации.
+
+### JSON-данные
+- `articles.json` — список статей (локальный fallback).
+- `categories.json` — категории статей (локальный fallback).
+- `locations.json` — список локаций (например, посольства, Ausländerbehörde, Bürgerämter).
+  Используется в `DataService` для загрузки и отображения на карте.
