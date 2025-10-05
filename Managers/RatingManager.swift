@@ -37,6 +37,18 @@ final class RatingManager: ObservableObject {
         ratings[articleId] = rating
         UserDefaults.standard.set(rating, forKey: keyPrefix + articleId)
     }
+    
+    // В RatingManager.swift добавить метод:
+    func clearForTesting() {
+        ratings.removeAll()
+        // Также очищаем UserDefaults
+        let defaults = UserDefaults.standard
+        for key in defaults.dictionaryRepresentation().keys {
+            if key.starts(with: keyPrefix) {
+                defaults.removeObject(forKey: key)
+            }
+        }
+    }
 
     /// Загружает все рейтинги из `UserDefaults` в память.
     private func loadRatings() {
