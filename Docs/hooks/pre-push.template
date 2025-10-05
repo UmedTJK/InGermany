@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Скопируйте этот шаблон в .git/hooks/pre-push и сделайте исполняемым:
+# cp Docs/hooks/pre-push.template .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+# Скрипт обновляет Docs/project_tree.md перед пушем (локально)
+./scripts/update_project_tree.sh 3
+exit 0
