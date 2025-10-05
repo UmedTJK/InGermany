@@ -4,60 +4,48 @@
 //
 
 import Foundation
+import Combine
 
-/// Менеджер для управления рейтингами статей.
-/// Хранит значения рейтингов в `UserDefaults` с префиксом ключей `rating_<id>`.
-/// Реализован как `ObservableObject` для реактивного обновления UI.
+@MainActor  // ✅ Добавляем MainActor для гарантии работы на главном потоке
 final class RatingManager: ObservableObject {
-    /// Глобально доступный экземпляр менеджера.
+    
     static let shared = RatingManager()
     
-    private let keyPrefix = "rating_"
-    
-    /// Словарь текущих рейтингов статей (ключ — `articleId`, значение — рейтинг).
     @Published private var ratings: [String: Int] = [:]
     
-    /// Приватный инициализатор. При создании загружает сохранённые рейтинги из `UserDefaults`.
-    private init() {
+    private let userDefaultsKey = "articleRatings"
+    private let userDefaults: UserDefaults
+    
+    private init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
         loadRatings()
     }
-
-    /// Возвращает рейтинг для указанной статьи.
-    /// - Parameter articleId: Уникальный идентификатор статьи.
-    /// - Returns: Значение рейтинга (по умолчанию 0, если не найдено).
+    
     func getRating(for articleId: String) -> Int {
-        ratings[articleId] ?? 0
-    }
-
-    /// Устанавливает рейтинг для указанной статьи и сохраняет его в `UserDefaults`.
-    /// - Parameters:
-    ///   - rating: Новое значение рейтинга.
-    ///   - articleId: Уникальный идентификатор статьи.
-    func setRating(_ rating: Int, for articleId: String) {
-        ratings[articleId] = rating
-        UserDefaults.standard.set(rating, forKey: keyPrefix + articleId)
+        return ratings[articleId] ?? 0
     }
     
-    // В RatingManager.swift добавить метод:
+    func setRating(_ rating: Int, for articleId: String) {
+        // ✅ Гарантируем выполнение на главном потоке благодаря @MainActor
+        ratings[articleId] = rating
+        saveRatings()
+    }
+    
     func clearForTesting() {
         ratings.removeAll()
-        // Также очищаем UserDefaults
-        let defaults = UserDefaults.standard
-        for key in defaults.dictionaryRepresentation().keys {
-            if key.starts(with: keyPrefix) {
-                defaults.removeObject(forKey: key)
-            }
+        userDefaults.removeObject(forKey: userDefaultsKey)
+    }
+    
+    private func loadRatings() {
+        if let data = userDefaults.data(forKey: userDefaultsKey),
+           let decoded = try? JSONDecoder().decode([String: Int].self, from: data) {
+            ratings = decoded
         }
     }
-
-    /// Загружает все рейтинги из `UserDefaults` в память.
-    private func loadRatings() {
-        let defaults = UserDefaults.standard
-        for (key, value) in defaults.dictionaryRepresentation() {
-            if key.starts(with: keyPrefix), let intValue = value as? Int {
-                let articleId = String(key.dropFirst(keyPrefix.count))
-                ratings[articleId] = intValue
-            }
+    
+    private func saveRatings() {
+        if let encoded = try? JSONEncoder().encode(ratings) {
+            userDefaults.set(encoded, forKey: userDefaultsKey)
         }
     }
 }
