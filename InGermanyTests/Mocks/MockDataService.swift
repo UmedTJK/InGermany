@@ -40,4 +40,23 @@ final class MockDataService: ArticlesRepository {
     func refreshCategories() async -> [InGermany.Category] {
         categories
     }
+    
+    var refreshedArticles: [Article] {
+        get { return [] }
+        set { }
+    }
+    
+    var lastDataSource: [String: String?] {
+        get { return [:] }
+        set { }
+    }
+    
+    var onRefreshData: (() -> Void)? {
+        get { return nil }
+        set { }
+    }
+    
+    
 }
+
+
