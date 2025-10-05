@@ -29,7 +29,7 @@ class HomeViewModel: ObservableObject {
     /// Repository for accessing categories.
     let categoriesRepository: CategoriesRepository
     /// Repository for loading and refreshing articles.
-    private let articlesRepo: ArticlesRepository
+    let articlesRepo: ArticlesRepository
 
     // MARK: - Designated init (главный инициализатор, используется DI/контейнером)
     /// Designated initializer injecting managers and repositories for dependency management.

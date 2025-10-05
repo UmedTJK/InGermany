@@ -1,0 +1,26 @@
+total 128
+drwxr-xr-x@ 26 sumtjk  staff    832 Oct  4 17:14 .
+drwx------@ 19 sumtjk  staff    608 Oct  4 16:50 ..
+-rw-r--r--@  1 sumtjk  staff  12292 Oct  4 14:01 .DS_Store
+drwxr-xr-x  16 sumtjk  staff    512 Oct  4 17:11 .git
+-rw-r--r--   1 sumtjk  staff    494 Oct  4 11:00 .gitignore
+-rw-r--r--@  1 sumtjk  staff    428 Sep 25 18:39 .swiftlint.yml
+-rw-r--r--   1 sumtjk  staff    604 Sep 25 18:38 .swiftlint.yml.save
+drwxr-xr-x   5 sumtjk  staff    160 Oct  4 13:54 Core
+drwxr-xr-x  12 sumtjk  staff    384 Oct  4 17:12 Docs
+drwxr-xr-x   3 sumtjk  staff     96 Oct  3 15:06 Formatters
+-rw-r--r--   1 sumtjk  staff  23205 Oct  3 15:06 HomeView_Context.zip
+drwxr-xr-x   8 sumtjk  staff    256 Sep 22 23:24 InGermany
+drwxr-xr-x   7 sumtjk  staff    224 Oct  4 11:06 InGermanyTests
+drwxr-xr-x  11 sumtjk  staff    352 Oct  4 17:07 Managers
+drwxr-xr-x   5 sumtjk  staff    160 Oct  4 11:00 Models
+drwxr-xr-x   4 sumtjk  staff    128 Oct  4 12:52 Protocols
+-rw-r--r--@  1 sumtjk  staff   7597 Sep 28 18:46 README.md
+drwxr-xr-x  12 sumtjk  staff    384 Oct  4 13:46 Resources
+drwxr-xr-x   8 sumtjk  staff    256 Sep 14 08:09 Screenshots
+drwxr-xr-x  11 sumtjk  staff    352 Oct  4 11:00 Services
+drwxr-xr-x@  8 sumtjk  staff    256 Oct  4 11:00 UIUtils
+drwxr-xr-x  11 sumtjk  staff    352 Oct  4 13:32 ViewModels
+drwxr-xr-x  16 sumtjk  staff    512 Oct  4 13:24 Views
+-rw-r--r--   1 sumtjk  staff      0 Oct  4 17:14 project_structure.txt
+-rwxr-xr-x   1 sumtjk  staff    372 Sep 28 18:44 update.sh

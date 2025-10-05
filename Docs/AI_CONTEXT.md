@@ -533,4 +533,38 @@ git log --oneline --graph -n 10
 #### 4. Интеграция
 - [ ] GitHub Actions workflow для запуска тестов при каждом PR.  
 - [ ] Генерация отчётов о покрытии кода (например, Slather + GitHub Actions).  
-ч
+
+
+### Unit Tests (XCTest)
+
+- ✅ **FavoritesManagerTests.swift** — проверка добавления/удаления избранного и фильтрации статей.  
+- ✅ **CategoryManagerTests.swift** — проверка загрузки категорий, поиска по ID/имени, обновления данных.  
+- ✅ **DataServiceTests.swift** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данные.  
+- ✅ **FavoritesViewModelTests.swift** — комплексное тестирование ViewModel избранного: состояния загрузки, переключение избранного, источник данных.  
+- ✅ **InGermanyTests.swift** — smoke-тесты (инициализация приложения, работа FavoritesManager и DataService).  
+
+📌 **Следующие шаги (roadmap по тестам):**
+- [ ] **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи.  
+- [ ] **SearchViewModelTests** — фильтрация по тексту, тегам, категориям.  
+
+
+# Обновим раздел тестов в AI_CONTEXT.md
+# (можно сделать вручную или через sed/awk)
+
+echo "### Unit Tests (XCTest)
+
+- ✅ **ArticleDetailViewModelTests** — полное покрытие управления избранным, историей чтения, логики связанных статей
+- ✅ **FavoritesManagerTests** — проверка добавления/удаления избранного и фильтрации статей  
+- ✅ **CategoryManagerTests** — проверка загрузки категорий, поиска по ID/имени, обновления данных
+- ✅ **DataServiceTests** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данные
+- ✅ **FavoritesViewModelTests** — комплексное тестирование ViewModel избранного: состояния загрузки, переключение избранного, источник данных
+- ✅ **InGermanyTests.swift** — smoke-тесты (инициализация приложения, работа FavoritesManager и DataService)
+
+📌 **Следующие шаги (roadmap по тестам):**
+- [ ] **ArticleRowViewModelTests** — тестирование управления состоянием строки статьи
+- [ ] **CategoriesViewModelTests** — тестирование загрузки категорий и связанных статей
+- [ ] **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи  
+- [ ] **SearchViewModelTests** — фильтрация по тексту, тегам, категориям
+- [ ] **SettingsViewModelTests** — смена языка, очистка истории, настройки" > temp_context.txt
+
+

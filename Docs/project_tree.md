@@ -38,9 +38,15 @@
 │       ├── Services
 │       │   └── DataServiceTests.swift
 │       └── ViewModels
+│           ├── AboutViewModelTests.swift
+│           ├── ArticleDetailViewModelTests.swift
+│           ├── ArticleRowViewModel.swift
+│           ├── CategoriesViewModel.swift
 │           ├── CategoriesViewModelTests.swift
 │           ├── FavoritesViewModelTests.swift
-│           └── HomeViewModelTests.swift
+│           ├── HomeViewModelTests.swift
+│           ├── SearchViewModelTests.swift
+│           └── SettingsViewModelTests.swift
 ├── Managers
 │   ├── CategoryManager.swift
 │   ├── FavoritesManager.swift
@@ -173,4 +179,4 @@
 ├── project_structure.txt
 └── update.sh
 
-35 directories, 139 files
+35 directories, 145 files
