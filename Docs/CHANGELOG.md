@@ -8,6 +8,28 @@
 
 # Changelog
 
+
+## [1.15.0] — 2025-10-04
+### Fixed
+- Исправлены ошибки компиляции в ArticleDetailViewModelTests:
+  - Убран несуществующий параметр readingTime из markAsRead()
+  - Заменены тесты computed properties на тесты реальной логики
+  - Решены проблемы с MainActor изоляцией в конкурентных тестах
+
+### Tests
+- ArticleDetailViewModelTests теперь имеет полное покрытие:
+  - Управление избранным и историей чтения
+  - Логика фильтрации связанных статей
+  - Локализация и edge-кейсы
+  - Performance-тесты основных операций
+
+### Changed
+- Улучшена изоляция тестов с clearForTesting()
+- Стандартизированы паттерны тестирования" >> Docs/CHANGELOG.md
+
+git add Docs/CHANGELOG.md
+git commit -m "docs: обновить CHANGELOG с информацией о фиксах тестов"
+
 ## [Unreleased]
 ### Added
 - Unit-тесты для CategoryManager (загрузка, поиск по id и имени).
@@ -581,3 +603,18 @@
 
 ### Changed
 - Структура тестов вынесена в отдельные модули `Unit/Managers` и `Unit/Services`.
+
+
+## [1.15.0] — 2025-10-04
+### Tests
+- ✅ **ArticleDetailViewModelTests** - полное покрытие управления избранным, историей чтения, логики связанных статей
+- ✅ **HomeViewModelTests** - проверка загрузки данных, обновления, выбора случайной статьи
+- Добавлены заготовки для ArticleRowViewModelTests и CategoriesViewModelTests
+
+### Fixed
+- Исправлены ошибки компиляции в ArticleDetailViewModelTests
+- Устранены проблемы с MainActor изоляцией
+
+### Changed
+- Обновлена документация проекта
+- Стандартизированы паттерны тестирования
