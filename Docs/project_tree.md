@@ -10,6 +10,7 @@
 │   ├── Git_Mini_Guide.md
 │   ├── PROMPTS_FOR_AI_AGENTS.md
 │   ├── git_snapshot.md
+│   ├── hooks
 │   ├── locations_README.md
 │   ├── next_steps.md
 │   └── project_tree.md
@@ -166,7 +167,9 @@
 │   │   └── UsefulToolsSection.swift
 │   └── SettingsView.swift
 ├── project_structure.txt
+├── scripts
+│   └── update_project_tree.sh
 ├── temp_ai_context.md
 └── update.sh
 
-48 directories, 122 files
+50 directories, 123 files
