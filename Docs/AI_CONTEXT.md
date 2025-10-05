@@ -568,3 +568,20 @@ echo "### Unit Tests (XCTest)
 - [ ] **SettingsViewModelTests** — смена языка, очистка истории, настройки" > temp_context.txt
 
 
+
+### Current Test Coverage Status
+
+✅ **ArticleDetailViewModelTests** — полное покрытие управления избранным, историей чтения, логики связанных статей
+✅ **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи
+✅ **FavoritesManagerTests** — проверка добавления/удаления избранного и фильтрации статей  
+✅ **CategoryManagerTests** — проверка загрузки категорий, поиска по ID/имени, обновления данных
+✅ **DataServiceTests** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данных
+✅ **FavoritesViewModelTests** — комплексное тестирование ViewModel избранного
+✅ **InGermanyTests.swift** — smoke-тесты
+
+**Next Targets:**
+- ArticleRowViewModelTests
+- CategoriesViewModelTests  
+- SearchViewModelTests
+- SettingsViewModelTests
+
