@@ -16,37 +16,44 @@
 ├── Formatters
 ├── HomeView_Context.zip
 ├── InGermany
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   ├── AppIcon.appiconset
+│   │   ├── Contents.json
+│   │   └── Logo.imageset
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
 │   └── Preview Content
+│       └── Preview Assets.xcassets
+├── InGermany.xcodeproj
+│   ├── project.pbxproj
+│   ├── project.xcworkspace
+│   │   ├── contents.xcworkspacedata
+│   │   ├── xcshareddata
+│   │   └── xcuserdata
+│   └── xcuserdata
+│       └── sumtjk.xcuserdatad
 ├── InGermanyTests
 │   ├── InGermanyTests.swift
 │   ├── Mocks
 │   │   ├── MockArticlesRepository.swift
 │   │   ├── MockCategoriesRepository.swift
 │   │   └── MockDataService.swift
+│   ├── Models
+│   │   ├── ArticleTests.swift
+│   │   ├── CategoryTests.swift
+│   │   └── LocationTests.swift
 │   ├── Resources
 │   │   ├── sample_articles.json
 │   │   └── sample_categories.json
 │   ├── UI
 │   │   └── AppUITests.swift
 │   └── Unit
+│       ├── Helpers
 │       ├── Managers
-│       │   ├── CategoryManagerTests.swift
-│       │   └── FavoritesManagerTests.swift
 │       ├── Services
-│       │   └── DataServiceTests.swift
 │       └── ViewModels
-│           ├── AboutViewModelTests.swift
-│           ├── ArticleDetailViewModelTests.swift
-│           ├── ArticleRowViewModel.swift
-│           ├── CategoriesViewModel.swift
-│           ├── CategoriesViewModelTests.swift
-│           ├── FavoritesViewModelTests.swift
-│           ├── HomeViewModelTests.swift
-│           ├── SearchViewModelTests.swift
-│           └── SettingsViewModelTests.swift
 ├── Managers
 │   ├── CategoryManager.swift
 │   ├── FavoritesManager.swift
@@ -68,22 +75,10 @@
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── ar.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── de.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── en.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── fa.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── germany10.jpg
 │   │   ├── germany11.jpg
 │   │   ├── germany12.jpg
@@ -96,14 +91,8 @@
 │   │   ├── germany8.jpg
 │   │   ├── germany9.jpg
 │   │   ├── ru.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── tg-TJ.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   └── uk.lproj
-│   │       ├── germany1.jpg
-│   │       └── germany3.jpg
 │   ├── Localizable.xcstrings
 │   ├── Test_Document.pdf
 │   ├── articles.json
@@ -177,6 +166,7 @@
 │   │   └── UsefulToolsSection.swift
 │   └── SettingsView.swift
 ├── project_structure.txt
+├── temp_ai_context.md
 └── update.sh
 
-35 directories, 145 files
+48 directories, 122 files
