@@ -117,7 +117,7 @@ final class ArticleDetailViewModelTests: XCTestCase {
     func testMarkAsReadMultipleTimes() {
         // Given - mark as read once
         sut.markAsRead()
-        let firstReadDate = ReadingHistoryManager.shared.lastReadDate(for: "test1")
+        _ = ReadingHistoryManager.shared.lastReadDate(for: "test1")
         
         // When - mark as read again
         sut.markAsRead()
@@ -157,7 +157,7 @@ final class ArticleDetailViewModelTests: XCTestCase {
             tags: ["unique-tag"]
         )
         
-        let sutWithUnique = ArticleDetailViewModel(
+        _ = ArticleDetailViewModel(
             article: uniqueArticle,
             allArticles: testArticles,
             favoritesManager: FavoritesManager.shared,
@@ -246,7 +246,7 @@ final class ArticleDetailViewModelTests: XCTestCase {
     
     func testEmptyAllArticles() {
         // Given - empty articles list
-        let sutWithEmpty = ArticleDetailViewModel(
+        _ = ArticleDetailViewModel(
             article: testArticle,
             allArticles: [],
             favoritesManager: FavoritesManager.shared,
@@ -276,7 +276,7 @@ final class ArticleDetailViewModelTests: XCTestCase {
         
         let articlesWithMixed = testArticles + [articleSameCategory]
         
-        let sutMixed = ArticleDetailViewModel(
+        _ = ArticleDetailViewModel(
             article: testArticle,
             allArticles: articlesWithMixed,
             favoritesManager: FavoritesManager.shared,
