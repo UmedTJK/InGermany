@@ -34,6 +34,37 @@
 
 - Обновил документацию
 
+[Unreleased] - 2025-10-06 18:42
+🔧 Architecture & DI Refactoring
+Fixed DI violations in ContentView: Removed direct FavoritesManager.shared creation, now uses AppContainer
+
+Fixed InGermanyApp DI: Now uses AppContainer instead of direct DefaultCategoriesRepository.shared
+
+Updated View initialization: All main Views (HomeView, CategoriesView, SearchView, FavoritesView, SettingsView) now accept AppContainer parameter
+
+Fixed navigation dependencies: Corrected appContainer passing in SettingsView and CategoriesView navigation
+
+Created new branch: fix/ui-di-violations for ongoing UI components refactoring
+
+🐛 Fixes
+Fixed compilation errors: Added missing selectedLanguage in ArticleDetailView
+
+Removed duplicate initializers: Cleaned up ArticleDetailView initialization
+
+Fixed parameter names: Corrected historyManager parameter in ArticleDetailViewModel calls
+
+📚 Documentation
+Updated AI_CONTEXT.md: Reflected current architecture progress
+
+Maintained project structure: Updated documentation with current state
+
+🔄 Next Steps
+Continue UI components refactoring: ArticleCompactCard, ArticleMetaView, ArticleCardView
+
+Eliminate direct manager dependencies in all UI components
+
+Unify localization approach across all Views
+
 ## [Unreleased] - 2025-10-05
 - docs(tree): обновлён Docs/project_tree.md (depth=3)
 //
