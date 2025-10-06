@@ -3,6 +3,7 @@ import SwiftUI
 struct AboutView: View {
     @StateObject private var viewModel: AboutViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
@@ -27,8 +28,8 @@ struct AboutView: View {
                     .multilineTextAlignment(.leading)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(t("version")): \(viewModel.appVersion)")
-                    Text("\(t("build")): \(viewModel.buildNumber)")
+                    Text("\(t("Версия")): \(viewModel.appVersion)")
+                    Text("\(t("Сборка")): \(viewModel.buildNumber)")
                     Link(viewModel.repositoryURL, destination: URL(string: viewModel.repositoryURL)!)
                 }
                 .font(.footnote)
@@ -40,6 +41,12 @@ struct AboutView: View {
     }
 
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
+}
+
+// MARK: - Preview
+#Preview {
+    AboutView(appContainer: AppContainer.shared)
+        .environmentObject(AppContainer.shared)
 }
