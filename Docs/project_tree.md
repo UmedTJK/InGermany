@@ -175,9 +175,11 @@
 │   ├── release_v4.sh
 │   ├── release_v4.sh.save
 │   ├── release_v5.sh
+│   ├── release_v6.sh
+│   ├── release_v7.sh
 │   ├── tag_with_date.sh
 │   └── update_project_tree.sh
 ├── temp_ai_context.md
 └── update.sh
 
-50 directories, 131 files
+50 directories, 133 files
