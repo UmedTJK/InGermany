@@ -7,20 +7,19 @@ import SwiftUI
 
 /// The settings screen of the app, allowing the user to configure appearance, language, date format, statistics, and history.
 struct SettingsView: View {
+    /// Stores whether dark mode is enabled.
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    /// Stores the preferred card image style.
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
+    /// Stores whether dates should be shown in relative format.
     @AppStorage("relativeDates") private var relativeDates: Bool = true
-    @StateObject private var viewModel: SettingsViewModel
-    @EnvironmentObject private var appContainer: AppContainer // ← ДОБАВИТЬ ЭТО
 
-    /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeSettingsViewModel())
-    }
-    
-    /// For preview and testing
-    init(viewModel: SettingsViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+    /// ViewModel providing reading statistics and history management.
+    @StateObject private var viewModel: SettingsViewModel
+
+    /// Initializes the settings view with a provided or default SettingsViewModel.
+    init(viewModel: SettingsViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeSettingsViewModel())
     }
 
     /// Builds the settings screen UI with sections for language, appearance, card style, date format, statistics, about info, and history clearing.
@@ -87,9 +86,11 @@ struct SettingsView: View {
                     Text(t("settings_stats_title"))
                 }
                 
+                
+                
                 // ℹ️ О приложении
                 Section {
-                    NavigationLink(destination: AboutView(appContainer: appContainer)) { // ← ИСПРАВЛЕНО: передаем appContainer
+                    NavigationLink(destination: AboutView()) {
                         Text(t("settings_about_title"))
                     }
                 }
@@ -119,13 +120,4 @@ struct SettingsView: View {
             return String(format: "%02d:%02d", mins, secs)
         }
     }
-
-    /// Retrieves a localized string for a given key.
-    private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: "ru") // Используем фиксированный язык для настроек
     }
-}
-
-#Preview {
-    SettingsView(viewModel: SettingsViewModel(historyManager: ReadingHistoryManager.shared))
-}

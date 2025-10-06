@@ -7,18 +7,14 @@ import SwiftUI
 
 /// Displays a list of article categories with navigation into category-specific articles.
 struct CategoriesView: View {
+    /// ViewModel responsible for loading and managing categories, and providing articles for the selected category.
     @StateObject private var viewModel: CategoriesViewModel
+    /// Stores the current UI language.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var appContainer: AppContainer // ← ДОБАВИТЬ
 
-    /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeCategoriesViewModel())
-    }
-    
-    /// For preview and testing
-    init(viewModel: CategoriesViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+    /// Initializes the view with a provided or default CategoriesViewModel.
+    init(viewModel: CategoriesViewModel? = nil) {
+        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeCategoriesViewModel())
     }
 
     /// Builds a navigation list of categories leading to `ArticlesByCategoryView`.
@@ -29,7 +25,7 @@ struct CategoriesView: View {
                     ArticlesByCategoryView(
                         category: category,
                         articles: viewModel.articles(for: category.id),
-                        favoritesManager: appContainer.favoritesManager // ← ИСПРАВЛЕНО: используем appContainer
+                        favoritesManager: FavoritesManager.shared
                     )
                 } label: {
                     HStack(spacing: 12) {
