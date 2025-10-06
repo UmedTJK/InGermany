@@ -1,5 +1,5 @@
 //
-//  ArticlesRepository.swift
+//  ArticlesRepositoryProtocol.swift
 //  InGermany
 //
 //  Created by SUM TJK on 03.10.25.
@@ -7,7 +7,7 @@
 import Foundation
 
 /// Контракт репозитория статей. Без throws — строго под твой DataService.
-protocol ArticlesRepository {
+protocol ArticlesRepositoryProtocol {
     /// Возвращает все статьи (локально/из кэша/как реализовано в DataService).
     func loadArticles() async -> [Article]
 

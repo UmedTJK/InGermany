@@ -24,15 +24,15 @@ class SearchViewModel: ObservableObject {
     /// Manager for handling favorite articles.
     let favoritesManager: FavoritesManager
     /// Repository for retrieving categories.
-    private let categoriesRepo: CategoriesRepository
+    private let categoriesRepo: CategoriesRepositoryProtocol
     /// Repository for loading articles.
-    private let articlesRepo: ArticlesRepository
+    private let articlesRepo: ArticlesRepositoryProtocol
 
     /// Injects dependencies.
     init(
         favoritesManager: FavoritesManager,
-        categoriesRepo: CategoriesRepository,
-        articlesRepo: ArticlesRepository
+        categoriesRepo: CategoriesRepositoryProtocol,
+        articlesRepo: ArticlesRepositoryProtocol
     ) {
         self.favoritesManager = favoritesManager
         self.categoriesRepo = categoriesRepo
@@ -41,10 +41,11 @@ class SearchViewModel: ObservableObject {
 
     /// Uses shared singletons for defaults.
     convenience init() {
+        // 🔧 ИСПРАВЛЕНО: Передаем DataService в ArticlesRepositoryImpl
         self.init(
             favoritesManager: FavoritesManager.shared,
             categoriesRepo: DefaultCategoriesRepository.shared,
-            articlesRepo: ArticlesRepositoryImpl()
+            articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared)
         )
     }
 

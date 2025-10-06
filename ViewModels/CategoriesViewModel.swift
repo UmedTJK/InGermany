@@ -10,14 +10,14 @@ final class CategoriesViewModel: ObservableObject {
     @Published private(set) var categories: [Category] = []
     @Published private(set) var articles: [Article] = []
 
-    private let categoriesRepo: CategoriesRepository
-    private let articlesRepo: ArticlesRepository
+    private let categoriesRepo: CategoriesRepositoryProtocol
+    private let articlesRepo: ArticlesRepositoryProtocol
     let favoritesManager: FavoritesManager
 
-    // Инжекция зависимостей: можно подменять репозитории (например, на моки в тестах)
+    /// Инжекция зависимостей: можно подменять репозитории (например, на моки в тестах)
     init(
-        categoriesRepo: CategoriesRepository,
-        articlesRepo: ArticlesRepository,
+        categoriesRepo: CategoriesRepositoryProtocol,
+        articlesRepo: ArticlesRepositoryProtocol,
         favoritesManager: FavoritesManager? = nil
     ) {
         self.categoriesRepo = categoriesRepo

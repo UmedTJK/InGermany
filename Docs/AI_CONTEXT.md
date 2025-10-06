@@ -66,9 +66,10 @@ AI_CONTEXT.md
   - `ReadingTimeCalculator.swift`  
   - `CategoryManager.swift`  
 * **Protocols/**:  
-  - `ArticlesRepository.swift`  
-  - `CategoriesRepository.swift`  
-  - (другие протоколы для сервисов, менеджеров и репозиториев)  
+  - `ArticlesRepositoryProtocol.swift`  
+  - `CategoriesRepositoryProtocol.swift` 
+  - `FavoritesManagingProtocol.swift`
+
 * **UIUtils/**:  
   - `Theme.swift`  
   - `Animations.swift`  
