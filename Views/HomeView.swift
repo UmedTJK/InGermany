@@ -5,11 +5,12 @@
 
 import SwiftUI
 
-
 /// The main screen of the app displaying sections like tools, recently read, favorites, categories, and all articles.
 struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: HomeViewModel
+    /// Контейнер зависимостей для получения менеджеров.
+    @EnvironmentObject private var appContainer: AppContainer
 
     // MARK: - Init
     /// Initializes the view with AppContainer for dependency injection
@@ -107,6 +108,12 @@ struct HomeView: View {
 
     /// Retrieves a localized string for a given key.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
+}
+
+// MARK: - Preview
+#Preview {
+    HomeView(appContainer: AppContainer.shared)
+        .environmentObject(AppContainer.shared)
 }
