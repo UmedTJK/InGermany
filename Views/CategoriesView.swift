@@ -9,7 +9,7 @@ import SwiftUI
 struct CategoriesView: View {
     @StateObject private var viewModel: CategoriesViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var appContainer: AppContainer // ← ДОБАВИТЬ
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
@@ -29,7 +29,7 @@ struct CategoriesView: View {
                     ArticlesByCategoryView(
                         category: category,
                         articles: viewModel.articles(for: category.id),
-                        favoritesManager: appContainer.favoritesManager // ← ИСПРАВЛЕНО: используем appContainer
+                        favoritesManager: appContainer.favoritesManager
                     )
                 } label: {
                     HStack(spacing: 12) {
@@ -58,6 +58,12 @@ struct CategoriesView: View {
 
     /// Provides localized strings for UI elements.
     private func t(_ key: String) -> String {
-        return LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
+}
+
+// MARK: - Preview
+#Preview {
+    CategoriesView(appContainer: AppContainer.shared)
+        .environmentObject(AppContainer.shared)
 }
