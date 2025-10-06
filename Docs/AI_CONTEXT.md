@@ -495,6 +495,22 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 - **ArticleCompactCard** — компактная карточка статьи, используемая в списках и секциях.
 - **ReadingProgressHelper** — утилита для прогресса чтения (цвета, статусы).
 
+#### Протоколы репозиториев (актуальные)
+
+- **ArticlesRepositoryProtocol**
+  - `loadArticles() async -> [Article]`
+  - `refreshArticles() async -> [Article]`
+  - `getLastSource() async -> String`
+
+- **CategoriesRepositoryProtocol** 
+  - `allCategories() -> [Category]`
+  - `category(by id: String) -> Category?`
+
+- **FavoritesManagingProtocol**
+  - `isFavorite(_ articleId: String) -> Bool`
+  - `toggleFavorite(for articleId: String)`
+  - `favoriteArticles(from articles: [Article]) -> [Article]`
+
 ---
 
 ## 2c) Публичные интерфейсы
@@ -674,7 +690,20 @@ R
 
 ## 7) Актуальные проблемы архитектуры (Дата актуализации: 06.10.2025)
 
-### 🔴 Критические расхождения
+### ✅ ИСПРАВЛЕННЫЕ ПРОБЛЕМЫ
+
+#### 🔧 DI Foundation (РЕШЕНО)
+- **Созданы протоколы репозиториев**: `ArticlesRepositoryProtocol`, `CategoriesRepositoryProtocol`, `FavoritesManagingProtocol`
+- **AppContainer обновлен**: Теперь использует протоколы вместо конкретных реализаций
+- **ViewModel рефакторинг**: Все основные ViewModel (`HomeViewModel`, `SearchViewModel`, `CategoriesViewModel`, `FavoritesViewModel`) переведены на протоколы
+- **Swift 6 Concurrency**: Исправлены проблемы MainActor изоляции в AppContainer
+- **Тестирование**: Обновлены тесты для работы с новой DI архитектурой
+
+#### 🔧 Service Layer (ЧАСТИЧНО РЕШЕНО)
+- **ArticlesRepositoryImpl**: Теперь требует явной инъекции DataService (убрано значение по умолчанию)
+- **Convenience инициализаторы**: Исправлены во всех ViewModel для правильной инъекции зависимостей
+
+### 🔴 КРИТИЧЕСКИЕ РАСХОЖДЕНИЯ (ОСТАЮТСЯ)
 
 1. **Систематическое нарушение DI в UI компонентах**
    - `ArticleCompactCard`: создает `RatingManager.shared`, `ReadingProgressTracker.shared`, `DefaultCategoriesRepository.shared` напрямую
@@ -705,9 +734,9 @@ R
    - `DefaultCategoriesRepository` используется вместо него
    - Два разных подхода к одной задаче
 
-7. **AppContainer.makeCategoriesViewModel()**
-   - Создает `ArticlesRepositoryImpl()` и `DefaultCategoriesRepository.shared` напрямую
-   - Не использует инжектированные `articlesRepo` и `categoriesRepo`
+7. **AppContainer.makeCategoriesViewModel()** ✅ **ИСПРАВЛЕНО**
+   - ~~Создает `ArticlesRepositoryImpl()` и `DefaultCategoriesRepository.shared` напрямую~~
+   - ✅ **Теперь использует инжектированные `articlesRepo` и `categoriesRepo`**
 
 8. **InGermanyApp.swift нарушает DI**
    - Создает `DefaultCategoriesRepository.shared` напрямую через `@StateObject`
@@ -763,8 +792,8 @@ R
     - `Article` поддерживает только ru, en, de, tj в методах форматирования дат
     - Отсутствует поддержка fa, ar, uk из списка поддерживаемых языков
 
-21. **Нарушение DI в репозиториях и сервисах**
-    - `ArticlesRepositoryImpl` использует `DataService.shared` напрямую вместо инжекции
+21. **Нарушение DI в репозиториях и сервисах** ⚠️ **ЧАСТИЧНО ИСПРАВЛЕНО**
+    - ~~`ArticlesRepositoryImpl` использует `DataService.shared` напрямую вместо инжекции~~ ✅ **ИСПРАВЛЕНО: теперь требует инъекции**
     - `DataService` использует `NetworkService.shared` напрямую
     - Все сервисы используют singleton паттерн вместо DI через AppContainer
 
@@ -773,10 +802,10 @@ R
     - Нет поддержки внешних файлов локализации
     - Сложность поддержки и добавления новых ключей
 
-23. **Смешанные стратегии кэширования**
+23. **Смешанные стратегии кэширования** 🚧 **В ПРОЦЕССЕ**
     - `DataService` кэширует в памяти
     - `NetworkService` кэширует в файловой системе + URLCache
-    - Нет единой стратегии управления кэшем
+    - **В процессе унификации на offline-first стратегию**
 
 24. **Нарушение ответственности в DataService**
     - Содержит логику загрузки, кэширования, и логирования
@@ -786,10 +815,10 @@ R
     - `loadJSONSync` метод существует для обратной совместимости
     - Дублирует функциональность async метода
 
-26. **Несоответствие стратегий кэширования между сервисами**
+26. **Несоответствие стратегий кэширования между сервисами** 🚧 **В ПРОЦЕССЕ**
     - `DataService` использует offline-first стратегию (память → локальный JSON → сеть)
     - `NetworkService` использует противоположную стратегию (сеть → файловый кэш → Bundle)
-    - Создает путаницу и непредсказуемое поведение при загрузке данных
+    - **В процессе унификации на единую offline-first стратегию**
 
 27. **AuthService является полной заглушкой**
     - Класс существует но не содержит никакой функциональности
@@ -841,11 +870,11 @@ R
 ### 🟡 Планы исправления
 
 **Высокий приоритет:**
+- ✅ ~~Создание протоколов для репозиториев и интеграция их в AppContainer~~
 - Рефакторинг UI компонентов для использования инжектированных зависимостей вместо shared-инстансов
-- Создание протоколов для менеджеров и интеграция их в AppContainer
 - Исправить ContentView для использования AppContainer
 - Унифицировать управление категориями (выбрать один подход)
-- Обновить AppContainer.makeCategoriesViewModel()
+- Завершить унификацию стратегий кэширования в NetworkService
 
 **Средний приоритет:**
 - Интегрировать новые менеджеры трекинга в DI
