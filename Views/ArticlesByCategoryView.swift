@@ -5,15 +5,14 @@
 
 import SwiftUI
 
-
 /// Displays a list of articles filtered by a specific category.
 struct ArticlesByCategoryView: View {
     /// The selected category to filter articles.
     let category: Category
     /// All available articles (filtered by category).
     let articles: [Article]
-    /// Shared favorites manager to track favorite status.
-    @ObservedObject var favoritesManager: FavoritesManager
+    /// Контейнер зависимостей для получения менеджеров.
+    @EnvironmentObject private var appContainer: AppContainer
     /// The current UI language stored in AppStorage.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
@@ -26,7 +25,11 @@ struct ArticlesByCategoryView: View {
                     allArticles: articles
                 )
             } label: {
-                ArticleRow(viewModel: ArticleRowViewModel(article: article))
+                ArticleRow(viewModel: ArticleRowViewModel(
+                    article: article,
+                    favoritesManager: appContainer.favoritesManager,
+                    ratingManager: appContainer.ratingManager
+                ))
             }
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))
@@ -38,6 +41,7 @@ struct ArticlesByCategoryView: View {
     }
 }
 
+// MARK: - Preview
 #Preview {
     ArticlesByCategoryView(
         category: Category(
@@ -46,7 +50,7 @@ struct ArticlesByCategoryView: View {
             icon: "banknote",
             colorHex: "#4A90E2"
         ),
-        articles: [],
-        favoritesManager: FavoritesManager.shared // ← ИСПРАВЛЕНО
+        articles: []
     )
+    .environmentObject(AppContainer.shared)
 }
