@@ -11,8 +11,9 @@ final class AppContainer: ObservableObject {
     let historyManager: ReadingHistoryManager
     let ratingManager: RatingManager
     let readingProgressTracker: ReadingProgressTracker
-    let textSizeManager: TextSizeManager // ✅ Добавляем
-    let readingTimeTracker: ReadingTimeTracker // ✅ Добавляем
+    let textSizeManager: TextSizeManager
+    let readingTimeTracker: ReadingTimeTracker
+    let localizationManager: LocalizationManager // ✅ Добавляем
 
     init(
         articlesRepo: ArticlesRepositoryProtocol? = nil,
@@ -21,8 +22,9 @@ final class AppContainer: ObservableObject {
         historyManager: ReadingHistoryManager? = nil,
         ratingManager: RatingManager? = nil,
         readingProgressTracker: ReadingProgressTracker? = nil,
-        textSizeManager: TextSizeManager? = nil, // ✅ Добавляем параметр
-        readingTimeTracker: ReadingTimeTracker? = nil // ✅ Добавляем параметр
+        textSizeManager: TextSizeManager? = nil,
+        readingTimeTracker: ReadingTimeTracker? = nil,
+        localizationManager: LocalizationManager? = nil // ✅ Добавляем параметр
     ) {
         self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: DataService.shared)
         self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
@@ -30,8 +32,9 @@ final class AppContainer: ObservableObject {
         self.historyManager = historyManager ?? ReadingHistoryManager.shared
         self.ratingManager = ratingManager ?? RatingManager.shared
         self.readingProgressTracker = readingProgressTracker ?? ReadingProgressTracker.shared
-        self.textSizeManager = textSizeManager ?? TextSizeManager.shared // ✅ Инициализируем
-        self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared // ✅ Инициализируем
+        self.textSizeManager = textSizeManager ?? TextSizeManager.shared
+        self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared
+        self.localizationManager = localizationManager ?? LocalizationManager.shared // ✅ Инициализируем
     }
 
     // MARK: - Factory Methods
