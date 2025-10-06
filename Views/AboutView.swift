@@ -1,18 +1,8 @@
-//
-//  AboutView.swift
-//  InGermany
-//
-
 import SwiftUI
 
-/// Экран 'О приложении'. Отображает информацию о версии, сборке и ссылку на репозиторий проекта.
 struct AboutView: View {
-    @StateObject private var viewModel: AboutViewModel
+    @StateObject private var viewModel = AboutViewModel()
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-
-    init() {
-        _viewModel = StateObject(wrappedValue: AppContainer.shared.makeAboutViewModel())
-    }
 
     var body: some View {
         ScrollView {

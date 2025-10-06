@@ -1,38 +1,29 @@
-//
-//  AppContainer.swift
-//  InGermany
-//
-
-import Foundation
+import SwiftUI
 
 /// The main dependency injection container for the app.
-/// Holds singletons and factories for repositories, managers, and ViewModels.
 @MainActor
-final class AppContainer {
-    /// Repository managing all article data access and operations.
+final class AppContainer: ObservableObject {
+    static let shared = AppContainer()
+    
     let articlesRepo: ArticlesRepositoryProtocol
-    /// Repository managing all category data access and operations.
     let categoriesRepo: CategoriesRepositoryProtocol
-
-    /// Manager for handling user's favorite articles.
     let favoritesManager: FavoritesManager
-    /// Manager for handling user's reading history.
     let historyManager: ReadingHistoryManager
 
-    // 🔧 ИСПРАВЛЕНО: Правильная инициализация с Swift 6 concurrency
     init(
         categoriesRepo: CategoriesRepositoryProtocol? = nil,
         favoritesManager: FavoritesManager? = nil,
         historyManager: ReadingHistoryManager? = nil
     ) {
-        // 🔧 ИСПРАВЛЕНО: Создаем зависимости внутри @MainActor контекста
         self.articlesRepo = ArticlesRepositoryImpl(dataService: DataService.shared)
         self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared
         self.historyManager = historyManager ?? ReadingHistoryManager.shared
     }
 
-    /// Creates a HomeViewModel with injected favorites manager, reading history manager, categories repository, and articles repository.
+    // MARK: - Factory Methods
+
+    /// Creates a HomeViewModel with injected dependencies
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
@@ -42,7 +33,7 @@ final class AppContainer {
         )
     }
 
-    /// Creates a SearchViewModel with injected favorites manager, categories repository, and articles repository.
+    /// Creates a SearchViewModel with injected dependencies
     func makeSearchViewModel() -> SearchViewModel {
         SearchViewModel(
             favoritesManager: favoritesManager,
@@ -51,7 +42,7 @@ final class AppContainer {
         )
     }
 
-    /// Creates a CategoriesViewModel with injected categories repository and articles repository.
+    /// Creates a CategoriesViewModel with injected dependencies
     func makeCategoriesViewModel() -> CategoriesViewModel {
         CategoriesViewModel(
             categoriesRepo: categoriesRepo,
@@ -60,12 +51,20 @@ final class AppContainer {
         )
     }
 
-    /// Creates a SettingsViewModel with the reading history manager injected.
+    /// Creates a FavoritesViewModel with injected dependencies
+    func makeFavoritesViewModel() -> FavoritesViewModel {
+        FavoritesViewModel(
+            favoritesManager: favoritesManager,
+            articlesRepo: articlesRepo
+        )
+    }
+
+    /// Creates a SettingsViewModel with injected dependencies
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(historyManager: historyManager)
     }
 
-    /// Creates an ArticleDetailViewModel for a specific article and the list of all articles, with favorites and history managers injected.
+    /// Creates an ArticleDetailViewModel for a specific article
     func makeArticleDetailViewModel(article: Article, allArticles: [Article]) -> ArticleDetailViewModel {
         ArticleDetailViewModel(
             article: article,
@@ -75,16 +74,8 @@ final class AppContainer {
         )
     }
 
-    /// Creates an AboutViewModel.
+    /// Creates an AboutViewModel
     func makeAboutViewModel() -> AboutViewModel {
         AboutViewModel()
-    }
-
-    /// Creates a FavoritesViewModel with favorites manager and articles repository injected.
-    func makeFavoritesViewModel() -> FavoritesViewModel {
-        FavoritesViewModel(
-            favoritesManager: favoritesManager,
-            articlesRepo: articlesRepo
-        )
     }
 }
