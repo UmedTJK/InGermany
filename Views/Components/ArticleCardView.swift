@@ -11,8 +11,8 @@ struct ArticleCardView: View {
     let article: Article
     /// Выбранный язык интерфейса для локализации заголовка и содержимого.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    /// Менеджер рейтингов статей (используется для отображения и изменения рейтинга).
-    @ObservedObject private var ratingManager = RatingManager.shared
+    /// Контейнер зависимостей для получения менеджеров.
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Основное содержимое карточки: изображение, заголовок, рейтинг и краткий текст статьи.
     var body: some View {
@@ -44,8 +44,8 @@ struct ArticleCardView: View {
                     .font(.caption)
                 StarRatingView(
                     rating: Binding(
-                        get: { ratingManager.getRating(for: article.id) },
-                        set: { newValue in ratingManager.setRating(newValue, for: article.id) }
+                        get: { appContainer.ratingManager.getRating(for: article.id) },
+                        set: { newValue in appContainer.ratingManager.setRating(newValue, for: article.id) }
                     )
                 )
                 .font(.caption)
@@ -62,4 +62,10 @@ struct ArticleCardView: View {
         .cornerRadius(12)
         .shadow(radius: 3)
     }
+}
+
+// MARK: - Preview
+#Preview {
+    ArticleCardView(article: Article.sampleArticle)
+        .environmentObject(AppContainer.shared)
 }
