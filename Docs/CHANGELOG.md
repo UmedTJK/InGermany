@@ -1,3 +1,8 @@
+### v1.13.3 – 2025-10-06
+
+#### 📝 Docs
+- docs(tree): обновлён Docs/project_tree.md (depth=3)
+
 ### v1.13.2 – 2025-10-06
 
 #### 🧹 Chores
