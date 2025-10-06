@@ -8,19 +8,18 @@ import SwiftUI
 
 /// The main screen of the app displaying sections like tools, recently read, favorites, categories, and all articles.
 struct HomeView: View {
-    /// Stores the selected interface language.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    /// Manages the state and data for the home screen.
     @StateObject private var viewModel: HomeViewModel
 
     // MARK: - Init
-    /// Initializes the view with an injected or default `HomeViewModel`.
-    init(viewModel: HomeViewModel? = nil) {
-        if let vm = viewModel {
-            _viewModel = StateObject(wrappedValue: vm)
-        } else {
-            _viewModel = StateObject(wrappedValue: AppContainer.shared.makeHomeViewModel())
-        }
+    /// Initializes the view with AppContainer for dependency injection
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeHomeViewModel())
+    }
+    
+    /// For preview and testing
+    init(viewModel: HomeViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     // MARK: - Body

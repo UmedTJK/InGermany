@@ -14,12 +14,8 @@ struct ArticleCompactCard: View {
     /// The current language code for localization.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    /// Shared rating manager for handling article ratings.
-    @StateObject private var ratingManager = RatingManager.shared
-    /// Shared tracker for reading progress.
-    @StateObject private var readingProgressTracker = ReadingProgressTracker.shared
-    /// Repository for categories.
-    @StateObject private var categoriesRepository = DefaultCategoriesRepository.shared
+    // ✅ ИСПРАВЛЕНО: Используем DI через AppContainer
+    @EnvironmentObject private var appContainer: AppContainer
     
     /// The current screen size from Environment.
     @Environment(\.screenSize) private var screenSize
@@ -30,7 +26,7 @@ struct ArticleCompactCard: View {
         let cardHeight = CardSize.height(for: screenSize.height, screenWidth: screenSize.width)
         
         VStack(alignment: .leading, spacing: 0) {
-            // 📸 Изображение статьи (берётся из JSON → Resources/Images/)
+            // 📸 Изображение статьи
             ZStack(alignment: .topLeading) {
                 let baseView: some View = Group {
                     if let name = article.image,
@@ -67,7 +63,8 @@ struct ArticleCompactCard: View {
                 }
                 
                 // 🏷 Категория
-                if let category = categoriesRepository.category(by: article.categoryId),
+                // ✅ ИСПРАВЛЕНО: Используем categoriesRepo из AppContainer
+                if let category = appContainer.categoriesRepo.category(by: article.categoryId),
                    let color = Color(hex: category.colorHex) {
                     HStack(spacing: 4) {
                         Image(systemName: category.icon)
@@ -121,15 +118,15 @@ struct ArticleCompactCard: View {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
                             .font(.caption)
-                        // Исправлено: используем Binding с get/set для рейтинга
+                        // ✅ ИСПРАВЛЕНО: Используем ratingManager из AppContainer
                         StarRatingView(
                             rating: Binding(
-                                get: { ratingManager.getRating(for: article.id) },
-                                set: { newValue in ratingManager.setRating(newValue, for: article.id) }
+                                get: { appContainer.ratingManager.getRating(for: article.id) },
+                                set: { newValue in appContainer.ratingManager.setRating(newValue, for: article.id) }
                             )
                         )
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                     }
                     
                     Spacer()
@@ -145,7 +142,8 @@ struct ArticleCompactCard: View {
                 }
                 
                 // 📊 Прогресс чтения
-                let progress = readingProgressTracker.progressForArticle(article.id)
+                // ✅ ИСПРАВЛЕНО: Используем historyManager из AppContainer
+                let progress = appContainer.readingProgressTracker.progressForArticle(article.id)
                 if progress > 0 {
                     ProgressBar(value: progress)
                         .frame(height: 4)
@@ -158,6 +156,12 @@ struct ArticleCompactCard: View {
         .cardStyle()
         .scaleOnAppear()
     }
+}
+
+// MARK: - Preview
+#Preview {
+    ArticleCompactCard(article: Article.sampleArticles[0])
+        .environmentObject(AppContainer.shared)
 }
 
 // MARK: - Экранный размер

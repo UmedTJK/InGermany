@@ -9,16 +9,29 @@ final class AppContainer: ObservableObject {
     let categoriesRepo: CategoriesRepositoryProtocol
     let favoritesManager: FavoritesManager
     let historyManager: ReadingHistoryManager
+    let ratingManager: RatingManager
+    let readingProgressTracker: ReadingProgressTracker
+    let textSizeManager: TextSizeManager // ✅ Добавляем
+    let readingTimeTracker: ReadingTimeTracker // ✅ Добавляем
 
     init(
+        articlesRepo: ArticlesRepositoryProtocol? = nil,
         categoriesRepo: CategoriesRepositoryProtocol? = nil,
         favoritesManager: FavoritesManager? = nil,
-        historyManager: ReadingHistoryManager? = nil
+        historyManager: ReadingHistoryManager? = nil,
+        ratingManager: RatingManager? = nil,
+        readingProgressTracker: ReadingProgressTracker? = nil,
+        textSizeManager: TextSizeManager? = nil, // ✅ Добавляем параметр
+        readingTimeTracker: ReadingTimeTracker? = nil // ✅ Добавляем параметр
     ) {
-        self.articlesRepo = ArticlesRepositoryImpl(dataService: DataService.shared)
+        self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: DataService.shared)
         self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared
         self.historyManager = historyManager ?? ReadingHistoryManager.shared
+        self.ratingManager = ratingManager ?? RatingManager.shared
+        self.readingProgressTracker = readingProgressTracker ?? ReadingProgressTracker.shared
+        self.textSizeManager = textSizeManager ?? TextSizeManager.shared // ✅ Инициализируем
+        self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared // ✅ Инициализируем
     }
 
     // MARK: - Factory Methods

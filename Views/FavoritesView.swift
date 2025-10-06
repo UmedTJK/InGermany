@@ -9,14 +9,19 @@ import SwiftUI
 
 /// Displays the user’s list of favorite articles with search and navigation.
 struct FavoritesView: View {
-    /// Manages favorite articles and loading state.
     @StateObject private var viewModel: FavoritesViewModel
-    
-    /// Stores the user’s selected interface language.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    
-    /// Holds the current search query for filtering favorites.
     @State private var searchText = ""
+
+    /// Initializes the view with AppContainer for dependency injection
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeFavoritesViewModel())
+    }
+    
+    /// For preview and testing
+    init(viewModel: FavoritesViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     /// Filters the favorites based on the search text and selected language.
     private var filteredFavoriteArticles: [Article] {

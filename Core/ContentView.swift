@@ -8,7 +8,7 @@ struct ContentView: View {
     /// Builds the tabbed interface with Home, Categories, Search, Favorites, and Settings.
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView()
+            HomeView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_home", comment: ""),
@@ -17,7 +17,7 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            CategoriesView()
+            CategoriesView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_categories", comment: ""),
@@ -26,7 +26,7 @@ struct ContentView: View {
                 }
                 .tag(1)
             
-            SearchView()
+            SearchView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_search", comment: ""),
@@ -35,7 +35,7 @@ struct ContentView: View {
                 }
                 .tag(2)
             
-            FavoritesView()
+            FavoritesView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_favorites", comment: ""),
@@ -44,7 +44,7 @@ struct ContentView: View {
                 }
                 .tag(3)
             
-            SettingsView()
+            SettingsView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
                 .tabItem {
                     Label(
                         NSLocalizedString("tab_settings", comment: ""),

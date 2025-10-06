@@ -2,8 +2,8 @@ import SwiftUI
 
 @main
 struct InGermanyApp: App {
+    @StateObject private var appContainer = AppContainer.shared // ← ИСПРАВЛЕНО: используем AppContainer вместо отдельных репозиториев
     @StateObject private var appState = AppState()
-    @StateObject private var categoriesRepository = DefaultCategoriesRepository.shared
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @Environment(\.scenePhase) private var scenePhase
 
@@ -15,7 +15,7 @@ struct InGermanyApp: App {
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     ContentView()
-                        .environmentObject(categoriesRepository)
+                        .environmentObject(appContainer) // ← ИСПРАВЛЕНО: передаем appContainer вместо categoriesRepository
                         .preferredColorScheme(isDarkMode ? .dark : .light)
                 }
             }

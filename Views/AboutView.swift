@@ -1,8 +1,18 @@
 import SwiftUI
 
 struct AboutView: View {
-    @StateObject private var viewModel = AboutViewModel()
+    @StateObject private var viewModel: AboutViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+
+    /// Initializes the view with AppContainer for dependency injection
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeAboutViewModel())
+    }
+    
+    /// For preview and testing
+    init(viewModel: AboutViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         ScrollView {
