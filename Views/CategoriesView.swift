@@ -28,8 +28,7 @@ struct CategoriesView: View {
                 NavigationLink {
                     ArticlesByCategoryView(
                         category: category,
-                        articles: viewModel.articles(for: category.id),
-                        favoritesManager: appContainer.favoritesManager
+                        articles: viewModel.articles(for: category.id)
                     )
                 } label: {
                     HStack(spacing: 12) {
