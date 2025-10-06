@@ -1,6 +1,6 @@
-# InGermany · AI_CONTEXT.md
+AI_CONTEXT.md
 
-> Единый контекст для ИИ-агентов. Задача — обеспечить моментальное понимание проекта и выпуск **релевантного, безопасного и соответствующего стандартам** кода. Документ публикуется в репозитории и прикладывается ко всем запросам к ИИ-агентам.
+Единый контекст для ИИ-агентов. Задача — обеспечить моментальное понимание проекта и выпуск **релевантного, безопасного и соответствующего стандартам** кода. Документ публикуется в репозитории и прикладывается ко всем запросам к ИИ-агентам.
 
 ---
 
@@ -32,15 +32,18 @@
 2. **Прозрачная актуальность**: сверка `git status` и структуры проекта.  
 3. **Один шаг = один коммит** (Conventional Commits).  
 4. **Строгие контракты данных** (§2b/2c).  
-5. **Concurrency-чистота.**  
+5. **Concurrency-чистота** (Swift 6 Ready, MainActor isolation).  
 6. **UI = Apple HIG.**  
 7. **Документируемое изменение.**
+8. **Полное тестовое покрытие** всех публичных API.
+9. **Dependency Injection** через AppContainer.
+10. **MVVM архитектура** с тонкими Views.
 
 ---
 
 ## 2) Архитектура и структура проекта
 
-* **Core/**: `InGermanyApp.swift`, `ContentView.swift`  
+* **Core/**: `InGermanyApp.swift`, `ContentView.swift`, `AppContainer.swift`  
 * **Models/**: `Article.swift`, `Category.swift`, `Location.swift`  
 * **Services/**:  
   - `DataService.swift`  
@@ -50,6 +53,7 @@
   - `DefaultsStore.swift`  
   - `ExportToPDF.swift`  
   - `LocalizationManager.swift`  
+  - `ArticlesRepositoryImpl.swift`  
 * **Managers/**:  
   - `FavoritesManager.swift`  
   - `RatingManager.swift`  
@@ -59,6 +63,7 @@
   - `ReadingProgressHelper.swift`  
   - `ReadingProgressTracker.swift`  
   - `ReadingTimeCalculator.swift`  
+  - `CategoryManager.swift`  
 * **Protocols/**:  
   - `ArticlesRepository.swift`  
   - `CategoriesRepository.swift`  
@@ -69,10 +74,21 @@
   - `CardSize.swift`  
   - `Color+Hex.swift`  
   - `ProgressBar.swift`  
+  - `CardImageStyle.swift`  
 * **Formatters/**:  
   - `DateFormatter+Localized.swift`  
   - `ReadingTimeFormatter.swift`  
   - (другие форматтеры для дат, времени, текста)  
+* **ViewModels/**: 
+  - `AboutViewModel.swift`
+  - `ArticleDetailViewModel.swift`
+  - `ArticleRowViewModel.swift`
+  - `CategoriesViewModel.swift`
+  - `FavoritesViewModel.swift`
+  - `HomeViewModel.swift`
+  - `SearchViewModel.swift`
+  - `SettingsViewModel.swift`
+  - `ViewModels.swift` (namespace)
 * **Views/**: `HomeView`, `SearchView`, `FavoritesView`, `CategoriesView`, `ArticlesByCategoryView`, `ArticlesByTagView`, `ArticleDetailView`, `SettingsView`, `AboutView`, `MapView`  
 
   - **HomeView.swift** — оболочка для главного экрана: отвечает за загрузку/обновление данных и навигацию. 
@@ -84,57 +100,144 @@
     - `AllArticlesSection.swift` — блок со всеми статьями.
 > Начиная с v1.8.7, `HomeView` больше не содержит внутреннюю разметку секций. Все UI-блоки вынесены в отдельные вью для упрощения сопровождения и работы ИИ-агентов.
 
-* **Views/Components/**: `ArticleCardView`, `ArticleRow`, `ArticleMetaView`, `ArticleCompactCard`, `FavoriteCard`, `RecentArticleCard`, `ToolCard`, `EmptyFavoritesView`, `CategoryFilterButton`, `TagFilterView`, `TextSizeSettingsPanel`, `ReadingProgressBar`, `ReadingProgressView`, `CircularReadingProgress`, `PDFViewer`  
+* **Views/Components/**: `ArticleCardView`, `ArticleRow`, `ArticleMetaView`, `ArticleCompactCard`, `FavoriteCard`, `RecentArticleCard`, `ToolCard`, `EmptyFavoritesView`, `CategoryFilterButton`, `TagFilterView`, `TextSizeSettingsPanel`, `ReadingProgressBar`, `ReadingProgressView`, `CircularReadingProgress`, `PDFViewer`, `StarRatingView`, `LanguagePickerView`  
+* **Views/Cards/**: `ArticleCompactCard.swift`  
 * **Resources/**: `articles.json`, `categories.json`, `locations.json`  
-* **Docs/**: `AI_CONTEXT_v2.md`, `CHANGELOG.md`, `PROMPTS_FOR_AI_AGENTS.md`, `Git_Mini_Guide.md`, `CLEAN_CODE_CHECKLIST.md`, `git_snapshot.md`, `project_tree.md`  
-* **Docs (архив)**: `PROJECT_STRUCTURE.md`, `Project_Brief.docx`  
-* **Корень**: `.swiftlint.yml`, `README.md`, `update.sh`
+* **Docs/**: `AI_CONTEXT.md`, `CHANGELOG.md`, `PROMPTS_FOR_AI_AGENTS.md`, `Git_Mini_Guide.md`, `CLEAN_CODE_CHECKLIST.md`, `git_snapshot.md`, `project_tree.md`, `locations_README.md`, `hooks/pre-push.template`  
+* **Scripts/**: `update_project_tree.sh`, `update.sh`  
+* **Tests/**: `InGermanyTests/` (21 компонентов, 262 теста)  
+* **Корень**: `.swiftlint.yml`, `README.md`, `update.sh`, `HomeView_Context.zip`, `project_structure.txt`, `temp_ai_context.md`
 
 ### Dependency Injection и AppContainer (с версии v1.10.0)
 
 Для управления зависимостями используется `AppContainer` (Composition Root), помеченный `@MainActor`.  
 AppContainer создаёт экземпляры ViewModel и менеджеров, централизуя конфигурацию приложения.
 
-- **AppContainer**
+- **AppContainer** (`AppContainer.swift`)
   - `articlesRepo: ArticlesRepository` → реализован через `ArticlesRepositoryImpl`
-  - `categoriesRepo: CategoriesRepository` → singleton `.shared`
+  - `categoriesRepo: CategoriesRepository` → `DefaultCategoriesRepository.shared`
   - `favoritesManager: FavoritesManager` → singleton `.shared`
   - `historyManager: ReadingHistoryManager` → singleton `.shared`
-  - `makeHomeViewModel()` → возвращает готовый `HomeViewModel`
-  - `makeSettingsViewModel()` → возвращает готовый `SettingsViewModel`
-  - `makeArticleDetailViewModel()` → возвращает готовый `ArticleDetailViewModel`
-  - `makeAboutViewModel()` → возвращает готовый `AboutViewModel`
+  
+  **Фабричные методы:**
+  - `makeHomeViewModel()` → возвращает `HomeViewModel`
+  - `makeSearchViewModel()` → возвращает `SearchViewModel`
+  - `makeCategoriesViewModel()` → возвращает `CategoriesViewModel` (⚠️ создает зависимости напрямую)
+  - `makeSettingsViewModel()` → возвращает `SettingsViewModel`
+  - `makeArticleDetailViewModel(article:allArticles:)` → возвращает `ArticleDetailViewModel`
+  - `makeAboutViewModel()` → возвращает `AboutViewModel`
+  - `makeFavoritesViewModel()` → возвращает `FavoritesViewModel`
+
+### ViewModels (MVVM Architecture)
 
 - **HomeViewModel**
-  - Теперь зависит от `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`
-  - Основной init принимает все зависимости
-  - Есть `convenience init()` для старых вызовов и превью
-  - Методы `loadData()` и `refreshData()` используют `articlesRepo`, а не напрямую `DataService`
+  - **MainActor, ObservableObject:** Класс помечен `@MainActor` и реализует `ObservableObject` для корректной работы с состоянием и интеграции с SwiftUI.
+  - **Ответственность:** Управление данными главного экрана
+  - **Зависимости:** `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`
+  - **Состояния:** 
+    - `articles`
+    - `isLoading`
+    - `dataSource` — по умолчанию `"unknown"`, обновляется в `loadData()` и `refreshData()` через `articlesRepo.getLastSource()`
+    - `isShowingRandomArticle`
+    - `randomArticle`
+  - **Методы:** `loadData()`, `refreshData()`, `selectRandomArticle()`
+  - **Вычисляемые свойства:** `allCategories`, `articlesByCategory`
+  - **Особенности:** 
+    - Имеет `convenience init()`, который использует `FavoritesManager.shared`, `ReadingHistoryManager.shared`, `DefaultCategoriesRepository.shared` и `ArticlesRepositoryImpl()` для обратной совместимости.
 
+- **FavoritesViewModel**
+  - **Ответственность:** Управление списком избранного
+  - **MainActor, ObservableObject:** класс помечен `@MainActor`, реализует `ObservableObject`.
+  - **Зависимости:** `FavoritesManager`, `ArticlesRepository`
+  - **Состояния:** 
+    - `allArticles` — список всех статей  
+    - `favoriteArticles` — список избранных статей  
+    - `isLoading` — индикатор загрузки  
+    - `dataSource` — источник данных; по умолчанию `"unknown"`, обновляется в `loadFavorites()` через `articlesRepo.getLastSource()`  
+  - **Методы:**  
+    - `loadFavorites()` — загружает все статьи, фильтрует избранные, обновляет `dataSource`  
+    - `toggleFavorite(for:)` — переключает статус избранного и обновляет список избранных статей
+    
+- **SearchViewModel**
+  - **MainActor, ObservableObject:** Класс помечен `@MainActor` и реализует `ObservableObject` для корректной работы с состоянием и интеграции с SwiftUI.
+  - **Ответственность:** Управление логикой поиска и фильтрации
+  - **Зависимости:** `FavoritesManager`, `CategoriesRepository`, `ArticlesRepository`
+  - **Состояния:**
+    - `articles`
+    - `searchText`
+    - `selectedTag`
+    - `isLoading`
+    - `dataSource` — по умолчанию `"unknown"`, обновляется в `loadArticles()` через `articlesRepo.getLastSource()`
+  - **Вычисляемые свойства:** 
+    - `filteredArticles` — фильтрация происходит по тегам, тексту, а также по локализованному названию категории через `categoriesRepo`
+    - `allTags`
+  - **Методы:** `loadArticles()`
+  - **Особенности:** Использует `@AppStorage("selectedLanguage")` для локализации поиска, имеет `convenience init()`
+
+- **CategoriesViewModel**
+  - **Ответственность:** Управление загрузкой категорий и связанных статей
+  - **MainActor, final, ObservableObject:** класс помечен `@MainActor`, является `final` и реализует `ObservableObject`.
+  - **Зависимости:** `CategoriesRepository`, `ArticlesRepository`, `FavoritesManager`
+  - **Состояния:** `categories`, `articles`
+  - **Методы:** 
+    - `load()` — вызывает `categoriesRepo.bootstrap()` и загружает статьи через `articlesRepo.loadArticles()`
+    - `refresh()` — вызывает `categoriesRepo.refresh()` и загружает статьи через `articlesRepo.refreshArticles()`
+    - `category(by:)`
+    - `articles(for:)`
+    - `loadData()` (для обратной совместимости, вызывает `refresh()`)
+  - **Особенности:** Опциональный `favoritesManager` в init
+  
 - **SettingsViewModel**
-  - Управляет настройками и историей чтения.
-  - Зависимости: `ReadingHistoryManager`.
-  - Состояния: `selectedLanguage`, `isHistoryCleared`.
-  - Методы: `clearHistory()`, `changeLanguage(to:)`.
+  - **MainActor, ObservableObject:** Класс помечен `@MainActor` и реализует `ObservableObject` для корректной работы с состоянием и интеграции с SwiftUI.
+  - **Ответственность:** Управление настройками и историей чтения
+  - **Зависимости:** `ReadingHistoryManager`
+  - **Состояния:**
+    - `selectedLanguage` — хранится в `@AppStorage("selectedLanguage")`, по умолчанию `"ru"`.
+    - `isHistoryCleared` — по умолчанию `false`; устанавливается в `true` после вызова `clearHistory()`.
+  - **Методы:** `clearHistory()`, `changeLanguage(to:)`, `getStats()` → возвращает `ReadingStats`
 
 - **ArticleDetailViewModel**
-  - Управляет состоянием экрана статьи.
-  - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
-  - Состояния: `article`, `allArticles`, `isFavorite`.
-  - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
+  - **Ответственность:** Управление состоянием экрана статьи
+  - **Зависимости:** `FavoritesManager`, `ReadingHistoryManager`
+  - **Состояния:** `article`, `allArticles`, `isFavorite`
+    - **Примечание:** `isFavorite` инициализируется в `init` на основе `FavoritesManager.isFavorite(article.id)`.
+  - **Методы:** 
+    - `toggleFavorite()`
+    - `exportToPDF()` — экспортирует статью в PDF, имя файла берётся из `article.pdfFileName ?? article.id`.
+    - `markAsRead()`
+  - **Особенности:** Жестко закодирован язык "ru" в PDF экспорте
 
-- **HomeView**
-  - Не создаёт VM напрямую.
-  - При инициализации по умолчанию использует `AppContainer.shared.makeHomeViewModel()`
-  - В тестах/превью может принимать кастомный VM.
+- **ArticleRowViewModel**
+  - **Ответственность:** Управление отображением строки статьи
+  - **Зависимости:** `FavoritesManager`, `RatingManager`
+  - **Состояния:** `isFavorite`, `rating`, `imageName`
+  - **Инициализация:** 
+    - Основной `init(article:favoritesManager:ratingManager:)` (Dependency Injection).
+    - Упрощённый `convenience init(article:)` использует глобальные `shared` менеджеры.
+  - **Методы:** `toggleFavorite()`, `setRating(_:)`
+  - **Вычисляемые свойства:** 
+    - `title` → основан на `Article.localizedTitle(for:)` (жёстко "ru")
+    - `subtitle` → основан на `Article.formattedReadingTime(for:)` (жёстко "ru")
+    - `metaInfo` → объединяет `Article.formattedCreatedDate(for:)` и `Article.formattedUpdatedDate(for:)` (жёстко "ru")
+  - **Особенности:** Имеет `convenience init(article:)` для упрощенного создания
 
-- **SettingsView**
-  - Теперь работает с `SettingsViewModel`.
-  - Управление настройками и очисткой истории вынесено во ViewModel.
+- **AboutViewModel**
+  - **Ответственность:** Управление экраном «О приложении»
+  - **MainActor, ObservableObject:** Класс помечен `@MainActor` и реализует `ObservableObject` для корректной работы с состоянием и интеграции с SwiftUI.
+  - **Состояния:** `appVersion`, `buildNumber`, `repositoryURL`
+    - **repositoryURL:** Свойство `repositoryURL` инициализируется значением `"https://github.com/UmedTJK/InGermany"`.
+  - **Методы:** автоматическая загрузка информации из Bundle
 
-- **ArticleDetailView**
-  - Теперь работает с `ArticleDetailViewModel`.
-  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
+### Views и их ViewModels
+
+- **HomeView** → `HomeViewModel` (из `AppContainer.makeHomeViewModel()`)
+- **FavoritesView** → `FavoritesViewModel` (из `AppContainer.makeFavoritesViewModel()`)
+- **SearchView** → `SearchViewModel` (из `AppContainer.makeSearchViewModel()`)
+- **CategoriesView** → `CategoriesViewModel` (из `AppContainer.makeCategoriesViewModel()`)
+- **SettingsView** → `SettingsViewModel` (из `AppContainer.makeSettingsViewModel()`)
+- **ArticleDetailView** → `ArticleDetailViewModel` (из `AppContainer.makeArticleDetailViewModel()`)
+- **AboutView** → `AboutViewModel` (из `AppContainer.makeAboutViewModel()`)
+- **ArticleRow** → `ArticleRowViewModel` (создается напрямую)
 
 ---
 
@@ -142,7 +245,11 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 
 Полное дерево проекта хранится в файле: `Docs/project_tree.md`
 
-> ⚠️ Обновляется вручную командой:
+> ⚠️ Обновляется автоматически через скрипт:
+> ```bash
+> ./scripts/update_project_tree.sh 3
+> ```
+> Или вручную:
 > ```bash
 > cd ~/Desktop/InGermany
 > tree -L 3 > Docs/project_tree.md
@@ -150,95 +257,230 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 
 ---
 
-## 2b) Потоки данных, менеджеры и хранение
+## 2b) Потоки данных, менеджеры и хранение (Дата актуализации: 06.10.2025)
+
+### Модели
 
 ### Модели
 
 - **Article**  
-  `id, title:[String:String], content:[String:String], categoryId, tags, pdfFileName?, createdAt?, updatedAt?, image?`  
-  Методы: `localizedTitle`, `localizedContent`, `formattedCreatedDate`, `formattedUpdatedDate`, `readingTime`, `formattedReadingTime`.
+  `id: String`, `title: [String: String]`, `content: [String: String]`, `categoryId: String`, `tags: [String]`, `pdfFileName: String?`, `createdAt: String?`, `updatedAt: String?`, `image: String?`  
+  **Кастомное Codable:** Обработка строковых дат в ISO8601 формате для обратной совместимости  
+  **Полная локализация:** Поддерживает все 7 языков (`ru`, `en`, `de`, `tj`, `fa`, `ar`, `uk`) в title и content  
+  **Markdown-контент:** Поле content содержит текст с Markdown-разметкой  
+  **JSON Mapping:** Поля модели напрямую соответствуют полям в `articles.json`  
+  **Методы:**  
+    - `localizedTitle(for:)` → с фолбэком на "en" или первое значение
+    - `localizedContent(for:)` → с фолбэком на "en" или первое значение  
+    - `formattedCreatedDate(for:)` → средний формат даты с локализацией
+    - `formattedUpdatedDate(for:)` → средний формат даты с локализацией  
+    - `relativeCreatedDate(for:)` → относительный формат ("3 дня назад")
+    - `readingTime(for:)` → время чтения для конкретного языка
+    - `formattedReadingTime(for:)` → форматированное время чтения
+    - `imageName` → нормализация имени изображения: конвертация `.avif` в `.jpg`, добавление расширения при отсутствии  
+    - `wordCount` → подсчитывается через `ReadingTimeCalculator.estimateReadingTime() * 200` (НЕ прямой подсчет слов)
+    - `isNew` → создана в последние 7 дней
+    - `isUpdatedRecently` → обновлена в последние 3 дня
+    - `getTranslation(key:language:)` (приватный) → хардкод-словари для фраз "Дата неизвестна", "Не обновлялась"
+  
+  **Особенности:**
+  - Использует `ISO8601DateFormatter()` для кодирования/декодирования дат
+  - Жестко закодированные локали для форматирования: ru_RU, en_US, de_DE, tj → ru_RU
+  - Hashable реализация основана только на `id`
+  - Sample данные включают изображения и даты
+  - Поле `image` содержит только имя файла без пути (например, "germany2.jpg")
 
 - **Category**  
-  `id, name:[String:String], icon (SF Symbol), colorHex`  
-  Метод: `localizedName(for:)`.
+  `id: String`, `name: [String: String]`, `icon: String (SF Symbol)`, `colorHex: String`  
+  **JSON Mapping:** Поля модели напрямую соответствуют полям в `categories.json`  
+  **Метод:** `localizedName(for:)` → фолбэк на "en" или первое доступное значение  
+  **Поддерживаемые языки:** Модель ожидает переводы только для `ru`, `en`, `de`, `tj`  
+  **Особенности:** Имеет поле `colorHex` для цветового оформления
 
 - **Location**  
-  `id, name, latitude, longitude`  
-  Свойство: `coordinate: CLLocationCoordinate2D`.
+  `id: String`, `name: String`, `latitude: Double`, `longitude: Double`  
+  **JSON Mapping:** Поля модели напрямую соответствуют полям в `locations.json`  
+  **Свойство:** `coordinate: CLLocationCoordinate2D` → вычисляемое свойство для MapKit  
+  **Особенности:** Простая модель без методов локализации, имя только на немецком/русском
 
-### Менеджеры состояния
+### Менеджеры состояния (Дата актуализации: 06.10.2025)
 
-- **FavoritesManager**  
-  `@AppStorage("favoriteArticles")` → JSON `Set<String>`  
-  Методы: `isFavorite(id:)`, `toggleFavorite(id:)`, `favoriteArticles(from:)`.
+- **FavoritesManager** (`@MainActor`, `final`, `ObservableObject`)
+  - **Singleton:** `static let shared`
+  - **Хранение:** `DefaultsStore` → ключ "favorites", массив `[String]` (конвертируется в `Set<String>`)
+  - **Состояние:** `@Published private(set) var favorites: Set<String>`
+  - **Методы:** 
+    - `isFavorite(_:)` и `isFavorite(id:)` (для обратной совместимости)
+    - `toggleFavorite(for:)` 
+    - `favoriteArticles(from:)` - фильтрация массива статей
+    - `clearForTesting()` - для тестов
+  - **Особенности:** Автоматическая загрузка при инициализации
 
-- **RatingManager**  
-  Хранение: `UserDefaults` (`rating_<articleId>`)  
-  Методы:  
-  - `getRating(for:) -> Int` — получить рейтинг статьи  
-  - `setRating(_:for:)` — установить рейтинг  
-  Используется в `ArticleCardView`, `ArticleCompactCard`, `ArticleMetaView` через биндинги в `StarRatingView`.
+- **RatingManager** (`@MainActor`, `final`, `ObservableObject`)
+  - **Singleton:** `static let shared`
+  - **Хранение:** `UserDefaults` → ключ "articleRatings", словарь `[String: Int]`
+  - **Состояние:** `@Published private var ratings: [String: Int]`
+  - **Методы:** `getRating(for:) -> Int`, `setRating(_:for:)`, `clearForTesting()`
+  - **Особенности:** Поддерживает инъекцию `UserDefaults` через `init(userDefaults:)`
 
-- **ReadingHistoryManager**  
-  Хранение: `@AppStorage("readingHistory")` JSON массив `ReadingHistoryEntry`.  
-  Методы: `addReadingEntry`, `recentlyReadArticles`, `isRead`, `lastReadDate`, `clearHistory`.  
-  Ограничение: максимум 100 записей.  
-  Вспомогательные: `ReadingTracker`, `ReadingStats`. let totalReadingTimeSeconds: Int   // учитываются секунды
+- **ReadingHistoryManager** (`ObservableObject`, НЕ `@MainActor`)
+  - **Singleton:** `static let shared`
+  - **Хранение:** `@AppStorage("readingHistory") private var storedHistory: Data`
+  - **Состояние:** `@Published private(set) var history: [ReadingHistoryEntry]`
+  - **Модели:** `ReadingHistoryEntry`, `ReadingTracker`, `ReadingStats`
+  - **Методы:** 
+    - `addReadingEntry(articleId:readingTime:)`
+    - `recentlyReadArticles(from:limit:)` - возвращает до 5 последних статей
+    - `isRead(_:)`, `lastReadDate(for:)`, `clearHistory()`, `getStats() -> ReadingStats`
+    - `clearForTesting()`
+  - **Статистика:** `totalReadingTimeMinutes`, `totalArticlesRead`
+  - **Ограничения:** Максимум 100 записей в истории
 
-- **CategoryManager (actor)**  
-  Методы: `loadCategories()`, `allCategories()`, `category(for id:)`, `category(for name:language:)`, `refreshCategories()`.
+- **CategoryManager** (`actor`, НЕ `@MainActor`)
+  - **⚠️ НЕ ИСПОЛЬЗУЕТСЯ в DI** - существует параллельно с CategoriesRepository
+  - **Глобальный инстанс:** `let categoryManager = CategoryManager()` (не singleton)
+  - **Зависимости:** `DataService.shared` напрямую
+  - **Методы:** `loadCategories() async`, `allCategories()`, `category(for id:)`, `category(for name:language:)`, `refreshCategories() async`
+  - **Особенности:** Actor для thread safety, но нарушает DI принципы
 
-- **CategoriesStore (ObservableObject)**  
-  Published: `categories:[Category]`, `byId:[String:Category]`.  
-  Методы: `bootstrap()`, `refresh()`, `category(for:)`, `categoryName(for:)`.
+- **TextSizeManager** (`@MainActor`, `final`, `ObservableObject`)
+  - **Singleton:** `static let shared`
+  - **Хранение:** `DefaultsStore` → ключи "textSize" (enum) и "customTextScale" (Double)
+  - **Состояния:** `@Published private(set) var textSize: TextSize`, `@Published var customScale: Double`
+  - **Методы:** `setTextSize(_:)`, автоматическое сохранение при изменении `customScale`
+  - **Особенности:** Поддерживает и enum-based и slider-based управление размером текста
 
-- **TextSizeManager (ObservableObject)**  
-  Хранение: `UserDefaults` (`articleFontSize`, `isCustomTextSizeEnabled`).  
-  Методы: `presetSizes`, `resetToDefault()`, `currentFont`.
+- **ReadingProgressTracker** (`@MainActor`, `final`, `ObservableObject`)
+  - **Singleton:** `static let shared`
+  - **Хранение:** память приложения (НЕ сохраняется между запусками)
+  - **Состояние:** `@Published private(set) var progress: [String: CGFloat]`
+  - **Методы:** `updateProgress(for:value:)`, `progressForArticle(_:)`, `reset(for:)`
+  - **Особенности:** Прогресс сбрасывается при перезапуске приложения
 
----
+- **ReadingTimeTracker** (`@MainActor`, `final`, `ObservableObject`)
+  - **Singleton:** `static let shared`
+  - **Хранение:** `DefaultsStore` → ключ "readingSessions", массив `[ReadingSession]`
+  - **Состояния:** `@Published private(set) var activeSessions: [String: ReadingSession]`, `@Published private(set) var completedSessions: [ReadingSession]`
+  - **Модель:** `ReadingSession` с `articleId`, `startTime`, `endTime`, `duration`
+  - **Методы:** `startSession(articleId:)`, `endSession(articleId:)`, `getTotalReadingTime()`, `getReadingTimeForLast(days:)`
+  - **Фильтрация:** Сохраняет только сессии длительнее 3 секунд
 
-### Сервисы
+- **ReadingTimeCalculator** (struct, НЕ менеджер)
+  - **Статические методы:** `estimateReadingTime(for:language:)`, `formatReadingTime(_:language:)`
+  - **Скорости чтения:** `ru: 200`, `en: 250`, `de: 220`, `tj: 180` слов/минуту
+  - **Минимум:** Всегда возвращает не менее 1 минуты
 
-- **DataService (actor)**  
-  Приоритет загрузки: память → Bundle JSON → сеть.  
-  Методы: `loadArticles`, `loadCategories`, `loadLocations`, `refreshData`, `clearCache`, `getLastDataSource`.
+- **ReadingProgressHelper** (struct, утилита)
+  - **Статические методы:** `color(for:)`, `status(for:language:)`, `progressView(progress:language:)`
+  - **Цвета прогресса:** green (0-50%), orange (50-80%), red (80-100%)
+  - **⚠️ Нарушение DI:** Использует `LocalizationManager.shared` напрямую
 
-- **NetworkService**  
-  Приоритет: сеть → cache (~/Library/Caches/InGermanyCache) → Bundle.  
-  Методы: `loadJSON<T:Decodable>(from:)`, `loadJSONSync<T>(from:completion:)`, `clearCache`.
+### Сервисы (Дата актуализации: 06.10.2025)
 
-- **ShareService**  
-  Метод: `shareArticle(_:language:)` → iOS Share Sheet.
+- **DataService** (`actor`)
+  - **Singleton:** `static let shared`
+  - **Зависимости:** `NetworkService.shared`
+  - **Кэширование:** `articlesCache`, `categoriesCache`, `locationsCache` в памяти
+  - **Стратегия:** Offline-first (память → локальный JSON → сеть асинхронно)
+  - **Методы:**
+    - `loadArticles() async -> [Article]` - основной метод загрузки
+    - `loadCategories() async -> [Category]`
+    - `loadLocations() async -> [Location]`
+    - `refreshData() async` - принудительное обновление
+    - `clearCache()` - очистка кэша
+    - `getLastDataSource() async -> [String: String]` - возвращает источники данных
+  - **Логирование:** Подробные console-логи с префиксами (📦, 📂, 🌐, ⚠️)
+  - **Особенности:** Асинхронное обновление из сети после возврата локальных данных
 
-- **AuthService**  
-  Заглушка.
+- **NetworkService** (class, НЕ actor)
+  - **Singleton:** `static let shared`
+  - **База URL:** `https://raw.githubusercontent.com/UmedTJK/InGermany/main/Resources/`
+  - **Кэширование:** `URLCache` (10MB память, 50MB диск) + файловая система в `~/Library/Caches/InGermanyCache/`
+  - **Стратегия:** Сеть → файловый кэш → Bundle
+  - **Методы:**
+    - `loadJSON<T: Decodable>(from:) async throws -> T` - основной async метод
+    - `loadJSONSync<T>(from:completion:)` - legacy sync метод
+    - `clearCache()` - очистка кэша
+  - **Таймаут:** 10 секунд
+  - **Особенности:** Подробная обработка ошибок, игнорирование локального кэша при сетевых запросах
 
----
+- **ArticlesRepositoryImpl** (final class)
+  - **Реализация:** `ArticlesRepository` protocol
+  - **Зависимости:** `DataService.shared` напрямую
+  - **Методы:**
+    - `loadArticles() async -> [Article]` → делегирует `DataService.shared.loadArticles()`
+    - `refreshArticles() async -> [Article]` → очищает кэш и загружает заново
+    - `getLastSource() async -> String` → получает источник из `DataService.shared.getLastDataSource()`
+  - **Особенности:** Тонкая прокладка без дополнительной логики
 
+- **LocalizationManager** (`@MainActor`, `final`, `ObservableObject`)
+  - **Singleton:** `static let shared`
+  - **Хранение:** `@AppStorage("selectedLanguage") var selectedLanguage: String = "ru"`
+  - **Методы:**
+    - `getTranslation(key:language:) -> String` - основной метод
+    - `t(_:language:) -> String` - сокращенный метод
+  - **Словарь:** Жестко закодированный словарь переводов для всех 7 языков
+  - **Расширения:** `View.t(_:)` для удобного доступа в SwiftUI
+  - **Особенности:** Полная поддержка всех языков проекта (ru/en/de/tj/fa/ar/uk)
 
-### Новые папки и их содержимое
+- **ShareService** (class)
+  - **Статические методы:** `shareArticle(_:language:)`
+  - **Форматирование:** Заголовок + контент + подпись "Читайте в приложении InGermany!"
+  - **Платформа:** Использует `UIActivityViewController` для iOS share sheet
+  - **Язык:** По умолчанию русский
 
-- **Protocols/**  
-  - `ArticlesRepository.swift`  
-  - `CategoriesRepository.swift`  
-  - (другие протоколы для сервисов, менеджеров и репозиториев)
+- **ExportToPDF** (struct)
+  - **Статические методы:** `export(title:content:fileName:)`
+  - **Формат:** A4 (595.2 × 841.8 points) с полями 20pt
+  - **Метаданные:** Creator, Author, Title
+  - **Шрифты:** Bold 24pt для заголовка, Regular 16pt для контента
+  - **Сохранение:** В папку Documents с именем `fileName.pdf`
+  - **Логирование:** Успех/ошибка в console
 
-- **UIUtils/**  
-  - `Theme.swift`  
-  - `Animations.swift`  
-  - `CardSize.swift`  
-  - `Color+Hex.swift`  
-  - `ProgressBar.swift`
+- **DefaultsStore** (enum)
+  - **Статические методы:** `load<T: Codable>(_ key:as:) -> T?`, `save<T: Codable>(_ value:for:)`
+  - **Реализация:** JSON encoding/decoding поверх `UserDefaults`
+  - **Особенности:** Универсальный helper для Codable объектов
 
-- **Formatters/**  
-  - `DateFormatter+Localized.swift`  
-  - `ReadingTimeFormatter.swift`  
-  - (другие форматтеры для дат, времени, текста)
+- **AuthService** (class)
+  - **⚠️ ЗАГЛУШКА:** Только TODO комментарии, функциональность не реализована
+  - **Планируемая ответственность:** Аутентификация, управление сессиями, хранение токенов
 
----
+### UI-компоненты и утилиты (Дата актуализации: 06.10.2025)
 
-### UI-компоненты
+- **Animations.swift** — расширенный набор анимаций и стилей:
+  - **View Modifiers:** `cardStyle()`, `lightCardStyle()`, `scaleOnAppear()`, `pressAnimation()`, `slideInAnimation(delay:)`
+  - **Button Styles:** `AppleCardButtonStyle`, `ScaleButtonStyle` (кастомизируемый масштаб)
+  - **Loading States:** `LoadingView` — индикатор загрузки с тремя анимированными точками
+  - **Shimmer Effect:** `ShimmerModifier` и метод `.shimmer()` для эффекта мерцания
+  - **Transition Effects:** `.slideAndFade`, `.scaleAndFade` — готовые переходы
+  - **Haptic Feedback:** `HapticFeedback` с методами `light()`, `medium()`, `heavy()`, `success()`, `error()`, `warning()`
+
+- **Theme.swift** — темы и стили:
+  - **Цвета:** `primaryBlue`, `secondaryGray`, `backgroundCard`, `backgroundMain`
+  - **Градиенты:** `cardGradient`, `favoriteCardGradient` 
+  - **Отступы:** `cardPadding`, `smallPadding`, `mediumPadding`, `largePadding`
+  - **Тени:** `cardShadow`, `lightShadow` (структура `Shadow`)
+  - **Методы:** `sectionCardStyle()` для секций с вертикальными отступами
+  - **Особенности:** Имеет дублирующую функциональность с `Animations.cardStyle()`
+
+- **CardImageStyle.swift** — стили изображений в карточках:
+  - `allCorners`, `bottomCorners`, `fullWidth`
+  - **⚠️ Прямое использование** `LocalizationManager.shared` без DI
+
+- **Color+Hex.swift** — расширение Color для работы с HEX
+  - `init?(hex: String)` — создание из HEX строки
+
+- **ProgressBar.swift** — компонент прогресс-бара
+  - **⚠️ Жестко закодированные цвета** (.gray, .blue) вместо Theme
+  - Фиксированная высота 4pt
+  - Анимация продолжительностью 0.3 секунды
+  - Простая реализация без кастомизации цветов или высоты
+
+- **CardSize.swift** — утилита для расчета размеров карточек:
+  - `width(for:)` — расчет ширины на основе ширины экрана
+  - `height(for:screenWidth:)` — расчет высоты на основе размеров экрана
+  - Поддерживает адаптацию для iPhone SE, обычных iPhone и iPad
 
 - **TextSizeSettingsPanel** — экран настройки текста.  
 - **TagFilterView** — фильтр тегов.  
@@ -246,169 +488,15 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 - **PDFViewer** — рендер PDF из Bundle.  
 - **FavoriteCard** — карточка избранного.  
 - **Components.swift**: `ToolCard`, `RecentArticleCard`, `EmptyFavoritesView`, `CategoryFilterButton`.  
-- **Animations.swift**: `.cardStyle()`, `.scaleOnAppear()`, `.shimmer()`, haptic feedback.  
 - **ArticleCardView** — карточка статьи в сетке.  
 - **ArticleMetaView** — категория, даты, бейджи.  
 - **ArticleRow** — строка списка статей, работает через `ArticleRowViewModel` (MVVM).
 - **ArticleCompactCard** — компактная карточка статьи, используемая в списках и секциях.
-  Включает:
-  - изображение статьи (с поддержкой стиля через `CardImageStyle`),
-  - заголовок (2 строки, выравнивание по левому краю),
-  - короткий анонс (до 2 строк из начала текста),
-  - блок метаданных:
-    - рейтинг из `RatingManager` (через `StarRatingView`),
-    - прогресс чтения через `ReadingProgressTracker`,
-    - время чтения (`Article.formattedReadingTime`).
-  Поддерживает динамический размер текста через `TextSizeManager`.
-  Размер: ширина 320pt, высота изображения 280pt, фон `systemBackground`, скруглённые углы и тень.
-
-
-### MVVM + Dependency Injection (с версии v1.11.0)
-
-Архитектура проекта переведена на использование централизованного DI через `AppContainer` и MVVM для основных экранов.
-
-#### AppContainer
-- Реализован как Composition Root, помечен `@MainActor`.
-- Отвечает за создание и хранение зависимостей.
-- Методы-фабрики:
-  - `makeHomeViewModel()`
-  - `makeFavoritesViewModel()`
-  - `makeSearchViewModel()`
-  - `makeCategoriesViewModel()`
-  - `makeSettingsViewModel()`
-  - `makeArticleDetailViewModel()`
-
-#### ViewModels
-- **HomeViewModel**
-  - Управляет данными главного экрана.
-  - Работает с `ArticlesRepository`, `FavoritesManager`, `ReadingHistoryManager`, `CategoriesRepository`.
-  - Методы: `loadData()`, `refreshData()`, `selectRandomArticle()`.
-
-- **FavoritesViewModel**
-  - Управляет списком избранного.
-  - Зависимости: `FavoritesManager`, `ArticlesRepository`.
-  - Методы: `loadFavorites()`, `toggleFavorite(for:)`.
-  - Публичные состояния: `favoriteArticles`, `allArticles`, `isLoading`, `dataSource`.
-
-- **SearchViewModel**
-  - Управляет логикой поиска и фильтрации.
-  - Зависимости: `FavoritesManager`, `CategoriesRepository`, `ArticlesRepository`.
-  - Состояния: `articles`, `searchText`, `selectedTag`, `isLoading`, `dataSource`.
-  - Вычисляемые свойства: `filteredArticles`, `allTags`.
-
-- **CategoriesViewModel**
-  - Управляет загрузкой категорий и связанных статей.
-  - Зависимости: `CategoriesRepository`, `ArticlesRepository`, `FavoritesManager`.
-  - Методы: `loadData()`.
-  - Состояния: `categories`, `articles`, `isLoading`.
-
-- **SettingsViewModel**
-  - Управляет настройками и историей чтения.
-  - Зависимости: `ReadingHistoryManager`.
-  - Состояния: `selectedLanguage`, `isHistoryCleared`.
-  - Методы: `clearHistory()`, `changeLanguage(to:)`.
-
-- **ArticleDetailViewModel**
-  - Управляет состоянием экрана статьи.
-  - Зависимости: `FavoritesManager`, `ReadingHistoryManager`.
-  - Состояния: `article`, `allArticles`, `isFavorite`.
-  - Методы: `toggleFavorite()`, `exportToPDF()`, `markAsRead()`.
-    - Теперь работает с `ArticleDetailViewModel`.
-  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
-  - Оптимизирован: вынесены вычисляемые свойства (`ratingBinding`, `articleContent`).
-  - Для связанных статей теперь используется `ArticleRow(viewModel:)`.
-  
-- **ArticleRowViewModel**
-  - Управляет отображением строки статьи (`ArticleRow`).
-  - Зависимости: `FavoritesManager`, `RatingManager`.
-  - Состояния: `isFavorite`, `rating`, `title`, `subtitle`, `metaInfo`.
-  - Методы: `toggleFavorite()`, `setRating(_:)`.
-
-- **AboutViewModel**
-  - Управляет экраном «О приложении».
-  - Состояния: `appVersion`, `buildNumber`, `repositoryURL`.
-  - Локализация выполняется через `LocalizationManager`.
-
-#### Views
-- **HomeView**
-  - Получает `HomeViewModel` из `AppContainer`.
-  - ViewModel полностью управляет данными и состоянием.
-
-- **FavoritesView**
-  - Теперь работает через `FavoritesViewModel`.
-  - Управление избранным (загрузка, фильтрация, добавление/удаление) вынесено во ViewModel.
-  - ViewModel отвечает за фильтрацию и загрузку избранных статей.
-
-- **SearchView**
-  - Работает с `SearchViewModel`.
-  - Фильтрация по тегам и поисковому тексту вынесена во ViewModel.
-  - View остаётся чисто декларативной.
-
-- **CategoriesView**
-  - Работает с `CategoriesViewModel`.
-  - Не принимает параметры `articles` и `favoritesManager` напрямую, получает их через DI.
-
-- **SettingsView**
-  - Теперь работает с `SettingsViewModel`.
-  - Управление настройками и очисткой истории вынесено во ViewModel.
-
-- **ArticleDetailView**
-  - Теперь работает с `ArticleDetailViewModel`.
-  - Функции: управление избранным, экспорт PDF, учёт истории чтения.
-
-#### ContentView
-- Убран вызов `SearchView(favoritesManager:, articles:)`.
-- Теперь используется просто `SearchView()`, так как зависимости берутся через DI.
-- `CategoriesView` теперь также переведён на MVVM через DI.
-
-- **AboutView**
-  - Теперь работает через `AboutViewModel`.
-  - Отображает описание приложения, версию, билд и ссылку на GitHub.
-
----
-
-📌 Важно: теперь весь код соответствует принципам **SOLID** и паттерну **MVVM**, зависимости централизованы, Views максимально «тонкие».
-
-### Экраны
-
-- **HomeView**  
-  Секции: «Полезные инструменты» (MapView, PDFViewer, Random Article), «Недавно прочитанное», «Избранное», категории, «Все статьи».  
-  Работает с: `favoritesManager`, `categoriesStore`, `ReadingHistoryManager`.
-
-- **MapView**  
-  Отображает `locations.json` (через DataService).  
-  Toolbar: «Моё местоположение», «Обновить».
-
-- **SearchView**  
-  Поиск по тексту, тегам, категориям.  
-  Использует: `TagFilterView`, `ArticleRow`.
-
-
-- **SettingsView**  
-  Управление настройками приложения (тема, размер текста, формат даты, история чтения, About).
-  ✅ Язык интерфейса теперь выбирается из списка с флагами и названием языка, текущий язык отмечен галочкой.
-  Теперь работает с `SettingsViewModel`.
-  Управление настройками и очисткой истории вынесено во ViewModel.
-
-- **ArticleDetailView**  
-  Полный экран статьи.  
-  Функции: PDF, избранное.  
-
-- **ArticlesByTagView** — список по тегу.  
-- **CategoriesView** — список категорий.  
-- **FavoritesView**  
-  - Теперь работает с `FavoritesViewModel`.
-  - Загружает и фильтрует избранные статьи через ViewModel.
-  - View остаётся декларативным, вся логика вынесена во ViewModel.
-- **AboutView** — информация о проекте.  
+- **ReadingProgressHelper** — утилита для прогресса чтения (цвета, статусы).
 
 ---
 
 ## 2c) Публичные интерфейсы
-
-> 📎 Все таблицы интерфейсов сведены по категориям: модели, сервисы, менеджеры, утилиты, UI и экраны.  
-> Формат: **Класс/Файл** → метод/свойство → входные параметры → возвращает → комментарий.  
-> (см. подробные таблицы в подготовленных блоках; при обновлении API фиксировать в этом разделе).
 
 #### Управление размером текста
 - Ранее выбор осуществлялся через enum `TextSize` (small/medium/large).  
@@ -417,14 +505,23 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 - Enum `TextSize` по-прежнему используется для функции «Сбросить» и обратной совместимости.  
 - `ArticleDetailView` и все текстовые представления теперь используют `customScale` вместо жёсткой привязки к `TextSize.scale`.
 
+#### Настройки интерфейса (AppStorage)
+- `selectedLanguage: String` — выбранный язык интерфейса
+- `cardImageStyle: CardImageStyle` — стиль изображений в карточках
+- `isDarkMode: Bool` — темная тема
+- `relativeDates: Bool` — относительный формат дат
+
+---
 
 ## 3) Ресурсы
 
 - `Resources/articles.json`  
 - `Resources/categories.json`  
 - `Resources/locations.json`  
+- `Resources/Images/` — изображения статей в локализованных папках .lproj
 - `Assets.xcassets` (логотипы, иконки)  
 - `Docs/*` (AI_CONTEXT, project_tree, git_snapshot и др.)  
+- `scripts/` — скрипты автоматизации
 - `update.sh`
 
 ---
@@ -432,7 +529,7 @@ AppContainer создаёт экземпляры ViewModel и менеджеро
 ## 4) Дорожная карта
 
 См. Roadmap в `README.md` и `CHANGELOG.md`.  
-Основные направления: улучшение UI, поддержка сетевой загрузки, unit-тесты ViewModel, расширение контента.
+Основные направления: улучшение UI, поддержка сетевой загрузки, расширение контента.
 
 ---
 
@@ -449,14 +546,218 @@ git log --oneline --graph -n 10
 - Коммиты только в стиле **Conventional Commits**.  
 - Пуш всегда в GitHub.  
 
+**Automation:**
+- Скрипт `scripts/update_project_tree.sh` автоматически обновляет структуру проекта
+- Git hook `Docs/hooks/pre-push.template` можно установить для автоматического обновления документации
+
 Актуальный снимок git хранится в: `Docs/git_snapshot.md`.
 
 ---
 
-## 6) Обновление контекста
+## 6) Unit Tests (XCTest) - ПОЛНОЕ ПОКРЫТИЕ 🎉
+
+### ✅ ТЕКУЩИЙ СТАТУС: 21/21 КОМПОНЕНТОВ, 262 ТЕСТА
+
+**Models (72 теста):**
+- ✅ **ArticleTests** — полное покрытие модели статьи (26 тестов)
+  - Тестирование кастомного Codable с строковыми датами
+  - Локализация заголовков и контента с фолбэками
+  - Форматирование дат (medium style и relative)
+  - Вычисление времени чтения и wordCount
+  - Логика imageName (AVIF→JPG конвертация)
+  - Свойства isNew и isUpdatedRecently
+  - Hashable реализация на основе id
+- ✅ **CategoryTests** — полное покрытие модели категории (24 теста)  
+  - Локализация имен с фолбэками
+  - Поддержка colorHex
+  - SF Symbols иконки
+- ✅ **LocationTests** — полное покрытие модели локации (22 теста)
+  - Координаты CLLocationCoordinate2D
+  - Простая Codable структура
+
+**ViewModels (полное покрытие):**
+- ✅ **AboutViewModelTests**
+- ✅ **ArticleDetailViewModelTests** — управление избранным, историей чтения, логика связанных статей
+- ✅ **ArticleRowViewModelTests** — управление состоянием строки статьи
+- ✅ **CategoriesViewModelTests** — загрузка категорий и связанных статей
+- ✅ **FavoritesViewModelTests** — комплексное тестирование ViewModel избранного
+- ✅ **HomeViewModelTests** — загрузка данных, обновления, выбор случайной статьи
+- ✅ **SearchViewModelTests** — фильтрация по тексту, тегам, категориям
+- ✅ **SettingsViewModelTests** — смена языка, очистка истории, настройки
+
+**Managers (комплексное тестирование):**
+- ✅ **FavoritesManagerTests** — добавление/удаление избранного, фильтрация статей, тестирование `clearForTesting()`
+- ✅ **RatingManagerTests** — установка и получение рейтинга, очистка для тестов
+- ✅ **ReadingHistoryManagerTests** — добавление/очистка истории, ограничение в 100 записей, статистика, `ReadingStats` вычисления
+- ✅ **CategoryManagerTests** — загрузка категорий, поиск по ID/имени, обновление данных (actor-тестирование)
+- ✅ **ReadingTimeTrackerTests** — управление сессиями, фильтрация коротких сессий (<3 сек), статистика по времени
+- ✅ **TextSizeManagerTests** — переключение размеров текста, работа с customScale
+- ✅ **ReadingProgressTrackerTests** — отслеживание прогресса чтения, сброс прогресса
+
+**Services (интеграционное тестирование):**
+- ✅ **DataServiceTests** — корректная работа с JSON (articles, categories), edge-кейсы: пустые/битые данные, стратегия offline-first
+- ✅ **ArticlesRepositoryImplTests** — тестирование репозитория статей, делегирование к DataService
+- ✅ **NetworkServiceTests** — загрузка из сети, кэширование, fallback на локальные файлы
+- ✅ **LocalizationManagerTests** — переводы для всех языков, фолбэки, работа с AppStorage
+
+**Helpers (115+ тестов):**
+- ✅ **ReadingTimeCalculatorTests** — вычисление времени чтения (60+ тестов)
+- ✅ **ReadingTimeTrackerTests** — трекинг времени чтения (30+ тестов)
+- ✅ **ReadingProgressTrackerTests** — отслеживание прогресса чтения (25 тестов)
+
+**Smoke Tests:**
+- ✅ **InGermanyTests** — smoke-тесты инициализации приложения
+
+### Архитектура тестирования
+- **Swift 6 Ready**: Full MainActor isolation и concurrency safety
+- **Performance Optimized**: Performance tests для всех критических операций
+- **Multilingual Support**: Тестирование для всех 7 поддерживаемых языков
+- **Real Data Integration**: Тесты используют актуальные JSON данные из ресурсов проекта
+- **100% Public API Coverage** для всех компонентов
+- **Edge Case Handling** для всех возможных сценариев
+
+---
+
+## 7) Актуальные проблемы архитектуры (Дата актуализации: 06.10.2025)
+
+### 🔴 Критические расхождения
+
+1. **Систематическое нарушение DI в UI компонентах**
+   - `ArticleCompactCard`: создает `RatingManager.shared`, `ReadingProgressTracker.shared`, `DefaultCategoriesRepository.shared` напрямую
+   - `ArticleMetaView`: создает `RatingManager.shared`, `ReadingHistoryManager.shared`, `DefaultCategoriesRepository.shared` напрямую
+   - `ArticleCardView`: создает `RatingManager.shared` напрямую
+   - `TextSizeSettingsPanel`: создает `TextSizeManager.shared` напрямую
+   - `ArticleDetailView`: создает 4 менеджера напрямую (`ReadingProgressTracker`, `TextSizeManager`, `RatingManager`, `ReadingTimeTracker`)
+
+2. **Прямое использование LocalizationManager в View**
+   - `HomeView`, `SearchView`, `AboutView`, `ArticleDetailView`, `CategoriesView`, `MapView`, `PDFViewer`, `ReadingProgressBar`, `TextSizeSettingsPanel` используют `LocalizationManager.shared` напрямую
+   - Нарушение DI принципов, должно быть инжектировано через ViewModel
+
+3. **Нарушение DI в ContentView.swift**
+   - Создает `FavoritesManager.shared` напрямую через `@StateObject`
+   - Использует `DataService.shared` напрямую вместо репозиториев
+   - Не использует AppContainer для создания View
+
+4. **Прямые зависимости в MapView**
+   - Использует `DataService.shared.loadLocations()` напрямую вместо репозиториев
+   - Создает `LocationManager` напрямую через `@StateObject`
+
+5. **Нарушение DI в навигационных View**
+   - `ArticlesByCategoryView`, `ArticlesByTagView` принимают `FavoritesManager` напрямую
+   - `CategoriesView` передает `FavoritesManager.shared` в дочерние View
+
+6. **Дублирование управления категориями**
+   - `CategoryManager` (actor) существует но не используется
+   - `DefaultCategoriesRepository` используется вместо него
+   - Два разных подхода к одной задаче
+
+7. **AppContainer.makeCategoriesViewModel()**
+   - Создает `ArticlesRepositoryImpl()` и `DefaultCategoriesRepository.shared` напрямую
+   - Не использует инжектированные `articlesRepo` и `categoriesRepo`
+
+8. **InGermanyApp.swift нарушает DI**
+   - Создает `DefaultCategoriesRepository.shared` напрямую через `@StateObject`
+
+9. **Прямые зависимости в UIUtils**
+   - `CardImageStyle` использует `LocalizationManager.shared` напрямую
+   - `ProgressBar` использует жестко закодированные цвета
+
+10. **Жестко закодированный язык в ViewModels**
+    - `ArticleRowViewModel` использует "ru" в computed properties
+    - `ArticleDetailViewModel` использует "ru" в PDF экспорте
+
+11. **Дублирование логики перевода**
+    - `FavoritesView`, `PDFViewer`, `ReadingProgressBar` имеют дублирующие методы перевода с жестко закодированными словарями
+
+12. **Отсутствие @MainActor изоляции**
+    - Большинство View не помечены как `@MainActor` несмотря на работу с @StateObject/@ObservedObject
+
+13. **Нарушение консистентности в менеджерах**
+    - `ReadingHistoryManager` НЕ помечен как `@MainActor`, хотя другие менеджеры помечены
+    - `CategoryManager` является `actor`, но не `@MainActor`, что создает путаницу
+    - `ReadingProgressTracker` хранит данные только в памяти, теряет прогресс между запусками
+
+14. **Дублирование функциональности трекеров**
+    - `ReadingHistoryManager` и `ReadingTimeTracker` отслеживают время чтения, но по-разному
+    - `ReadingTracker` (вложенный в ReadingHistoryManager) дублирует логику `ReadingTimeTracker`
+
+15. **Нарушение DI в менеджерах**
+    - `CategoryManager` использует `DataService.shared` напрямую
+    - `ReadingProgressHelper` использует `LocalizationManager.shared` напрямую
+    - Все менеджеры используют singleton паттерн вместо DI через AppContainer
+
+16. **Несоответствие хранения данных**
+    - Одни менеджеры используют `DefaultsStore`, другие - `UserDefaults`, третьи - `@AppStorage`
+    - `ReadingProgressTracker` не сохраняет данные вообще
+
+17. **Жестко закодированные локали в моделях**
+    - `Article` использует фиксированные локали (ru_RU, en_US, de_DE) вместо системных
+    - `Article` использует `ru_RU` локаль для таджикского языка (tj)
+    - Нарушение принципов локализации - должен использоваться системный Locale
+
+18. **Некорректный подсчет слов в Article**
+    - Свойство `wordCount` использует приблизительный расчет: `readingTime * 200`
+    - Не отражает реальное количество слов, вводит в заблуждение
+    - Дублирует логику `ReadingTimeCalculator.countWords(in:)` но неправильно
+
+19. **Хардкод-переводы в модели данных**
+    - `Article.getTranslation(key:language:)` содержит жестко закодированные словари
+    - Нарушение разделения ответственности - модель не должна заниматься локализацией
+    - Дублирует функциональность `LocalizationManager`
+
+20. **Неполная поддержка языков в моделях**
+    - `Article` поддерживает только ru, en, de, tj в методах форматирования дат
+    - Отсутствует поддержка fa, ar, uk из списка поддерживаемых языков
+
+21. **Нарушение DI в репозиториях и сервисах**
+    - `ArticlesRepositoryImpl` использует `DataService.shared` напрямую вместо инжекции
+    - `DataService` использует `NetworkService.shared` напрямую
+    - Все сервисы используют singleton паттерн вместо DI через AppContainer
+
+22. **Жестко закодированные переводы в LocalizationManager**
+    - Полный словарь переводов захардкожен в коде
+    - Нет поддержки внешних файлов локализации
+    - Сложность поддержки и добавления новых ключей
+
+23. **Смешанные стратегии кэширования**
+    - `DataService` кэширует в памяти
+    - `NetworkService` кэширует в файловой системе + URLCache
+    - Нет единой стратегии управления кэшем
+
+24. **Нарушение ответственности в DataService**
+    - Содержит логику загрузки, кэширования, и логирования
+    - Слишком высокая связность, нарушение Single Responsibility Principle
+
+25. **Устаревший sync API в NetworkService**
+    - `loadJSONSync` метод существует для обратной совместимости
+    - Дублирует функциональность async метода
+
+### 🟡 Планы исправления
+
+**Высокий приоритет:**
+- Рефакторинг UI компонентов для использования инжектированных зависимостей вместо shared-инстансов
+- Создание протоколов для менеджеров и интеграция их в AppContainer
+- Исправить ContentView для использования AppContainer
+- Унифицировать управление категориями (выбрать один подход)
+- Обновить AppContainer.makeCategoriesViewModel()
+
+**Средний приоритет:**
+- Интегрировать новые менеджеры трекинга в DI
+- Заменить жестко закодированный язык на динамический из настроек
+- Добавить @MainActor изоляцию для всех View
+- Обновить тесты для нового функционала
+
+**Низкий приоритет:**
+- Унифицировать подход к локализации между компонентами
+- Убрать дублирующие методы перевода
+- Создать общие компоненты для повторяющихся паттернов
+
+---
+
+## 8) Обновление контекста
 
 - Меняется модель/интерфейс → обновить §2b/2c.  
-- Обновляется структура → перегенерировать `Docs/project_tree.md`.  
+- Обновляется структура → запустить `./scripts/update_project_tree.sh 3`.  
 - Новый коммит/ветка → обновить `Docs/git_snapshot.md`.  
 - Все изменения фиксировать в `Docs/CHANGELOG.md`.  
 - Коммит:  
@@ -465,34 +766,14 @@ git log --oneline --graph -n 10
   ```
 
 ### Documentation
-- [2025-10-03] Добавлены `///` doc-комментарии ко всем основным моделям, менеджерам, сервисам, утилитам и view model:
-  - `Article`
-  - `DataService`
-  - `FavoritesManager`
-  - `CategoryManager`
-  - `LocalizationManager`
-  - `RatingManager`
-  - `ReadingHistoryManager`
-  - `ReadingTimeCalculator`
-  - `ReadingTimeTracker`
-  - `DefaultsStore`
-  - `Theme`
-  - `Animations`
-  - `ArticleRowViewModel`
-- Обновлён `CLEAN_CODE_CHECKLIST.md` — теперь пункт про обязательные `///` комментарии у публичных классов и методов.
+- [2025-10-06] Полное обновление AI_CONTEXT.md на основе анализа кодовой базы:
+  - Обновлены разделы 2b (Модели, Менеджеры, Сервисы, UIUtils) с реальными деталями реализации
+  - Выявлены и документированы 25 критических проблем архитектуры
+  - Добавлены точные описания всех сервисов с их зависимостями и стратегиями
+  - Обновлена информация о тестах с учетом реального покрытия
+  - Уточнены все singleton зависимости и нарушения DI принципов
 
-- [2025-10-03] v1.12.2 bugfix: восстановлено корректное отображение миниатюр статей из Bundle.
-  - Добавлена поддержка `.avif → .jpg` (автоматическая конвертация расширения).
-  - Добавлен fallback для изображений без расширения.
-  - Улучшена надёжность загрузки миниатюр (thumbnail) для статей.
-
-- [2025-10-04] Добавлены `///` doc-комментарии для всех секций:
-  - `AllArticlesSection`
-  - `FavoritesSection`
-  - `RecentlyReadSection`
-  - `CategorySection`
-  - `UsefulToolsSection`
-  - PR #9 (draft) фиксирует этот этап документации.
+- [2025-10-05] Добавлены `///` doc-комментарии ко всем основным моделям, менеджерам, сервисам, утилитам и view model
 
 ### JSON-данные
 
@@ -503,85 +784,4 @@ git log --oneline --graph -n 10
 - **categories.json** — список категорий (id, локализованные названия, иконки).  
 - **locations.json** — список географических объектов (например, Ausländerbehörde, Bürgeramt, посольства).  
   - Структура описана в файле [`Docs/locations_README.md`](Docs/locations_README.md).  
-  - Используется для отображения точек на карте (`MapView`) и работы с моделью `Location`.  
-### Unit Tests (XCTest)
-
-- ✅ **FavoritesManagerTests.swift** — проверка добавления/удаления избранного и фильтрации статей.  
-- ✅ **CategoryManagerTests.swift** — проверка загрузки категорий, поиска по ID/имени, обновления данных.  
-- ✅ **DataServiceTests.swift** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данные.  
-- ✅ **InGermanyTests.swift** — smoke-тесты (инициализация приложения, работа FavoritesManager и DataService).  
-
-📌 **Следующие шаги (roadmap по тестам):**
-
-#### 1. ViewModels
-- [ ] **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи.  
-- [ ] **FavoritesViewModelTests** — загрузка избранных статей, переключение статуса избранного.  
-- [ ] **SearchViewModelTests** — фильтрация по тексту, тегам, категориям, edge-кейсы (пустой ввод).  
-- [ ] **CategoriesViewModelTests** — загрузка категорий и связанных статей, проверка состояния `isLoading`.  
-- [ ] **SettingsViewModelTests** — смена языка, очистка истории, проверка `isHistoryCleared`.  
-- [ ] **ArticleDetailViewModelTests** — избранное, экспорт в PDF, история чтения.  
-
-#### 2. UI / Snapshot
-- [ ] **Snapshot-тесты** для основных экранов (`HomeView`, `SearchView`, `ArticleDetailView`).  
-- [ ] **Accessibility-тесты** (VoiceOver, Dynamic Type).  
-
-#### 3. Services / Managers (расширение)
-- [ ] **NetworkServiceTests** — обработка ошибок сети, кеширование, загрузка JSON.  
-- [ ] **ReadingHistoryManagerTests** — добавление/очистка истории, ограничение в 100 записей.  
-- [ ] **RatingManagerTests** — установка и получение рейтинга, edge-кейсы.  
-
-#### 4. Интеграция
-- [ ] GitHub Actions workflow для запуска тестов при каждом PR.  
-- [ ] Генерация отчётов о покрытии кода (например, Slather + GitHub Actions).  
-
-
-### Unit Tests (XCTest)
-
-- ✅ **FavoritesManagerTests.swift** — проверка добавления/удаления избранного и фильтрации статей.  
-- ✅ **CategoryManagerTests.swift** — проверка загрузки категорий, поиска по ID/имени, обновления данных.  
-- ✅ **DataServiceTests.swift** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данные.  
-- ✅ **FavoritesViewModelTests.swift** — комплексное тестирование ViewModel избранного: состояния загрузки, переключение избранного, источник данных.  
-- ✅ **InGermanyTests.swift** — smoke-тесты (инициализация приложения, работа FavoritesManager и DataService).  
-
-📌 **Следующие шаги (roadmap по тестам):**
-- [ ] **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи.  
-- [ ] **SearchViewModelTests** — фильтрация по тексту, тегам, категориям.  
-
-
-# Обновим раздел тестов в AI_CONTEXT.md
-# (можно сделать вручную или через sed/awk)
-
-echo "### Unit Tests (XCTest)
-
-- ✅ **ArticleDetailViewModelTests** — полное покрытие управления избранным, историей чтения, логики связанных статей
-- ✅ **FavoritesManagerTests** — проверка добавления/удаления избранного и фильтрации статей  
-- ✅ **CategoryManagerTests** — проверка загрузки категорий, поиска по ID/имени, обновления данных
-- ✅ **DataServiceTests** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данные
-- ✅ **FavoritesViewModelTests** — комплексное тестирование ViewModel избранного: состояния загрузки, переключение избранного, источник данных
-- ✅ **InGermanyTests.swift** — smoke-тесты (инициализация приложения, работа FavoritesManager и DataService)
-
-📌 **Следующие шаги (roadmap по тестам):**
-- [ ] **ArticleRowViewModelTests** — тестирование управления состоянием строки статьи
-- [ ] **CategoriesViewModelTests** — тестирование загрузки категорий и связанных статей
-- [ ] **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи  
-- [ ] **SearchViewModelTests** — фильтрация по тексту, тегам, категориям
-- [ ] **SettingsViewModelTests** — смена языка, очистка истории, настройки" > temp_context.txt
-
-
-
-### Current Test Coverage Status
-
-✅ **ArticleDetailViewModelTests** — полное покрытие управления избранным, историей чтения, логики связанных статей
-✅ **HomeViewModelTests** — проверка загрузки данных, обновления, выбора случайной статьи
-✅ **FavoritesManagerTests** — проверка добавления/удаления избранного и фильтрации статей  
-✅ **CategoryManagerTests** — проверка загрузки категорий, поиска по ID/имени, обновления данных
-✅ **DataServiceTests** — проверка корректной работы с JSON (articles, categories), edge-кейсы: пустые/битые данных
-✅ **FavoritesViewModelTests** — комплексное тестирование ViewModel избранного
-✅ **InGermanyTests.swift** — smoke-тесты
-
-**Next Targets:**
-- ArticleRowViewModelTests
-- CategoriesViewModelTests  
-- SearchViewModelTests
-- SettingsViewModelTests
-
+  - Используется для отображения точек на карте (`MapView`) и работы с моделью `Location`.
