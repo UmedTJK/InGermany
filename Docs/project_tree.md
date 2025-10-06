@@ -9,6 +9,7 @@
 │   ├── CLEAN_CODE_CHECKLIST.md
 │   ├── Git_Mini_Guide.md
 │   ├── PROMPTS_FOR_AI_AGENTS.md
+│   ├── di_refactoring_progress.md
 │   ├── git_snapshot.md
 │   ├── hooks
 │   │   └── pre-push.template
@@ -182,4 +183,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-50 directories, 133 files
+50 directories, 134 files
