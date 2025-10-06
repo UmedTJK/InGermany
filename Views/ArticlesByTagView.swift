@@ -11,8 +11,8 @@ struct ArticlesByTagView: View {
     let tag: String
     /// The complete list of articles to filter from.
     let articles: [Article]
-    /// Shared manager to track favorites.
-    @ObservedObject var favoritesManager: FavoritesManager
+    /// Контейнер зависимостей для получения менеджеров.
+    @EnvironmentObject private var appContainer: AppContainer
     /// Current UI language, stored in AppStorage.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
@@ -26,7 +26,11 @@ struct ArticlesByTagView: View {
                         allArticles: articles
                     )
                 } label: {
-                    ArticleRow(viewModel: ArticleRowViewModel(article: article))
+                    ArticleRow(viewModel: ArticleRowViewModel(
+                        article: article,
+                        favoritesManager: appContainer.favoritesManager,
+                        ratingManager: appContainer.ratingManager
+                    ))
                 }
             }
         }
@@ -43,14 +47,15 @@ struct ArticlesByTagView: View {
 
     /// Retrieves the localized translation for a tag key.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
+// MARK: - Preview
 #Preview {
     ArticlesByTagView(
         tag: "Финансы",
-        articles: [Article.sampleArticle],
-        favoritesManager: FavoritesManager.shared // ← ИСПРАВЛЕНО
+        articles: [Article.sampleArticle]
     )
+    .environmentObject(AppContainer.shared)
 }
