@@ -13,7 +13,8 @@ final class AppContainer: ObservableObject {
     let readingProgressTracker: ReadingProgressTracker
     let textSizeManager: TextSizeManager
     let readingTimeTracker: ReadingTimeTracker
-    let localizationManager: LocalizationManager // ✅ Добавляем
+    let localizationManager: LocalizationManager
+    let dataService: DataService // ✅ Добавляем DataService
 
     init(
         articlesRepo: ArticlesRepositoryProtocol? = nil,
@@ -24,7 +25,8 @@ final class AppContainer: ObservableObject {
         readingProgressTracker: ReadingProgressTracker? = nil,
         textSizeManager: TextSizeManager? = nil,
         readingTimeTracker: ReadingTimeTracker? = nil,
-        localizationManager: LocalizationManager? = nil // ✅ Добавляем параметр
+        localizationManager: LocalizationManager? = nil,
+        dataService: DataService? = nil // ✅ Добавляем параметр
     ) {
         self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: DataService.shared)
         self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
@@ -34,7 +36,8 @@ final class AppContainer: ObservableObject {
         self.readingProgressTracker = readingProgressTracker ?? ReadingProgressTracker.shared
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
         self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared
-        self.localizationManager = localizationManager ?? LocalizationManager.shared // ✅ Инициализируем
+        self.localizationManager = localizationManager ?? LocalizationManager.shared
+        self.dataService = dataService ?? DataService.shared // ✅ Инициализируем
     }
 
     // MARK: - Factory Methods

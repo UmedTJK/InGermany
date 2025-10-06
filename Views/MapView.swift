@@ -46,6 +46,8 @@ struct MapView: View {
         center: CLLocationCoordinate2D(latitude: 50.4250, longitude: 10.7317),
         span: MKCoordinateSpan(latitudeDelta: 5.0, longitudeDelta: 5.0)
     )
+    /// Контейнер зависимостей для получения сервисов.
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Builds the main map view with navigation, annotations, and toolbar controls.
     var body: some View {
@@ -120,63 +122,26 @@ struct MapView: View {
     
     /// Loads locations asynchronously from the data service and updates the map.
     private func loadLocations() async {
-        locations = await DataService.shared.loadLocations()
+        locations = await appContainer.dataService.loadLocations()
         isLoading = false
     }
     
     /// Refreshes locations by clearing cache, reloading data, and updating the map.
     private func refreshLocations() async {
         isLoading = true
-        await DataService.shared.refreshData()
-        locations = await DataService.shared.loadLocations()
+        await appContainer.dataService.refreshData()
+        locations = await appContainer.dataService.loadLocations()
         isLoading = false
     }
 
-    /// Shortcut helper for retrieving localized translations via LocalizationManager.
+    /// Shortcut helper for retrieving localized translations via AppContainer's LocalizationManager.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
+}
 
-    /// Legacy translation method kept for compatibility. Provides hardcoded translations for map-related strings.
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Загрузка карты...": [
-                "ru": "Загрузка карты...",
-                "en": "Loading map...",
-                "de": "Karte wird geladen...",
-                "tj": "Боркунии харита...",
-                "fa": "در حال بارگذاری نقشه...",
-                "ar": "جارٍ تحميل الخريطة...",
-                "uk": "Завантаження карти..."
-            ],
-            "Карта": [
-                "ru": "Карта",
-                "en": "Map",
-                "de": "Karte",
-                "tj": "Харита",
-                "fa": "نقشه",
-                "ar": "خريطة",
-                "uk": "Карта"
-            ],
-            "Моё местоположение": [
-                "ru": "Моё местоположение",
-                "en": "My location",
-                "de": "Mein Standort",
-                "tj": "Ҷойгиршавии ман",
-                "fa": "مکان من",
-                "ar": "موقعي",
-                "uk": "Моє місцезнаходження"
-            ],
-            "Обновить": [
-                "ru": "Обновить",
-                "en": "Refresh",
-                "de": "Aktualisieren",
-                "tj": "Навсозӣ",
-                "fa": "به‌روزرسانی",
-                "ar": "تحديث",
-                "uk": "Оновити"
-            ]
-        ]
-        return translations[key]?[language] ?? key
-    }
+// MARK: - Preview
+#Preview {
+    MapView()
+        .environmentObject(AppContainer.shared)
 }
