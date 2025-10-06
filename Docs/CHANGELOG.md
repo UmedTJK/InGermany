@@ -1,3 +1,8 @@
+### v1.13.5 – 2025-10-06
+
+#### 🧪 Tests
+- test(article-detail-vm): убраны предупреждения об unused vars в `ArticleDetailViewModelTests`
+
 ### v1.13.4 – 2025-10-06
 
 - 📝 обновлён Docs/project_tree.md (depth=3)
