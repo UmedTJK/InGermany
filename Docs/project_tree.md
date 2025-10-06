@@ -11,6 +11,7 @@
 │   ├── PROMPTS_FOR_AI_AGENTS.md
 │   ├── git_snapshot.md
 │   ├── hooks
+│   │   └── pre-push.template
 │   ├── locations_README.md
 │   ├── next_steps.md
 │   └── project_tree.md
@@ -168,8 +169,11 @@
 │   └── SettingsView.swift
 ├── project_structure.txt
 ├── scripts
+│   ├── release.sh
+│   ├── release_v2.sh
+│   ├── tag_with_date.sh
 │   └── update_project_tree.sh
 ├── temp_ai_context.md
 └── update.sh
 
-50 directories, 123 files
+50 directories, 127 files
