@@ -1,13 +1,15 @@
 //
-//  ArticleDetailView.swift
+//  SearchView.swift
 //  InGermany
 //
+
 import SwiftUI
 
 /// Provides a search interface for articles and categories with tag filtering and navigation.
 struct SearchView: View {
     @StateObject private var viewModel: SearchViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
@@ -36,7 +38,11 @@ struct SearchView: View {
                             allArticles: viewModel.articles
                         )
                     } label: {
-                        ArticleRow(viewModel: ArticleRowViewModel(article: article))
+                        ArticleRow(viewModel: ArticleRowViewModel(
+                            article: article,
+                            favoritesManager: viewModel.favoritesManager,
+                            ratingManager: appContainer.ratingManager
+                        ))
                     }
                 }
                 .listStyle(.plain)
@@ -52,33 +58,14 @@ struct SearchView: View {
         }
     }
 
-    /// Shortcut method to fetch localized translations using LocalizationManager.
+    /// Shortcut method to fetch localized translations using AppContainer's LocalizationManager.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: self.selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
+}
 
-    /// Legacy hardcoded translation method, kept for compatibility.
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Поиск": [
-                "ru": "Поиск",
-                "en": "Search",
-                "de": "Suche",
-                "tj": "Ҷустуҷӯ",
-                "fa": "جستجو",
-                "ar": "بحث",
-                "uk": "Пошук"
-            ],
-            "Искать по статьям или категориям": [
-                "ru": "Искать по статьям или категориям",
-                "en": "Search articles or categories",
-                "de": "Artikel oder Kategorien suchen",
-                "tj": "Ҷустуҷӯ аз рӯи мақолаҳо ё категорияҳо",
-                "fa": "جستجو در مقالات یا دسته‌ها",
-                "ar": "ابحث في المقالات أو الفئات",
-                "uk": "Шукати за статтями чи категоріями"
-            ]
-        ]
-        return translations[key]?[language] ?? key
-    }
+// MARK: - Preview
+#Preview {
+    SearchView(appContainer: AppContainer.shared)
+        .environmentObject(AppContainer.shared)
 }
