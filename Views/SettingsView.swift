@@ -10,8 +10,9 @@ struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
     @AppStorage("relativeDates") private var relativeDates: Bool = true
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: SettingsViewModel
-    @EnvironmentObject private var appContainer: AppContainer // ← ДОБАВИТЬ ЭТО
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
@@ -89,7 +90,7 @@ struct SettingsView: View {
                 
                 // ℹ️ О приложении
                 Section {
-                    NavigationLink(destination: AboutView(appContainer: appContainer)) { // ← ИСПРАВЛЕНО: передаем appContainer
+                    NavigationLink(destination: AboutView(appContainer: appContainer)) {
                         Text(t("settings_about_title"))
                     }
                 }
@@ -122,10 +123,12 @@ struct SettingsView: View {
 
     /// Retrieves a localized string for a given key.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: "ru") // Используем фиксированный язык для настроек
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
+// MARK: - Preview
 #Preview {
-    SettingsView(viewModel: SettingsViewModel(historyManager: ReadingHistoryManager.shared))
+    SettingsView(appContainer: AppContainer.shared)
+        .environmentObject(AppContainer.shared)
 }
