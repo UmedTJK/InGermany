@@ -16,7 +16,6 @@
 │   ├── next_steps.md
 │   └── project_tree.md
 ├── Formatters
-├── HomeView_Context.zip
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
@@ -71,8 +70,10 @@
 │   ├── Category.swift
 │   └── Location.swift
 ├── Protocols
-│   ├── ArticlesRepository.swift
-│   └── CategoriesRepository.swift
+│   ├── ArticlesRepositoryProtocol.swift
+│   ├── CategoriesRepositoryProtocol.swift
+│   ├── FavoritesManagingProtocol.swift
+│   └── Untitled.swift
 ├── README.md
 ├── Resources
 │   ├── Images
@@ -179,7 +180,6 @@
 │   ├── release_v7.sh
 │   ├── tag_with_date.sh
 │   └── update_project_tree.sh
-├── temp_ai_context.md
 └── update.sh
 
 50 directories, 133 files

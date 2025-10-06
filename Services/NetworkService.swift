@@ -5,17 +5,10 @@
 //  Created by SUM TJK on 20.09.25.
 //
 
-//
-//  NetworkService.swift
-//  InGermany
-//
-//  Created by Umed Sabzaev on 20.09.25.
-//
-
 import Foundation
 
-/// A singleton service responsible for loading JSON data from the network, cache, or local bundle.
-/// Provides async and sync methods with fallback mechanisms and simple caching.
+/// A singleton service responsible for loading JSON data with OFFLINE-FIRST strategy.
+/// Uses: Bundle → File Cache → Network (async update)
 class NetworkService {
     /// Shared singleton instance of `NetworkService`.
     static let shared = NetworkService()
@@ -42,86 +35,167 @@ class NetworkService {
         }
     }
     
-    /// Loads and decodes a JSON file into a specified Decodable type.
-    /// The method tries network first, then cache, then local bundle.
+    // MARK: - Основной API
+    
+    /// Loads and decodes a JSON file into a specified Decodable type with OFFLINE-FIRST strategy.
+    /// Strategy: Bundle → File Cache → Network (with async refresh)
     /// - Parameter file: The filename of the JSON resource.
     /// - Returns: A decoded object of type `T`.
     /// - Throws: An error if the data cannot be loaded or decoded.
     func loadJSON<T: Decodable>(from file: String) async throws -> T {
-        let url = URL(string: baseURL + file)!
+        // 🔄 ИЗМЕНЕНО: Теперь настоящий offline-first
         
-        // Пытаемся загрузить из сети
-        if let data = try await loadFromNetwork(url: url) {
-            // Сохраняем в кэш
-            saveToCache(data: data, for: file)
-            return try decodeData(data)
+        // Шаг 1: Пытаемся загрузить из Bundle (самый быстрый, всегда доступный)
+        if let bundleData = loadFromBundle(file: file) {
+            print("📦 [NetworkService] Загружено из Bundle: \(file)")
+            
+            // Асинхронно обновляем из сети если доступно
+            Task {
+                await refreshFromNetwork(file: file)
+            }
+            
+            return try decodeData(bundleData)
         }
         
-        // Пытаемся загрузить из кэша
+        // Шаг 2: Пытаемся загрузить из файлового кэша
         if let cachedData = loadFromCache(for: file) {
+            print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
+            
+            // Асинхронно обновляем из сети если доступно
+            Task {
+                await refreshFromNetwork(file: file)
+            }
+            
             return try decodeData(cachedData)
         }
         
-        // Fallback на локальные файлы
-        return try loadLocalFile(file)
+        // Шаг 3: Загружаем из сети (только если предыдущие шаги не сработали)
+        print("🌐 [NetworkService] Загружаем из сети: \(file)")
+        return try await loadFromNetwork(file: file)
     }
     
-    /// Attempts to fetch data from the network.
-    /// - Parameter url: The remote URL.
-    /// - Returns: Data if the request succeeds with status 200, otherwise nil.
-    private func loadFromNetwork(url: URL) async throws -> Data? {
-        var request = URLRequest(url: url)
-        request.cachePolicy = .reloadIgnoringLocalCacheData
-        request.timeoutInterval = 10
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else {
-            return nil
+    /// Loads JSON with detailed source information for tracking
+    func loadJSONWithSource<T: Decodable>(from file: String) async throws -> (T, DataSource) {
+        // Шаг 1: Bundle
+        if let bundleData = loadFromBundle(file: file) {
+            print("📦 [NetworkService] Загружено из Bundle: \(file)")
+            
+            Task {
+                await refreshFromNetwork(file: file)
+            }
+            
+            // 🔧 ИСПРАВЛЕНО: Явно указываем тип при декодировании
+            let decoded: T = try decodeData(bundleData)
+            return (decoded, .bundle)
         }
         
-        return data
+        // Шаг 2: File Cache
+        if let cachedData = loadFromCache(for: file) {
+            print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
+            
+            Task {
+                await refreshFromNetwork(file: file)
+            }
+            
+            // 🔧 ИСПРАВЛЕНО: Явно указываем тип при декодировании
+            let decoded: T = try decodeData(cachedData)
+            return (decoded, .fileCache)
+        }
+        
+        // Шаг 3: Network
+        print("🌐 [NetworkService] Загружаем из сети: \(file)")
+        let decoded: T = try await loadFromNetwork(file: file)
+        return (decoded, .network)
     }
     
-    /// Attempts to read cached data from disk.
-    /// - Parameter file: The filename of the cached JSON.
-    /// - Returns: Data if found, otherwise nil.
+    // MARK: - Приватные методы загрузки
+    
+    /// Загружает данные из Bundle (самый приоритетный источник)
+    private func loadFromBundle(file: String) -> Data? {
+        guard let bundleURL = Bundle.main.url(forResource: file, withExtension: nil) else {
+            return nil
+        }
+        return try? Data(contentsOf: bundleURL)
+    }
+    
+    /// Загружает данные из файлового кэша
     private func loadFromCache(for file: String) -> Data? {
         let cacheFile = cacheDirectory.appendingPathComponent(file)
         return try? Data(contentsOf: cacheFile)
     }
     
-    /// Saves given data to the local cache directory.
-    /// - Parameters:
-    ///   - data: Data to save.
-    ///   - file: Filename used as cache key.
-    private func saveToCache(data: Data, for file: String) {
-        let cacheFile = cacheDirectory.appendingPathComponent(file)
-        try? data.write(to: cacheFile)
-    }
-    
-    /// Loads and decodes a JSON file from the app bundle.
-    /// - Parameter filename: The name of the file in the bundle.
-    /// - Returns: A decoded object of type `T`.
-    /// - Throws: An error if the file cannot be found or decoded.
-    private func loadLocalFile<T: Decodable>(_ filename: String) throws -> T {
-        guard let file = Bundle.main.url(forResource: filename, withExtension: nil) else {
-            throw NSError(domain: "NetworkService", code: 404, userInfo: [NSLocalizedDescriptionKey: "Файл \(filename) не найден"])
+    /// Загружает данные из сети (последний резерв)
+    private func loadFromNetwork<T: Decodable>(file: String) async throws -> T {
+        let url = URL(string: baseURL + file)!
+        
+        var request = URLRequest(url: url)
+        // 🔄 ИЗМЕНЕНО: Было .reloadIgnoringLocalCacheData
+        request.cachePolicy = .returnCacheDataElseLoad // Теперь используем кэш
+        request.timeoutInterval = 10.0
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw NetworkError.invalidResponse
         }
         
-        let data = try Data(contentsOf: file)
+        // Сохраняем в файловый кэш для будущего использования
+        saveToCache(data: data, for: file)
+        
         return try decodeData(data)
     }
     
-    /// Decodes raw Data into a Decodable object.
-    /// - Parameter data: JSON data.
-    /// - Returns: A decoded object of type `T`.
-    /// - Throws: An error if decoding fails.
+    /// Асинхронно обновляет данные из сети (для уже загруженных локальных данных)
+    private func refreshFromNetwork(file: String) async {
+        let url = URL(string: baseURL + file)!
+        
+        do {
+            var request = URLRequest(url: url)
+            request.cachePolicy = .reloadIgnoringLocalCacheData // Для обновления игнорируем кэш
+            request.timeoutInterval = 8.0 // Более короткий таймаут для обновлений
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                return
+            }
+            
+            // Сохраняем обновленные данные
+            saveToCache(data: data, for: file)
+            print("🔄 [NetworkService] Данные обновлены из сети: \(file)")
+            
+        } catch {
+            print("⚠️ [NetworkService] Не удалось обновить данные из сети: \(error.localizedDescription)")
+            // Тихий fail - не прерываем основной поток
+        }
+    }
+    
+    // MARK: - Вспомогательные методы
+    
+    /// Сохраняет данные в файловый кэш
+    private func saveToCache(data: Data, for file: String) {
+        let cacheFile = cacheDirectory.appendingPathComponent(file)
+        
+        // Создаем директорию если нужно
+        let directory = cacheFile.deletingLastPathComponent()
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        
+        do {
+            try data.write(to: cacheFile)
+        } catch {
+            print("⚠️ [NetworkService] Ошибка сохранения в файловый кэш: \(error)")
+        }
+    }
+    
+    /// Декодирует данные в указанный тип
     private func decodeData<T: Decodable>(_ data: Data) throws -> T {
         let decoder = JSONDecoder()
         return try decoder.decode(T.self, from: data)
     }
+    
+    // MARK: - Legacy API (сохраняем для обратной совместимости)
     
     /// Legacy synchronous-style JSON loader wrapping the async method.
     /// - Parameters:
@@ -145,8 +219,26 @@ class NetworkService {
             for file in files {
                 try fileManager.removeItem(at: file)
             }
+            print("🗑️ [NetworkService] Файловый кэш очищен")
         } catch {
-            print("⚠️ Не удалось очистить кэш: \(error)")
+            print("⚠️ [NetworkService] Не удалось очистить кэш: \(error)")
         }
+    }
+}
+
+// MARK: - Вспомогательные типы
+
+extension NetworkService {
+    /// Источники данных для отслеживания
+    enum DataSource: String {
+        case bundle = "bundle"
+        case fileCache = "file_cache"
+        case network = "network"
+    }
+    
+    /// Ошибки сети
+    enum NetworkError: Error {
+        case invalidResponse
+        case networkUnavailable
     }
 }

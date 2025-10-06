@@ -1,12 +1,8 @@
 //
-//  CategoriesRepository.swift
+//  CategoriesRepositoryProtocol.swift
 //  InGermany
 //
 //  Created by SUM TJK on 27.09.25.
-//
-//
-//  CategoriesRepository.swift
-//  InGermany
 //
 
 import Foundation
@@ -14,7 +10,7 @@ import Combine
 
 /// Репозиторий категорий, объединяющий загрузку и хранение
 @MainActor
-protocol CategoriesRepository {
+protocol CategoriesRepositoryProtocol {
     var categories: [Category] { get }
     func bootstrap() async
     func refresh() async
@@ -23,7 +19,7 @@ protocol CategoriesRepository {
 }
 
 @MainActor
-final class DefaultCategoriesRepository: ObservableObject, CategoriesRepository {
+final class DefaultCategoriesRepository: ObservableObject, CategoriesRepositoryProtocol {
     static let shared = DefaultCategoriesRepository()
 
     @Published private(set) var categories: [Category] = []

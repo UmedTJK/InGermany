@@ -12,8 +12,6 @@
 		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D02E8FAD42006A94DD /* git_snapshot.md */; };
 		AD2A64D32E8FAD42006A94DD /* project_tree.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D12E8FAD42006A94DD /* project_tree.md */; };
-		AD2A65572E8FEBF2006A94DD /* CategoriesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65552E8FEBF2006A94DD /* CategoriesRepository.swift */; };
-		AD2A65582E8FEBF2006A94DD /* ArticlesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65542E8FEBF2006A94DD /* ArticlesRepository.swift */; };
 		AD2A655C2E8FEF44006A94DD /* ExportToPDF.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A655A2E8FEF44006A94DD /* ExportToPDF.swift */; };
 		AD2A655D2E8FEF44006A94DD /* DefaultsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65592E8FEF44006A94DD /* DefaultsStore.swift */; };
 		AD2A655E2E8FEF44006A94DD /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A655B2E8FEF44006A94DD /* LocalizationManager.swift */; };
@@ -35,6 +33,9 @@
 		AD38F5892E76C15600E36EA4 /* update.sh in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5882E76C15000E36EA4 /* update.sh */; };
 		AD40EEF02E75C3DC00866648 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C82E75B4C4003D3826 /* categories.json */; };
 		AD40EEF12E75C3DC00866648 /* articles.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C72E75B4AF003D3826 /* articles.json */; };
+		AD675BA82E93D85E007B0994 /* FavoritesManagingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BA72E93D85C007B0994 /* FavoritesManagingProtocol.swift */; };
+		AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */; };
+		AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */; };
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
 		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
@@ -65,8 +66,6 @@
 		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD2A64D02E8FAD42006A94DD /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
 		AD2A64D12E8FAD42006A94DD /* project_tree.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = project_tree.md; sourceTree = "<group>"; };
-		AD2A65542E8FEBF2006A94DD /* ArticlesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepository.swift; sourceTree = "<group>"; };
-		AD2A65552E8FEBF2006A94DD /* CategoriesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesRepository.swift; sourceTree = "<group>"; };
 		AD2A65592E8FEF44006A94DD /* DefaultsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStore.swift; sourceTree = "<group>"; };
 		AD2A655A2E8FEF44006A94DD /* ExportToPDF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportToPDF.swift; sourceTree = "<group>"; };
 		AD2A655B2E8FEF44006A94DD /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
@@ -90,6 +89,9 @@
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
 		AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROMPTS_FOR_AI_AGENTS.md; sourceTree = "<group>"; };
+		AD675BA72E93D85C007B0994 /* FavoritesManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManagingProtocol.swift; sourceTree = "<group>"; };
+		AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryProtocol.swift; sourceTree = "<group>"; };
+		AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,8 +168,9 @@
 		AD2A65562E8FEBF2006A94DD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				AD2A65542E8FEBF2006A94DD /* ArticlesRepository.swift */,
-				AD2A65552E8FEBF2006A94DD /* CategoriesRepository.swift */,
+				AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */,
+				AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */,
+				AD675BA72E93D85C007B0994 /* FavoritesManagingProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -420,8 +423,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD2A65662E8FF0D1006A94DD /* ProgressBar.swift in Sources */,
+				AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */,
+				AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */,
 				AD2A65672E8FF0D1006A94DD /* Color+Hex.swift in Sources */,
 				AD2A65682E8FF0D1006A94DD /* Animations.swift in Sources */,
+				AD675BA82E93D85E007B0994 /* FavoritesManagingProtocol.swift in Sources */,
 				AD2A65692E8FF0D1006A94DD /* CardSize.swift in Sources */,
 				AD2A656A2E8FF0D1006A94DD /* Theme.swift in Sources */,
 				AD2A656B2E8FF0D1006A94DD /* CardImageStyle.swift in Sources */,
@@ -432,8 +438,6 @@
 				AD2A65712E8FF39E006A94DD /* ReadingProgressHelper.swift in Sources */,
 				AD2A65722E8FF39E006A94DD /* ReadingProgressTracker.swift in Sources */,
 				AD2A65732E8FF39E006A94DD /* CategoryManager.swift in Sources */,
-				AD2A65572E8FEBF2006A94DD /* CategoriesRepository.swift in Sources */,
-				AD2A65582E8FEBF2006A94DD /* ArticlesRepository.swift in Sources */,
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
 				AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */,
 				ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */,

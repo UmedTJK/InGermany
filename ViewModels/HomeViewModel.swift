@@ -27,17 +27,17 @@ class HomeViewModel: ObservableObject {
     /// Manager for tracking reading history.
     let readingHistoryManager: ReadingHistoryManager
     /// Repository for accessing categories.
-    let categoriesRepository: CategoriesRepository
+    let categoriesRepository: CategoriesRepositoryProtocol
     /// Repository for loading and refreshing articles.
-    let articlesRepo: ArticlesRepository
+    let articlesRepo: ArticlesRepositoryProtocol
 
     // MARK: - Designated init (главный инициализатор, используется DI/контейнером)
     /// Designated initializer injecting managers and repositories for dependency management.
     init(
         favoritesManager: FavoritesManager,
         readingHistoryManager: ReadingHistoryManager,
-        categoriesRepository: CategoriesRepository,
-        articlesRepo: ArticlesRepository
+        categoriesRepository: CategoriesRepositoryProtocol,
+        articlesRepo: ArticlesRepositoryProtocol
     ) {
         self.favoritesManager = favoritesManager
         self.readingHistoryManager = readingHistoryManager
@@ -48,11 +48,12 @@ class HomeViewModel: ObservableObject {
     // MARK: - Convenience init (для превью и старых вызовов)
     /// Convenience initializer using shared singletons for previews and default usage.
     convenience init() {
+        // 🔧 ИСПРАВЛЕНО: Передаем DataService в ArticlesRepositoryImpl
         self.init(
             favoritesManager: FavoritesManager.shared,
             readingHistoryManager: ReadingHistoryManager.shared,
             categoriesRepository: DefaultCategoriesRepository.shared,
-            articlesRepo: ArticlesRepositoryImpl()
+            articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared)
         )
     }
 

@@ -10,7 +10,8 @@ final class ArticlesRepositoryImplTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        sut = ArticlesRepositoryImpl()
+        // 🔧 ИСПРАВЛЕНО: Передаем DataService в инициализатор
+        sut = ArticlesRepositoryImpl(dataService: DataService.shared)
     }
     
     override func tearDown() {

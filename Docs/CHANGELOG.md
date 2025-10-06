@@ -46,6 +46,27 @@
 
 # Changelog
 
+## [Unreleased] - 2025-10-06
+
+### 🔧 Architecture & Refactoring
+- **DI Foundation**: Created repository protocols (`ArticlesRepositoryProtocol`, `CategoriesRepositoryProtocol`, `FavoritesManagingProtocol`)
+- **AppContainer**: Refactored to use protocol-based dependencies instead of concrete implementations
+- **ViewModel Layer**: Updated all ViewModels (`HomeViewModel`, `SearchViewModel`, `CategoriesViewModel`, `FavoritesViewModel`) for proper DI compatibility
+- **Service Layer**: 
+  - `ArticlesRepositoryImpl` now requires explicit DataService injection
+  - Started NetworkService refactoring for unified offline-first strategy
+- **Testing**: Updated test suite to work with new DI architecture
+
+### 🐛 Fixes
+- **Convenience Initializers**: Fixed ViewModel convenience initializers to properly inject dependencies
+- **Swift 6 Concurrency**: Resolved MainActor isolation issues in AppContainer
+- **Protocol Adoption**: Ensured all components use protocols instead of direct dependencies
+
+### 📚 Documentation
+- Updated AI_CONTEXT.md with current architecture state
+- Maintained project structure documentation
+- Added comprehensive commit history tracking
+
 [1.17.0] — 2025-10-05
 Tests - COMPLETE UNIT TESTING COVERAGE 🎉
 ALL COMPONENTS TESTED: 21/21 components with 300+ unit tests
@@ -686,3 +707,18 @@ git commit -m "docs: обновить CHANGELOG с информацией о ф�
 ### Changed
 - Обновлена документация проекта
 - Стандартизированы паттерны тестирования
+
+## [Unreleased] - 2025-10-06
+
+### 🔧 Architecture & Refactoring
+- **DI Foundation**: Created repository protocols (ArticlesRepositoryProtocol, CategoriesRepositoryProtocol, FavoritesManagingProtocol)
+- **AppContainer**: Refactored to use protocol-based dependencies instead of concrete implementations  
+- **ViewModel Layer**: Updated all ViewModels for proper DI compatibility
+- **Service Layer**: ArticlesRepositoryImpl now requires explicit DataService injection
+- **Testing**: Updated test suite to work with new DI architecture
+
+### 🐛 Fixes
+- **Convenience Initializers**: Fixed ViewModel convenience initializers to properly inject dependencies
+- **Swift 6 Concurrency**: Resolved MainActor isolation issues in AppContainer
+- **Protocol Adoption**: Ensured all components use protocols instead of direct dependencies
+
