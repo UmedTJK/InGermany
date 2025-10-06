@@ -9,21 +9,19 @@ import SwiftUI
 struct ArticleMetaView: View {
     /// Статья, для которой отображаются метаданные.
     let article: Article
+    
     /// Выбранный язык интерфейса для локализации.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    /// Менеджер рейтингов для отображения текущего рейтинга статьи.
-    @ObservedObject private var ratingManager = RatingManager.shared
-    /// Менеджер истории чтения (зарезервировано для будущего использования).
-    @ObservedObject private var historyManager = ReadingHistoryManager.shared
-    /// Репозиторий категорий для получения названия и цвета категории.
-    @StateObject private var categoriesRepository = DefaultCategoriesRepository.shared
+    
+    // ✅ ИСПРАВЛЕНО: Используем DI через AppContainer
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Основное содержимое: категория, рейтинг, время чтения, даты и бейджи.
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 12) {
                 // 🔹 Категория
-                if let category = categoriesRepository.category(by: article.categoryId) { // ← ИСПРАВЛЕНО
+                if let category = appContainer.categoriesRepo.category(by: article.categoryId) {
                     HStack(spacing: 6) {
                         Circle()
                             .fill(Color(hex: category.colorHex) ?? .blue)
@@ -36,7 +34,7 @@ struct ArticleMetaView: View {
                 }
 
                 // 🔹 Рейтинг
-                let currentRating = ratingManager.getRating(for: article.id)
+                let currentRating = appContainer.ratingManager.getRating(for: article.id)
                 if currentRating > 0 {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
@@ -83,11 +81,6 @@ struct ArticleMetaView: View {
                 if article.isUpdatedRecently {
                     BadgeView(text: t("Обновлено"), color: .blue)
                 }
-                
-                // УБРАТЬ: historyManager.isRead - метода нет
-                // if historyManager.isRead(article.id) {
-                //     BadgeView(text: t("Прочитано"), color: .orange)
-                // }
             }
         }
     }
@@ -117,6 +110,7 @@ struct BadgeView: View {
 #if DEBUG
 #Preview {
     ArticleMetaView(article: Article.sampleArticle)
+        .environmentObject(AppContainer.shared)
         .padding()
 }
 #endif
