@@ -1,8 +1,3 @@
-//
-//  HomeView.swift
-//  InGermany
-//
-
 import SwiftUI
 
 /// The main screen of the app displaying sections like tools, recently read, favorites, categories, and all articles.
@@ -14,8 +9,9 @@ struct HomeView: View {
 
     // MARK: - Init
     /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeHomeViewModel())
+    init() {
+        // ✅ ИСПРАВЛЕНО: используем AppContainer.shared вместо параметра
+        _viewModel = StateObject(wrappedValue: AppContainer.shared.makeHomeViewModel())
     }
     
     /// For preview and testing
@@ -85,6 +81,7 @@ struct HomeView: View {
             .background(Color(.systemGroupedBackground))
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {
+                    // ✅ ИСПРАВЛЕНО: используем appContainer для создания ArticleDetailView
                     ArticleDetailView(
                         article: article,
                         allArticles: viewModel.articles
@@ -114,6 +111,6 @@ struct HomeView: View {
 
 // MARK: - Preview
 #Preview {
-    HomeView(appContainer: AppContainer.shared)
+    HomeView()
         .environmentObject(AppContainer.shared)
 }

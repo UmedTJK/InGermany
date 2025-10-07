@@ -2,56 +2,66 @@ import SwiftUI
 
 /// The main entry point of the app UI, containing the tab navigation.
 struct ContentView: View {
-    @EnvironmentObject private var appContainer: AppContainer
+    @StateObject private var appContainer = AppContainer.shared
     @State private var selectedTab = 0
     
-    /// Builds the tabbed interface with Home, Categories, Search, Favorites, and Settings.
     var body: some View {
         TabView(selection: $selectedTab) {
-            HomeView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
+            HomeView()
                 .tabItem {
                     Label(
-                        NSLocalizedString("tab_home", comment: ""),
+                        appContainer.localizationManager.getTranslation(key: "tab_home", language: appContainer.localizationManager.selectedLanguage),
                         systemImage: "house.fill"
                     )
                 }
                 .tag(0)
             
-            CategoriesView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
+            CategoriesView()
                 .tabItem {
                     Label(
-                        NSLocalizedString("tab_categories", comment: ""),
+                        appContainer.localizationManager.getTranslation(key: "tab_categories", language: appContainer.localizationManager.selectedLanguage),
                         systemImage: "square.grid.2x2.fill"
                     )
                 }
                 .tag(1)
             
-            SearchView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
+            SettingsView(appContainer: appContainer)
                 .tabItem {
                     Label(
-                        NSLocalizedString("tab_search", comment: ""),
-                        systemImage: "magnifyingglass"
+                        appContainer.localizationManager.getTranslation(
+                            key: "tab_settings",
+                            language: appContainer.localizationManager.selectedLanguage
+                        ),
+                        systemImage: "gearshape.fill"
                     )
                 }
-                .tag(2)
+                .tag(4)
+
             
-            FavoritesView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
+            FavoritesView()
                 .tabItem {
                     Label(
-                        NSLocalizedString("tab_favorites", comment: ""),
+                        appContainer.localizationManager.getTranslation(key: "tab_favorites", language: appContainer.localizationManager.selectedLanguage),
                         systemImage: "star.fill"
                     )
                 }
                 .tag(3)
             
-            SettingsView(appContainer: appContainer) // ← ИСПРАВЛЕНО: передаем appContainer
+            SettingsView(viewModel: appContainer.makeSettingsViewModel())
                 .tabItem {
                     Label(
-                        NSLocalizedString("tab_settings", comment: ""),
+                        appContainer.localizationManager.getTranslation(key: "tab_settings", language: appContainer.localizationManager.selectedLanguage),
                         systemImage: "gearshape.fill"
                     )
                 }
                 .tag(4)
+
         }
+        .environmentObject(appContainer)
+        .environmentObject(appContainer.favoritesManager)
+        .environmentObject(appContainer.textSizeManager)
+        .environmentObject(appContainer.localizationManager)
+        .environmentObject(appContainer.readingProgressTracker)
+        .environmentObject(appContainer.readingTimeTracker)
     }
 }

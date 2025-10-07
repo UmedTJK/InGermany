@@ -1,8 +1,3 @@
-//
-//  CategoriesView.swift
-//  InGermany
-//
-
 import SwiftUI
 
 /// Displays a list of article categories with navigation into category-specific articles.
@@ -12,8 +7,9 @@ struct CategoriesView: View {
     @EnvironmentObject private var appContainer: AppContainer
 
     /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeCategoriesViewModel())
+    init() {
+        // ✅ ИСПРАВЛЕНО: используем AppContainer.shared вместо параметра
+        _viewModel = StateObject(wrappedValue: AppContainer.shared.makeCategoriesViewModel())
     }
     
     /// For preview and testing
@@ -63,6 +59,6 @@ struct CategoriesView: View {
 
 // MARK: - Preview
 #Preview {
-    CategoriesView(appContainer: AppContainer.shared)
+    CategoriesView()
         .environmentObject(AppContainer.shared)
 }

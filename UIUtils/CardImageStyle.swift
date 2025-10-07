@@ -34,3 +34,16 @@ enum CardImageStyle: String, CaseIterable, Identifiable {
         }
     }
 }
+
+extension CardImageStyle {
+    var localizedTitle: String {
+        switch self {
+        case .allCorners:
+            return "Закругленные углы"
+        case .bottomCorners:
+            return "Закругленные снизу"
+        case .fullWidth:
+            return "На всю ширину"
+        }
+    }
+}

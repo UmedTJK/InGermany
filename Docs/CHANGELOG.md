@@ -34,6 +34,12 @@
 
 - Обновил документацию
 
+## [v1.13.5] – 2025-10-07 10:03 или в текущую версию:
+### Исправления
+- Исправлена ошибка инициализации `SettingsViewModel` через `AppContainer`
+- Устранены ошибки подписки на `@AppStorage` с Combine (`dropFirst().sink`)
+- Обновлён `LanguagePickerView`: добавлена поддержка внешнего `Binding<String>`
+
 [Unreleased] - 2025-10-06 18:42
 🔧 Architecture & DI Refactoring
 Fixed DI violations in ContentView: Removed direct FavoritesManager.shared creation, now uses AppContainer

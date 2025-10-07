@@ -2,8 +2,8 @@ import SwiftUI
 
 @main
 struct InGermanyApp: App {
-    @StateObject private var appContainer = AppContainer.shared // ← ИСПРАВЛЕНО: используем AppContainer вместо отдельных репозиториев
-    @StateObject private var appState = AppState()
+    @StateObject private var appContainer = AppContainer.shared
+    @StateObject private var appState = AppState(appContainer: AppContainer.shared) // ← ИСПРАВЛЕНО: инжектим контейнер
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @Environment(\.scenePhase) private var scenePhase
 
@@ -15,8 +15,13 @@ struct InGermanyApp: App {
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     ContentView()
-                        .environmentObject(appContainer) // ← ИСПРАВЛЕНО: передаем appContainer вместо categoriesRepository
-                        .preferredColorScheme(isDarkMode ? .dark : .light)
+                        // ✅ ПЕРЕДАЕМ ВСЕ НЕОБХОДИМЫЕ ENVIRONMENT OBJECTS
+                        .environmentObject(appContainer)
+                        .environmentObject(appContainer.favoritesManager)
+                        .environmentObject(appContainer.textSizeManager)
+                        .environmentObject(appContainer.localizationManager)
+                        .environmentObject(appContainer.readingProgressTracker)
+                        .preferredColorScheme(isDarkMode ? .light : .dark)
                 }
             }
             .task {
@@ -29,15 +34,21 @@ struct InGermanyApp: App {
 @MainActor
 final class AppState: ObservableObject {
     @Published var isLoading = true
+    private let appContainer: AppContainer // ← ДОБАВЛЕНО: зависимость через DI
+
+    init(appContainer: AppContainer) { // ← ИСПРАВЛЕНО: инжектим контейнер
+        self.appContainer = appContainer
+    }
 
     func loadData() async {
-        let dataService = DataService.shared
-        async let articles = dataService.loadArticles()
-        async let categories = dataService.loadCategories()
-        async let locations = dataService.loadLocations()
+        // ✅ ИСПОЛЬЗУЕМ ЗАВИСИМОСТИ ИЗ КОНТЕЙНЕРА ВМЕСТО ПРЯМЫХ SINGLETONS
+        async let articles = appContainer.dataService.loadArticles()
+        async let categories = appContainer.dataService.loadCategories()
+        async let locations = appContainer.dataService.loadLocations()
         _ = await (articles, categories, locations)
 
-        await DefaultCategoriesRepository.shared.bootstrap()
+        // ✅ ИСПОЛЬЗУЕМ КОНТЕЙНЕР ДЛЯ РЕПОЗИТОРИЕВ
+        await appContainer.categoriesRepo.bootstrap()
         isLoading = false
     }
 }
