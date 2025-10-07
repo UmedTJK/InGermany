@@ -112,5 +112,5 @@ struct HomeView: View {
 // MARK: - Preview
 #Preview {
     HomeView()
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }

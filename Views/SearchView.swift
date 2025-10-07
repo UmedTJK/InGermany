@@ -67,5 +67,5 @@ struct SearchView: View {
 // MARK: - Preview
 #Preview {
     SearchView(appContainer: AppContainer.shared)
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }

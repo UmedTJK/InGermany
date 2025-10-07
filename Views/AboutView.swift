@@ -48,5 +48,5 @@ struct AboutView: View {
 // MARK: - Preview
 #Preview {
     AboutView(appContainer: AppContainer.shared)
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }

@@ -57,5 +57,5 @@ struct ArticlesByTagView: View {
         tag: "Финансы",
         articles: [Article.sampleArticle]
     )
-    .environmentObject(AppContainer.shared)
+    .environmentObject(appContainer)
 }

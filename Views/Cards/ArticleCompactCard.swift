@@ -161,7 +161,7 @@ struct ArticleCompactCard: View {
 // MARK: - Preview
 #Preview {
     ArticleCompactCard(article: Article.sampleArticles[0])
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }
 
 // MARK: - Экранный размер

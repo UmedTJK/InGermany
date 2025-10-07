@@ -52,5 +52,5 @@ struct ArticlesByCategoryView: View {
         ),
         articles: []
     )
-    .environmentObject(AppContainer.shared)
+    .environmentObject(appContainer)
 }

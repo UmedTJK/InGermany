@@ -31,7 +31,7 @@ struct PDFViewer: View {
 
     /// Шорткат для получения перевода строки через LocalizationManager.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 
     /// Старый метод перевода, оставлен для совместимости.

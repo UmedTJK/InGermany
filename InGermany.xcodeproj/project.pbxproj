@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD0826D32E85A50A009C30CC /* .swiftlint.yml */; };
+		AD160DA92E9511AF009B49F2 /* ARCHITECTURE_ISSUES.md in Sources */ = {isa = PBXBuildFile; fileRef = AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */; };
 		AD2A625A2E8893BC006A94DD /* ReadingTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */; };
 		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D02E8FAD42006A94DD /* git_snapshot.md */; };
@@ -62,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		AD0826D32E85A50A009C30CC /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARCHITECTURE_ISSUES.md; sourceTree = "<group>"; };
 		AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeTracker.swift; sourceTree = "<group>"; };
 		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD2A64D02E8FAD42006A94DD /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */,
 				AD52FD452E8585B300CC9F61 /* CHANGELOG.md */,
 				ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */,
 				AD2A64D12E8FAD42006A94DD /* project_tree.md */,
@@ -448,6 +451,7 @@
 				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */,
+				AD160DA92E9511AF009B49F2 /* ARCHITECTURE_ISSUES.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

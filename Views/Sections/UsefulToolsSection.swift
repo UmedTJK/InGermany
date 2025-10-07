@@ -16,7 +16,7 @@ struct UsefulToolsSection: View {
     /// Builds the "Полезные инструменты" section UI with navigation links and buttons.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(LocalizationManager.shared.getTranslation(key: "Полезные инструменты", language: "ru"))
+            Text(appContainer.localizationManager.getTranslation(key: "Полезные инструменты", language: "ru"))
                 .font(.headline)
                 .padding(.horizontal)
 

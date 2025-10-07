@@ -87,7 +87,7 @@ struct ArticleMetaView: View {
     
     /// Локализует строку по ключу для выбранного языка.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
@@ -110,7 +110,7 @@ struct BadgeView: View {
 #if DEBUG
 #Preview {
     ArticleMetaView(article: Article.sampleArticle)
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
         .padding()
 }
 #endif

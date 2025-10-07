@@ -217,10 +217,10 @@ private struct HistoryClearedToast: View {
 // MARK: - Preview
 #Preview("Default Settings") {
     SettingsView(viewModel: .previewMock())
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }
 
 #Preview("With Stats") {
     SettingsView(viewModel: .previewMockWithStats())
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }

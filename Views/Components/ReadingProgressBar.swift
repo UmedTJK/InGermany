@@ -53,7 +53,7 @@ struct ReadingProgressBar: View {
 
     /// Шорткат для перевода текста через LocalizationManager.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 
     /// Старый метод перевода, оставлен для совместимости.

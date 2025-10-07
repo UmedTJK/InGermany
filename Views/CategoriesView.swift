@@ -60,5 +60,5 @@ struct CategoriesView: View {
 // MARK: - Preview
 #Preview {
     CategoriesView()
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }

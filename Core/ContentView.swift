@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The main entry point of the app UI, containing the tab navigation.
 struct ContentView: View {
-    @StateObject private var appContainer = AppContainer.shared
+    @StateObject private var appContainer = AppContainer()
     @State private var selectedTab = 0
     
     var body: some View {

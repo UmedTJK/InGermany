@@ -247,7 +247,7 @@ struct ArticleDetailView: View {
     }
     
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
     
     private func handleScrollOffset(_ value: CGFloat) {
@@ -287,6 +287,6 @@ private struct ScrollOffsetPreferenceKey: PreferenceKey {
             article: Article.sampleArticles[0],
             allArticles: Article.sampleArticles
         )
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
     }
 }

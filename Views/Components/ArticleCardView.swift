@@ -67,5 +67,5 @@ struct ArticleCardView: View {
 // MARK: - Preview
 #Preview {
     ArticleCardView(article: Article.sampleArticle)
-        .environmentObject(AppContainer.shared)
+        .environmentObject(appContainer)
 }
