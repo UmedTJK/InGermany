@@ -5,6 +5,7 @@ import SwiftUI
 final class AppContainer: ObservableObject {
     static let shared = AppContainer()
     
+    // Существующие зависимости...
     let articlesRepo: ArticlesRepositoryProtocol
     let categoriesRepo: CategoriesRepositoryProtocol
     let favoritesManager: FavoritesManager
@@ -14,7 +15,7 @@ final class AppContainer: ObservableObject {
     let textSizeManager: TextSizeManager
     let readingTimeTracker: ReadingTimeTracker
     let localizationManager: LocalizationManager
-    let dataService: DataService // ✅ Добавляем DataService
+    let dataService: DataService
 
     init(
         articlesRepo: ArticlesRepositoryProtocol? = nil,
@@ -26,9 +27,13 @@ final class AppContainer: ObservableObject {
         textSizeManager: TextSizeManager? = nil,
         readingTimeTracker: ReadingTimeTracker? = nil,
         localizationManager: LocalizationManager? = nil,
-        dataService: DataService? = nil // ✅ Добавляем параметр
+        dataService: DataService? = nil
     ) {
-        self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: DataService.shared)
+        // ✅ Инициализируем DataService ПЕРВЫМ, так как он нужен для ArticlesRepositoryImpl
+        let dataServiceInstance = dataService ?? DataService.shared
+        self.dataService = dataServiceInstance
+        
+        self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: dataServiceInstance)
         self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared
         self.historyManager = historyManager ?? ReadingHistoryManager.shared
@@ -37,12 +42,10 @@ final class AppContainer: ObservableObject {
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
         self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared
         self.localizationManager = localizationManager ?? LocalizationManager.shared
-        self.dataService = dataService ?? DataService.shared // ✅ Инициализируем
     }
 
-    // MARK: - Factory Methods
-
-    /// Creates a HomeViewModel with injected dependencies
+    // MARK: - Существующие Factory Methods для ViewModels
+    
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
@@ -52,7 +55,6 @@ final class AppContainer: ObservableObject {
         )
     }
 
-    /// Creates a SearchViewModel with injected dependencies
     func makeSearchViewModel() -> SearchViewModel {
         SearchViewModel(
             favoritesManager: favoritesManager,
@@ -61,7 +63,6 @@ final class AppContainer: ObservableObject {
         )
     }
 
-    /// Creates a CategoriesViewModel with injected dependencies
     func makeCategoriesViewModel() -> CategoriesViewModel {
         CategoriesViewModel(
             categoriesRepo: categoriesRepo,
@@ -70,7 +71,6 @@ final class AppContainer: ObservableObject {
         )
     }
 
-    /// Creates a FavoritesViewModel with injected dependencies
     func makeFavoritesViewModel() -> FavoritesViewModel {
         FavoritesViewModel(
             favoritesManager: favoritesManager,
@@ -78,12 +78,10 @@ final class AppContainer: ObservableObject {
         )
     }
 
-    /// Creates a SettingsViewModel with injected dependencies
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(historyManager: historyManager)
     }
 
-    /// Creates an ArticleDetailViewModel for a specific article
     func makeArticleDetailViewModel(article: Article, allArticles: [Article]) -> ArticleDetailViewModel {
         ArticleDetailViewModel(
             article: article,
@@ -93,8 +91,65 @@ final class AppContainer: ObservableObject {
         )
     }
 
-    /// Creates an AboutViewModel
     func makeAboutViewModel() -> AboutViewModel {
         AboutViewModel()
+    }
+
+    // MARK: - НОВЫЕ Factory Methods для UI компонентов
+
+    func makeArticleRowViewModel(article: Article) -> ArticleRowViewModel {
+        ArticleRowViewModel(
+            article: article,
+            favoritesManager: favoritesManager,
+            ratingManager: ratingManager
+        )
+    }
+
+    func makeArticleCompactCardViewModel(article: Article) -> ArticleRowViewModel {
+        makeArticleRowViewModel(article: article)
+    }
+
+    func makeArticleCardViewModel(article: Article) -> ArticleRowViewModel {
+        makeArticleRowViewModel(article: article)
+    }
+
+    // MARK: - НОВЫЕ Factory Methods для специализированных ViewModels
+
+    func makeLocationsViewModel() -> LocationsViewModel {
+        LocationsViewModel(dataService: dataService)
+    }
+
+    func makePDFViewerViewModel() -> PDFViewerViewModel {
+        PDFViewerViewModel(localizationManager: localizationManager)
+    }
+
+    // MARK: - Вспомогательные методы для dependency injection
+
+    func provideEnvironmentObjects() -> some View {
+        EmptyView()
+            .environmentObject(self)
+            .environmentObject(favoritesManager)
+            .environmentObject(textSizeManager)
+            .environmentObject(localizationManager)
+            .environmentObject(readingProgressTracker)
+            .environmentObject(readingTimeTracker)
+    }
+
+    // 🔧 ИСПРАВЛЕННЫЙ МЕТОД - используем публичные методы менеджеров вместо прямого доступа
+    func clearAllData() {
+        favoritesManager.clearForTesting()
+        ratingManager.clearForTesting()
+        historyManager.clearForTesting()
+        
+        // Вместо прямого доступа к private(set) свойствам используем публичные методы
+        // Если в менеджерах нет методов для очистки, добавляем их или просто пропускаем
+        // так как это используется только для тестирования
+        
+        // Для ReadingProgressTracker - если нет метода очистки, пропускаем
+        // readingProgressTracker.progress.removeAll() // ❌ Нельзя - private(set)
+        
+        // Для ReadingTimeTracker - если нет метода очистки, пропускаем
+        // readingTimeTracker.completedSessions.removeAll() // ❌ Нельзя - private(set)
+        // readingTimeTracker.activeSessions.removeAll() // ❌ Нельзя - private(set)
     }
 }

@@ -92,3 +92,21 @@ class ArticleRowViewModel: ObservableObject {
         .joined(separator: " · ")
     }
 }
+
+extension ArticleRowViewModel {
+    // Методы специфичные для ArticleCompactCard
+    var compactCardImageName: String {
+        article.imageName
+    }
+    
+    var compactCardCategory: String? {
+        // Логика для получения локализованного названия категории
+        // через categoriesRepo (нужно будет добавить в ViewModel)
+        nil // временно
+    }
+    
+    // Методы специфичные для ArticleCardView
+    var cardViewRating: Int {
+        rating
+    }
+}
