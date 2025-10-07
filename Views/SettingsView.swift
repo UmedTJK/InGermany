@@ -1,134 +1,226 @@
-//
-//  SettingsView.swift
-//  InGermany
-//
-
 import SwiftUI
 
 /// The settings screen of the app, allowing the user to configure appearance, language, date format, statistics, and history.
 struct SettingsView: View {
-    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
-    @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
-    @AppStorage("relativeDates") private var relativeDates: Bool = true
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: SettingsViewModel
-    @EnvironmentObject private var appContainer: AppContainer
-
-    /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeSettingsViewModel())
-    }
+    @Environment(\.dismiss) private var dismiss
     
-    /// For preview and testing
+    // MARK: - Init
+    /// Primary initializer for runtime usage - DI through parameters
     init(viewModel: SettingsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
+    
+    /// DI initializer for runtime
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeSettingsViewModel())
+    }
 
-    /// Builds the settings screen UI with sections for language, appearance, card style, date format, statistics, about info, and history clearing.
+
+    // MARK: - Body
     var body: some View {
         NavigationView {
             Form {
-                // 🔤 Язык
-                Section {
-                    LanguagePickerView()
-                }
-                
-                // 🎨 Внешний вид
-                Section(header: Text(t("settings_appearance_title"))) {
-                    Toggle(isOn: $isDarkMode) {
-                        Text(t("settings_dark_mode"))
-                    }
-                }
-                
-                // 🖼 Стиль карточек
-                Section(header: Text(t("settings_card_style"))) {
-                    Picker(t("settings_card_style_photo"), selection: $cardImageStyle) {
-                        ForEach(CardImageStyle.allCases) { style in
-                            Text(style.title).tag(style)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-                
-                // 📅 Формат дат
-                Section(header: Text(t("settings_date_format_title"))) {
-                    Toggle(isOn: $relativeDates) {
-                        Text(t("settings_relative_dates"))
-                    }
-                }
-                
-                // 📊 Статистика чтения
-                Section {
-                    let stats = viewModel.getStats()
-                    let avgMinutes = stats.totalArticlesRead > 0
-                        ? Double(stats.totalReadingTimeMinutes) / Double(stats.totalArticlesRead)
-                        : 0.0
-                    
-                    HStack {
-                        Text(t("settings_articles_read"))
-                        Spacer()
-                        Text("\(stats.totalArticlesRead)")
-                    }
-                    HStack {
-                        Text(t("settings_total_time"))
-                        Spacer()
-                        Text(formatHMS(fromSeconds: stats.totalReadingTimeMinutes * 60))
-                    }
-                    HStack {
-                        Text(t("settings_average_time"))
-                        Spacer()
-                        Text(formatHMS(fromSeconds: Int(avgMinutes * 60)))
-                    }
-                    HStack {
-                        Text(t("settings_streak"))
-                        Spacer()
-                        Text("\(stats.readingStreak)")
-                    }
-                } header: {
-                    Text(t("settings_stats_title"))
-                }
-                
-                // ℹ️ О приложении
-                Section {
-                    NavigationLink(destination: AboutView(appContainer: appContainer)) {
-                        Text(t("settings_about_title"))
-                    }
-                }
-                
-                // 🧹 Очистка истории
-                Section {
-                    Button(role: .destructive) {
-                        viewModel.clearHistory()
-                    } label: {
-                        Text(t("settings_clear_history"))
+                languageSection
+                appearanceSection
+                cardStyleSection
+                dateFormatSection
+                statisticsSection
+                aboutSection
+                clearHistorySection
+                resetSection
+            }
+            .navigationTitle(viewModel.localizedText("settings_title"))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Готово") {
+                        dismiss()
                     }
                 }
             }
-            .navigationTitle(t("settings_title"))
+            .overlay {
+                if viewModel.isHistoryCleared {
+                    HistoryClearedToast()
+                }
+            }
+        }
+    }
+
+    // MARK: - Section Views
+    
+    private var languageSection: some View {
+        Section {
+            LanguagePickerView(selectedLanguage: $viewModel.selectedLanguage)
+        } header: {
+            Text(viewModel.localizedText("settings_language_section"))
         }
     }
     
-    /// Formats total seconds into HH:MM:SS or MM:SS depending on duration.
+    private var appearanceSection: some View {
+        Section {
+            Toggle(isOn: $viewModel.isDarkMode) {
+                Text(viewModel.localizedText("settings_dark_mode"))
+                    .accessibilityLabel(viewModel.localizedText("settings_dark_mode_accessibility"))
+            }
+        } header: {
+            Text(viewModel.localizedText("settings_appearance_title"))
+        }
+    }
+    
+    private var cardStyleSection: some View {
+        Section {
+            Picker(viewModel.localizedText("settings_card_style_photo"), selection: $viewModel.cardImageStyle) {
+                ForEach(CardImageStyle.allCases) { style in
+                    Text(style.localizedTitle)
+                        .tag(style)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityLabel(viewModel.localizedText("settings_card_style_accessibility"))
+        } header: {
+            Text(viewModel.localizedText("settings_card_style"))
+        }
+    }
+    
+    private var dateFormatSection: some View {
+        Section {
+            Toggle(isOn: $viewModel.relativeDates) {
+                Text(viewModel.localizedText("settings_relative_dates"))
+                    .accessibilityLabel(viewModel.localizedText("settings_relative_dates_accessibility"))
+            }
+        } header: {
+            Text(viewModel.localizedText("settings_date_format_title"))
+        }
+    }
+    
+    private var statisticsSection: some View {
+        Section {
+            let stats = viewModel.getStats()
+            let avgMinutes = stats.totalArticlesRead > 0
+                ? Double(stats.totalReadingTimeMinutes) / Double(stats.totalArticlesRead)
+                : 0.0
+            
+            StatisticRow(
+                title: viewModel.localizedText("settings_articles_read"),
+                value: "\(stats.totalArticlesRead)"
+            )
+            
+            StatisticRow(
+                title: viewModel.localizedText("settings_total_time"),
+                value: formatHMS(fromSeconds: stats.totalReadingTimeMinutes * 60)
+            )
+            
+            StatisticRow(
+                title: viewModel.localizedText("settings_average_time"),
+                value: formatHMS(fromSeconds: Int(avgMinutes * 60))
+            )
+            
+            StatisticRow(
+                title: viewModel.localizedText("settings_streak"),
+                value: "\(stats.readingStreak)"
+            )
+        } header: {
+            Text(viewModel.localizedText("settings_stats_title"))
+        }
+    }
+    
+    private var aboutSection: some View {
+        Section {
+            NavigationLink(destination: AboutView(appContainer: AppContainer.shared)) {
+                Text(viewModel.localizedText("settings_about_title"))
+            }
+
+        }
+    }
+    
+    private var clearHistorySection: some View {
+        Section {
+            Button(role: .destructive) {
+                viewModel.clearHistory()
+            } label: {
+                HStack {
+                    Image(systemName: "trash")
+                    Text(viewModel.localizedText("settings_clear_history"))
+                }
+            }
+            .accessibilityLabel(viewModel.localizedText("settings_clear_history_accessibility"))
+        }
+    }
+    
+    private var resetSection: some View {
+        Section {
+            Button(role: .destructive) {
+                viewModel.resetToDefaults()
+            } label: {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                    Text(viewModel.localizedText("settings_reset_defaults"))
+                }
+            }
+            .accessibilityLabel(viewModel.localizedText("settings_reset_defaults_accessibility"))
+        }
+    }
+    
+    // MARK: - Helper Methods
+    
     private func formatHMS(fromSeconds totalSeconds: Int) -> String {
         let hours = totalSeconds / 3600
         let mins = (totalSeconds % 3600) / 60
         let secs = totalSeconds % 60
         
         if hours > 0 {
-            return String(format: "%02d:%02d:%02d", hours, mins, secs)
+            return String(format: "%d:%02d:%02d", hours, mins, secs)
         } else {
-            return String(format: "%02d:%02d", mins, secs)
+            return String(format: "%d:%02d", mins, secs)
         }
     }
+}
 
-    /// Retrieves a localized string for a given key.
-    private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+// MARK: - Supporting Views
+
+private struct StatisticRow: View {
+    let title: String
+    let value: String
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(value)
+                .foregroundColor(.secondary)
+                .monospacedDigit()
+        }
+    }
+}
+
+private struct HistoryClearedToast: View {
+    var body: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.green)
+                Text("История очищена")
+                    .foregroundColor(.primary)
+            }
+            .padding()
+            .background(Color(.systemBackground))
+            .cornerRadius(10)
+            .shadow(radius: 5)
+            .padding()
+        }
+        .transition(.scale.combined(with: .opacity))
+        .animation(.spring(), value: true)
     }
 }
 
 // MARK: - Preview
-#Preview {
-    SettingsView(appContainer: AppContainer.shared)
+#Preview("Default Settings") {
+    SettingsView(viewModel: .previewMock())
+        .environmentObject(AppContainer.shared)
+}
+
+#Preview("With Stats") {
+    SettingsView(viewModel: .previewMockWithStats())
         .environmentObject(AppContainer.shared)
 }
