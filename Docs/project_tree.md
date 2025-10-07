@@ -59,6 +59,7 @@
 ├── Managers
 │   ├── CategoryManager.swift
 │   ├── FavoritesManager.swift
+│   ├── ProtocolConformances.swift
 │   ├── RatingManager.swift
 │   ├── ReadingHistoryManager.swift
 │   ├── ReadingProgressHelper.swift
@@ -135,6 +136,8 @@
 │   ├── CategoriesViewModel.swift
 │   ├── FavoritesViewModel.swift
 │   ├── HomeViewModel.swift
+│   ├── LocationsViewModel.swift
+│   ├── PDFViewerViewModel.swift
 │   ├── SearchViewModel.swift
 │   ├── SettingsViewModel.swift
 │   └── ViewModels.swift
@@ -169,6 +172,8 @@
 │   │   ├── RecentlyReadSection.swift
 │   │   └── UsefulToolsSection.swift
 │   └── SettingsView.swift
+├── check_di_violations.sh
+├── di_violations_report.md
 ├── project_structure.txt
 ├── scripts
 │   ├── release.sh
@@ -183,4 +188,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-50 directories, 134 files
+50 directories, 139 files
