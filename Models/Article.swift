@@ -27,6 +27,7 @@ struct Article: Identifiable, Codable, Hashable {
     let updatedAt: Date?
     /// Optional image filename associated with the article.
     let image: String?   // 🔹 Новое поле для фото статьи
+
     
     // MARK: - Initializers
     

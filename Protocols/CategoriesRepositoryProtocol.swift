@@ -41,7 +41,7 @@ final class DefaultCategoriesRepository: ObservableObject, CategoriesRepositoryP
 
     /// Получить категорию по ID
     func category(by id: String) -> Category? {
-        byId[id]
+        return byId[id]
     }
 
     /// Получить все категории

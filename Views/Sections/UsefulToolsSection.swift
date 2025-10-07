@@ -8,6 +8,8 @@ import SwiftUI
 
 /// A view that displays a section with useful tool cards for navigation, PDF viewing, and random article selection.
 struct UsefulToolsSection: View {
+    @EnvironmentObject var appContainer: AppContainer
+
     /// An array of articles used to select a random article.
     let articles: [Article]
     /// Closure called when a random article is selected.

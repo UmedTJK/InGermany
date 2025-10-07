@@ -8,104 +8,98 @@
 import SwiftUI
 
 /// ViewModel для строки статьи (`ArticleRow`).
-/// Отвечает за управление состоянием избранного, рейтинга и отображения метаданных.
-/// Использует `FavoritesManager` и `RatingManager`.
+/// Отвечает за управление состоянием избранного, рейтинга, метаданных и прогресса чтения.
+/// Использует `FavoritesManager`, `RatingManager`, `ReadingProgressTracker` и `CategoriesRepositoryProtocol`.
 @MainActor
 class ArticleRowViewModel: ObservableObject {
-    /// Флаг, указывающий, добавлена ли статья в избранное.
     @Published var isFavorite: Bool
-    
-    /// Текущий рейтинг статьи (например, от 0 до 5).
     @Published var rating: Int
-    
-    /// Имя изображения, связанного со статьёй.
     @Published var imageName: String?
-    
-    /// Статья, для которой создаётся ViewModel.
+
     let article: Article
-    
-    /// Менеджер для управления избранными статьями
+
     private let favoritesManager: FavoritesManager
-    /// Менеджер для хранения и получения рейтингов статей
     private let ratingManager: RatingManager
-    
-    /// Основной инициализатор ViewModel.
-    /// - Parameters:
-    ///   - article: Модель статьи.
-    ///   - favoritesManager: Менеджер для работы с избранным.
-    ///   - ratingManager: Менеджер для работы с рейтингами.
-    init(article: Article,
-         favoritesManager: FavoritesManager,
-         ratingManager: RatingManager) {
+    private let categoriesRepo: CategoriesRepositoryProtocol
+    private let readingProgressTracker: ReadingProgressTracker
+
+    init(
+        article: Article,
+        favoritesManager: FavoritesManager,
+        ratingManager: RatingManager,
+        categoriesRepo: CategoriesRepositoryProtocol,
+        readingProgressTracker: ReadingProgressTracker
+    ) {
         self.article = article
         self.favoritesManager = favoritesManager
         self.ratingManager = ratingManager
-        
+        self.categoriesRepo = categoriesRepo
+        self.readingProgressTracker = readingProgressTracker
         self.isFavorite = favoritesManager.isFavorite(article.id)
         self.rating = ratingManager.getRating(for: article.id)
         self.imageName = article.image
     }
-    
-    /// Упрощённый инициализатор, использующий глобальные `shared` менеджеры.
-    /// - Parameter article: Модель статьи.
+
+    /// Упрощённый инициализатор (устаревший — использовать только для превью).
     convenience init(article: Article) {
-        self.init(article: article,
-                  favoritesManager: FavoritesManager.shared,
-                  ratingManager: RatingManager.shared)
+        self.init(
+            article: article,
+            favoritesManager: FavoritesManager.shared,
+            ratingManager: RatingManager.shared,
+            categoriesRepo: DefaultCategoriesRepository.shared,
+            readingProgressTracker: ReadingProgressTracker.shared
+        )
     }
-    
+
     // MARK: - Favorites
-    
-    /// Переключает состояние избранного для статьи.
     func toggleFavorite() {
         favoritesManager.toggleFavorite(for: article.id)
         isFavorite = favoritesManager.isFavorite(article.id)
     }
-    
+
     // MARK: - Rating
-    
-    /// Устанавливает рейтинг для статьи.
-    /// - Parameter value: Значение рейтинга (например, от 0 до 5).
     func setRating(_ value: Int) {
         ratingManager.setRating(value, for: article.id)
         rating = value
     }
-    
+
     // MARK: - Metadata
-    
-    /// Локализованный заголовок статьи.
     var title: String {
-        article.localizedTitle(for: "ru") // можно подставить язык из настроек
+        article.localizedTitle(for: "ru")
     }
-    
-    /// Краткая информация, например время чтения.
+
     var subtitle: String {
         article.formattedReadingTime(for: "ru")
     }
-    
-    /// Метаданные статьи: дата создания и дата обновления.
+
     var metaInfo: String {
         [
             article.formattedCreatedDate(for: "ru"),
             article.formattedUpdatedDate(for: "ru")
-        ]
-        .joined(separator: " · ")
+        ].joined(separator: " · ")
     }
+
+    var category: Category? {
+        categoriesRepo.category(by: article.categoryId)
+    }
+
+    /// Текущий прогресс чтения статьи (0.0 ... 1.0)
+    var progress: Double {
+        Double(readingProgressTracker.progressForArticle(article.id))
+    }
+
 }
 
+// MARK: - Расширения для ArticleCard / CompactCard
 extension ArticleRowViewModel {
-    // Методы специфичные для ArticleCompactCard
     var compactCardImageName: String {
         article.imageName
     }
-    
+
     var compactCardCategory: String? {
-        // Логика для получения локализованного названия категории
-        // через categoriesRepo (нужно будет добавить в ViewModel)
-        nil // временно
+        category?.localizedName(for: "ru")
     }
-    
-    // Методы специфичные для ArticleCardView
+
     var cardViewRating: Int {
         rating
     }

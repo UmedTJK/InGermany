@@ -20,14 +20,13 @@ final class SettingsViewModel: ObservableObject {
     // MARK: - Init
     init(
         historyManager: ReadingHistoryManager,
-        localizationManager: LocalizationManager = appContainer.localizationManager
+        localizationManager: LocalizationManager
     ) {
         self.historyManager = historyManager
         self.localizationManager = localizationManager
-        
-        // Setup reactive bindings for additional AppStorage properties if needed
         setupReactiveBindings()
     }
+
     
     // MARK: - Public Methods
     
@@ -77,17 +76,21 @@ final class SettingsViewModel: ObservableObject {
 }
 
 // MARK: - Preview Support
+// MARK: - Preview Support
 extension SettingsViewModel {
     static func previewMock() -> SettingsViewModel {
-        let viewModel = SettingsViewModel(historyManager: ReadingHistoryManager.shared)
-        return viewModel
+        SettingsViewModel(
+            historyManager: ReadingHistoryManager.shared,
+            localizationManager: LocalizationManager.shared
+        )
     }
     
     static func previewMockWithStats() -> SettingsViewModel {
-        let viewModel = SettingsViewModel(historyManager: ReadingHistoryManager.shared)
-        
-        // Simulate some reading history for preview
-        // Note: In real implementation, you might want to inject a mock history manager
-        return viewModel
+        let vm = SettingsViewModel(
+            historyManager: ReadingHistoryManager.shared,
+            localizationManager: LocalizationManager.shared
+        )
+        // если нужно, можно добавить тестовую историю в vm.historyManager здесь
+        return vm
     }
 }

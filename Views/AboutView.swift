@@ -1,9 +1,12 @@
 import SwiftUI
 
 struct AboutView: View {
+
     @StateObject private var viewModel: AboutViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var appContainer: AppContainer
+    @EnvironmentObject var appContainer: AppContainer
+
+
 
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
@@ -48,5 +51,5 @@ struct AboutView: View {
 // MARK: - Preview
 #Preview {
     AboutView(appContainer: AppContainer.shared)
-        .environmentObject(appContainer)
+        .environmentObject(AppContainer.previewMock())
 }

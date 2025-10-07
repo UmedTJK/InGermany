@@ -15,7 +15,7 @@ struct SearchView: View {
     init(appContainer: AppContainer) {
         _viewModel = StateObject(wrappedValue: appContainer.makeSearchViewModel())
     }
-    
+
     /// For preview and testing
     init(viewModel: SearchViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -31,18 +31,19 @@ struct SearchView: View {
                     }
                     .padding(.horizontal)
                 }
+
                 List(viewModel.filteredArticles) { article in
                     NavigationLink {
+                        // ✅ ИСПРАВЛЕНО: используем правильный конструктор ArticleDetailView
                         ArticleDetailView(
                             article: article,
-                            allArticles: viewModel.articles
+                            allArticles: viewModel.articles,
+                            appContainer: appContainer
                         )
                     } label: {
-                        ArticleRow(viewModel: ArticleRowViewModel(
-                            article: article,
-                            favoritesManager: viewModel.favoritesManager,
-                            ratingManager: appContainer.ratingManager
-                        ))
+                        ArticleRow(
+                            viewModel: appContainer.makeArticleRowViewModel(article: article)
+                        )
                     }
                 }
                 .listStyle(.plain)
@@ -66,6 +67,7 @@ struct SearchView: View {
 
 // MARK: - Preview
 #Preview {
-    SearchView(appContainer: AppContainer.shared)
-        .environmentObject(appContainer)
+    let container = AppContainer.previewMock()
+    return SearchView(appContainer: container)
+        .environmentObject(container)
 }

@@ -7,6 +7,9 @@ import SwiftUI
 
 /// Прогресс-бар чтения статьи, показывающий процент прочитанного и статус активности.
 struct ReadingProgressBar: View {
+    @EnvironmentObject var localizationManager: LocalizationManager
+
+
     /// Текущее значение прогресса чтения (0.0–1.0).
     var progress: CGFloat
     /// Высота индикатора прогресса.
@@ -53,7 +56,7 @@ struct ReadingProgressBar: View {
 
     /// Шорткат для перевода текста через LocalizationManager.
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 
     /// Старый метод перевода, оставлен для совместимости.

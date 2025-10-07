@@ -143,5 +143,5 @@ struct MapView: View {
 // MARK: - Preview
 #Preview {
     MapView()
-        .environmentObject(appContainer)
+        .environmentObject(AppContainer.previewMock())
 }

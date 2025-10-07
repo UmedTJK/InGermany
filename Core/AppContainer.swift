@@ -1,13 +1,21 @@
+//
+//  AppContainer.swift
+//  InGermany
+//
+
 import SwiftUI
+import Foundation
 
 /// The main dependency injection container for the app.
 @MainActor
 final class AppContainer: ObservableObject {
     static let shared = AppContainer()
-    
-    // Существующие зависимости...
+
+    // MARK: - Core Repositories
     let articlesRepo: ArticlesRepositoryProtocol
     let categoriesRepo: CategoriesRepositoryProtocol
+
+    // MARK: - Managers (конкретные классы для SwiftUI EnvironmentObject)
     let favoritesManager: FavoritesManager
     let historyManager: ReadingHistoryManager
     let ratingManager: RatingManager
@@ -15,6 +23,8 @@ final class AppContainer: ObservableObject {
     let textSizeManager: TextSizeManager
     let readingTimeTracker: ReadingTimeTracker
     let localizationManager: LocalizationManager
+
+    // MARK: - Services
     let dataService: DataService
 
     init(
@@ -29,23 +39,25 @@ final class AppContainer: ObservableObject {
         localizationManager: LocalizationManager? = nil,
         dataService: DataService? = nil
     ) {
-        // ✅ Инициализируем DataService ПЕРВЫМ, так как он нужен для ArticlesRepositoryImpl
+        // ✅ Services & Repos
         let dataServiceInstance = dataService ?? DataService.shared
         self.dataService = dataServiceInstance
-        
+
         self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: dataServiceInstance)
         self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
+
+        // ✅ Managers (конкретные классы)
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared
         self.historyManager = historyManager ?? ReadingHistoryManager.shared
         self.ratingManager = ratingManager ?? RatingManager.shared
         self.readingProgressTracker = readingProgressTracker ?? ReadingProgressTracker.shared
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
         self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared
-        self.localizationManager = localizationManager ?? appContainer.localizationManager
+        self.localizationManager = localizationManager ?? LocalizationManager.shared
     }
 
-    // MARK: - Существующие Factory Methods для ViewModels
-    
+    // MARK: - ViewModel Factory Methods
+
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
@@ -79,31 +91,42 @@ final class AppContainer: ObservableObject {
     }
 
     func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel(historyManager: historyManager)
+        SettingsViewModel(
+            historyManager: historyManager,
+            localizationManager: localizationManager // как протокол передастся сам
+        )
     }
 
     func makeArticleDetailViewModel(article: Article, allArticles: [Article]) -> ArticleDetailViewModel {
         ArticleDetailViewModel(
             article: article,
             allArticles: allArticles,
+            localizationManager: localizationManager,
+            textSizeManager: textSizeManager,
             favoritesManager: favoritesManager,
+            ratingManager: ratingManager,
+            readingProgressTracker: readingProgressTracker,
+            readingTimeTracker: readingTimeTracker,
             historyManager: historyManager
         )
     }
+
 
     func makeAboutViewModel() -> AboutViewModel {
         AboutViewModel()
     }
 
-    // MARK: - НОВЫЕ Factory Methods для UI компонентов
-
     func makeArticleRowViewModel(article: Article) -> ArticleRowViewModel {
         ArticleRowViewModel(
             article: article,
             favoritesManager: favoritesManager,
-            ratingManager: ratingManager
+            ratingManager: ratingManager,
+            categoriesRepo: categoriesRepo,
+            readingProgressTracker: readingProgressTracker
         )
     }
+
+
 
     func makeArticleCompactCardViewModel(article: Article) -> ArticleRowViewModel {
         makeArticleRowViewModel(article: article)
@@ -113,8 +136,6 @@ final class AppContainer: ObservableObject {
         makeArticleRowViewModel(article: article)
     }
 
-    // MARK: - НОВЫЕ Factory Methods для специализированных ViewModels
-
     func makeLocationsViewModel() -> LocationsViewModel {
         LocationsViewModel(dataService: dataService)
     }
@@ -123,7 +144,9 @@ final class AppContainer: ObservableObject {
         PDFViewerViewModel(localizationManager: localizationManager)
     }
 
-    // MARK: - Вспомогательные методы для dependency injection
+
+
+    // MARK: - Global Environment Injection
 
     func provideEnvironmentObjects() -> some View {
         EmptyView()
@@ -133,23 +156,20 @@ final class AppContainer: ObservableObject {
             .environmentObject(localizationManager)
             .environmentObject(readingProgressTracker)
             .environmentObject(readingTimeTracker)
+            .environmentObject(ratingManager)
     }
 
-    // 🔧 ИСПРАВЛЕННЫЙ МЕТОД - используем публичные методы менеджеров вместо прямого доступа
+    // MARK: - Clear All Data (for testing)
+
     func clearAllData() {
         favoritesManager.clearForTesting()
         ratingManager.clearForTesting()
         historyManager.clearForTesting()
-        
-        // Вместо прямого доступа к private(set) свойствам используем публичные методы
-        // Если в менеджерах нет методов для очистки, добавляем их или просто пропускаем
-        // так как это используется только для тестирования
-        
-        // Для ReadingProgressTracker - если нет метода очистки, пропускаем
-        // readingProgressTracker.progress.removeAll() // ❌ Нельзя - private(set)
-        
-        // Для ReadingTimeTracker - если нет метода очистки, пропускаем
-        // readingTimeTracker.completedSessions.removeAll() // ❌ Нельзя - private(set)
-        // readingTimeTracker.activeSessions.removeAll() // ❌ Нельзя - private(set)
+    }
+}
+
+extension AppContainer {
+    static func previewMock() -> AppContainer {
+        AppContainer()
     }
 }

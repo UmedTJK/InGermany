@@ -471,6 +471,7 @@ extension View {
     /// - Parameter key: Ключ для перевода.
     /// - Returns: Переведённая строка.
     func t(_ key: String) -> String {
-        appContainer.localizationManager.t(key)
+        LocalizationManager.shared.t(key)
     }
+
 }

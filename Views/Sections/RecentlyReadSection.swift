@@ -6,16 +6,23 @@
 //
 import SwiftUI
 
-/// A view that displays a section of recently read articles based on the user's reading history.
 struct RecentlyReadSection: View {
-    /// All available articles to display from.
     let articles: [Article]
-    /// Manager responsible for handling favorite articles.
     let favoritesManager: FavoritesManager
-    /// Manager responsible for tracking and providing recently read articles.
     let readingHistoryManager: ReadingHistoryManager
+    @EnvironmentObject private var appContainer: AppContainer
 
-    /// Conditionally builds the "Недавно прочитанное" section with horizontally scrollable compact article cards if reading history is not empty.
+    // ✅ Только один конструктор без appContainer
+    init(
+        articles: [Article],
+        favoritesManager: FavoritesManager,
+        readingHistoryManager: ReadingHistoryManager
+    ) {
+        self.articles = articles
+        self.favoritesManager = favoritesManager
+        self.readingHistoryManager = readingHistoryManager
+    }
+
     var body: some View {
         let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
 
@@ -31,11 +38,13 @@ struct RecentlyReadSection: View {
                             NavigationLink {
                                 ArticleDetailView(
                                     article: article,
-                                    allArticles: articles
+                                    allArticles: articles,
+                                    appContainer: appContainer
                                 )
                             } label: {
-                                /// Карточка компактного вида статьи, ведущая на экран её деталей
-                                ArticleCompactCard(article: article)
+                                ArticleRow(
+                                    viewModel: appContainer.makeArticleRowViewModel(article: article)
+                                )
                             }
                         }
                     }

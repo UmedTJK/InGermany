@@ -2,6 +2,8 @@ import SwiftUI
 
 /// The settings screen of the app, allowing the user to configure appearance, language, date format, statistics, and history.
 struct SettingsView: View {
+    @EnvironmentObject var appContainer: AppContainer
+
     @StateObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
     
@@ -11,10 +13,7 @@ struct SettingsView: View {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
-    /// DI initializer for runtime
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeSettingsViewModel())
-    }
+
 
 
     // MARK: - Body
@@ -217,10 +216,10 @@ private struct HistoryClearedToast: View {
 // MARK: - Preview
 #Preview("Default Settings") {
     SettingsView(viewModel: .previewMock())
-        .environmentObject(appContainer)
+        .environmentObject(AppContainer.previewMock())
 }
 
 #Preview("With Stats") {
     SettingsView(viewModel: .previewMockWithStats())
-        .environmentObject(appContainer)
+        .environmentObject(AppContainer.previewMock())
 }

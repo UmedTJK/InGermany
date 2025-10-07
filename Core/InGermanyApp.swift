@@ -22,6 +22,7 @@ struct InGermanyApp: App {
                         .environmentObject(appContainer.localizationManager)
                         .environmentObject(appContainer.readingProgressTracker)
                         .preferredColorScheme(isDarkMode ? .light : .dark)
+                        .environment(\.screenSize, UIScreen.main.bounds.size)
                 }
             }
             .task {

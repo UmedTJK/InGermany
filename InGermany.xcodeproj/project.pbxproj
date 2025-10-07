@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD0826D32E85A50A009C30CC /* .swiftlint.yml */; };
 		AD160DA92E9511AF009B49F2 /* ARCHITECTURE_ISSUES.md in Sources */ = {isa = PBXBuildFile; fileRef = AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */; };
+		AD160DAE2E95290F009B49F2 /* ReadingProgressTrackerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DAD2E95290E009B49F2 /* ReadingProgressTrackerProtocol.swift */; };
+		AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */; };
+		AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */; };
+		AD160DB42E955DF1009B49F2 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */; };
+		AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */; };
 		AD2A625A2E8893BC006A94DD /* ReadingTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */; };
 		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D02E8FAD42006A94DD /* git_snapshot.md */; };
@@ -64,6 +69,11 @@
 /* Begin PBXFileReference section */
 		AD0826D32E85A50A009C30CC /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARCHITECTURE_ISSUES.md; sourceTree = "<group>"; };
+		AD160DAD2E95290E009B49F2 /* ReadingProgressTrackerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTrackerProtocol.swift; sourceTree = "<group>"; };
+		AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingManagerProtocol.swift; sourceTree = "<group>"; };
+		AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManagerProtocol.swift; sourceTree = "<group>"; };
+		AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
+		AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Environment+ScreenSize.swift"; sourceTree = "<group>"; };
 		AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeTracker.swift; sourceTree = "<group>"; };
 		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD2A64D02E8FAD42006A94DD /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
@@ -170,6 +180,9 @@
 		AD2A65562E8FEBF2006A94DD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */,
+				AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */,
+				AD160DAD2E95290E009B49F2 /* ReadingProgressTrackerProtocol.swift */,
 				AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */,
 				AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */,
 				AD675BA72E93D85C007B0994 /* FavoritesManagingProtocol.swift */,
@@ -180,6 +193,8 @@
 		AD2A65652E8FF0D1006A94DD /* UIUtils */ = {
 			isa = PBXGroup;
 			children = (
+				AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */,
+				AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */,
 				AD2A655F2E8FF0D1006A94DD /* Animations.swift */,
 				AD2A65602E8FF0D1006A94DD /* CardImageStyle.swift */,
 				AD2A65612E8FF0D1006A94DD /* CardSize.swift */,
@@ -428,6 +443,11 @@
 				AD2A65662E8FF0D1006A94DD /* ProgressBar.swift in Sources */,
 				AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */,
 				AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */,
+				AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */,
+				AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */,
+				AD160DB42E955DF1009B49F2 /* RoundedCorner.swift in Sources */,
+				AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */,
+				AD160DAE2E95290F009B49F2 /* ReadingProgressTrackerProtocol.swift in Sources */,
 				AD2A65672E8FF0D1006A94DD /* Color+Hex.swift in Sources */,
 				AD2A65682E8FF0D1006A94DD /* Animations.swift in Sources */,
 				AD675BA82E93D85E007B0994 /* FavoritesManagingProtocol.swift in Sources */,

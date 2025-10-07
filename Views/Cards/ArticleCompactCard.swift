@@ -1,35 +1,25 @@
-//
 //  ArticleCompactCard.swift
 //  InGermany
-//
 
 import SwiftUI
 
-/// A compact article card view for displaying an article with image, title, tags, rating, and reading progress.
+/// A compact article card view using DI and ViewModel for displaying an article summary.
 struct ArticleCompactCard: View {
-    /// The article model displayed in the card.
-    let article: Article
-    /// The image corner style preference loaded from AppStorage.
+    @ObservedObject var viewModel: ArticleRowViewModel
+    
     @AppStorage("cardImageStyle") private var cardImageStyle: CardImageStyle = .bottomCorners
-    /// The current language code for localization.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    // ✅ ИСПРАВЛЕНО: Используем DI через AppContainer
-    @EnvironmentObject private var appContainer: AppContainer
-    
-    /// The current screen size from Environment.
     @Environment(\.screenSize) private var screenSize
-    
-    /// Builds the UI for the article card with image, title, tags, rating, reading time, and progress.
+
     var body: some View {
         let cardWidth = CardSize.width(for: screenSize.width)
         let cardHeight = CardSize.height(for: screenSize.height, screenWidth: screenSize.width)
-        
+
         VStack(alignment: .leading, spacing: 0) {
-            // 📸 Изображение статьи
             ZStack(alignment: .topLeading) {
                 let baseView: some View = Group {
-                    if let name = article.image,
+                    if let name = viewModel.article.image,
                        let uiImage = UIImage(named: name, in: .main, with: nil) {
                         Image(uiImage: uiImage)
                             .resizable()
@@ -41,30 +31,22 @@ struct ArticleCompactCard: View {
                             .background(Color.secondary.opacity(0.08))
                     }
                 }
-                
+
                 switch cardImageStyle {
                 case .allCorners:
                     baseView
                         .frame(width: cardWidth, height: cardHeight * 0.55)
                         .clipped()
                         .cornerRadius(12)
-                    
-                case .bottomCorners:
+                case .bottomCorners, .fullWidth:
                     baseView
                         .frame(width: cardWidth, height: cardHeight * 0.55)
                         .clipped()
-                        .cornerRadius(12, corners: [.bottomLeft, .bottomRight])
-                    
-                case .fullWidth:
-                    baseView
-                        .frame(width: cardWidth, height: cardHeight * 0.55)
-                        .clipped()
-                        .cornerRadius(12, corners: [.bottomLeft, .bottomRight])
+                        .cornerRadius(12, corners: UIRectCorner([.bottomLeft, .bottomRight]))
+
                 }
-                
-                // 🏷 Категория
-                // ✅ ИСПРАВЛЕНО: Используем categoriesRepo из AppContainer
-                if let category = appContainer.categoriesRepo.category(by: article.categoryId),
+
+                if let category = viewModel.category,
                    let color = Color(hex: category.colorHex) {
                     HStack(spacing: 4) {
                         Image(systemName: category.icon)
@@ -81,27 +63,23 @@ struct ArticleCompactCard: View {
                 }
             }
             .frame(width: cardWidth)
-            
-            // 📄 Контент статьи
+
             VStack(alignment: .leading, spacing: 10) {
-                // 📰 Заголовок
-                Text(article.localizedTitle(for: selectedLanguage))
+                Text(viewModel.article.localizedTitle(for: selectedLanguage))
                     .font(.headline)
                     .foregroundColor(.primary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
-                
-                // 📝 Анонс
-                Text(article.localizedContent(for: selectedLanguage))
+
+                Text(viewModel.article.localizedContent(for: selectedLanguage))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
-                
-                // 🔖 Теги
-                if !article.tags.isEmpty {
+
+                if !viewModel.article.tags.isEmpty {
                     HStack(spacing: 6) {
-                        ForEach(article.tags.prefix(3), id: \.self) { tag in
+                        ForEach(viewModel.article.tags.prefix(3), id: \.self) { tag in
                             Text(tag)
                                 .font(.caption2)
                                 .padding(.horizontal, 6)
@@ -111,41 +89,31 @@ struct ArticleCompactCard: View {
                         }
                     }
                 }
-                
-                // ⭐ Рейтинг + ⏱ Время чтения
+
                 HStack {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .foregroundColor(.yellow)
                             .font(.caption)
-                        // ✅ ИСПРАВЛЕНО: Используем ratingManager из AppContainer
-                        StarRatingView(
-                            rating: Binding(
-                                get: { appContainer.ratingManager.getRating(for: article.id) },
-                                set: { newValue in appContainer.ratingManager.setRating(newValue, for: article.id) }
-                            )
-                        )
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        StarRatingView(rating: $viewModel.rating)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
-                    
+
                     Spacer()
-                    
+
                     HStack(spacing: 4) {
                         Image(systemName: "clock")
                             .foregroundColor(.secondary)
                             .font(.caption)
-                        Text(article.formattedReadingTime(for: selectedLanguage))
+                        Text(viewModel.article.formattedReadingTime(for: selectedLanguage))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
-                
-                // 📊 Прогресс чтения
-                // ✅ ИСПРАВЛЕНО: Используем historyManager из AppContainer
-                let progress = appContainer.readingProgressTracker.progressForArticle(article.id)
-                if progress > 0 {
-                    ProgressBar(value: progress)
+
+                if viewModel.progress > 0 {
+                    ProgressBar(value: viewModel.progress)
                         .frame(height: 4)
                         .padding(.top, 4)
                 }
@@ -158,44 +126,11 @@ struct ArticleCompactCard: View {
     }
 }
 
-// MARK: - Preview
+#if DEBUG
 #Preview {
-    ArticleCompactCard(article: Article.sampleArticles[0])
-        .environmentObject(appContainer)
+    let container = AppContainer.shared
+    let vm = container.makeArticleRowViewModel(article: Article.sampleArticles[0])
+    return ArticleCompactCard(viewModel: vm)
+        .environmentObject(container)
 }
-
-// MARK: - Экранный размер
-/// Provides the screen size through the Environment.
-private struct ScreenSizeKey: EnvironmentKey {
-    static let defaultValue: CGSize = UIScreen.main.bounds.size
-}
-
-extension EnvironmentValues {
-    var screenSize: CGSize {
-        get { self[ScreenSizeKey.self] }
-        set { self[ScreenSizeKey.self] = newValue }
-    }
-}
-
-// MARK: - CornerRadius только для выбранных углов
-/// Allows applying corner radius to specific corners only.
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
-    }
-}
-
-/// Applies rounded corners selectively to specified corners.
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
+#endif

@@ -19,20 +19,11 @@ enum CardImageStyle: String, CaseIterable, Identifiable {
     /// Уникальный идентификатор для использования в SwiftUI списках.
     var id: String { self.rawValue }
 
-    /// Локализованное название стиля, используется в UI.
+    /// Локализованное название стиля — безопасный fallback (используется в UI)
     var title: String {
-        switch self {
-        case .allCorners:
-            return appContainer.localizationManager.getTranslation(key: "card_style_all",
-                                                             language: appContainer.localizationManager.selectedLanguage)
-        case .bottomCorners:
-            return appContainer.localizationManager.getTranslation(key: "card_style_bottom",
-                                                             language: appContainer.localizationManager.selectedLanguage)
-        case .fullWidth:
-            return appContainer.localizationManager.getTranslation(key: "card_style_full",
-                                                             language: appContainer.localizationManager.selectedLanguage)
-        }
+        localizedTitle // Используем безопасный computed property
     }
+
 }
 
 extension CardImageStyle {

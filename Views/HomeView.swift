@@ -29,52 +29,52 @@ struct HomeView: View {
                     .frame(height: 3)
                     .frame(maxWidth: .infinity)
 
-                Group {
-                    if viewModel.isLoading {
-                        ProgressView(t("Загрузка данных..."))
-                            .progressViewStyle(CircularProgressViewStyle())
-                    } else {
-                        ScrollView {
-                            VStack(alignment: .leading, spacing: 28) {
-                                UsefulToolsSection(
-                                    articles: viewModel.articles,
-                                    onRandomArticleSelected: { _ in
-                                        viewModel.selectRandomArticle()
-                                    }
-                                )
-
-                                RecentlyReadSection(
-                                    articles: viewModel.articles,
-                                    favoritesManager: viewModel.favoritesManager,
-                                    readingHistoryManager: viewModel.readingHistoryManager
-                                )
-
-                                FavoritesSection(
-                                    articles: viewModel.articles,
-                                    favoritesManager: viewModel.favoritesManager
-                                )
-
-                                ForEach(viewModel.allCategories, id: \.id) { category in
-                                    if let categoryArticles = viewModel.articlesByCategory[category.id],
-                                       !categoryArticles.isEmpty {
-                                        CategorySection(
-                                            category: category,
-                                            articles: categoryArticles,
-                                            favoritesManager: viewModel.favoritesManager,
-                                            language: selectedLanguage
-                                        )
-                                    }
+                // ✅ ИСПРАВЛЕНО: Убрал Group и сделал прямую conditional logic
+                if viewModel.isLoading {
+                    ProgressView(t("Загрузка данных..."))
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 28) {
+                            UsefulToolsSection(
+                                articles: viewModel.articles,
+                                onRandomArticleSelected: { _ in
+                                    viewModel.selectRandomArticle()
                                 }
+                            )
 
-                                AllArticlesSection(
-                                    articles: viewModel.articles,
-                                    favoritesManager: viewModel.favoritesManager
-                                )
+                            RecentlyReadSection(
+                                articles: viewModel.articles,
+                                favoritesManager: viewModel.favoritesManager,
+                                readingHistoryManager: viewModel.readingHistoryManager
+                            )
+
+                            FavoritesSection(
+                                articles: viewModel.articles,
+                                favoritesManager: viewModel.favoritesManager
+                            )
+
+                            ForEach(viewModel.allCategories, id: \.id) { category in
+                                if let categoryArticles = viewModel.articlesByCategory[category.id],
+                                   !categoryArticles.isEmpty {
+                                    CategorySection(
+                                        category: category,
+                                        articles: categoryArticles,
+                                        favoritesManager: viewModel.favoritesManager,
+                                        language: selectedLanguage
+                                    )
+                                }
                             }
-                            .padding(.vertical)
+
+                            AllArticlesSection(
+                                articles: viewModel.articles,
+                                favoritesManager: viewModel.favoritesManager
+                            )
                         }
-                        .refreshable { await viewModel.refreshData() }
+                        .padding(.vertical)
                     }
+                    .refreshable { await viewModel.refreshData() }
                 }
             }
             .navigationTitle(t("Главная"))
@@ -84,7 +84,8 @@ struct HomeView: View {
                     // ✅ ИСПРАВЛЕНО: используем appContainer для создания ArticleDetailView
                     ArticleDetailView(
                         article: article,
-                        allArticles: viewModel.articles
+                        allArticles: viewModel.articles,
+                        appContainer: appContainer
                     )
                 }
             }
@@ -112,5 +113,5 @@ struct HomeView: View {
 // MARK: - Preview
 #Preview {
     HomeView()
-        .environmentObject(appContainer)
+        .environmentObject(AppContainer.previewMock())
 }

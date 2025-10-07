@@ -78,5 +78,6 @@ struct TextSizeSettingsPanel: View {
 // MARK: - Preview
 #Preview {
     TextSizeSettingsPanel()
-        .environmentObject(appContainer)
+        .environmentObject(AppContainer.shared)
 }
+

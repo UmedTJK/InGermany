@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-/// Displays the user’s list of favorite articles with search and navigation.
+/// Displays the user's list of favorite articles with search and navigation.
 struct FavoritesView: View {
     @StateObject private var viewModel: FavoritesViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var searchText = ""
+    @EnvironmentObject private var appContainer: AppContainer
 
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
@@ -33,11 +34,6 @@ struct FavoritesView: View {
                 $0.localizedTitle(for: selectedLanguage).localizedCaseInsensitiveContains(searchText)
             }
         }
-    }
-    
-    /// Initializes the view with an injected or default FavoritesViewModel.
-    init(viewModel: FavoritesViewModel? = nil) {
-        _viewModel = StateObject(wrappedValue: viewModel ?? AppContainer.shared.makeFavoritesViewModel())
     }
     
     /// Builds the main UI with navigation, search, loading indicator, and favorites list.
@@ -80,10 +76,11 @@ struct FavoritesView: View {
             NavigationLink {
                 ArticleDetailView(
                     article: article,
-                    allArticles: viewModel.allArticles
+                    allArticles: viewModel.allArticles,
+                    appContainer: appContainer // ✅ ДОБАВЛЕНО
                 )
             } label: {
-                ArticleRow(viewModel: ArticleRowViewModel(article: article))
+                ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article)) // ✅ ИСПРАВЛЕНО
             }
         }
         .listStyle(PlainListStyle())
@@ -133,5 +130,4 @@ struct FavoritesView: View {
         ]
         return translations[key]?[language] ?? key
     }
-
-    }
+}

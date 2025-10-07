@@ -2,9 +2,11 @@ import SwiftUI
 
 /// Displays a list of article categories with navigation into category-specific articles.
 struct CategoriesView: View {
+
     @StateObject private var viewModel: CategoriesViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var appContainer: AppContainer
+    @EnvironmentObject var appContainer: AppContainer
+
 
     /// Initializes the view with AppContainer for dependency injection
     init() {
@@ -60,5 +62,5 @@ struct CategoriesView: View {
 // MARK: - Preview
 #Preview {
     CategoriesView()
-        .environmentObject(appContainer)
+        .environmentObject(AppContainer.previewMock())
 }

@@ -8,6 +8,9 @@ import PDFKit
 
 /// Экран для отображения PDF-файлов с использованием PDFKit.
 struct PDFViewer: View {
+    @EnvironmentObject var localizationManager: LocalizationManager
+
+
     /// Имя PDF-файла из ресурсов Bundle.
     let fileName: String
     /// Выбранный язык интерфейса для локализации текста.
@@ -31,7 +34,8 @@ struct PDFViewer: View {
 
     /// Шорткат для получения перевода строки через LocalizationManager.
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
+
     }
 
     /// Старый метод перевода, оставлен для совместимости.

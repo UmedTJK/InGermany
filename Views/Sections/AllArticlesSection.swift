@@ -8,13 +8,19 @@ import SwiftUI
 
 /// A section view displaying all available articles in a horizontally scrollable list.
 struct AllArticlesSection: View {
-    /// The list of all articles to display in the section.
     let articles: [Article]
-    /// The shared favorites manager (not directly used in this view, but passed for consistency or future use).
     let favoritesManager: FavoritesManager
+    @EnvironmentObject private var appContainer: AppContainer
 
-    /// Builds the section UI with a title and a horizontal scrollable list of article cards,
-    /// each navigable to its detail view.
+    // ✅ ДОБАВЛЕНО: конструктор
+    init(
+        articles: [Article],
+        favoritesManager: FavoritesManager
+    ) {
+        self.articles = articles
+        self.favoritesManager = favoritesManager
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Все статьи")
@@ -27,10 +33,13 @@ struct AllArticlesSection: View {
                         NavigationLink {
                             ArticleDetailView(
                                 article: article,
-                                allArticles: articles
+                                allArticles: articles,
+                                appContainer: appContainer
                             )
                         } label: {
-                            ArticleCompactCard(article: article)
+                            ArticleRow(
+                                viewModel: appContainer.makeArticleRowViewModel(article: article)
+                            )
                         }
                     }
                 }
