@@ -20,7 +20,7 @@ final class SettingsViewModel: ObservableObject {
     // MARK: - Init
     init(
         historyManager: ReadingHistoryManager,
-        localizationManager: LocalizationManager = LocalizationManager.shared
+        localizationManager: LocalizationManager = appContainer.localizationManager
     ) {
         self.historyManager = historyManager
         self.localizationManager = localizationManager

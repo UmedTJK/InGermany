@@ -41,7 +41,7 @@ final class AppContainer: ObservableObject {
         self.readingProgressTracker = readingProgressTracker ?? ReadingProgressTracker.shared
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
         self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared
-        self.localizationManager = localizationManager ?? LocalizationManager.shared
+        self.localizationManager = localizationManager ?? appContainer.localizationManager
     }
 
     // MARK: - Существующие Factory Methods для ViewModels

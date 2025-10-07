@@ -25,7 +25,7 @@ struct ReadingProgressHelper {
     
     /// Возвращает локализованный статус по проценту
     static func status(for progress: CGFloat, language: String) -> String {
-        let lm = LocalizationManager.shared
+        let lm = appContainer.localizationManager
         switch progress {
         case 0..<0.1: return lm.getTranslation(key: "Начало", language: language)
         case 0.1..<0.7: return lm.getTranslation(key: "В процессе", language: language)

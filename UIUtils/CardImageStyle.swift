@@ -23,14 +23,14 @@ enum CardImageStyle: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .allCorners:
-            return LocalizationManager.shared.getTranslation(key: "card_style_all",
-                                                             language: LocalizationManager.shared.selectedLanguage)
+            return appContainer.localizationManager.getTranslation(key: "card_style_all",
+                                                             language: appContainer.localizationManager.selectedLanguage)
         case .bottomCorners:
-            return LocalizationManager.shared.getTranslation(key: "card_style_bottom",
-                                                             language: LocalizationManager.shared.selectedLanguage)
+            return appContainer.localizationManager.getTranslation(key: "card_style_bottom",
+                                                             language: appContainer.localizationManager.selectedLanguage)
         case .fullWidth:
-            return LocalizationManager.shared.getTranslation(key: "card_style_full",
-                                                             language: LocalizationManager.shared.selectedLanguage)
+            return appContainer.localizationManager.getTranslation(key: "card_style_full",
+                                                             language: appContainer.localizationManager.selectedLanguage)
         }
     }
 }
