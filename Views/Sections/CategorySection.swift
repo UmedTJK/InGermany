@@ -14,7 +14,6 @@ struct CategorySection: View {
     let language: String
     @EnvironmentObject private var appContainer: AppContainer
 
-    // ✅ ДОБАВЛЕНО: конструктор
     init(
         category: Category,
         articles: [Article],
@@ -43,9 +42,8 @@ struct CategorySection: View {
                                 appContainer: appContainer
                             )
                         } label: {
-                            ArticleRow(
-                                viewModel: appContainer.makeArticleRowViewModel(article: article)
-                            )
+                            // ✅ ИСПРАВЛЕНО: используем правильный вызов ViewModel
+                            ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
                         }
                     }
                 }

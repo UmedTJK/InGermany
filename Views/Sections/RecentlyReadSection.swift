@@ -12,7 +12,6 @@ struct RecentlyReadSection: View {
     let readingHistoryManager: ReadingHistoryManager
     @EnvironmentObject private var appContainer: AppContainer
 
-    // ✅ Только один конструктор без appContainer
     init(
         articles: [Article],
         favoritesManager: FavoritesManager,
@@ -42,9 +41,8 @@ struct RecentlyReadSection: View {
                                     appContainer: appContainer
                                 )
                             } label: {
-                                ArticleRow(
-                                    viewModel: appContainer.makeArticleRowViewModel(article: article)
-                                )
+                                // ✅ ИСПРАВЛЕНО: используем правильный вызов ViewModel
+                                ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
                             }
                         }
                     }

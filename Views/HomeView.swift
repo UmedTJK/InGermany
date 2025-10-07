@@ -10,7 +10,6 @@ struct HomeView: View {
     // MARK: - Init
     /// Initializes the view with AppContainer for dependency injection
     init() {
-        // ✅ ИСПРАВЛЕНО: используем AppContainer.shared вместо параметра
         _viewModel = StateObject(wrappedValue: AppContainer.shared.makeHomeViewModel())
     }
     
@@ -29,7 +28,6 @@ struct HomeView: View {
                     .frame(height: 3)
                     .frame(maxWidth: .infinity)
 
-                // ✅ ИСПРАВЛЕНО: Убрал Group и сделал прямую conditional logic
                 if viewModel.isLoading {
                     ProgressView(t("Загрузка данных..."))
                         .progressViewStyle(CircularProgressViewStyle())
@@ -81,7 +79,6 @@ struct HomeView: View {
             .background(Color(.systemGroupedBackground))
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {
-                    // ✅ ИСПРАВЛЕНО: используем appContainer для создания ArticleDetailView
                     ArticleDetailView(
                         article: article,
                         allArticles: viewModel.articles,

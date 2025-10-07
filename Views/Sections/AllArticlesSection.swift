@@ -12,7 +12,6 @@ struct AllArticlesSection: View {
     let favoritesManager: FavoritesManager
     @EnvironmentObject private var appContainer: AppContainer
 
-    // ✅ ДОБАВЛЕНО: конструктор
     init(
         articles: [Article],
         favoritesManager: FavoritesManager
@@ -37,9 +36,8 @@ struct AllArticlesSection: View {
                                 appContainer: appContainer
                             )
                         } label: {
-                            ArticleRow(
-                                viewModel: appContainer.makeArticleRowViewModel(article: article)
-                            )
+                            // ✅ ИСПРАВЛЕНО: используем правильный вызов ViewModel
+                            ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
                         }
                     }
                 }
