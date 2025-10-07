@@ -5,6 +5,8 @@
 │   └── InGermanyApp.swift
 ├── Docs
 │   ├── AI_CONTEXT.md
+│   ├── AI_CONTEXT_20251006.md
+│   ├── ARCHITECTURE_ISSUES.md
 │   ├── CHANGELOG.md
 │   ├── CLEAN_CODE_CHECKLIST.md
 │   ├── Git_Mini_Guide.md
@@ -20,43 +22,22 @@
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
-│   │   │   └── Contents.json
 │   │   ├── AppIcon.appiconset
-│   │   │   ├── Contents.json
-│   │   │   ├── Logo 1.png
-│   │   │   └── Logo.png
 │   │   ├── Contents.json
 │   │   └── Logo.imageset
-│   │       ├── Contents.json
-│   │       └── Logo.png
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
 │   └── Preview Content
 │       └── Preview Assets.xcassets
-│           ├── Contents.json
-│           ├── LogoDark.imageset
-│           │   ├── Contents.json
-│           │   └── LogoDark.png
-│           └── LogoLight.imageset
-│               ├── Contents.json
-│               └── LogoLight.png
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
 │   │   ├── xcshareddata
-│   │   │   └── swiftpm
-│   │   │       └── configuration
 │   │   └── xcuserdata
-│   │       └── sumtjk.xcuserdatad
-│   │           └── UserInterfaceState.xcuserstate
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
-│           ├── xcdebugger
-│           │   └── Breakpoints_v2.xcbkptlist
-│           └── xcschemes
-│               └── xcschememanagement.plist
 ├── InGermanyTests
 │   ├── InGermanyTests.swift
 │   ├── Mocks
@@ -74,26 +55,9 @@
 │   │   └── AppUITests.swift
 │   └── Unit
 │       ├── Helpers
-│       │   ├── ReadingProgressTrackerTests.swift
-│       │   └── ReadingTimeCalculatorTests.swift
 │       ├── Managers
-│       │   ├── CategoryManagerTests.swift
-│       │   ├── FavoritesManagerTests.swift
-│       │   ├── RatingManagerTests.swift
-│       │   └── ReadingHistoryManagerTests.swift
 │       ├── Services
-│       │   ├── ArticlesRepositoryImplTests.swift
-│       │   ├── DataServiceTests.swift
-│       │   └── NetworkServiceTests.swift
 │       └── ViewModels
-│           ├── AboutViewModelTests.swift
-│           ├── ArticleDetailViewModelTests.swift
-│           ├── ArticleRowViewModelTests.swift
-│           ├── CategoriesViewModelTests.swift
-│           ├── FavoritesViewModelTests.swift
-│           ├── HomeViewModelTests.swift
-│           ├── SearchViewModelTests.swift
-│           └── SettingsViewModelTests.swift
 ├── Managers
 │   ├── CategoryManager.swift
 │   ├── FavoritesManager.swift
@@ -112,28 +76,15 @@
 ├── Protocols
 │   ├── ArticlesRepositoryProtocol.swift
 │   ├── CategoriesRepositoryProtocol.swift
-│   ├── FavoritesManagingProtocol.swift
-│   └── Untitled.swift
+│   └── FavoritesManagingProtocol.swift
 ├── README.md
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── ar.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── de.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── en.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── fa.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── germany10.jpg
 │   │   ├── germany11.jpg
 │   │   ├── germany12.jpg
@@ -146,14 +97,8 @@
 │   │   ├── germany8.jpg
 │   │   ├── germany9.jpg
 │   │   ├── ru.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── tg-TJ.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   └── uk.lproj
-│   │       ├── germany1.jpg
-│   │       └── germany3.jpg
 │   ├── Localizable.xcstrings
 │   ├── Test_Document.pdf
 │   ├── articles.json
@@ -244,4 +189,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-57 directories, 188 files
+50 directories, 140 files
