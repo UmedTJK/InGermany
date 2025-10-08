@@ -41,8 +41,8 @@ struct RecentlyReadSection: View {
                                     appContainer: appContainer
                                 )
                             } label: {
-                                // ✅ ИСПРАВЛЕНО: используем правильный вызов ViewModel
-                                ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                                // ✅ ИСПРАВЛЕНО: используем ArticleCompactCard
+                                ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
                             }
                         }
                     }

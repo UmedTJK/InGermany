@@ -12,7 +12,6 @@ struct FavoritesSection: View {
     let favoritesManager: FavoritesManager
     @EnvironmentObject private var appContainer: AppContainer
 
-    // ✅ ДОБАВЛЕНО: конструктор
     init(
         articles: [Article],
         favoritesManager: FavoritesManager
@@ -40,9 +39,8 @@ struct FavoritesSection: View {
                                     appContainer: appContainer
                                 )
                             } label: {
-                                ArticleRow(
-                                    viewModel: appContainer.makeArticleRowViewModel(article: article)
-                                )
+                                // ✅ ИСПРАВЛЕНО: используем ArticleCompactCard
+                                ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
                             }
                         }
                     }

@@ -30,7 +30,6 @@
 		AD2A65702E8FF39E006A94DD /* ReadingTimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */; };
 		AD2A65712E8FF39E006A94DD /* ReadingProgressHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */; };
 		AD2A65722E8FF39E006A94DD /* ReadingProgressTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */; };
-		AD2A65732E8FF39E006A94DD /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656C2E8FF39E006A94DD /* CategoryManager.swift */; };
 		AD2A66942E90D803006A94DD /* locations_README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A66932E90D7FE006A94DD /* locations_README.md */; };
 		AD2A67B62E90DDF6006A94DD /* next_steps.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A67B52E90DDF0006A94DD /* next_steps.md */; };
 		AD2A67ED2E91027D006A94DD /* DefaultsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65592E8FEF44006A94DD /* DefaultsStore.swift */; };
@@ -87,7 +86,6 @@
 		AD2A65622E8FF0D1006A94DD /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		AD2A65632E8FF0D1006A94DD /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		AD2A65642E8FF0D1006A94DD /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		AD2A656C2E8FF39E006A94DD /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
 		AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressHelper.swift; sourceTree = "<group>"; };
 		AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTracker.swift; sourceTree = "<group>"; };
 		AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
@@ -285,7 +283,6 @@
 		ADF339482E8850FA00AE4CBF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				AD2A656C2E8FF39E006A94DD /* CategoryManager.swift */,
 				AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */,
 				AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */,
 				AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */,
@@ -460,7 +457,6 @@
 				AD2A65702E8FF39E006A94DD /* ReadingTimeCalculator.swift in Sources */,
 				AD2A65712E8FF39E006A94DD /* ReadingProgressHelper.swift in Sources */,
 				AD2A65722E8FF39E006A94DD /* ReadingProgressTracker.swift in Sources */,
-				AD2A65732E8FF39E006A94DD /* CategoryManager.swift in Sources */,
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
 				AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */,
 				ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */,
