@@ -41,7 +41,6 @@ class SearchViewModel: ObservableObject {
 
     /// Uses shared singletons for defaults.
     convenience init() {
-        // 🔧 ИСПРАВЛЕНО: Передаем DataService в ArticlesRepositoryImpl
         self.init(
             favoritesManager: FavoritesManager.shared,
             categoriesRepo: DefaultCategoriesRepository.shared,
@@ -59,6 +58,7 @@ class SearchViewModel: ObservableObject {
         if !searchText.isEmpty {
             let lowercased = searchText.lowercased()
             results = results.filter { article in
+                // 🔧 ИСПРАВЛЕНО: Все вызовы используют selectedLanguage
                 article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
                 article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
                 categoriesRepo.category(by: article.categoryId)?

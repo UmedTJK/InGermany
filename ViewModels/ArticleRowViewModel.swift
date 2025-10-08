@@ -2,14 +2,9 @@
 //  ArticleRowViewModel.swift
 //  InGermany
 //
-//  Created by SUM TJK on 03.10.25.
-//
 
 import SwiftUI
 
-/// ViewModel для строки статьи (`ArticleRow`).
-/// Отвечает за управление состоянием избранного, рейтинга, метаданных и прогресса чтения.
-/// Использует `FavoritesManager`, `RatingManager`, `ReadingProgressTracker` и `CategoriesRepositoryProtocol`.
 @MainActor
 class ArticleRowViewModel: ObservableObject {
     @Published var isFavorite: Bool
@@ -17,6 +12,12 @@ class ArticleRowViewModel: ObservableObject {
     @Published var imageName: String?
 
     let article: Article
+    
+    // ✅ ПРАВИЛЬНО: Через dependency injection
+    private let localizationManager: LocalizationManagerProtocol
+    private var selectedLanguage: String {
+        localizationManager.selectedLanguage
+    }
 
     private let favoritesManager: FavoritesManager
     private let ratingManager: RatingManager
@@ -25,12 +26,14 @@ class ArticleRowViewModel: ObservableObject {
 
     init(
         article: Article,
+        localizationManager: LocalizationManagerProtocol,
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
         categoriesRepo: CategoriesRepositoryProtocol,
         readingProgressTracker: ReadingProgressTracker
     ) {
         self.article = article
+        self.localizationManager = localizationManager
         self.favoritesManager = favoritesManager
         self.ratingManager = ratingManager
         self.categoriesRepo = categoriesRepo
@@ -44,6 +47,7 @@ class ArticleRowViewModel: ObservableObject {
     convenience init(article: Article) {
         self.init(
             article: article,
+            localizationManager: LocalizationManager.shared,
             favoritesManager: FavoritesManager.shared,
             ratingManager: RatingManager.shared,
             categoriesRepo: DefaultCategoriesRepository.shared,
@@ -52,12 +56,14 @@ class ArticleRowViewModel: ObservableObject {
     }
 
     // MARK: - Favorites
+    // ✅ ДОБАВЛЕНО: Метод для переключения избранного
     func toggleFavorite() {
         favoritesManager.toggleFavorite(for: article.id)
         isFavorite = favoritesManager.isFavorite(article.id)
     }
 
     // MARK: - Rating
+    // ✅ ДОБАВЛЕНО: Метод для установки рейтинга
     func setRating(_ value: Int) {
         ratingManager.setRating(value, for: article.id)
         rating = value
@@ -65,17 +71,17 @@ class ArticleRowViewModel: ObservableObject {
 
     // MARK: - Metadata
     var title: String {
-        article.localizedTitle(for: "ru")
+        article.localizedTitle(for: selectedLanguage)
     }
 
     var subtitle: String {
-        article.formattedReadingTime(for: "ru")
+        article.formattedReadingTime(for: selectedLanguage)
     }
 
     var metaInfo: String {
         [
-            article.formattedCreatedDate(for: "ru"),
-            article.formattedUpdatedDate(for: "ru")
+            article.formattedCreatedDate(for: selectedLanguage),
+            article.formattedUpdatedDate(for: selectedLanguage)
         ].joined(separator: " · ")
     }
 
@@ -87,7 +93,6 @@ class ArticleRowViewModel: ObservableObject {
     var progress: Double {
         Double(readingProgressTracker.progressForArticle(article.id))
     }
-
 }
 
 // MARK: - Расширения для ArticleCard / CompactCard
@@ -97,7 +102,7 @@ extension ArticleRowViewModel {
     }
 
     var compactCardCategory: String? {
-        category?.localizedName(for: "ru")
+        category?.localizedName(for: selectedLanguage)
     }
 
     var cardViewRating: Int {

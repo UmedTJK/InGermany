@@ -8,7 +8,7 @@ import SwiftUI
 
 /// Менеджер локализации приложения.
 /// Отвечает за хранение выбранного языка и получение переведённых строк из словаря.
-final class LocalizationManager: ObservableObject {
+final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
     /// Глобально доступный синглтон-экземпляр.
     static let shared = LocalizationManager()
     

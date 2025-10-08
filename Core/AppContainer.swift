@@ -119,6 +119,7 @@ final class AppContainer: ObservableObject {
     func makeArticleRowViewModel(article: Article) -> ArticleRowViewModel {
         ArticleRowViewModel(
             article: article,
+            localizationManager: localizationManager,
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
             categoriesRepo: categoriesRepo,
@@ -166,6 +167,7 @@ final class AppContainer: ObservableObject {
         ratingManager.clearForTesting()
         historyManager.clearForTesting()
     }
+    
 }
 
 extension AppContainer {
