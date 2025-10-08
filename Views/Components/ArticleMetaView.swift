@@ -53,7 +53,7 @@ struct ArticleMetaView: View {
                     Image(systemName: "clock")
                         .foregroundColor(.secondary)
                         .font(.caption)
-                    Text(article.formattedReadingTime(for: selectedLanguage))
+                    Text(formattedReadingTime)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -61,12 +61,12 @@ struct ArticleMetaView: View {
 
             // 🔹 Даты
             HStack(spacing: 12) {
-                Text("\(t("Опубликовано")): \(article.formattedCreatedDate(for: selectedLanguage))")
+                Text("\(t("Опубликовано")): \(formattedCreatedDate)")
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 
                 if article.updatedAt != nil {
-                    Text("\(t("Обновлено")): \(article.formattedUpdatedDate(for: selectedLanguage))")
+                    Text("\(t("Обновлено")): \(formattedUpdatedDate)")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
@@ -85,9 +85,23 @@ struct ArticleMetaView: View {
         }
     }
     
+    // ✅ ДОБАВЛЕНО: Вычисляемые свойства для форматирования
+    private var formattedReadingTime: String {
+        let readingTime = appContainer.makeArticleFormatter().readingTime(article, for: selectedLanguage)
+        return ReadingTimeCalculator.formatReadingTime(readingTime, language: selectedLanguage)
+    }
+    
+    private var formattedCreatedDate: String {
+        appContainer.makeArticleFormatter().formattedCreatedDate(article, for: selectedLanguage)
+    }
+    
+    private var formattedUpdatedDate: String {
+        appContainer.makeArticleFormatter().formattedUpdatedDate(article, for: selectedLanguage)
+    }
+    
     /// Локализует строку по ключу для выбранного языка.
     private func t(_ key: String) -> String {
-        LocalizationManager.shared.getTranslation(key: key, language: selectedLanguage)
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 

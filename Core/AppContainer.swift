@@ -23,9 +23,17 @@ final class AppContainer: ObservableObject {
     let textSizeManager: TextSizeManager
     let readingTimeTracker: ReadingTimeTracker
     let localizationManager: LocalizationManager
+    private let dateFormattingService = DateFormattingService.shared
+    private let textAnalysisService = TextAnalysisService.shared
 
     // MARK: - Services
     let dataService: DataService
+    private let articleFormatter = ArticleFormatter()
+
+    // И метод для доступа:
+    func makeArticleFormatter() -> ArticleFormatter {
+        return articleFormatter
+    }
 
     init(
         articlesRepo: ArticlesRepositoryProtocol? = nil,
@@ -107,10 +115,10 @@ final class AppContainer: ObservableObject {
             ratingManager: ratingManager,
             readingProgressTracker: readingProgressTracker,
             readingTimeTracker: readingTimeTracker,
-            historyManager: historyManager
+            historyManager: historyManager,
+            articleFormatter: articleFormatter  // ✅ ДОБАВЛЕНО
         )
     }
-
 
     func makeAboutViewModel() -> AboutViewModel {
         AboutViewModel()
@@ -123,11 +131,10 @@ final class AppContainer: ObservableObject {
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
             categoriesRepo: categoriesRepo,
-            readingProgressTracker: readingProgressTracker
+            readingProgressTracker: readingProgressTracker,
+            articleFormatter: articleFormatter  // ✅ ДОБАВЛЕНО
         )
     }
-
-
 
     func makeArticleCompactCardViewModel(article: Article) -> ArticleRowViewModel {
         makeArticleRowViewModel(article: article)
@@ -144,8 +151,6 @@ final class AppContainer: ObservableObject {
     func makePDFViewerViewModel() -> PDFViewerViewModel {
         PDFViewerViewModel(localizationManager: localizationManager)
     }
-
-
 
     // MARK: - Global Environment Injection
 
@@ -167,7 +172,6 @@ final class AppContainer: ObservableObject {
         ratingManager.clearForTesting()
         historyManager.clearForTesting()
     }
-    
 }
 
 extension AppContainer {

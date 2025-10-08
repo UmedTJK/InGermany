@@ -50,6 +50,13 @@ actor DataService {
             
             // 🔄 СОХРАНЯЕМ: Совместимость со старым кэшем
             articlesCache = cached
+            
+            // 🔍 ДОБАВЛЕНО: Отладочная информация
+            print("🔍 [DEBUG] Загружено статей из кэша: \(cached.count)")
+            if !cached.isEmpty {
+                print("✅ [DEBUG] Первая статья из кэша: \(cached[0].id) - \(cached[0].localizedTitle(for: "ru"))")
+            }
+            
             return cached
         }
 
@@ -65,8 +72,14 @@ actor DataService {
             
             print("📥 [DataService] Articles загружены из: \(source)")
             
-            // 🔄 СОХРАНЯЕМ: Preview для отладки
-            print("🔎 Preview первых 3 статей:", Array(articles.prefix(3)))
+            // 🔍 ДОБАВЛЕНО: Отладочная информация
+            print("🔍 [DEBUG] Загружено статей: \(articles.count)")
+            if articles.isEmpty {
+                print("❌ [DEBUG] Статьи не загружены - проверьте структуру JSON")
+            } else {
+                print("✅ [DEBUG] Первая статья: \(articles[0].id) - \(articles[0].localizedTitle(for: "ru"))")
+                print("✅ [DEBUG] Поля статьи: title=\(articles[0].title.count) языков, content=\(articles[0].content.count) языков, categoryId=\(articles[0].categoryId)")
+            }
             
             return articles
             
@@ -80,9 +93,17 @@ actor DataService {
                 articlesCache = localArticles
                 lastDataSource["articles"] = "local_fallback"
                 print("🔄 [DataService] Articles из локального fallback")
+                
+                // 🔍 ДОБАВЛЕНО: Отладочная информация для fallback
+                print("🔍 [DEBUG] Fallback статей: \(localArticles.count)")
+                if !localArticles.isEmpty {
+                    print("✅ [DEBUG] Первая fallback статья: \(localArticles[0].id) - \(localArticles[0].localizedTitle(for: "ru"))")
+                }
+                
                 return localArticles
             }
             
+            print("❌ [DEBUG] Нет статей даже в fallback")
             return []
         }
     }
@@ -105,6 +126,13 @@ actor DataService {
             }
             
             categoriesCache = cached
+            
+            // 🔍 ДОБАВЛЕНО: Отладочная информация
+            print("🔍 [DEBUG] Загружено категорий из кэша: \(cached.count)")
+            if !cached.isEmpty {
+                print("✅ [DEBUG] Первая категория из кэша: \(cached[0].id) - \(cached[0].localizedName(for: "ru"))")
+            }
+            
             return cached
         }
 
@@ -117,6 +145,16 @@ actor DataService {
             lastDataSource["categories"] = source.rawValue
             
             print("📥 [DataService] Categories загружены из: \(source)")
+            
+            // 🔍 ДОБАВЛЕНО: Отладочная информация
+            print("🔍 [DEBUG] Загружено категорий: \(categories.count)")
+            if categories.isEmpty {
+                print("❌ [DEBUG] Категории не загружены - проверьте структуру JSON")
+            } else {
+                print("✅ [DEBUG] Первая категория: \(categories[0].id) - \(categories[0].localizedName(for: "ru"))")
+                print("✅ [DEBUG] Поля категории: name=\(categories[0].name.count) языков, icon=\(categories[0].icon), colorHex=\(categories[0].colorHex)")
+            }
+            
             return categories
             
         } catch {
@@ -128,9 +166,17 @@ actor DataService {
                 categoriesCache = localCategories
                 lastDataSource["categories"] = "local_fallback"
                 print("🔄 [DataService] Categories из локального fallback")
+                
+                // 🔍 ДОБАВЛЕНО: Отладочная информация для fallback
+                print("🔍 [DEBUG] Fallback категорий: \(localCategories.count)")
+                if !localCategories.isEmpty {
+                    print("✅ [DEBUG] Первая fallback категория: \(localCategories[0].id) - \(localCategories[0].localizedName(for: "ru"))")
+                }
+                
                 return localCategories
             }
             
+            print("❌ [DEBUG] Нет категорий даже в fallback")
             return []
         }
     }
@@ -225,14 +271,18 @@ actor DataService {
         await withCheckedContinuation { continuation in
             DispatchQueue.global().async {
                 guard let file = Bundle.main.url(forResource: "articles", withExtension: "json") else {
+                    print("❌ [DEBUG] Файл articles.json не найден в Bundle")
                     continuation.resume(returning: [])
                     return
                 }
                 do {
                     let data = try Data(contentsOf: file)
+                    print("✅ [DEBUG] articles.json найден, размер: \(data.count) байт")
                     let decoded = try JSONDecoder().decode([Article].self, from: data)
+                    print("✅ [DEBUG] articles.json успешно декодирован: \(decoded.count) статей")
                     continuation.resume(returning: decoded)
                 } catch {
+                    print("❌ [DEBUG] Ошибка декодирования articles.json: \(error)")
                     continuation.resume(returning: [])
                 }
             }
@@ -243,14 +293,18 @@ actor DataService {
         await withCheckedContinuation { continuation in
             DispatchQueue.global().async {
                 guard let file = Bundle.main.url(forResource: "categories", withExtension: "json") else {
+                    print("❌ [DEBUG] Файл categories.json не найден в Bundle")
                     continuation.resume(returning: [])
                     return
                 }
                 do {
                     let data = try Data(contentsOf: file)
+                    print("✅ [DEBUG] categories.json найден, размер: \(data.count) байт")
                     let decoded = try JSONDecoder().decode([Category].self, from: data)
+                    print("✅ [DEBUG] categories.json успешно декодирован: \(decoded.count) категорий")
                     continuation.resume(returning: decoded)
                 } catch {
+                    print("❌ [DEBUG] Ошибка декодирования categories.json: \(error)")
                     continuation.resume(returning: [])
                 }
             }

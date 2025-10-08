@@ -1,3 +1,8 @@
+//
+//  ArticleDetailViewModel.swift
+//  InGermany
+//
+
 import SwiftUI
 
 @MainActor
@@ -18,6 +23,7 @@ final class ArticleDetailViewModel: ObservableObject {
     let readingProgressTracker: ReadingProgressTracker
     let readingTimeTracker: ReadingTimeTracker
     let historyManager: ReadingHistoryManager
+    private let articleFormatter: ArticleFormatter
 
     init(article: Article,
          allArticles: [Article],
@@ -27,7 +33,8 @@ final class ArticleDetailViewModel: ObservableObject {
          ratingManager: RatingManager,
          readingProgressTracker: ReadingProgressTracker,
          readingTimeTracker: ReadingTimeTracker,
-         historyManager: ReadingHistoryManager) {
+         historyManager: ReadingHistoryManager,
+         articleFormatter: ArticleFormatter) {
         self.article = article
         self.allArticles = allArticles
         self.localizationManager = localizationManager
@@ -37,6 +44,7 @@ final class ArticleDetailViewModel: ObservableObject {
         self.readingProgressTracker = readingProgressTracker
         self.readingTimeTracker = readingTimeTracker
         self.historyManager = historyManager
+        self.articleFormatter = articleFormatter
     }
 
     // MARK: - API for View
@@ -91,14 +99,16 @@ final class ArticleDetailViewModel: ObservableObject {
     func shareContent(selectedLanguage: String) -> String {
         let title = article.localizedTitle(for: selectedLanguage)
         let content = article.localizedContent(for: selectedLanguage)
-        let readingTime = article.formattedReadingTime(for: selectedLanguage)
+        let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
+        let formattedReadingTime = ReadingTimeCalculator.formatReadingTime(readingTime, language: selectedLanguage)
+        
         return """
         \(title)
 
         \(content)
 
-        \(t("Время чтения", lang: selectedLanguage)): \(readingTime)
-        \(t("Опубликовано", lang: selectedLanguage)): \(article.formattedCreatedDate(for: selectedLanguage))
+        \(t("Время чтения", lang: selectedLanguage)): \(formattedReadingTime)
+        \(t("Опубликовано", lang: selectedLanguage)): \(articleFormatter.formattedCreatedDate(article, for: selectedLanguage))
         """
     }
 }

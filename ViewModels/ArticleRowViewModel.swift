@@ -23,6 +23,7 @@ class ArticleRowViewModel: ObservableObject {
     private let ratingManager: RatingManager
     private let categoriesRepo: CategoriesRepositoryProtocol
     private let readingProgressTracker: ReadingProgressTracker
+    private let articleFormatter: ArticleFormatter
 
     init(
         article: Article,
@@ -30,7 +31,8 @@ class ArticleRowViewModel: ObservableObject {
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
         categoriesRepo: CategoriesRepositoryProtocol,
-        readingProgressTracker: ReadingProgressTracker
+        readingProgressTracker: ReadingProgressTracker,
+        articleFormatter: ArticleFormatter
     ) {
         self.article = article
         self.localizationManager = localizationManager
@@ -38,6 +40,7 @@ class ArticleRowViewModel: ObservableObject {
         self.ratingManager = ratingManager
         self.categoriesRepo = categoriesRepo
         self.readingProgressTracker = readingProgressTracker
+        self.articleFormatter = articleFormatter
         self.isFavorite = favoritesManager.isFavorite(article.id)
         self.rating = ratingManager.getRating(for: article.id)
         self.imageName = article.image
@@ -51,7 +54,8 @@ class ArticleRowViewModel: ObservableObject {
             favoritesManager: FavoritesManager.shared,
             ratingManager: RatingManager.shared,
             categoriesRepo: DefaultCategoriesRepository.shared,
-            readingProgressTracker: ReadingProgressTracker.shared
+            readingProgressTracker: ReadingProgressTracker.shared,
+            articleFormatter: ArticleFormatter()
         )
     }
 
@@ -75,14 +79,14 @@ class ArticleRowViewModel: ObservableObject {
     }
 
     var subtitle: String {
-        article.formattedReadingTime(for: selectedLanguage)
+        let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
+        return ReadingTimeCalculator.formatReadingTime(readingTime, language: selectedLanguage)
     }
 
     var metaInfo: String {
-        [
-            article.formattedCreatedDate(for: selectedLanguage),
-            article.formattedUpdatedDate(for: selectedLanguage)
-        ].joined(separator: " · ")
+        let createdDate = articleFormatter.formattedCreatedDate(article, for: selectedLanguage)
+        let updatedDate = articleFormatter.formattedUpdatedDate(article, for: selectedLanguage)
+        return [createdDate, updatedDate].joined(separator: " · ")
     }
 
     var category: Category? {

@@ -1,5 +1,7 @@
+//
 //  ArticleCompactCard.swift
 //  InGermany
+//
 
 import SwiftUI
 
@@ -106,7 +108,7 @@ struct ArticleCompactCard: View {
                         Image(systemName: "clock")
                             .foregroundColor(.secondary)
                             .font(.caption)
-                        Text(viewModel.article.formattedReadingTime(for: selectedLanguage))
+                        Text(viewModel.subtitle) // ✅ ИСПРАВЛЕНО: Используем computed property из ViewModel
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
