@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD0826D32E85A50A009C30CC /* .swiftlint.yml */; };
-		AD160DA92E9511AF009B49F2 /* ARCHITECTURE_ISSUES.md in Sources */ = {isa = PBXBuildFile; fileRef = AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */; };
 		AD160DAE2E95290F009B49F2 /* ReadingProgressTrackerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DAD2E95290E009B49F2 /* ReadingProgressTrackerProtocol.swift */; };
 		AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */; };
 		AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */; };
@@ -467,7 +466,6 @@
 				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */,
-				AD160DA92E9511AF009B49F2 /* ARCHITECTURE_ISSUES.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

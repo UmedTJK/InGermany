@@ -52,18 +52,14 @@ actor DataService {
         // поэтому мы можем упростить логику обновления
         Task {
             do {
-                // Используем новый метод с отслеживанием источника
                 let (articles, source): ([Article], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "articles.json")
                 self.articlesCache = articles
                 self.lastDataSource["articles"] = source.rawValue
                 print("🌐 [DataService] Articles обновлены из сети (\(source))")
             } catch {
-                print("⚠️ [DataService] Ошибка загрузки Articles из сети: \(error)")
-                // Сохраняем локальные данные как fallback
-                if self.articlesCache == nil {
-                    self.articlesCache = localArticles
-                    self.lastDataSource["articles"] = "local_fallback"
-                }
+                print("⚠️ [DataService] Ошибка обновления Articles из сети: \(error)")
+                // ✅ ЛУЧШЕ: Не перезаписываем кэш, просто логируем ошибку
+                // Кэш остается неизменным (уже есть локальные данные)
             }
         }
 
@@ -210,6 +206,27 @@ actor DataService {
         networkService.clearCache()
         lastDataSource.removeAll()
         print("🗑️ [DataService] Кэш очищен")
+    }
+    
+    /// Clears only articles cache while preserving categories and locations
+    func clearArticlesCache() async {
+        articlesCache = nil
+        lastDataSource["articles"] = nil
+        print("🗑️ [DataService] Articles cache cleared")
+    }
+
+    /// Clears only categories cache while preserving articles and locations
+    func clearCategoriesCache() async {
+        categoriesCache = nil
+        lastDataSource["categories"] = nil
+        print("🗑️ [DataService] Categories cache cleared")
+    }
+
+    /// Clears only locations cache while preserving articles and categories
+    func clearLocationsCache() async {
+        locationsCache = nil
+        lastDataSource["locations"] = nil
+        print("🗑️ [DataService] Locations cache cleared")
     }
 
     /// Forces a refresh by clearing caches and reloading all data.

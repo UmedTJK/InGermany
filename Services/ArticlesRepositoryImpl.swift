@@ -22,7 +22,7 @@ final class ArticlesRepositoryImpl: ArticlesRepositoryProtocol {
     }
 
     func refreshArticles() async -> [Article] {
-        await dataService.refreshData()
+        await dataService.clearArticlesCache()
         return await dataService.loadArticles()
     }
 
