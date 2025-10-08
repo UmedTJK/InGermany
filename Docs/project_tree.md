@@ -79,7 +79,6 @@
 │       │   ├── ReadingProgressTrackerTests.swift
 │       │   └── ReadingTimeCalculatorTests.swift
 │       ├── Managers
-│       │   ├── CategoryManagerTests.swift
 │       │   ├── FavoritesManagerTests.swift
 │       │   ├── RatingManagerTests.swift
 │       │   └── ReadingHistoryManagerTests.swift
@@ -97,7 +96,6 @@
 │           ├── SearchViewModelTests.swift
 │           └── SettingsViewModelTests.swift
 ├── Managers
-│   ├── CategoryManager.swift
 │   ├── FavoritesManager.swift
 │   ├── ProtocolConformances.swift
 │   ├── RatingManager.swift
@@ -251,4 +249,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-57 directories, 195 files
+57 directories, 193 files
