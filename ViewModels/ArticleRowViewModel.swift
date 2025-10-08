@@ -98,18 +98,3 @@ class ArticleRowViewModel: ObservableObject {
         Double(readingProgressTracker.progressForArticle(article.id))
     }
 }
-
-// MARK: - Расширения для ArticleCard / CompactCard
-extension ArticleRowViewModel {
-    var compactCardImageName: String {
-        article.imageName
-    }
-
-    var compactCardCategory: String? {
-        category?.localizedName(for: selectedLanguage)
-    }
-
-    var cardViewRating: Int {
-        rating
-    }
-}
