@@ -26,4 +26,10 @@ enum DefaultsStore {
             UserDefaults.standard.set(data, forKey: key)
         }
     }
+    
+    /// 🔧 ДОБАВИТЬ ЭТОТ МЕТОД:
+    /// Removes data from UserDefaults for the given key.
+    static func remove(_ key: String) {
+        UserDefaults.standard.removeObject(forKey: key)
+    }
 }

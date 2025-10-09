@@ -10,7 +10,7 @@ struct ArticleRow: View {
     /// ViewModel строки статьи, содержащая данные об изображении, заголовке, рейтинге и статусе избранного.
     @ObservedObject var viewModel: ArticleRowViewModel
     
-    /// Основное содержимое строки: изображение статьи, текстовые данные, рейтинг и кнопка избранного.
+    /// Основное содержимое строки: изображение статьи, текстовые данные, рейтинг и кнопку избранного.
     var body: some View {
         let _ = {
             if let name = viewModel.imageName {
@@ -53,31 +53,33 @@ struct ArticleRow: View {
                         .foregroundColor(.gray)
                 }
                 
-                // Rating под датой публикации, с выравниванием по тексту
+                // ✅ ИСПРАВЛЕНО: Правильное создание Binding для рейтинга
                 HStack {
-                    StarRatingView(rating: $viewModel.rating)
-                        .frame(width: 100, alignment: .leading)
+                    StarRatingView(
+                        rating: Binding(
+                            get: { viewModel.rating },
+                            set: { newRating in
+                                viewModel.setRating(newRating)
+                            }
+                        )
+                    )
+                    .frame(width: 100, alignment: .leading)
                 }
                 .padding(.top, 2)
             }
             Spacer()
             
             /// Кнопка для добавления или удаления статьи из избранного.
-            Button(action: { viewModel.toggleFavorite() }) {
+            Button(action: {
+                viewModel.toggleFavorite()
+            }) {
                 Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
                     .foregroundColor(.red)
             }
         }
         .padding(.vertical, 8)
-        if viewModel.progress > 0 {
-            ProgressView(value: viewModel.progress)
-                .progressViewStyle(LinearProgressViewStyle())
-                .frame(height: 4)
-                .tint(.accentColor)
-                .padding(.top, 4)
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.25), value: viewModel.progress)
-        }
+        // ❌ УДАЛЕНО: Прогресс-бар из строки статьи (должен быть только в детальном просмотре)
+        // if viewModel.progress > 0 { ... }
     }
 }
 

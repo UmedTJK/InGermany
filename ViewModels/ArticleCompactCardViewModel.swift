@@ -1,5 +1,7 @@
+//
 //  ArticleCompactCardViewModel.swift
 //  InGermany
+//
 
 import Foundation
 import Combine
@@ -12,20 +14,22 @@ final class ArticleCompactCardViewModel: ObservableObject {
     let ratingManager: RatingManagerProtocol
     let categoriesRepo: CategoriesRepositoryProtocol
     let localizationManager: LocalizationManagerProtocol
-    let languageCode: String
+    
+    // ✅ ИСПРАВЛЕНО: Убрали @AppStorage, используем localizationManager
+    private var selectedLanguage: String {
+        localizationManager.selectedLanguage
+    }
 
     init(
         readingProgressTracker: ReadingProgressTrackerProtocol,
         ratingManager: RatingManagerProtocol,
         categoriesRepo: CategoriesRepositoryProtocol,
-        localizationManager: LocalizationManagerProtocol,
-        languageCode: String
+        localizationManager: LocalizationManagerProtocol
     ) {
         self.readingProgressTracker = readingProgressTracker
         self.ratingManager = ratingManager
         self.categoriesRepo = categoriesRepo
         self.localizationManager = localizationManager
-        self.languageCode = languageCode
     }
 
     func category(for article: Article) -> Category? {
@@ -34,7 +38,7 @@ final class ArticleCompactCardViewModel: ObservableObject {
 
     func categoryDisplay(for article: Article) -> (icon: String, name: String, colorHex: String)? {
         guard let category = category(for: article) else { return nil }
-        return (category.icon, category.localizedName(for: languageCode), category.colorHex)
+        return (category.icon, category.localizedName(for: selectedLanguage), category.colorHex)
     }
 
     func rating(for articleId: String) -> Int {
@@ -50,6 +54,6 @@ final class ArticleCompactCardViewModel: ObservableObject {
     }
 
     func t(_ key: String) -> String {
-        localizationManager.getTranslation(key: key, language: languageCode)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }

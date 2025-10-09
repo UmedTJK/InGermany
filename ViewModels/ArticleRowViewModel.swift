@@ -2,14 +2,9 @@
 //  ArticleRowViewModel.swift
 //  InGermany
 //
-//  Created by SUM TJK on 03.10.25.
-//
 
 import SwiftUI
 
-/// ViewModel для строки статьи (`ArticleRow`).
-/// Отвечает за управление состоянием избранного, рейтинга, метаданных и прогресса чтения.
-/// Использует `FavoritesManager`, `RatingManager`, `ReadingProgressTracker` и `CategoriesRepositoryProtocol`.
 @MainActor
 class ArticleRowViewModel: ObservableObject {
     @Published var isFavorite: Bool
@@ -17,24 +12,35 @@ class ArticleRowViewModel: ObservableObject {
     @Published var imageName: String?
 
     let article: Article
+    
+    // ✅ Через dependency injection
+    private let localizationManager: LocalizationManagerProtocol
+    private var selectedLanguage: String {
+        localizationManager.selectedLanguage
+    }
 
     private let favoritesManager: FavoritesManager
     private let ratingManager: RatingManager
     private let categoriesRepo: CategoriesRepositoryProtocol
-    private let readingProgressTracker: ReadingProgressTracker
+    private let readingStatsManager: ReadingStatsManaging
+    private let articleFormatter: ArticleFormatter
 
     init(
         article: Article,
+        localizationManager: LocalizationManagerProtocol,
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
         categoriesRepo: CategoriesRepositoryProtocol,
-        readingProgressTracker: ReadingProgressTracker
+        readingStatsManager: ReadingStatsManaging,
+        articleFormatter: ArticleFormatter
     ) {
         self.article = article
+        self.localizationManager = localizationManager
         self.favoritesManager = favoritesManager
         self.ratingManager = ratingManager
         self.categoriesRepo = categoriesRepo
-        self.readingProgressTracker = readingProgressTracker
+        self.readingStatsManager = readingStatsManager
+        self.articleFormatter = articleFormatter
         self.isFavorite = favoritesManager.isFavorite(article.id)
         self.rating = ratingManager.getRating(for: article.id)
         self.imageName = article.image
@@ -44,10 +50,12 @@ class ArticleRowViewModel: ObservableObject {
     convenience init(article: Article) {
         self.init(
             article: article,
+            localizationManager: LocalizationManager.shared,
             favoritesManager: FavoritesManager.shared,
             ratingManager: RatingManager.shared,
             categoriesRepo: DefaultCategoriesRepository.shared,
-            readingProgressTracker: ReadingProgressTracker.shared
+            readingStatsManager: ReadingStatsManager.shared,
+            articleFormatter: ArticleFormatter()
         )
     }
 
@@ -65,18 +73,18 @@ class ArticleRowViewModel: ObservableObject {
 
     // MARK: - Metadata
     var title: String {
-        article.localizedTitle(for: "ru")
+        article.localizedTitle(for: selectedLanguage)
     }
 
     var subtitle: String {
-        article.formattedReadingTime(for: "ru")
+        let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
+        return readingStatsManager.formatReadingTime(readingTime, language: selectedLanguage)
     }
 
     var metaInfo: String {
-        [
-            article.formattedCreatedDate(for: "ru"),
-            article.formattedUpdatedDate(for: "ru")
-        ].joined(separator: " · ")
+        let createdDate = articleFormatter.formattedCreatedDate(article, for: selectedLanguage)
+        let updatedDate = articleFormatter.formattedUpdatedDate(article, for: selectedLanguage)
+        return [createdDate, updatedDate].joined(separator: " · ")
     }
 
     var category: Category? {
@@ -85,22 +93,6 @@ class ArticleRowViewModel: ObservableObject {
 
     /// Текущий прогресс чтения статьи (0.0 ... 1.0)
     var progress: Double {
-        Double(readingProgressTracker.progressForArticle(article.id))
-    }
-
-}
-
-// MARK: - Расширения для ArticleCard / CompactCard
-extension ArticleRowViewModel {
-    var compactCardImageName: String {
-        article.imageName
-    }
-
-    var compactCardCategory: String? {
-        category?.localizedName(for: "ru")
-    }
-
-    var cardViewRating: Int {
-        rating
+        Double(readingStatsManager.progressForArticle(article.id))
     }
 }

@@ -2,28 +2,27 @@
 //  RecentlyReadSection.swift
 //  InGermany
 //
-//  Created by SUM TJK on 28.09.25.
-//
+
 import SwiftUI
 
 struct RecentlyReadSection: View {
     let articles: [Article]
     let favoritesManager: FavoritesManager
-    let readingHistoryManager: ReadingHistoryManager
+    let readingStatsManager: ReadingStatsManaging
     @EnvironmentObject private var appContainer: AppContainer
 
     init(
         articles: [Article],
         favoritesManager: FavoritesManager,
-        readingHistoryManager: ReadingHistoryManager
+        readingStatsManager: ReadingStatsManaging
     ) {
         self.articles = articles
         self.favoritesManager = favoritesManager
-        self.readingHistoryManager = readingHistoryManager
+        self.readingStatsManager = readingStatsManager
     }
 
     var body: some View {
-        let recentlyRead = readingHistoryManager.recentlyReadArticles(from: articles)
+        let recentlyRead = readingStatsManager.recentlyReadArticles(from: articles, limit: 5)
 
         if !recentlyRead.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
@@ -41,8 +40,9 @@ struct RecentlyReadSection: View {
                                     appContainer: appContainer
                                 )
                             } label: {
-                                // ✅ ИСПРАВЛЕНО: используем ArticleCompactCard
-                                ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                                ArticleCompactCard(
+                                    viewModel: appContainer.makeArticleRowViewModel(article: article)
+                                )
                             }
                         }
                     }

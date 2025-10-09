@@ -1,5 +1,7 @@
+//
 //  ArticleCompactCard.swift
 //  InGermany
+//
 
 import SwiftUI
 
@@ -106,17 +108,14 @@ struct ArticleCompactCard: View {
                         Image(systemName: "clock")
                             .foregroundColor(.secondary)
                             .font(.caption)
-                        Text(viewModel.article.formattedReadingTime(for: selectedLanguage))
+                        Text(viewModel.subtitle) // ✅ ИСПРАВЛЕНО: Используем computed property из ViewModel
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
 
-                if viewModel.progress > 0 {
-                    ProgressBar(value: viewModel.progress)
-                        .frame(height: 4)
-                        .padding(.top, 4)
-                }
+                // ❌ УДАЛЕНО: Прогресс-бар из компактной карточки (должен быть только в детальном просмотре)
+                // if viewModel.progress > 0 { ... }
             }
             .padding(12)
         }

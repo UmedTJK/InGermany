@@ -59,26 +59,30 @@
 │       ├── Services
 │       └── ViewModels
 ├── Managers
+│   ├── CacheManager.swift
 │   ├── FavoritesManager.swift
 │   ├── ProtocolConformances.swift
 │   ├── RatingManager.swift
 │   ├── ReadingHistoryManager.swift
 │   ├── ReadingProgressHelper.swift
 │   ├── ReadingProgressTracker.swift
+│   ├── ReadingStatsManager.swift
 │   ├── ReadingTimeCalculator.swift
 │   ├── ReadingTimeTracker.swift
 │   └── TextSizeManager.swift
 ├── Models
 │   ├── Article.swift
 │   ├── Category.swift
-│   └── Location.swift
+│   ├── Location.swift
+│   └── ReadingSession.swift
 ├── Protocols
 │   ├── ArticlesRepositoryProtocol.swift
 │   ├── CategoriesRepositoryProtocol.swift
 │   ├── FavoritesManagingProtocol.swift
 │   ├── LocalizationManagerProtocol.swift
 │   ├── RatingManagerProtocol.swift
-│   └── ReadingProgressTrackerProtocol.swift
+│   ├── ReadingProgressTrackerProtocol.swift
+│   └── ReadingStatsManagingProtocol.swift
 ├── README.md
 ├── Resources
 │   ├── Images
@@ -117,14 +121,17 @@
 │   ├── search.png
 │   └── settings.png
 ├── Services
+│   ├── ArticleFormatter.swift
 │   ├── ArticlesRepositoryImpl.swift
 │   ├── AuthService.swift
 │   ├── DataService.swift
+│   ├── DateFormattingService.swift
 │   ├── DefaultsStore.swift
 │   ├── ExportToPDF.swift
 │   ├── LocalizationManager.swift
 │   ├── NetworkService.swift
-│   └── ShareService.swift
+│   ├── ShareService.swift
+│   └── TextAnalysisService.swift
 ├── UIUtils
 │   ├── Animations.swift
 │   ├── CardImageStyle.swift
@@ -132,6 +139,7 @@
 │   ├── Color+Hex.swift
 │   ├── Environment+ScreenSize.swift
 │   ├── ProgressBar.swift
+│   ├── ReadingTimeCalculator.swift
 │   ├── RoundedCorner.swift
 │   └── Theme.swift
 ├── ViewModels
@@ -178,6 +186,7 @@
 │   │   ├── RecentlyReadSection.swift
 │   │   └── UsefulToolsSection.swift
 │   └── SettingsView.swift
+├── appcontainer_patch.diff
 ├── check_di_violations.sh
 ├── di_violations_report.md
 ├── project_structure.txt
@@ -194,4 +203,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-50 directories, 145 files
+50 directories, 154 files

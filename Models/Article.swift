@@ -1,13 +1,11 @@
 //
-//  Article.swift
+//  Article.swift (ИСПРАВЛЕННАЯ ВЕРСИЯ)
 //  InGermany
-//
-//  Updated with dates, reading time functionality and image support
 //
 
 import Foundation
 
-/// The main model representing a localized article in the app, including metadata such as title, content, category, tags, dates, and images.
+/// Чистая модель данных статьи без бизнес-логики
 struct Article: Identifiable, Codable, Hashable {
     /// Unique identifier for the article.
     let id: String
@@ -26,12 +24,10 @@ struct Article: Identifiable, Codable, Hashable {
     /// Optional last updated date of the article.
     let updatedAt: Date?
     /// Optional image filename associated with the article.
-    let image: String?   // 🔹 Новое поле для фото статьи
-
+    let image: String?
     
     // MARK: - Initializers
     
-    /// Creates a new article instance with optional metadata.
     init(
         id: String,
         title: [String: String],
@@ -60,7 +56,7 @@ struct Article: Identifiable, Codable, Hashable {
         case id, title, content, categoryId, tags, pdfFileName, createdAt, updatedAt, image
     }
     
-    // MARK: - Custom Decoding (для совместимости со старыми JSON)
+    // MARK: - Custom Decoding (УПРОЩЕННЫЙ И ИСПРАВЛЕННЫЙ)
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -73,15 +69,17 @@ struct Article: Identifiable, Codable, Hashable {
         pdfFileName = try container.decodeIfPresent(String.self, forKey: .pdfFileName)
         image = try container.decodeIfPresent(String.self, forKey: .image)
         
-        // Пытаемся декодировать даты (если их нет в JSON, ставим nil)
-        if let createdAtString = try container.decodeIfPresent(String.self, forKey: .createdAt) {
-            createdAt = ISO8601DateFormatter().date(from: createdAtString)
+        // 🔧 ИСПРАВЛЕНО: Упрощенное декодирование дат
+        let dateFormatter = ISO8601DateFormatter()
+        
+        if let createdAtString = try? container.decode(String.self, forKey: .createdAt) {
+            createdAt = dateFormatter.date(from: createdAtString)
         } else {
             createdAt = nil
         }
         
-        if let updatedAtString = try container.decodeIfPresent(String.self, forKey: .updatedAt) {
-            updatedAt = ISO8601DateFormatter().date(from: updatedAtString)
+        if let updatedAtString = try? container.decode(String.self, forKey: .updatedAt) {
+            updatedAt = dateFormatter.date(from: updatedAtString)
         } else {
             updatedAt = nil
         }
@@ -100,12 +98,14 @@ struct Article: Identifiable, Codable, Hashable {
         try container.encodeIfPresent(pdfFileName, forKey: .pdfFileName)
         try container.encodeIfPresent(image, forKey: .image)
         
+        let dateFormatter = ISO8601DateFormatter()
+        
         if let createdAt = createdAt {
-            try container.encode(ISO8601DateFormatter().string(from: createdAt), forKey: .createdAt)
+            try container.encode(dateFormatter.string(from: createdAt), forKey: .createdAt)
         }
         
         if let updatedAt = updatedAt {
-            try container.encode(ISO8601DateFormatter().string(from: updatedAt), forKey: .updatedAt)
+            try container.encode(dateFormatter.string(from: updatedAt), forKey: .updatedAt)
         }
     }
     
@@ -119,21 +119,21 @@ struct Article: Identifiable, Codable, Hashable {
         hasher.combine(id)
     }
     
-    // MARK: - Localization Methods
+    // MARK: - Localization Methods (оставляем только чистые геттеры)
     
-    /// Returns the localized title for the given language, falling back to English or the first available title.
+    /// Returns the localized title for the given language
     func localizedTitle(for language: String) -> String {
         title[language] ?? title["en"] ?? title.values.first ?? "No title"
     }
     
-    /// Returns the localized content for the given language, falling back to English or the first available content.
+    /// Returns the localized content for the given language
     func localizedContent(for language: String) -> String {
         content[language] ?? content["en"] ?? content.values.first ?? "No content"
     }
     
-    // MARK: - Image fallback
+    // MARK: - Image fallback (оставляем как чистую логику преобразования)
     
-    /// Provides the normalized image filename with fallback logic, converting AVIF to JPG and adding extension if missing.
+    /// Provides the normalized image filename with fallback logic
     var imageName: String {
         guard var img = image else { return "Logo" }
         
@@ -150,74 +150,7 @@ struct Article: Identifiable, Codable, Hashable {
         return img
     }
     
-    // MARK: - Date Formatting
-    
-    /// Returns a human-readable formatted creation date string for the given language.
-    func formattedCreatedDate(for language: String = "ru") -> String {
-        guard let createdAt = createdAt else {
-            return getTranslation(key: "Дата неизвестна", language: language)
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        
-        switch language {
-        case "en": formatter.locale = Locale(identifier: "en_US")
-        case "de": formatter.locale = Locale(identifier: "de_DE")
-        case "tj": formatter.locale = Locale(identifier: "ru_RU")
-        default: formatter.locale = Locale(identifier: "ru_RU")
-        }
-        
-        return formatter.string(from: createdAt)
-    }
-    
-    /// Returns a human-readable formatted updated date string for the given language.
-    func formattedUpdatedDate(for language: String = "ru") -> String {
-        guard let updatedAt = updatedAt else {
-            return getTranslation(key: "Не обновлялась", language: language)
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        
-        switch language {
-        case "en": formatter.locale = Locale(identifier: "en_US")
-        case "de": formatter.locale = Locale(identifier: "de_DE")
-        case "tj": formatter.locale = Locale(identifier: "ru_RU")
-        default: formatter.locale = Locale(identifier: "ru_RU")
-        }
-        
-        return formatter.string(from: updatedAt)
-    }
-    
-    /// Returns a relative formatted creation date string (e.g., "3 days ago") for the given language.
-    func relativeCreatedDate(for language: String = "ru") -> String {
-        guard let createdAt = createdAt else {
-            return getTranslation(key: "Дата неизвестна", language: language)
-        }
-        
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        
-        switch language {
-        case "en": formatter.locale = Locale(identifier: "en_US")
-        case "de": formatter.locale = Locale(identifier: "de_DE")
-        case "tj": formatter.locale = Locale(identifier: "ru_RU")
-        default: formatter.locale = Locale(identifier: "ru_RU")
-        }
-        
-        return formatter.localizedString(for: createdAt, relativeTo: Date())
-    }
-    
-    // MARK: - Content Analysis
-    
-    /// Computes the total word count of the article's content across all languages.
-    var wordCount: Int {
-        let allContent = content.values.joined(separator: " ")
-        return ReadingTimeCalculator.estimateReadingTime(for: allContent) * 200
-    }
+    // MARK: - Computed Properties (только чистые вычисления без внешних зависимостей)
     
     /// Indicates whether the article is considered new (created within the last 7 days).
     var isNew: Bool {
@@ -230,48 +163,11 @@ struct Article: Identifiable, Codable, Hashable {
         guard let updatedAt = updatedAt else { return false }
         return Date().timeIntervalSince(updatedAt) < 3 * 24 * 60 * 60
     }
-    
-    // MARK: - Helper Methods
-    
-    private func getTranslation(key: String, language: String) -> String {
-        let translations: [String: [String: String]] = [
-            "Дата неизвестна": [
-                "ru": "Дата неизвестна",
-                "en": "Date unknown",
-                "de": "Datum unbekannt",
-                "tj": "Сана номаълум"
-            ],
-            "Не обновлялась": [
-                "ru": "Не обновлялась",
-                "en": "Not updated",
-                "de": "Nicht aktualisiert",
-                "tj": "Навсозӣ нашуд"
-            ]
-        ]
-        return translations[key]?[language] ?? key
-    }
 }
 
-// MARK: - Reading Time Extension
+// MARK: - Sample Data для Preview (без изменений)
 
 extension Article {
-    /// Calculates the estimated reading time in minutes for the article's content in the specified language.
-    func readingTime(for language: String) -> Int {
-        let content = localizedContent(for: language)
-        return ReadingTimeCalculator.estimateReadingTime(for: content, language: language)
-    }
-    
-    /// Formats the estimated reading time as a user-friendly string for the specified language.
-    func formattedReadingTime(for language: String) -> String {
-        let minutes = readingTime(for: language)
-        return ReadingTimeCalculator.formatReadingTime(minutes, language: language)
-    }
-}
-
-// MARK: - Sample Data для Preview
-
-extension Article {
-    /// Provides a sample article instance with mock data for previews and testing.
     static let sampleArticle: Article = Article(
         id: "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
         title: [
@@ -292,7 +188,6 @@ extension Article {
         image: "bank_account.jpg"
     )
     
-    /// Provides a list of sample articles with mock data for previews and testing.
     static let sampleArticles: [Article] = [
         sampleArticle,
         Article(
