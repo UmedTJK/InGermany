@@ -8,8 +8,10 @@ import SwiftUI
 struct ArticleDetailView: View {
     let article: Article
     @StateObject private var viewModel: ArticleDetailViewModel
+
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    
+    @EnvironmentObject private var appContainer: AppContainer
+
     // Для отслеживания скролла
     @State private var scrollViewContentSize: CGFloat = 0
     @State private var scrollViewVisibleSize: CGFloat = 0
@@ -17,16 +19,18 @@ struct ArticleDetailView: View {
 
     init(article: Article, allArticles: [Article], appContainer: AppContainer) {
         self.article = article
-        _viewModel = StateObject(wrappedValue: appContainer.makeArticleDetailViewModel(
-            article: article,
-            allArticles: allArticles
-        ))
+        _viewModel = StateObject(
+            wrappedValue: appContainer.makeArticleDetailViewModel(
+                article: article,
+                allArticles: allArticles
+            )
+        )
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            // ✅ ИСПРАВЛЕНО: Правильное отслеживание скролла с реальным offset
-            ScrollViewReader { proxy in
+            // Правильное отслеживание скролла
+            ScrollViewReader { _ in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 20) {
                         // Изображение статьи
@@ -43,8 +47,8 @@ struct ArticleDetailView: View {
 
                         // Рекомендации
                         recommendationsView
-                        
-                        // ✅ ДОБАВИМ: Невидимый маркер для отслеживания конца контента
+
+                        // Маркер для конца контента
                         Color.clear
                             .frame(height: 1)
                             .id("content_end")
@@ -56,7 +60,7 @@ struct ArticleDetailView: View {
                                 .onAppear {
                                     scrollViewContentSize = contentGeometry.size.height
                                 }
-                                .onChange(of: contentGeometry.size.height) { oldValue, newValue in
+                                .onChange(of: contentGeometry.size.height) { _, newValue in
                                     scrollViewContentSize = newValue
                                 }
                         }
@@ -68,7 +72,7 @@ struct ArticleDetailView: View {
                             .onAppear {
                                 scrollViewVisibleSize = scrollViewGeometry.size.height
                             }
-                            .onChange(of: scrollViewGeometry.size.height) { oldValue, newValue in
+                            .onChange(of: scrollViewGeometry.size.height) { _, newValue in
                                 scrollViewVisibleSize = newValue
                             }
                     }
@@ -80,7 +84,7 @@ struct ArticleDetailView: View {
                 }
             }
 
-            // ✅ ИСПРАВЛЕНО: Чистый прогресс-бар без тестовых кнопок
+            // Прогресс-бар
             progressBarView
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -97,18 +101,16 @@ struct ArticleDetailView: View {
             viewModel.endReadingSession()
         }
     }
-    
-    // ✅ Исправлено: используем readingStatsManager
+
+    // Правильная логика прогресса на основе скролла
     private func updateProgress() {
         guard scrollViewContentSize > 0, scrollViewVisibleSize > 0 else { return }
-        
-        let scrollProgress = max(0, min(-currentScrollOffset / (scrollViewContentSize - scrollViewVisibleSize), 1.0))
-        
-        viewModel.readingStatsManager.updateProgress(for: article.id, value: scrollProgress)
-        
-        print("📊 Real progress: \(Int(scrollProgress * 100))% (offset: \(currentScrollOffset))")
-    }
+        let denom = max(scrollViewContentSize - scrollViewVisibleSize, 1)
+        let scrollProgress = max(0, min(-currentScrollOffset / denom, 1.0))
 
+        // Обновляем прогресс через менеджер
+        viewModel.readingStatsManager.updateProgress(for: article.id, value: scrollProgress)
+    }
 
     // MARK: - Subviews
 
@@ -151,11 +153,10 @@ struct ArticleDetailView: View {
             .padding(.horizontal)
             .background(
                 GeometryReader { proxy in
-                    Color.clear
-                        .preference(
-                            key: ScrollOffsetPreferenceKey.self,
-                            value: proxy.frame(in: .named("scroll")).minY
-                        )
+                    Color.clear.preference(
+                        key: ScrollOffsetPreferenceKey.self,
+                        value: proxy.frame(in: .named("scroll")).minY
+                    )
                 }
             )
     }
@@ -185,13 +186,11 @@ struct ArticleDetailView: View {
                             ArticleDetailView(
                                 article: recommendedArticle,
                                 allArticles: viewModel.allArticles,
-                                appContainer: viewModel.appContainer
+                                appContainer: appContainer
                             )
                         } label: {
                             ArticleCompactCard(
-                                viewModel: viewModel.appContainer.makeArticleRowViewModel(
-                                    article: recommendedArticle
-                                )
+                                viewModel: appContainer.makeArticleRowViewModel(article: recommendedArticle)
                             )
                             .frame(width: 280)
                         }
@@ -203,8 +202,7 @@ struct ArticleDetailView: View {
         }
         .padding(.vertical)
     }
-    
-    // ✅ ИСПРАВЛЕНО: Чистый прогресс-бар без лишних кнопок
+
     private var progressBarView: some View {
         VStack(spacing: 8) {
             HStack {
@@ -218,12 +216,12 @@ struct ArticleDetailView: View {
                     .foregroundColor(.blue)
             }
             .padding(.horizontal)
-            
+
             ZStack(alignment: .leading) {
                 Capsule()
                     .frame(height: 6)
                     .foregroundColor(.gray.opacity(0.2))
-                
+
                 Capsule()
                     .frame(
                         width: max((UIScreen.main.bounds.width - 32) * CGFloat(viewModel.progress), 6),
@@ -262,7 +260,7 @@ struct ArticleDetailView: View {
     }
 }
 
-// ✅ ДОБАВИМ: Key для отслеживания скролла
+// Ключ для отслеживания скролла
 private struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {

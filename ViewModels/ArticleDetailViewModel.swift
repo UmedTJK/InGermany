@@ -12,13 +12,14 @@ final class ArticleDetailViewModel: ObservableObject {
     @Published var viewHeight: CGFloat = 1
     @Published var showRelatedArticles = false
     @Published var showTextSizePanel = false
-    
+
     @Published var rating: Int
     @Published var isFavorite: Bool
 
     private let article: Article
     let allArticles: [Article]
 
+    // Dependencies
     let localizationManager: LocalizationManager
     let textSizeManager: TextSizeManager
     let favoritesManager: FavoritesManager
@@ -26,14 +27,16 @@ final class ArticleDetailViewModel: ObservableObject {
     let readingStatsManager: ReadingStatsManaging
     private let articleFormatter: ArticleFormatter
 
-    init(article: Article,
-         allArticles: [Article],
-         localizationManager: LocalizationManager,
-         textSizeManager: TextSizeManager,
-         favoritesManager: FavoritesManager,
-         ratingManager: RatingManager,
-         readingStatsManager: ReadingStatsManaging,
-         articleFormatter: ArticleFormatter) {
+    init(
+        article: Article,
+        allArticles: [Article],
+        localizationManager: LocalizationManager,
+        textSizeManager: TextSizeManager,
+        favoritesManager: FavoritesManager,
+        ratingManager: RatingManager,
+        readingStatsManager: ReadingStatsManaging,
+        articleFormatter: ArticleFormatter
+    ) {
         self.article = article
         self.allArticles = allArticles
         self.localizationManager = localizationManager
@@ -58,17 +61,17 @@ final class ArticleDetailViewModel: ObservableObject {
     }
 
     var relatedArticles: [Article] {
-        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
+        Array(
+            allArticles
+                .filter { $0.categoryId == article.categoryId && $0.id != article.id }
+                .prefix(3)
+        )
     }
 
     var recommendedArticles: [Article] {
         let sameCategory = allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }
         let shuffled = sameCategory.shuffled()
         return Array(shuffled.prefix(4))
-    }
-
-    var appContainer: AppContainer {
-        AppContainer.shared
     }
 
     func t(_ key: String, lang: String) -> String {
@@ -102,9 +105,9 @@ final class ArticleDetailViewModel: ObservableObject {
     func shareContent(selectedLanguage: String) -> String {
         let title = article.localizedTitle(for: selectedLanguage)
         let content = article.localizedContent(for: selectedLanguage)
-        let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
-        let formattedReadingTime = readingStatsManager.formatReadingTime(readingTime, language: selectedLanguage)
-        
+        let readingTimeMinutes = articleFormatter.readingTime(article, for: selectedLanguage)
+        let formattedReadingTime = readingStatsManager.formatReadingTime(readingTimeMinutes, language: selectedLanguage)
+
         return """
         \(title)
 

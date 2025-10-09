@@ -20,7 +20,11 @@ final class AppContainer: ObservableObject {
     let ratingManager: RatingManager
     let textSizeManager: TextSizeManager
     let localizationManager: LocalizationManager
-    let readingStatsManager: ReadingStatsManaging
+
+    /// Конкретный экземпляр для SwiftUI
+    let readingStatsManager: ReadingStatsManager
+    /// Доступ через протокол (для ViewModel)
+    var readingStatsService: ReadingStatsManaging { readingStatsManager }
 
     private let dateFormattingService = DateFormattingService.shared
     private let textAnalysisService = TextAnalysisService.shared
@@ -41,7 +45,7 @@ final class AppContainer: ObservableObject {
         textSizeManager: TextSizeManager? = nil,
         localizationManager: LocalizationManager? = nil,
         dataService: DataService? = nil,
-        readingStatsManager: ReadingStatsManaging? = nil
+        readingStatsManager: ReadingStatsManager? = nil
     ) {
         // ✅ Services & Repos
         let dataServiceInstance = dataService ?? DataService.shared
@@ -63,7 +67,7 @@ final class AppContainer: ObservableObject {
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
-            readingStatsManager: readingStatsManager,
+            readingStatsManager: readingStatsService,
             categoriesRepository: categoriesRepo,
             articlesRepo: articlesRepo
         )
@@ -94,7 +98,7 @@ final class AppContainer: ObservableObject {
 
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(
-            readingStatsManager: readingStatsManager,
+            readingStatsManager: readingStatsService,
             localizationManager: localizationManager
         )
     }
@@ -107,7 +111,7 @@ final class AppContainer: ObservableObject {
             textSizeManager: textSizeManager,
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
-            readingStatsManager: readingStatsManager,
+            readingStatsManager: readingStatsService,
             articleFormatter: articleFormatter
         )
     }
@@ -123,7 +127,7 @@ final class AppContainer: ObservableObject {
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
             categoriesRepo: categoriesRepo,
-            readingStatsManager: readingStatsManager,
+            readingStatsManager: readingStatsService,
             articleFormatter: articleFormatter
         )
     }
@@ -153,9 +157,8 @@ final class AppContainer: ObservableObject {
             .environmentObject(textSizeManager)
             .environmentObject(localizationManager)
             .environmentObject(ratingManager)
-            .environmentObject(readingStatsManager as! ReadingStatsManager) // ✅ кастуем к ObservableObject
+            .environmentObject(readingStatsManager) // ✅ без as!
     }
-
 
     // MARK: - Clear All Data (for testing)
 
