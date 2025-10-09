@@ -57,7 +57,7 @@ struct ContentView: View {
         .environmentObject(appContainer.favoritesManager)
         .environmentObject(appContainer.textSizeManager)
         .environmentObject(appContainer.localizationManager)
-        .environmentObject(appContainer.readingStatsManager as! ReadingStatsManager)
+        .environmentObject(appContainer.readingStatsManager)
         .environmentObject(appContainer.ratingManager)
     }
 }
