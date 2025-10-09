@@ -1,126 +1,79 @@
-# 🚧 Architecture Issues — InGermany  
-_Актуальность: v1.14.0 (2025-10-09)_
+🚧 Architecture Issues — InGermany
 
-Этот документ фиксирует текущие архитектурные проблемы проекта **InGermany**, а также отмечает уже исправленные недочёты.  
-Цель — обеспечить прозрачность, видеть прогресс и понимать приоритеты следующих задач.
+📅 Обновлено: 2025-10-09 • Версия: v1.14.1
 
----
+Документ фиксирует текущие архитектурные проблемы проекта InGermany, а также отмечает уже решённые.
+Цель — видеть прогресс и приоритеты следующих шагов.
 
-## 🚨 Актуальные архитектурные проблемы
+🚨 Актуальные архитектурные проблемы
+1. Использование AppContainer.shared во ViewModel
 
-### 1. Использование `AppContainer.shared` во ViewModel
-- В `ArticleDetailViewModel` по-прежнему используется глобальный вызов `AppContainer.shared`.
-- Это нарушает строгие принципы Dependency Injection (DI).
+После рефакторинга DI в AppContainer и InGermanyApp глобальные вызовы практически убраны.
 
-**Решение:** передавать зависимости через конструктор или фабрики `AppContainer`, а не обращаться к синглтону внутри ViewModel.
+⚠️ Остался только один случай в ArticleDetailViewModel.
 
----
+Решение: полностью убрать AppContainer.shared, передавать зависимости через AppContainer или фабрики.
 
-### 2. UI-логика во ViewModel
-- В `ArticleDetailViewModel` есть метод `currentFont`, который жёстко задаёт `.system(size: 16 * textSizeManager.customScale)`.
-- Это относится к уровню UI, а не бизнес-логики.
+2. UI-логика во ViewModel
 
-**Решение:** перенести выбор шрифта в `TextSizeManager` или выделенный UI-хелпер.
+В ArticleDetailViewModel остался метод currentFont, который жёстко задаёт .system(size: …).
 
----
+Часть UI-логики уже вынесена, но проблема полностью не решена.
 
-### 3. Шаринг реализован слишком жёстко
-- Метод `shareContent` во ViewModel возвращает длинную строку с заголовком, текстом и временем чтения.
-- При добавлении новых форматов (PDF, rich text, JSON) придётся переписывать логику.
+Решение: перенести выбор шрифта и визуальные правила в TextSizeManager или отдельный UI-хелпер.
 
-**Решение:** вынести формирование контента в отдельный сервис (`ShareService`), а во ViewModel оставить только вызов.
+3. Шаринг реализован слишком жёстко
 
----
+shareContent во ViewModel формирует строку вручную.
 
-### 4. Недостаток unit-тестов
-- Есть тесты для `HomeViewModel`, но они покрывают только базовые сценарии.
-- Не протестированы:
-  - `ReadingStatsManager` (сессии, прогресс, статистика),
-  - `ArticleDetailViewModel`,
-  - `SettingsViewModel`.
+При расширении (PDF, rich text, JSON) код придётся переписывать.
 
-**Решение:** расширить покрытие unit-тестами для ключевых менеджеров и ViewModel.
+Решение: вынести формирование контента в сервис (ShareService), оставить во ViewModel только вызов.
 
----
+4. Недостаток unit-тестов
 
-### 5. Ограниченная валидация моделей
-- В `Article.swift` и `Category.swift` возможны force-unwrap ситуации при работе с JSON.
-- Нет fallback-значений, если локализованный заголовок или текст отсутствует.
+Есть базовые тесты для HomeViewModel.
 
-**Решение:** добавить безопасные геттеры и дефолтные fallback-значения.
+Не протестированы:
 
----
+ReadingStatsManager (сессии, прогресс, статистика),
 
-## ✅ Уже исправлено (v1.14.0)
+ArticleDetailViewModel,
 
-- **DI:** ViewModel теперь получают зависимости через конструктор, а не напрямую из синглтонов.  
-- **Менеджеры:** удалён устаревший `ReadingHistoryManager`, заменён на новый `ReadingStatsManager` с протоколом `ReadingStatsManaging`.  
-- **Прогресс чтения:** реализованы `updateProgress`, `startSession`, `endSession`, расчёт статистики.  
-- **EnvironmentObject:** исправлено использование в `ContentView` и `AppContainer`.  
-- **SOLID:** улучшена структура `HomeViewModel`, устранено дублирование логики, соблюдены принципы разделения ответственности.  
+SettingsViewModel.
 
----
+Решение: расширить покрытие тестами для ключевых менеджеров и ViewModel.
 
-## 📊 Чеклист прогресса
+5. Ограниченная валидация моделей
 
-- [ ] Убрать `AppContainer.shared` из `ArticleDetailViewModel`  
-- [ ] Вынести UI-логику (`currentFont`) в `TextSizeManager` или UI-хелпер  
-- [ ] Вынести `shareContent` в отдельный сервис  
-- [ ] Добавить unit-тесты для `ReadingStatsManager`, `ArticleDetailViewModel`, `SettingsViewModel`  
-- [ ] Усилить валидацию моделей (`Article`, `Category`)  
-- [x] Перевести ViewModel на конструкторный DI  
-- [x] Удалить `ReadingHistoryManager` и заменить на `ReadingStatsManager`  
-- [x] Исправить `EnvironmentObject` в `ContentView` и `AppContainer`  
-- [x] Оптимизировать `HomeViewModel` под SOLID  
+В Article.swift и Category.swift возможны ситуации с отсутствующими данными.
 
----
+Нет fallback-значений для локализации заголовка/контента.
 
+Решение: добавить безопасные геттеры и дефолтные fallback-значения.
 
----
+✅ Уже исправлено
 
-# ✅ Архитектурный чеклист для финального мёрджа (v1.15.0)
+DI: ViewModel и экраны получают зависимости через AppContainer, убраны прямые .shared.
 
-## 1. Dependency Injection (DI)
+Менеджеры: ReadingHistoryManager удалён, заменён на ReadingStatsManager + протокол ReadingStatsManaging.
 
-* [ ] Убрать использование `AppContainer.shared` во всех `ViewModel` (например, в `ArticleDetailViewModel`).
-* [ ] Все зависимости должны приходить через фабрики `AppContainer` или конструктор.
+Прогресс чтения: реализованы updateProgress, startSession, endSession, расчёт статистики.
 
-## 2. UI-логика
+EnvironmentObject: исправлено в ContentView и InGermanyApp.
 
-* [ ] Вынести `currentFont` из `ArticleDetailViewModel` → в `TextSizeManager` или отдельный `UIFontService`.
-* [ ] Проверить, нет ли ещё UI-специфичных вычислений во ViewModel.
+SOLID: улучшена структура HomeViewModel, устранено дублирование логики.
 
-## 3. ShareService
+UI: убран лишний forced cast для ReadingStatsManager в ContentView.
 
-* [ ] Создать новый сервис `ShareService`.
-* [ ] Перенести туда форматирование текста для шаринга (раньше это было в `shareContent`).
-* [ ] ViewModel должны просто вызывать сервис.
+📌 Следующие шаги:
 
-## 4. Unit-тесты
+Убрать последний вызов AppContainer.shared (в ArticleDetailViewModel).
 
-* [ ] Написать тесты для `ReadingStatsManager` (сессии, прогресс, статистика).
-* [ ] Добавить тесты для `ArticleDetailViewModel` (favorite, rating, progress).
-* [ ] Проверить покрытие `SettingsViewModel`.
+Вынести UI-логику (currentFont) в сервис.
 
-## 5. Модели
+Вынести shareContent в отдельный ShareService.
 
-* [ ] Добавить безопасные геттеры в `Article` (например, если локализация отсутствует).
-* [ ] Добавить fallback для `Category` (название по умолчанию).
-* [ ] Проверить, что JSON-данные не крашатся при отсутствии ключей.
+Добавить unit-тесты для ReadingStatsManager и ViewModel.
 
-## 6. Документация
-
-* [ ] Обновить `ARCHITECTURE_ISSUES.md` (все чекбоксы перенести в ✅).
-* [ ] Обновить `CHANGELOG.md` → **v1.15.0 – Major Architecture Fix**.
-* [ ] Обновить `Docs/project_tree.md`.
-
----
-
-📌 **Результат после выполнения:**
-
-* Архитектура приведена в порядок: **DI соблюдён**, **UI вынесен в сервисы**, **шаринг изолирован**, **модели защищены**, **тесты покрывают ключевую бизнес-логику**.
-* Ветка готова к мёрджу в `main` как **полноценный major-фикс**.
-
----
-
-Хочешь, я прямо сейчас помогу выбрать, **с какой задачи начать** (например, убрать `AppContainer.shared` в `ArticleDetailViewModel`) и составлю пошаговые изменения в коде?
+Добавить fallback-значения в модели Article и Category.
