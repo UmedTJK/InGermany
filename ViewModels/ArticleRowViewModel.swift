@@ -1,8 +1,3 @@
-//
-//  ArticleRowViewModel.swift
-//  InGermany
-//
-
 import SwiftUI
 
 @MainActor
@@ -12,8 +7,7 @@ class ArticleRowViewModel: ObservableObject {
     @Published var imageName: String?
 
     let article: Article
-    
-    // ✅ Через dependency injection
+
     private let localizationManager: LocalizationManagerProtocol
     private var selectedLanguage: String {
         localizationManager.selectedLanguage
@@ -46,7 +40,6 @@ class ArticleRowViewModel: ObservableObject {
         self.imageName = article.image
     }
 
-    /// Упрощённый инициализатор (устаревший — использовать только для превью).
     convenience init(article: Article) {
         self.init(
             article: article,
@@ -59,19 +52,16 @@ class ArticleRowViewModel: ObservableObject {
         )
     }
 
-    // MARK: - Favorites
     func toggleFavorite() {
         favoritesManager.toggleFavorite(for: article.id)
         isFavorite = favoritesManager.isFavorite(article.id)
     }
 
-    // MARK: - Rating
     func setRating(_ value: Int) {
         ratingManager.setRating(value, for: article.id)
         rating = value
     }
 
-    // MARK: - Metadata
     var title: String {
         article.localizedTitle(for: selectedLanguage)
     }
@@ -91,7 +81,6 @@ class ArticleRowViewModel: ObservableObject {
         categoriesRepo.category(by: article.categoryId)
     }
 
-    /// Текущий прогресс чтения статьи (0.0 ... 1.0)
     var progress: Double {
         Double(readingStatsManager.progressForArticle(article.id))
     }

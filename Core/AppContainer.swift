@@ -67,11 +67,13 @@ final class AppContainer: ObservableObject {
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
-            readingStatsManager: readingStatsService,
+            readingStatsManager: readingStatsManager,    // <- concrete ReadingHistoryManager & correct label
             categoriesRepository: categoriesRepo,
             articlesRepo: articlesRepo
         )
     }
+
+
 
     func makeSearchViewModel() -> SearchViewModel {
         SearchViewModel(
@@ -98,8 +100,8 @@ final class AppContainer: ObservableObject {
 
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(
-            readingStatsManager: readingStatsService,
-            localizationManager: localizationManager
+             readingStatsManager: readingStatsService,
+             localizationManager: localizationManager
         )
     }
 

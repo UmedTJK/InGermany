@@ -2,8 +2,6 @@ import SwiftUI
 
 /// The settings screen of the app, allowing the user to configure appearance, language, date format, statistics, and history.
 struct SettingsView: View {
-    @EnvironmentObject var appContainer: AppContainer
-
     @StateObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
     
@@ -13,7 +11,10 @@ struct SettingsView: View {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
-
+    /// DI initializer for runtime
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeSettingsViewModel())
+    }
 
 
     // MARK: - Body
@@ -32,7 +33,7 @@ struct SettingsView: View {
             .navigationTitle(viewModel.localizedText("settings_title"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(viewModel.localizedText("settings_done")) {
+                    Button("Готово") {
                         dismiss()
                     }
                 }
@@ -193,14 +194,13 @@ private struct StatisticRow: View {
 }
 
 private struct HistoryClearedToast: View {
-    @EnvironmentObject var appContainer: AppContainer
     var body: some View {
         VStack {
             Spacer()
             HStack {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)
-                Text(appContainer.localizationManager.t("settings_history_cleared"))
+                Text("История очищена")
                     .foregroundColor(.primary)
             }
             .padding()
@@ -214,15 +214,13 @@ private struct HistoryClearedToast: View {
     }
 }
 
-
-
 // MARK: - Preview
 #Preview("Default Settings") {
     SettingsView(viewModel: .previewMock())
-        .environmentObject(AppContainer.previewMock())
+        .environmentObject(AppContainer.shared)
 }
 
 #Preview("With Stats") {
     SettingsView(viewModel: .previewMockWithStats())
-        .environmentObject(AppContainer.previewMock())
+        .environmentObject(AppContainer.shared)
 }

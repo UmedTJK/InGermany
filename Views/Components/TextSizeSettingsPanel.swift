@@ -80,4 +80,3 @@ struct TextSizeSettingsPanel: View {
     TextSizeSettingsPanel()
         .environmentObject(AppContainer.shared)
 }
-

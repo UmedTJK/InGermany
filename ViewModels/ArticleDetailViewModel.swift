@@ -1,8 +1,3 @@
-//
-//  ArticleDetailViewModel.swift
-//  InGermany
-//
-
 import SwiftUI
 
 @MainActor
@@ -12,14 +7,12 @@ final class ArticleDetailViewModel: ObservableObject {
     @Published var viewHeight: CGFloat = 1
     @Published var showRelatedArticles = false
     @Published var showTextSizePanel = false
-
     @Published var rating: Int
     @Published var isFavorite: Bool
 
     private let article: Article
     let allArticles: [Article]
 
-    // Dependencies
     let localizationManager: LocalizationManager
     let textSizeManager: TextSizeManager
     let favoritesManager: FavoritesManager
@@ -50,8 +43,6 @@ final class ArticleDetailViewModel: ObservableObject {
         self.isFavorite = favoritesManager.isFavorite(article.id)
     }
 
-    // MARK: - API for View
-
     var currentFont: Font {
         .system(size: 16 * textSizeManager.customScale)
     }
@@ -61,17 +52,11 @@ final class ArticleDetailViewModel: ObservableObject {
     }
 
     var relatedArticles: [Article] {
-        Array(
-            allArticles
-                .filter { $0.categoryId == article.categoryId && $0.id != article.id }
-                .prefix(3)
-        )
+        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
     }
 
     var recommendedArticles: [Article] {
-        let sameCategory = allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }
-        let shuffled = sameCategory.shuffled()
-        return Array(shuffled.prefix(4))
+        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.shuffled().prefix(4))
     }
 
     func t(_ key: String, lang: String) -> String {
