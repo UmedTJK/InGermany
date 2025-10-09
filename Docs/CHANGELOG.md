@@ -1,3 +1,16 @@
+## [1.14.0] - 2025-10-09
+### Added
+- Новый `ReadingStatsManager` и протокол `ReadingStatsManaging`
+- Поддержка расчёта прогресса чтения, сессий и статистики
+
+### Changed
+- DI в `AppContainer` обновлён под ReadingStatsManager
+- Все ViewModel переведены на использование `ReadingStatsManaging`
+- RecentlyReadSection получает статьи через ReadingStatsManager
+
+### Removed
+- Удалён `ReadingHistoryManager` как устаревший компонент
+
 ### v1.13.5 – 2025-10-06
 
 #### 🧪 Tests
