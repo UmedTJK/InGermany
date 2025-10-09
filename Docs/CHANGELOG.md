@@ -1,3 +1,8 @@
+## [v1.14.1] - 2025-10-09
+### Fixed
+- Удалён ненужный `as! ReadingStatsManager` в ContentView
+- Устранено предупреждение компилятора (Swift 6)
+
 ## [1.14.0] - 2025-10-09
 ### Added
 - Новый `ReadingStatsManager` и протокол `ReadingStatsManaging`
