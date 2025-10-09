@@ -4,13 +4,16 @@
 //
 //  Created by SUM TJK on 28.09.25.
 //
+
 import SwiftUI
 
 /// Секция, отображающая избранные статьи в горизонтальном списке.
 struct FavoritesSection: View {
     let articles: [Article]
     let favoritesManager: FavoritesManager
+
     @EnvironmentObject private var appContainer: AppContainer
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     init(
         articles: [Article],
@@ -25,7 +28,7 @@ struct FavoritesSection: View {
 
         if !favoriteArticles.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Избранное")
+                Text(t("section_favorites"))
                     .font(.headline)
                     .padding(.horizontal)
 
@@ -39,7 +42,6 @@ struct FavoritesSection: View {
                                     appContainer: appContainer
                                 )
                             } label: {
-                                // ✅ ИСПРАВЛЕНО: используем ArticleCompactCard
                                 ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
                             }
                         }
@@ -50,5 +52,10 @@ struct FavoritesSection: View {
             }
             .padding(.bottom, 24)
         }
+    }
+
+    /// Возвращает перевод строки по ключу.
+    private func t(_ key: String) -> String {
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }

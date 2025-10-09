@@ -3,36 +3,32 @@
 //  InGermany
 //
 
+//
+//  RecentlyReadSection.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct RecentlyReadSection: View {
     let articles: [Article]
     let favoritesManager: FavoritesManager
-    let readingStatsManager: ReadingStatsManaging
+    let readingStatsManager: any ReadingStatsManaging
     @EnvironmentObject private var appContainer: AppContainer
-
-    init(
-        articles: [Article],
-        favoritesManager: FavoritesManager,
-        readingStatsManager: ReadingStatsManaging
-    ) {
-        self.articles = articles
-        self.favoritesManager = favoritesManager
-        self.readingStatsManager = readingStatsManager
-    }
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     var body: some View {
-        let recentlyRead = readingStatsManager.recentlyReadArticles(from: articles, limit: 5)
+        let recentArticles = readingStatsManager.recentlyReadArticles(from: articles, limit: 7)
 
-        if !recentlyRead.isEmpty {
+        if !recentArticles.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Недавно прочитанное")
+                Text(t("section_recently_read"))
                     .font(.headline)
                     .padding(.horizontal)
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 16) {
-                        ForEach(recentlyRead) { article in
+                        ForEach(recentArticles) { article in
                             NavigationLink {
                                 ArticleDetailView(
                                     article: article,
@@ -40,9 +36,7 @@ struct RecentlyReadSection: View {
                                     appContainer: appContainer
                                 )
                             } label: {
-                                ArticleCompactCard(
-                                    viewModel: appContainer.makeArticleRowViewModel(article: article)
-                                )
+                                ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
                             }
                         }
                     }
@@ -53,4 +47,9 @@ struct RecentlyReadSection: View {
             .padding(.bottom, 24)
         }
     }
+
+    private func t(_ key: String) -> String {
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+    }
 }
+

@@ -31,8 +31,9 @@ struct AboutView: View {
                     .multilineTextAlignment(.leading)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(t("Версия")): \(viewModel.appVersion)")
                     Text("\(t("Сборка")): \(viewModel.buildNumber)")
+                    Text("\(t("about_build")): \(viewModel.buildNumber)")
+
                     Link(viewModel.repositoryURL, destination: URL(string: viewModel.repositoryURL)!)
                 }
                 .font(.footnote)

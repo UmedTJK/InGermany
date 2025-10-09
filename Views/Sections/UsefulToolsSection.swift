@@ -6,45 +6,43 @@
 //
 import SwiftUI
 
-/// A view that displays a section with useful tool cards for navigation, PDF viewing, and random article selection.
 struct UsefulToolsSection: View {
     @EnvironmentObject var appContainer: AppContainer
-
-    /// An array of articles used to select a random article.
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    
     let articles: [Article]
-    /// Closure called when a random article is selected.
     let onRandomArticleSelected: (Article) -> Void
 
-    /// Builds the "Полезные инструменты" section UI with navigation links and buttons.
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(appContainer.localizationManager.getTranslation(key: "Полезные инструменты", language: "ru"))
+            Text(t("section_useful_tools"))
                 .font(.headline)
                 .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    // Navigation link to the Map view.
                     NavigationLink(destination: MapView()) {
-                        ToolCard(title: "Карта", systemImage: "map", color: .blue)
+                        ToolCard(title: t("tool_map"), systemImage: "map", color: .blue)
                     }
 
-                    // Navigation link to the PDF viewer with sample documents.
                     NavigationLink(destination: PDFViewer(fileName: "sample")) {
-                        ToolCard(title: "PDF Документы", systemImage: "doc.richtext", color: .green)
+                        ToolCard(title: t("tool_pdf_docs"), systemImage: "doc.richtext", color: .green)
                     }
 
-                    // Button to select and display a random article.
                     Button {
                         if let random = articles.randomElement() {
                             onRandomArticleSelected(random)
                         }
                     } label: {
-                        ToolCard(title: "Случайная статья", systemImage: "shuffle", color: .orange)
+                        ToolCard(title: t("tool_random_article"), systemImage: "shuffle", color: .orange)
                     }
                 }
                 .padding(.horizontal)
             }
         }
+    }
+
+    private func t(_ key: String) -> String {
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }

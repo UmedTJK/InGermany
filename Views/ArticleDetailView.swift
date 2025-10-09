@@ -132,6 +132,10 @@ struct ArticleDetailView: View {
             }
         }
     }
+    
+    private func t(_ key: String) -> String {
+        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+    }
 
     private var titleAndMetaView: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -163,7 +167,7 @@ struct ArticleDetailView: View {
 
     private var ratingView: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(viewModel.t("Оцените статью", lang: selectedLanguage))
+            Text(viewModel.t("article_rate", lang: selectedLanguage))
                 .font(.headline)
 
             StarRatingView(rating: $viewModel.rating)
@@ -174,7 +178,8 @@ struct ArticleDetailView: View {
 
     private var recommendationsView: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(viewModel.t("Рекомендуемые статьи", lang: selectedLanguage))
+            Text(viewModel.t("article_recommendations", lang: selectedLanguage))
+
                 .font(.title2)
                 .bold()
                 .padding(.horizontal)
@@ -206,7 +211,7 @@ struct ArticleDetailView: View {
     private var progressBarView: some View {
         VStack(spacing: 8) {
             HStack {
-                Text("Прогресс чтения")
+                Text(t("article_reading_progress"))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 Spacer()

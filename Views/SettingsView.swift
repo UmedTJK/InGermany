@@ -32,7 +32,7 @@ struct SettingsView: View {
             .navigationTitle(viewModel.localizedText("settings_title"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Готово") {
+                    Button(viewModel.localizedText("settings_done")) {
                         dismiss()
                     }
                 }
@@ -193,13 +193,14 @@ private struct StatisticRow: View {
 }
 
 private struct HistoryClearedToast: View {
+    @EnvironmentObject var appContainer: AppContainer
     var body: some View {
         VStack {
             Spacer()
             HStack {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)
-                Text("История очищена")
+                Text(appContainer.localizationManager.t("settings_history_cleared"))
                     .foregroundColor(.primary)
             }
             .padding()
@@ -212,6 +213,8 @@ private struct HistoryClearedToast: View {
         .animation(.spring(), value: true)
     }
 }
+
+
 
 // MARK: - Preview
 #Preview("Default Settings") {

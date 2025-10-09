@@ -22,7 +22,7 @@ struct TagFilterView: View {
                     Button(action: {
                         onTagSelected(tag)
                     }) {
-                        Text("#\(tag)")
+                        Text("#" + t(tag))
                             .font(.caption)
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)

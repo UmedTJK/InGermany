@@ -73,7 +73,7 @@ struct HomeView: View {
                     .refreshable { await viewModel.refreshData() }
                 }
             }
-            .navigationTitle(t("Главная"))
+            .navigationTitle(t("tab_home"))
             .background(Color(.systemGroupedBackground))
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {

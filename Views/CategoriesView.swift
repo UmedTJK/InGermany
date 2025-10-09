@@ -7,13 +7,11 @@ struct CategoriesView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @EnvironmentObject var appContainer: AppContainer
 
-
     /// Initializes the view with AppContainer for dependency injection
     init() {
-        // ✅ ИСПРАВЛЕНО: используем AppContainer.shared вместо параметра
         _viewModel = StateObject(wrappedValue: AppContainer.shared.makeCategoriesViewModel())
     }
-    
+
     /// For preview and testing
     init(viewModel: CategoriesViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -45,7 +43,7 @@ struct CategoriesView: View {
                     .padding(.vertical, 6)
                 }
             }
-            .navigationTitle(t("Категории"))
+            .navigationTitle(t("tab_categories"))
             .listStyle(PlainListStyle())
             .task {
                 await viewModel.load()
