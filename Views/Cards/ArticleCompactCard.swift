@@ -114,11 +114,8 @@ struct ArticleCompactCard: View {
                     }
                 }
 
-                if viewModel.progress > 0 {
-                    ProgressBar(value: viewModel.progress)
-                        .frame(height: 4)
-                        .padding(.top, 4)
-                }
+                // ❌ УДАЛЕНО: Прогресс-бар из компактной карточки (должен быть только в детальном просмотре)
+                // if viewModel.progress > 0 { ... }
             }
             .padding(12)
         }

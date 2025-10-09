@@ -12,17 +12,18 @@ final class ArticleDetailViewModel: ObservableObject {
     @Published var viewHeight: CGFloat = 1
     @Published var showRelatedArticles = false
     @Published var showTextSizePanel = false
+    
+    @Published var rating: Int
+    @Published var isFavorite: Bool
 
     private let article: Article
-    private let allArticles: [Article]
+    let allArticles: [Article]
 
     let localizationManager: LocalizationManager
     let textSizeManager: TextSizeManager
     let favoritesManager: FavoritesManager
     let ratingManager: RatingManager
-    let readingProgressTracker: ReadingProgressTracker
-    let readingTimeTracker: ReadingTimeTracker
-    let historyManager: ReadingHistoryManager
+    let readingStatsManager: ReadingStatsManaging
     private let articleFormatter: ArticleFormatter
 
     init(article: Article,
@@ -31,9 +32,7 @@ final class ArticleDetailViewModel: ObservableObject {
          textSizeManager: TextSizeManager,
          favoritesManager: FavoritesManager,
          ratingManager: RatingManager,
-         readingProgressTracker: ReadingProgressTracker,
-         readingTimeTracker: ReadingTimeTracker,
-         historyManager: ReadingHistoryManager,
+         readingStatsManager: ReadingStatsManaging,
          articleFormatter: ArticleFormatter) {
         self.article = article
         self.allArticles = allArticles
@@ -41,10 +40,11 @@ final class ArticleDetailViewModel: ObservableObject {
         self.textSizeManager = textSizeManager
         self.favoritesManager = favoritesManager
         self.ratingManager = ratingManager
-        self.readingProgressTracker = readingProgressTracker
-        self.readingTimeTracker = readingTimeTracker
-        self.historyManager = historyManager
+        self.readingStatsManager = readingStatsManager
         self.articleFormatter = articleFormatter
+
+        self.rating = ratingManager.getRating(for: article.id)
+        self.isFavorite = favoritesManager.isFavorite(article.id)
     }
 
     // MARK: - API for View
@@ -54,11 +54,21 @@ final class ArticleDetailViewModel: ObservableObject {
     }
 
     var progress: CGFloat {
-        readingProgressTracker.progressForArticle(article.id)
+        readingStatsManager.progressForArticle(article.id)
     }
 
     var relatedArticles: [Article] {
         Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
+    }
+
+    var recommendedArticles: [Article] {
+        let sameCategory = allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }
+        let shuffled = sameCategory.shuffled()
+        return Array(shuffled.prefix(4))
+    }
+
+    var appContainer: AppContainer {
+        AppContainer.shared
     }
 
     func t(_ key: String, lang: String) -> String {
@@ -67,40 +77,33 @@ final class ArticleDetailViewModel: ObservableObject {
 
     func toggleFavorite() {
         favoritesManager.toggleFavorite(for: article.id)
+        isFavorite = favoritesManager.isFavorite(article.id)
     }
 
-    func isFavorite() -> Bool {
-        favoritesManager.isFavorite(article.id)
-    }
-
-    func getRating() -> Int {
-        ratingManager.getRating(for: article.id)
-    }
-
-    func setRating(_ rating: Int) {
-        ratingManager.setRating(rating, for: article.id)
+    func setRating(_ newRating: Int) {
+        ratingManager.setRating(newRating, for: article.id)
+        rating = newRating
     }
 
     func handleScrollOffset(_ value: CGFloat) {
         scrollOffset = -value
         let progress = max(0, min(scrollOffset / max(contentHeight - viewHeight, 1), 1))
-        readingProgressTracker.updateProgress(for: article.id, value: progress)
+        readingStatsManager.updateProgress(for: article.id, value: progress)
     }
 
     func startReadingSession() {
-        readingTimeTracker.startSession(articleId: article.id)
+        readingStatsManager.startSession(articleId: article.id)
     }
 
     func endReadingSession() {
-        readingTimeTracker.endSession(articleId: article.id)
-        historyManager.addReadingEntry(articleId: article.id, readingTime: 60)
+        readingStatsManager.endSession(articleId: article.id)
     }
 
     func shareContent(selectedLanguage: String) -> String {
         let title = article.localizedTitle(for: selectedLanguage)
         let content = article.localizedContent(for: selectedLanguage)
         let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
-        let formattedReadingTime = ReadingTimeCalculator.formatReadingTime(readingTime, language: selectedLanguage)
+        let formattedReadingTime = readingStatsManager.formatReadingTime(readingTime, language: selectedLanguage)
         
         return """
         \(title)

@@ -1,25 +1,23 @@
+//
+//  HomeView.swift
+//  InGermany
+//
+
 import SwiftUI
 
-/// The main screen of the app displaying sections like tools, recently read, favorites, categories, and all articles.
 struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: HomeViewModel
-    /// Контейнер зависимостей для получения менеджеров.
     @EnvironmentObject private var appContainer: AppContainer
 
-    // MARK: - Init
-    /// Initializes the view with AppContainer for dependency injection
     init() {
         _viewModel = StateObject(wrappedValue: AppContainer.shared.makeHomeViewModel())
     }
-    
-    /// For preview and testing
+
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
-    // MARK: - Body
-    /// Builds the main navigation stack with dynamic sections.
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -45,7 +43,7 @@ struct HomeView: View {
                             RecentlyReadSection(
                                 articles: viewModel.articles,
                                 favoritesManager: viewModel.favoritesManager,
-                                readingHistoryManager: viewModel.readingHistoryManager
+                                readingStatsManager: viewModel.readingStatsManager
                             )
 
                             FavoritesSection(
@@ -90,8 +88,6 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Helpers
-    /// Returns a color depending on the current data source.
     private func getDataSourceColor() -> Color {
         switch viewModel.dataSource {
         case "network": return .green
@@ -101,13 +97,11 @@ struct HomeView: View {
         }
     }
 
-    /// Retrieves a localized string for a given key.
     private func t(_ key: String) -> String {
         appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
-// MARK: - Preview
 #Preview {
     HomeView()
         .environmentObject(AppContainer.previewMock())

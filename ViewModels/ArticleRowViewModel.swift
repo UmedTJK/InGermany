@@ -13,7 +13,7 @@ class ArticleRowViewModel: ObservableObject {
 
     let article: Article
     
-    // ✅ ПРАВИЛЬНО: Через dependency injection
+    // ✅ Через dependency injection
     private let localizationManager: LocalizationManagerProtocol
     private var selectedLanguage: String {
         localizationManager.selectedLanguage
@@ -22,7 +22,7 @@ class ArticleRowViewModel: ObservableObject {
     private let favoritesManager: FavoritesManager
     private let ratingManager: RatingManager
     private let categoriesRepo: CategoriesRepositoryProtocol
-    private let readingProgressTracker: ReadingProgressTracker
+    private let readingStatsManager: ReadingStatsManaging
     private let articleFormatter: ArticleFormatter
 
     init(
@@ -31,7 +31,7 @@ class ArticleRowViewModel: ObservableObject {
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
         categoriesRepo: CategoriesRepositoryProtocol,
-        readingProgressTracker: ReadingProgressTracker,
+        readingStatsManager: ReadingStatsManaging,
         articleFormatter: ArticleFormatter
     ) {
         self.article = article
@@ -39,7 +39,7 @@ class ArticleRowViewModel: ObservableObject {
         self.favoritesManager = favoritesManager
         self.ratingManager = ratingManager
         self.categoriesRepo = categoriesRepo
-        self.readingProgressTracker = readingProgressTracker
+        self.readingStatsManager = readingStatsManager
         self.articleFormatter = articleFormatter
         self.isFavorite = favoritesManager.isFavorite(article.id)
         self.rating = ratingManager.getRating(for: article.id)
@@ -54,20 +54,18 @@ class ArticleRowViewModel: ObservableObject {
             favoritesManager: FavoritesManager.shared,
             ratingManager: RatingManager.shared,
             categoriesRepo: DefaultCategoriesRepository.shared,
-            readingProgressTracker: ReadingProgressTracker.shared,
+            readingStatsManager: ReadingStatsManager.shared,
             articleFormatter: ArticleFormatter()
         )
     }
 
     // MARK: - Favorites
-    // ✅ ДОБАВЛЕНО: Метод для переключения избранного
     func toggleFavorite() {
         favoritesManager.toggleFavorite(for: article.id)
         isFavorite = favoritesManager.isFavorite(article.id)
     }
 
     // MARK: - Rating
-    // ✅ ДОБАВЛЕНО: Метод для установки рейтинга
     func setRating(_ value: Int) {
         ratingManager.setRating(value, for: article.id)
         rating = value
@@ -80,7 +78,7 @@ class ArticleRowViewModel: ObservableObject {
 
     var subtitle: String {
         let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
-        return ReadingTimeCalculator.formatReadingTime(readingTime, language: selectedLanguage)
+        return readingStatsManager.formatReadingTime(readingTime, language: selectedLanguage)
     }
 
     var metaInfo: String {
@@ -95,6 +93,6 @@ class ArticleRowViewModel: ObservableObject {
 
     /// Текущий прогресс чтения статьи (0.0 ... 1.0)
     var progress: Double {
-        Double(readingProgressTracker.progressForArticle(article.id))
+        Double(readingStatsManager.progressForArticle(article.id))
     }
 }

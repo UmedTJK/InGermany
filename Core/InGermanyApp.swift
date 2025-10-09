@@ -20,7 +20,7 @@ struct InGermanyApp: App {
                         .environmentObject(appContainer.favoritesManager)
                         .environmentObject(appContainer.textSizeManager)
                         .environmentObject(appContainer.localizationManager)
-                        .environmentObject(appContainer.readingProgressTracker)
+                        .environmentObject(appContainer.readingStatsManager as! ReadingStatsManager)
                         .preferredColorScheme(isDarkMode ? .light : .dark)
                         .environment(\.screenSize, UIScreen.main.bounds.size)
                 }

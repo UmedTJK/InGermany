@@ -13,29 +13,27 @@ final class SettingsViewModel: ObservableObject {
     @Published var isHistoryCleared: Bool = false
     
     // MARK: - Dependencies
-    private let historyManager: ReadingHistoryManager
+    private let readingStatsManager: ReadingStatsManaging
     private let localizationManager: LocalizationManager
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
     init(
-        historyManager: ReadingHistoryManager,
+        readingStatsManager: ReadingStatsManaging,
         localizationManager: LocalizationManager
     ) {
-        self.historyManager = historyManager
+        self.readingStatsManager = readingStatsManager
         self.localizationManager = localizationManager
         setupReactiveBindings()
     }
 
-    
     // MARK: - Public Methods
     
     /// Очистка истории чтения
     func clearHistory() {
-        historyManager.clearHistory()
+        readingStatsManager.clearHistory()
         isHistoryCleared = true
         
-        // Reset the flag after a delay for UI feedback
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.isHistoryCleared = false
         }
@@ -48,7 +46,7 @@ final class SettingsViewModel: ObservableObject {
     
     /// Возвращает агрегированную статистику чтения
     public func getStats() -> ReadingStats {
-        return historyManager.getStats()
+        return readingStatsManager.getStats()
     }
     
     /// Provides localized text for the given key
@@ -68,29 +66,25 @@ final class SettingsViewModel: ObservableObject {
     }
     
     // MARK: - Private Methods
-    
     private func setupReactiveBindings() {
-        // Ничего здесь не нужно, убери содержимое
+        // пока ничего не нужно
     }
-
 }
 
-// MARK: - Preview Support
 // MARK: - Preview Support
 extension SettingsViewModel {
     static func previewMock() -> SettingsViewModel {
         SettingsViewModel(
-            historyManager: ReadingHistoryManager.shared,
+            readingStatsManager: ReadingStatsManager.shared,
             localizationManager: LocalizationManager.shared
         )
     }
     
     static func previewMockWithStats() -> SettingsViewModel {
         let vm = SettingsViewModel(
-            historyManager: ReadingHistoryManager.shared,
+            readingStatsManager: ReadingStatsManager.shared,
             localizationManager: LocalizationManager.shared
         )
-        // если нужно, можно добавить тестовую историю в vm.historyManager здесь
         return vm
     }
 }

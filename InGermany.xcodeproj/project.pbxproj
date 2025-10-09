@@ -13,7 +13,6 @@
 		AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */; };
 		AD160DB42E955DF1009B49F2 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */; };
 		AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */; };
-		AD2A625A2E8893BC006A94DD /* ReadingTimeTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */; };
 		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D02E8FAD42006A94DD /* git_snapshot.md */; };
 		AD2A64D32E8FAD42006A94DD /* project_tree.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D12E8FAD42006A94DD /* project_tree.md */; };
@@ -26,9 +25,6 @@
 		AD2A65692E8FF0D1006A94DD /* CardSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65612E8FF0D1006A94DD /* CardSize.swift */; };
 		AD2A656A2E8FF0D1006A94DD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65642E8FF0D1006A94DD /* Theme.swift */; };
 		AD2A656B2E8FF0D1006A94DD /* CardImageStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65602E8FF0D1006A94DD /* CardImageStyle.swift */; };
-		AD2A65702E8FF39E006A94DD /* ReadingTimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */; };
-		AD2A65712E8FF39E006A94DD /* ReadingProgressHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */; };
-		AD2A65722E8FF39E006A94DD /* ReadingProgressTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */; };
 		AD2A66942E90D803006A94DD /* locations_README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A66932E90D7FE006A94DD /* locations_README.md */; };
 		AD2A67B62E90DDF6006A94DD /* next_steps.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A67B52E90DDF0006A94DD /* next_steps.md */; };
 		AD2A67ED2E91027D006A94DD /* DefaultsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A65592E8FEF44006A94DD /* DefaultsStore.swift */; };
@@ -37,6 +33,9 @@
 		AD38F5892E76C15600E36EA4 /* update.sh in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5882E76C15000E36EA4 /* update.sh */; };
 		AD40EEF02E75C3DC00866648 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C82E75B4C4003D3826 /* categories.json */; };
 		AD40EEF12E75C3DC00866648 /* articles.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C72E75B4AF003D3826 /* articles.json */; };
+		AD459A5C2E97925900F540F3 /* ReadingStatsManagingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */; };
+		AD459A5E2E97927500F540F3 /* ReadingStatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */; };
+		AD459A652E97972B00F540F3 /* ReadingTimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459A642E97972A00F540F3 /* ReadingTimeCalculator.swift */; };
 		AD5D36C92E96D4BD00DB63EF /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36C82E96D4BB00DB63EF /* CacheManager.swift */; };
 		AD5D36CB2E96DF3900DB63EF /* DateFormattingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36CA2E96DF3700DB63EF /* DateFormattingService.swift */; };
 		AD5D36CD2E96DF4A00DB63EF /* TextAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36CC2E96DF4900DB63EF /* TextAnalysisService.swift */; };
@@ -76,7 +75,6 @@
 		AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManagerProtocol.swift; sourceTree = "<group>"; };
 		AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Environment+ScreenSize.swift"; sourceTree = "<group>"; };
-		AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeTracker.swift; sourceTree = "<group>"; };
 		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD2A64D02E8FAD42006A94DD /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
 		AD2A64D12E8FAD42006A94DD /* project_tree.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = project_tree.md; sourceTree = "<group>"; };
@@ -89,15 +87,15 @@
 		AD2A65622E8FF0D1006A94DD /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		AD2A65632E8FF0D1006A94DD /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		AD2A65642E8FF0D1006A94DD /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressHelper.swift; sourceTree = "<group>"; };
-		AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTracker.swift; sourceTree = "<group>"; };
-		AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
 		AD2A66932E90D7FE006A94DD /* locations_README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = locations_README.md; sourceTree = "<group>"; };
 		AD2A67B52E90DDF0006A94DD /* next_steps.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = next_steps.md; sourceTree = "<group>"; };
 		AD2A67CC2E910028006A94DD /* InGermanyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InGermanyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD38F5882E76C15000E36EA4 /* update.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update.sh; sourceTree = "<group>"; };
+		AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManagingProtocol.swift; sourceTree = "<group>"; };
+		AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManager.swift; sourceTree = "<group>"; };
+		AD459A642E97972A00F540F3 /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
 		AD52FD452E8585B300CC9F61 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
@@ -185,6 +183,7 @@
 		AD2A65562E8FEBF2006A94DD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */,
 				AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */,
 				AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */,
 				AD160DAD2E95290E009B49F2 /* ReadingProgressTrackerProtocol.swift */,
@@ -198,6 +197,7 @@
 		AD2A65652E8FF0D1006A94DD /* UIUtils */ = {
 			isa = PBXGroup;
 			children = (
+				AD459A642E97972A00F540F3 /* ReadingTimeCalculator.swift */,
 				AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */,
 				AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */,
 				AD2A655F2E8FF0D1006A94DD /* Animations.swift */,
@@ -293,11 +293,8 @@
 		ADF339482E8850FA00AE4CBF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */,
 				AD5D36C82E96D4BB00DB63EF /* CacheManager.swift */,
-				AD2A656D2E8FF39E006A94DD /* ReadingProgressHelper.swift */,
-				AD2A656E2E8FF39E006A94DD /* ReadingProgressTracker.swift */,
-				AD2A656F2E8FF39E006A94DD /* ReadingTimeCalculator.swift */,
-				AD2A62592E8893BB006A94DD /* ReadingTimeTracker.swift */,
 				ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */,
 				ADF339452E8850FA00AE4CBF /* RatingManager.swift */,
 				ADF339462E8850FA00AE4CBF /* ReadingHistoryManager.swift */,
@@ -462,12 +459,12 @@
 				AD2A65692E8FF0D1006A94DD /* CardSize.swift in Sources */,
 				AD2A656A2E8FF0D1006A94DD /* Theme.swift in Sources */,
 				AD2A656B2E8FF0D1006A94DD /* CardImageStyle.swift in Sources */,
+				AD459A5E2E97927500F540F3 /* ReadingStatsManager.swift in Sources */,
+				AD459A652E97972B00F540F3 /* ReadingTimeCalculator.swift in Sources */,
 				AD2A655C2E8FEF44006A94DD /* ExportToPDF.swift in Sources */,
+				AD459A5C2E97925900F540F3 /* ReadingStatsManagingProtocol.swift in Sources */,
 				AD2A655D2E8FEF44006A94DD /* DefaultsStore.swift in Sources */,
 				AD2A655E2E8FEF44006A94DD /* LocalizationManager.swift in Sources */,
-				AD2A65702E8FF39E006A94DD /* ReadingTimeCalculator.swift in Sources */,
-				AD2A65712E8FF39E006A94DD /* ReadingProgressHelper.swift in Sources */,
-				AD2A65722E8FF39E006A94DD /* ReadingProgressTracker.swift in Sources */,
 				AD5D36CD2E96DF4A00DB63EF /* TextAnalysisService.swift in Sources */,
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
 				AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */,
@@ -477,7 +474,6 @@
 				ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */,
 				ADF3394E2E8850FA00AE4CBF /* ReadingHistoryManager.swift in Sources */,
 				AD5D36C92E96D4BD00DB63EF /* CacheManager.swift in Sources */,
-				AD2A625A2E8893BC006A94DD /* ReadingTimeTracker.swift in Sources */,
 				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD5D36CF2E96DFAA00DB63EF /* ArticleFormatter.swift in Sources */,

@@ -78,15 +78,8 @@ struct ArticleRow: View {
             }
         }
         .padding(.vertical, 8)
-        if viewModel.progress > 0 {
-            ProgressView(value: viewModel.progress)
-                .progressViewStyle(LinearProgressViewStyle())
-                .frame(height: 4)
-                .tint(.accentColor)
-                .padding(.top, 4)
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.25), value: viewModel.progress)
-        }
+        // ❌ УДАЛЕНО: Прогресс-бар из строки статьи (должен быть только в детальном просмотре)
+        // if viewModel.progress > 0 { ... }
     }
 }
 

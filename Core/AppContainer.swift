@@ -15,14 +15,13 @@ final class AppContainer: ObservableObject {
     let articlesRepo: ArticlesRepositoryProtocol
     let categoriesRepo: CategoriesRepositoryProtocol
 
-    // MARK: - Managers (конкретные классы для SwiftUI EnvironmentObject)
+    // MARK: - Managers
     let favoritesManager: FavoritesManager
-    let historyManager: ReadingHistoryManager
     let ratingManager: RatingManager
-    let readingProgressTracker: ReadingProgressTracker
     let textSizeManager: TextSizeManager
-    let readingTimeTracker: ReadingTimeTracker
     let localizationManager: LocalizationManager
+    let readingStatsManager: ReadingStatsManaging
+
     private let dateFormattingService = DateFormattingService.shared
     private let textAnalysisService = TextAnalysisService.shared
 
@@ -30,7 +29,6 @@ final class AppContainer: ObservableObject {
     let dataService: DataService
     private let articleFormatter = ArticleFormatter()
 
-    // И метод для доступа:
     func makeArticleFormatter() -> ArticleFormatter {
         return articleFormatter
     }
@@ -39,13 +37,11 @@ final class AppContainer: ObservableObject {
         articlesRepo: ArticlesRepositoryProtocol? = nil,
         categoriesRepo: CategoriesRepositoryProtocol? = nil,
         favoritesManager: FavoritesManager? = nil,
-        historyManager: ReadingHistoryManager? = nil,
         ratingManager: RatingManager? = nil,
-        readingProgressTracker: ReadingProgressTracker? = nil,
         textSizeManager: TextSizeManager? = nil,
-        readingTimeTracker: ReadingTimeTracker? = nil,
         localizationManager: LocalizationManager? = nil,
-        dataService: DataService? = nil
+        dataService: DataService? = nil,
+        readingStatsManager: ReadingStatsManaging? = nil
     ) {
         // ✅ Services & Repos
         let dataServiceInstance = dataService ?? DataService.shared
@@ -54,14 +50,12 @@ final class AppContainer: ObservableObject {
         self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: dataServiceInstance)
         self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
 
-        // ✅ Managers (конкретные классы)
+        // ✅ Managers
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared
-        self.historyManager = historyManager ?? ReadingHistoryManager.shared
         self.ratingManager = ratingManager ?? RatingManager.shared
-        self.readingProgressTracker = readingProgressTracker ?? ReadingProgressTracker.shared
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
-        self.readingTimeTracker = readingTimeTracker ?? ReadingTimeTracker.shared
         self.localizationManager = localizationManager ?? LocalizationManager.shared
+        self.readingStatsManager = readingStatsManager ?? ReadingStatsManager.shared
     }
 
     // MARK: - ViewModel Factory Methods
@@ -69,7 +63,7 @@ final class AppContainer: ObservableObject {
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
-            readingHistoryManager: historyManager,
+            readingStatsManager: readingStatsManager,
             categoriesRepository: categoriesRepo,
             articlesRepo: articlesRepo
         )
@@ -100,8 +94,8 @@ final class AppContainer: ObservableObject {
 
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(
-            historyManager: historyManager,
-            localizationManager: localizationManager // как протокол передастся сам
+            readingStatsManager: readingStatsManager,
+            localizationManager: localizationManager
         )
     }
 
@@ -113,10 +107,8 @@ final class AppContainer: ObservableObject {
             textSizeManager: textSizeManager,
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
-            readingProgressTracker: readingProgressTracker,
-            readingTimeTracker: readingTimeTracker,
-            historyManager: historyManager,
-            articleFormatter: articleFormatter  // ✅ ДОБАВЛЕНО
+            readingStatsManager: readingStatsManager,
+            articleFormatter: articleFormatter
         )
     }
 
@@ -131,8 +123,8 @@ final class AppContainer: ObservableObject {
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
             categoriesRepo: categoriesRepo,
-            readingProgressTracker: readingProgressTracker,
-            articleFormatter: articleFormatter  // ✅ ДОБАВЛЕНО
+            readingStatsManager: readingStatsManager,
+            articleFormatter: articleFormatter
         )
     }
 
@@ -160,17 +152,17 @@ final class AppContainer: ObservableObject {
             .environmentObject(favoritesManager)
             .environmentObject(textSizeManager)
             .environmentObject(localizationManager)
-            .environmentObject(readingProgressTracker)
-            .environmentObject(readingTimeTracker)
             .environmentObject(ratingManager)
+            .environmentObject(readingStatsManager as! ReadingStatsManager) // ✅ кастуем к ObservableObject
     }
+
 
     // MARK: - Clear All Data (for testing)
 
     func clearAllData() {
         favoritesManager.clearForTesting()
         ratingManager.clearForTesting()
-        historyManager.clearForTesting()
+        readingStatsManager.clearHistory()
     }
 }
 
