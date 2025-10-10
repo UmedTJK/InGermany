@@ -46,12 +46,45 @@
   {
     "id": "55555555-5555-5555-5555-eeeeeeeeeeee",
     "name": {
-      "ru": "Жизнь",
-      "en": "Life",
-      "de": "Leben",
-      "tj": "Зиндагӣ"
+      "ru": "Здравоохранение",
+      "en": "Healthcare",
+      "de": "Gesundheit",
+      "tj": "Саломатӣ"
     },
-    "icon": "house",
-    "colorHex": "#E74C3C"
+    "icon": "cross.case",
+    "colorHex": "#E67E22"
+  },
+  {
+    "id": "77777777-7777-7777-7777-aaaaaaaaaaaa",
+    "name": {
+      "ru": "Образование",
+      "en": "Education",
+      "de": "Bildung",
+      "tj": "Маориф"
+    },
+    "icon": "book",
+    "colorHex": "#3498DB"
+  },
+  {
+    "id": "99999999-9999-9999-9999-cccccccccccc",
+    "name": {
+      "ru": "Работа",
+      "en": "Jobs",
+      "de": "Jobs",
+      "tj": "Кор"
+    },
+    "icon": "briefcase.fill",
+    "colorHex": "#2ECC71"
+  },
+  {
+    "id": "10101010-aaaa-bbbb-cccc-121212121212",
+    "name": {
+      "ru": "Жильё",
+      "en": "Housing",
+      "de": "Wohnen",
+      "tj": "Манзил"
+    },
+    "icon": "house.fill",
+    "colorHex": "#9B59B6"
   }
 ]

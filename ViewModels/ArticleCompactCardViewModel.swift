@@ -15,7 +15,7 @@ final class ArticleCompactCardViewModel: ObservableObject {
     let categoriesRepo: CategoriesRepositoryProtocol
     let localizationManager: LocalizationManagerProtocol
     
-    // ✅ ИСПРАВЛЕНО: Убрали @AppStorage, используем localizationManager
+    // ✅ Используем localizationManager для выбранного языка
     private var selectedLanguage: String {
         localizationManager.selectedLanguage
     }
@@ -36,9 +36,22 @@ final class ArticleCompactCardViewModel: ObservableObject {
         categoriesRepo.category(by: article.categoryId)
     }
 
-    func categoryDisplay(for article: Article) -> (icon: String, name: String, colorHex: String)? {
-        guard let category = category(for: article) else { return nil }
-        return (category.icon, category.localizedName(for: selectedLanguage), category.colorHex)
+    /// Возвращает данные для отображения категории: иконку, имя и цвет.
+    /// Если категория не найдена, показывает фолбэк "Без категории".
+    func categoryDisplay(for article: Article) -> (icon: String, name: String, colorHex: String) {
+        if let category = category(for: article) {
+            return (
+                category.icon,
+                category.localizedName(for: selectedLanguage),
+                category.colorHex
+            )
+        } else {
+            return (
+                "questionmark.circle",
+                localizationManager.getTranslation(key: "category_none", language: selectedLanguage),
+                "#7f8c8d" // серый цвет по умолчанию
+            )
+        }
     }
 
     func rating(for articleId: String) -> Int {

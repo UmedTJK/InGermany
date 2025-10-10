@@ -21,17 +21,22 @@ class HomeViewModel: ObservableObject {
     let categoriesRepository: CategoriesRepositoryProtocol
     let articlesRepo: ArticlesRepositoryProtocol
 
+    // Локализация
+    private let localizationManager: LocalizationManager
+
     // MARK: - Init
     init(
         favoritesManager: FavoritesManager,
         readingStatsManager: ReadingStatsManaging,
         categoriesRepository: CategoriesRepositoryProtocol,
-        articlesRepo: ArticlesRepositoryProtocol
+        articlesRepo: ArticlesRepositoryProtocol,
+        localizationManager: LocalizationManager = LocalizationManager.shared
     ) {
         self.favoritesManager = favoritesManager
         self.readingStatsManager = readingStatsManager
         self.categoriesRepository = categoriesRepository
         self.articlesRepo = articlesRepo
+        self.localizationManager = localizationManager
     }
 
     // MARK: - Convenience init (Preview)
@@ -40,7 +45,8 @@ class HomeViewModel: ObservableObject {
             favoritesManager: FavoritesManager.shared,
             readingStatsManager: ReadingStatsManager.shared,
             categoriesRepository: DefaultCategoriesRepository.shared,
-            articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared)
+            articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared),
+            localizationManager: LocalizationManager.shared
         )
     }
 
@@ -51,6 +57,15 @@ class HomeViewModel: ObservableObject {
 
     var articlesByCategory: [String: [Article]] {
         Dictionary(grouping: articles, by: { $0.categoryId })
+    }
+
+    /// Возвращает локализованное имя категории по ID или "Без категории".
+    func categoryName(for id: String, language: String) -> String {
+        if let category = categoriesRepository.category(by: id) {
+            return category.localizedName(for: language)
+        } else {
+            return localizationManager.getTranslation(key: "category_none", language: language)
+        }
     }
 
     // MARK: - Data loading

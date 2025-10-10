@@ -1,58 +1,55 @@
-#!/bin/bash
+#!/bin/zsh
+set -e
 
-# === CONFIG ===
-CHANGELOG_PATH="Docs/CHANGELOG.md"
-BRANCH="main"
+echo "🚀 Starting release script..."
 
-# === 1. Определение последней версии ===
-LAST_VERSION=$(git tag --sort=-creatordate | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -n 1)
+# Находим последний релизный тег (учитываем только vX.Y.Z)
+LAST_TAG=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
 
-if [ -z "$LAST_VERSION" ]; then
-  LAST_VERSION="v0.0.0"
+if [ -z "$LAST_TAG" ]; then
+  echo "⚠️  Нет существующих тегов. Начинаем с v1.0.0"
+  LAST_TAG="v1.0.0"
 fi
 
-IFS='.' read -r MAJOR MINOR PATCH <<< "${LAST_VERSION#v}"
-NEXT_MAJOR=$((MAJOR + 1))
-NEXT_MINOR=$((MINOR + 1))
-NEXT_PATCH=$((PATCH + 1))
+echo "📌 Последняя версия: $LAST_TAG"
 
-# === 2. Предложение следующей версии ===
-echo "📌 Последняя версия: $LAST_VERSION"
+# Извлекаем MAJOR, MINOR, PATCH
+VERSION=$(echo $LAST_TAG | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+).*/\1 \2 \3/')
+set -- $VERSION
+MAJOR=$1
+MINOR=$2
+PATCH=$3
+
+# Показываем варианты
 echo "🔢 Возможные варианты:"
-echo "   1) Патч   → v$MAJOR.$MINOR.$NEXT_PATCH"
-echo "   2) Minor  → v$MAJOR.$NEXT_MINOR.0"
-echo "   3) Major  → v$NEXT_MAJOR.0.0"
-read -p "Выбери (1/2/3): " CHOICE
+echo "   1) Патч   → v$MAJOR.$MINOR.$((PATCH+1))"
+echo "   2) Минор  → v$MAJOR.$((MINOR+1)).0"
+echo "   3) Мажор  → v$((MAJOR+1)).0.0"
 
-case $CHOICE in
-  1) VERSION="v$MAJOR.$MINOR.$NEXT_PATCH" ;;
-  2) VERSION="v$MAJOR.$NEXT_MINOR.0" ;;
-  3) VERSION="v$NEXT_MAJOR.0.0" ;;
+read "choice?Выбери (1/2/3): "
+
+case $choice in
+  1) NEW_TAG="v$MAJOR.$MINOR.$((PATCH+1))-$(date +%Y%m%d)" ;;
+  2) NEW_TAG="v$MAJOR.$((MINOR+1)).0-$(date +%Y%m%d)" ;;
+  3) NEW_TAG="v$((MAJOR+1)).0.0-$(date +%Y%m%d)" ;;
   *) echo "❌ Неверный выбор"; exit 1 ;;
 esac
 
-read -p "📝 Введи краткое описание изменений: " MESSAGE
+echo "📝 Введи краткое описание изменений:"
+read desc
 
-# === 3. Генерация тега с датой ===
-DATE=$(date +%Y-%m-%d)
-TAG_DATE=$(date +%Y%m%d)
-TAG="$VERSION-$TAG_DATE"
+# Обновляем CHANGELOG.md
+echo "" >> Docs/CHANGELOG.md
+echo "## $NEW_TAG – $(date +%Y-%m-%d)" >> Docs/CHANGELOG.md
+echo "" >> Docs/CHANGELOG.md
+echo "$desc" >> Docs/CHANGELOG.md
+echo "" >> Docs/CHANGELOG.md
 
-# === 4. Обновление CHANGELOG.md ===
-TEMP_CHANGELOG=".changelog_temp"
-
-{
-  echo "### $VERSION – $DATE"
-  echo ""
-  echo "- $MESSAGE"
-  echo ""
-  cat Docs/CHANGELOG.md
-} > "$TEMP_CHANGELOG" && mv "$TEMP_CHANGELOG" Docs/CHANGELOG.md
-
-# === 5. Коммит и тег ===
+# Добавляем в git
 git add Docs/CHANGELOG.md
-git commit -m "$MESSAGE"
-git tag "$TAG"
-git push
-git push --tags
+git commit -m "docs(changelog): update for $NEW_TAG"
+git tag $NEW_TAG
+git push origin main --tags
+
+echo "✅ Новый релиз создан: $NEW_TAG"
 
