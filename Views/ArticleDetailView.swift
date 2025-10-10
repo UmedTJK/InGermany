@@ -100,7 +100,7 @@ struct ArticleDetailView: View {
                         
                         // Рейтинг - ИСПРАВЛЕННЫЕ КЛЮЧИ ЛОКАЛИЗАЦИИ
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(t("Оцените статью"))
+                            Text(t("article_rate"))
                                 .font(viewModel.textSizeManager.headlineFont)
                             
                             StarRatingView(
@@ -117,12 +117,12 @@ struct ArticleDetailView: View {
                         if !relatedArticles.isEmpty {
                             VStack(alignment: .leading, spacing: 12) {
                                 HStack {
-                                    Text(t("Вам может понравиться"))
+                                    Text(t("you_may_like"))
                                         .font(viewModel.textSizeManager.headlineFont)
                                     
                                     Spacer()
                                     
-                                    Button(showRelatedArticles ? t("Скрыть") : t("Показать")) {
+                                    Button(showRelatedArticles ? t("hide") : t("show")) {
                                         withAnimation(.easeInOut(duration: 0.3)) {
                                             showRelatedArticles.toggle()
                                         }

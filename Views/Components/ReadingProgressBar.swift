@@ -38,14 +38,14 @@ struct ReadingProgressBar: View {
             .frame(height: height)
 
             HStack {
-                Text(t("Прогресс чтения"))
+                Text(t("article_reading_progress"))
                     .font(.caption)
                     .foregroundColor(.secondary)
 
                 Spacer()
 
                 if isReading {
-                    Text(t("Читаете"))
+                    Text(t("reading_status"))
                         .font(.caption)
                         .foregroundColor(.green)
                 }
