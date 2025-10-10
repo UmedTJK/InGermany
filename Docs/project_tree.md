@@ -76,13 +76,16 @@
 │   ├── Location.swift
 │   └── ReadingSession.swift
 ├── Protocols
+│   ├── ArticleFormatterProtocol.swift
 │   ├── ArticlesRepositoryProtocol.swift
 │   ├── CategoriesRepositoryProtocol.swift
 │   ├── FavoritesManagingProtocol.swift
+│   ├── FontProviding.swift
 │   ├── LocalizationManagerProtocol.swift
 │   ├── RatingManagerProtocol.swift
 │   ├── ReadingProgressTrackerProtocol.swift
-│   └── ReadingStatsManagingProtocol.swift
+│   ├── ReadingStatsManagingProtocol.swift
+│   └── ShareServiceProtocol.swift
 ├── README.md
 ├── Resources
 │   ├── Images
@@ -204,4 +207,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-50 directories, 155 files
+50 directories, 158 files
