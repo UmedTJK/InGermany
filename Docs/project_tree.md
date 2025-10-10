@@ -1,4 +1,6 @@
 .
+├── 0001-add-missing-categories.patch
+├── 0001-add-missing-categories.patch.save
 ├── Core
 │   ├── AppContainer.swift
 │   ├── ContentView.swift
@@ -57,6 +59,8 @@
 │   └── Unit
 │       ├── Helpers
 │       ├── Managers
+│       ├── Modeld
+│       ├── New Folder
 │       ├── Services
 │       └── ViewModels
 ├── Managers
@@ -210,4 +214,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-50 directories, 161 files
+52 directories, 163 files
