@@ -42,10 +42,7 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "ru": "Внешний вид", "en": "Appearance", "de": "Erscheinungsbild",
             "tj": "Намуд", "fa": "ظاهر", "ar": "المظهر", "uk": "Зовнішній вигляд"
         ],
-        "settings_card_style_photo": [
-            "ru": "Фото", "en": "Photo", "de": "Foto",
-            "tj": "Акс", "fa": "عکس", "ar": "صورة", "uk": "Фото"
-        ],
+        
         "settings_date_format_title": [
             "ru": "Формат даты", "en": "Date format", "de": "Datumsformat",
             "tj": "Формати сана", "fa": "قالب تاریخ", "ar": "تنسيق التاريخ", "uk": "Формат дати"
@@ -213,10 +210,8 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "ru": "Тёмная тема", "en": "Dark Mode", "de": "Dunkelmodus",
             "tj": "Ҳолати торик", "fa": "حالت تاریک", "ar": "الوضع الداكن", "uk": "Темний режим"
         ],
-        "settings_card_style": [
-            "ru": "Стиль карточек", "en": "Card style", "de": "Kartenstil",
-            "tj": "Услуби кортҳо", "fa": "سبک کارت", "ar": "نمط البطاقات", "uk": "Стиль карток"
-        ],
+
+
         "settings_relative_dates": [
             "ru": "Относительные даты", "en": "Relative dates", "de": "Relative Daten",
             "tj": "Санаҳои нисбӣ", "fa": "تاریخ نسبی", "ar": "تواريخ نسبية", "uk": "Відносні дати"
@@ -233,6 +228,8 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "ru": "О приложении", "en": "About", "de": "Über",
             "tj": "Дар бораи", "fa": "درباره", "ar": "حول", "uk": "Про застосунок"
         ],
+        
+
         
         // 🔹 SettingsView — accessibility
         "settings_dark_mode_accessibility": [

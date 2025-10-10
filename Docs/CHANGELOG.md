@@ -1,3 +1,13 @@
+### v1.15.1 – 2025-10-10
+
+- ✨ enable global dark mode toggle via @AppStorage
+- ✨ enable global dark mode toggle via @AppStorage
+- ✨ add Article.wordCount(for:) implementation
+- 🛠 use optional languageCode identifier with default in SettingsViewModel and SearchViewModel
+- 📝 обновлён Docs/project_tree.md (depth=3)
+- 📝 обновлён Docs/project_tree.md (depth=3)
+- 🔧 remove obsolete CardStyle enum
+
 
 echo "- COMPLETE ARCHITECTURE REFACTORING: All core issues resolved" >> Docs/CHANGELOG.md
 echo "- DI Perfection: Zero AppContainer.shared in ViewModels" >> Docs/CHANGELOG.md

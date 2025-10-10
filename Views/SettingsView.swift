@@ -6,24 +6,19 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     
     // MARK: - Init
-    /// Primary initializer for runtime usage - DI through parameters
     init(viewModel: SettingsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
-    /// DI initializer for runtime
     init(appContainer: AppContainer) {
         _viewModel = StateObject(wrappedValue: appContainer.makeSettingsViewModel())
     }
 
-
-    // MARK: - Body
     var body: some View {
         NavigationView {
             Form {
                 languageSection
                 appearanceSection
-                cardStyleSection
                 dateFormatSection
                 statisticsSection
                 aboutSection
@@ -33,7 +28,7 @@ struct SettingsView: View {
             .navigationTitle(viewModel.localizedText("settings_title"))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Готово") {
+                    Button(viewModel.localizedText("settings_done")) {
                         dismiss()
                     }
                 }
@@ -66,21 +61,9 @@ struct SettingsView: View {
             Text(viewModel.localizedText("settings_appearance_title"))
         }
     }
+
     
-    private var cardStyleSection: some View {
-        Section {
-            Picker(viewModel.localizedText("settings_card_style_photo"), selection: $viewModel.cardImageStyle) {
-                ForEach(CardImageStyle.allCases) { style in
-                    Text(style.localizedTitle)
-                        .tag(style)
-                }
-            }
-            .pickerStyle(.segmented)
-            .accessibilityLabel(viewModel.localizedText("settings_card_style_accessibility"))
-        } header: {
-            Text(viewModel.localizedText("settings_card_style"))
-        }
-    }
+    
     
     private var dateFormatSection: some View {
         Section {
@@ -129,7 +112,6 @@ struct SettingsView: View {
             NavigationLink(destination: AboutView(appContainer: AppContainer.shared)) {
                 Text(viewModel.localizedText("settings_about_title"))
             }
-
         }
     }
     
@@ -162,7 +144,6 @@ struct SettingsView: View {
     }
     
     // MARK: - Helper Methods
-    
     private func formatHMS(fromSeconds totalSeconds: Int) -> String {
         let hours = totalSeconds / 3600
         let mins = (totalSeconds % 3600) / 60

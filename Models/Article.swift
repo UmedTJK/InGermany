@@ -165,6 +165,18 @@ struct Article: Identifiable, Codable, Hashable {
     }
 }
 
+extension Article {
+    /// Подсчитывает количество слов в контенте для данного языка.
+    func wordCount(for language: String) -> Int {
+        let text = localizedContent(for: language)
+        // Разбиваем по непробельным разделителям (пунктуация плюс пробелы)
+        let tokens = text
+            .components(separatedBy: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters))
+            .filter { !$0.isEmpty }
+        return tokens.count
+    }
+}
+
 // MARK: - Sample Data для Preview (без изменений)
 
 extension Article {

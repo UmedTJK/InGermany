@@ -141,6 +141,7 @@
 │   ├── Animations.swift
 │   ├── CardImageStyle.swift
 │   ├── CardSize.swift
+│   ├── CardStyle.swift
 │   ├── Color+Hex.swift
 │   ├── Environment+ScreenSize.swift
 │   ├── ProgressBar.swift
@@ -209,4 +210,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-50 directories, 160 files
+50 directories, 161 files
