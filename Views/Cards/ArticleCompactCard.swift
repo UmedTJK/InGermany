@@ -45,7 +45,6 @@ struct ArticleCompactCard: View {
                         .frame(width: cardWidth, height: cardHeight * 0.55)
                         .clipped()
                         .cornerRadius(12, corners: UIRectCorner([.bottomLeft, .bottomRight]))
-
                 }
 
                 if let category = viewModel.category,
@@ -108,19 +107,16 @@ struct ArticleCompactCard: View {
                         Image(systemName: "clock")
                             .foregroundColor(.secondary)
                             .font(.caption)
-                        Text(viewModel.subtitle) // ✅ ИСПРАВЛЕНО: Используем computed property из ViewModel
+                        Text(viewModel.subtitle)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
-
-                // ❌ УДАЛЕНО: Прогресс-бар из компактной карточки (должен быть только в детальном просмотре)
-                // if viewModel.progress > 0 { ... }
             }
             .padding(12)
         }
         .frame(width: cardWidth)
-        .cardStyle()
+        .cardStyle() // ✅ вместо applyCardStyle(CardStyle...)
         .scaleOnAppear()
     }
 }

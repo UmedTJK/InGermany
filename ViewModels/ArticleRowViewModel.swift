@@ -1,33 +1,38 @@
+//
+//  ArticleRowViewModel.swift
+//  InGermany
+//
+
 import SwiftUI
 
+/// ViewModel for displaying an article row/card in lists and favorites.
 @MainActor
-class ArticleRowViewModel: ObservableObject {
-    @Published var isFavorite: Bool
-    @Published var rating: Int
-    @Published var imageName: String?
-
+final class ArticleRowViewModel: ObservableObject, Identifiable {
+    let id: String   // id статьи — строка
     let article: Article
-
-    private let localizationManager: LocalizationManagerProtocol
-    private var selectedLanguage: String {
-        localizationManager.selectedLanguage
-    }
-
+    
+    private let localizationManager: LocalizationManager
     private let favoritesManager: FavoritesManager
     private let ratingManager: RatingManager
     private let categoriesRepo: CategoriesRepositoryProtocol
     private let readingStatsManager: ReadingStatsManaging
     private let articleFormatter: ArticleFormatter
-
+    
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    
+    @Published var isFavorite: Bool
+    @Published var rating: Int
+    
     init(
         article: Article,
-        localizationManager: LocalizationManagerProtocol,
+        localizationManager: LocalizationManager,
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
         categoriesRepo: CategoriesRepositoryProtocol,
         readingStatsManager: ReadingStatsManaging,
         articleFormatter: ArticleFormatter
     ) {
+        self.id = article.id
         self.article = article
         self.localizationManager = localizationManager
         self.favoritesManager = favoritesManager
@@ -35,53 +40,81 @@ class ArticleRowViewModel: ObservableObject {
         self.categoriesRepo = categoriesRepo
         self.readingStatsManager = readingStatsManager
         self.articleFormatter = articleFormatter
+        
         self.isFavorite = favoritesManager.isFavorite(article.id)
         self.rating = ratingManager.getRating(for: article.id)
-        self.imageName = article.image
     }
-
-    convenience init(article: Article) {
-        self.init(
-            article: article,
-            localizationManager: LocalizationManager.shared,
-            favoritesManager: FavoritesManager.shared,
-            ratingManager: RatingManager.shared,
-            categoriesRepo: DefaultCategoriesRepository.shared,
-            readingStatsManager: ReadingStatsManager.shared,
-            articleFormatter: ArticleFormatter()
-        )
+    
+    // MARK: - Image
+    
+    /// Имя изображения статьи или nil, если не задано
+    var imageName: String? {
+        article.image
     }
-
+    
+    // MARK: - Category
+    
+    var category: Category? {
+        categoriesRepo.category(by: article.categoryId)
+    }
+    
+    /// Возвращает локализованное имя категории или "Без категории"
+    var categoryName: String {
+        if let category = category {
+            return category.localizedName(for: selectedLanguage)
+        } else {
+            return localizationManager.getTranslation(key: "category_none", language: selectedLanguage)
+        }
+    }
+    
+    // MARK: - Texts
+    
+    var title: String {
+        article.localizedTitle(for: selectedLanguage)
+    }
+    
+    var subtitle: String {
+        "\(articleFormatter.readingTime(article, for: selectedLanguage)) " +
+        localizationManager.getTranslation(key: "min", language: selectedLanguage)
+    }
+    
+    var contentPreview: String {
+        article.localizedContent(for: selectedLanguage)
+    }
+    
+    /// Дополнительная информация: категория + теги
+    var metaInfo: String {
+        var parts: [String] = []
+        
+        // Категория
+        parts.append(categoryName)
+        
+        // Первые два тега
+        if !article.tags.isEmpty {
+            let tagsString = article.tags.prefix(2).map { "#\($0)" }.joined(separator: " ")
+            parts.append(tagsString)
+        }
+        
+        return parts.joined(separator: " • ")
+    }
+    
+    // MARK: - Favorites
+    
     func toggleFavorite() {
         favoritesManager.toggleFavorite(for: article.id)
         isFavorite = favoritesManager.isFavorite(article.id)
     }
-
-    func setRating(_ value: Int) {
-        ratingManager.setRating(value, for: article.id)
-        rating = value
+    
+    // MARK: - Rating
+    
+    func setRating(_ newRating: Int) {
+        ratingManager.setRating(newRating, for: article.id)
+        rating = newRating
     }
-
-    var title: String {
-        article.localizedTitle(for: selectedLanguage)
-    }
-
-    var subtitle: String {
-        let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
-        return readingStatsManager.formatReadingTime(readingTime, language: selectedLanguage)
-    }
-
-    var metaInfo: String {
-        let createdDate = articleFormatter.formattedCreatedDate(article, for: selectedLanguage)
-        let updatedDate = articleFormatter.formattedUpdatedDate(article, for: selectedLanguage)
-        return [createdDate, updatedDate].joined(separator: " · ")
-    }
-
-    var category: Category? {
-        categoriesRepo.category(by: article.categoryId)
-    }
-
-    var progress: Double {
-        Double(readingStatsManager.progressForArticle(article.id))
+    
+    // MARK: - Reading stats
+    
+    var progress: CGFloat {
+        readingStatsManager.progressForArticle(article.id)
     }
 }

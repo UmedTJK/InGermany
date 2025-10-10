@@ -7,10 +7,8 @@ import SwiftUI
 
 /// Строка статьи, отображающая изображение, заголовок, метаданные, рейтинг и кнопку избранного.
 struct ArticleRow: View {
-    /// ViewModel строки статьи, содержащая данные об изображении, заголовке, рейтинге и статусе избранного.
     @ObservedObject var viewModel: ArticleRowViewModel
     
-    /// Основное содержимое строки: изображение статьи, текстовые данные, рейтинг и кнопку избранного.
     var body: some View {
         let _ = {
             if let name = viewModel.imageName {
@@ -20,6 +18,7 @@ struct ArticleRow: View {
                 print("🚫 No image for article:", viewModel.title)
             }
         }()
+        
         HStack {
             if let imageName = viewModel.imageName,
                let uiImage = UIImage(named: imageName, in: .main, with: nil) {
@@ -30,14 +29,14 @@ struct ArticleRow: View {
                     .clipped()
                     .cornerRadius(8)
             } else {
-                /// Запасное изображение по умолчанию, если картинка статьи не найдена.
-                Image("Logo") // запасной вариант
+                Image("Logo")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 80, height: 80)
                     .clipped()
                     .cornerRadius(8)
             }
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(viewModel.title)
                     .font(.headline)
@@ -53,7 +52,6 @@ struct ArticleRow: View {
                         .foregroundColor(.gray)
                 }
                 
-                // ✅ ИСПРАВЛЕНО: Правильное создание Binding для рейтинга
                 HStack {
                     StarRatingView(
                         rating: Binding(
@@ -67,9 +65,9 @@ struct ArticleRow: View {
                 }
                 .padding(.top, 2)
             }
+            
             Spacer()
             
-            /// Кнопка для добавления или удаления статьи из избранного.
             Button(action: {
                 viewModel.toggleFavorite()
             }) {
@@ -78,11 +76,12 @@ struct ArticleRow: View {
             }
         }
         .padding(.vertical, 8)
-        // ❌ УДАЛЕНО: Прогресс-бар из строки статьи (должен быть только в детальном просмотре)
-        // if viewModel.progress > 0 { ... }
     }
 }
 
 #Preview {
-    ArticleRow(viewModel: ArticleRowViewModel(article: Article.sampleArticle))
+    let container = AppContainer.shared
+    let vm = container.makeArticleRowViewModel(article: Article.sampleArticles[0])
+    return ArticleRow(viewModel: vm)
+        .environmentObject(container)
 }

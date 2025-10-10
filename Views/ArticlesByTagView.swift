@@ -11,6 +11,7 @@ struct ArticlesByTagView: View {
     
     @EnvironmentObject private var appContainer: AppContainer
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
 
     var body: some View {
         List(filteredArticles) { article in
@@ -25,6 +26,7 @@ struct ArticlesByTagView: View {
                 )
             } label: {
                 ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                    .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard) // ✅ применяем выбранный стиль
             }
         }
         .navigationTitle("#\(tag)")

@@ -125,6 +125,7 @@ final class AppContainer: ObservableObject {
             ratingManager: ratingManager,
             readingStatsManager: readingStatsService,
             articleFormatter: articleFormatter,
+            categoriesRepository: categoriesRepo,
             shareService: shareService  // ✅ ДОБАВЛЯЕМ новый dependency
         )
     }
