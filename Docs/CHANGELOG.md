@@ -1,3 +1,7 @@
+### v1.13.1 – 2025-10-10
+
+- fix: navigation flow in Categories → Articles → Detail
+
 ### Fixed
 - 🛠 Navigation in Categories flow:
   - Migrated `CategoriesView` to `NavigationStack`
