@@ -5,6 +5,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 /// Размер текста в приложении
 enum TextSize: String, Codable, CaseIterable {
@@ -57,5 +58,28 @@ final class TextSizeManager: ObservableObject {
 
     private func saveCustomScale() {
         DefaultsStore.save(customScale, for: customKey)
+    }
+}
+
+// MARK: - FontProviding Implementation
+extension TextSizeManager: FontProviding {
+    var bodyFont: Font {
+        .system(size: 16 * customScale, weight: .regular, design: .default)
+    }
+    
+    var titleFont: Font {
+        .system(size: 20 * customScale, weight: .semibold, design: .default)
+    }
+    
+    var headlineFont: Font {
+        .system(size: 24 * customScale, weight: .bold, design: .default)
+    }
+    
+    var captionFont: Font {
+        .system(size: 14 * customScale, weight: .regular, design: .default)
+    }
+    
+    var subheadlineFont: Font {
+        .system(size: 18 * customScale, weight: .medium, design: .default)
     }
 }

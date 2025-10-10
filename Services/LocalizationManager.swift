@@ -31,7 +31,7 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
         ],
         "tab_favorites": [
             "ru": "Избранное", "en": "Favorites", "de": "Favoriten",
-            "tj": "Интихобшуда", "fa": "علاقه‌مندی‌ها", "ar": "المفضلة", "uk": "Вибране"
+            "tj": "Интихобшуда", "fa": "علاقه‌мندی‌ها", "ar": "المفضلة", "uk": "Вибране"
         ],
         "tab_settings": [
             "ru": "Настройки", "en": "Settings", "de": "Einstellungen",
@@ -82,7 +82,7 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
         
         "Избранное": [
             "ru": "Избранное", "en": "Favorites", "de": "Favoriten",
-            "tj": "Интихобшуда", "fa": "علاقه‌مندی‌ها", "ar": "المفضلة", "uk": "Вибране"
+            "tj": "Интихобшуда", "fa": "علاقه‌мندی‌ها", "ar": "المفضلة", "uk": "Вибране"
         ],
         "Нет избранных статей": [
             "ru": "Нет избранных статей", "en": "No favorite articles", "de": "Keine Favoriten",
@@ -103,7 +103,7 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
         ],
         "Искать по статьям или категориям": [
             "ru": "Искать по статьям или категориям", "en": "Search articles or categories", "de": "Artikel oder Kategorien suchen",
-            "tj": "Ҷустуҷӯ дар мақолаҳо ё категорияҳо", "fa": "جستجو در مقالات یا دسته‌ها", "ar": "البحث في المقالات أو الفئات", "uk": "Шукати за статтями чи категоріями"
+            "tj": "Ҷустуҷӯ дар мақолаҳо ё категорияҳо", "fa": "جستجو در مقالات یا دسته‌ها", "ar": "البحث в المقالات أو الفئات", "uk": "Шукати за статтями чи категоріями"
         ],
         
         "article_rate": [
@@ -148,9 +148,35 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
         "map_refresh": [
             "ru": "Обновить", "en": "Refresh", "de": "Aktualisieren",
             "tj": "Нав кардан", "fa": "تازه‌سازی", "ar": "تحديث", "uk": "Оновити"
-        ],
+        ]
+    ]
 
-        
+    // ✅ ДОБАВЛЕН: Отдельный словарь для ArticleDetailView
+    private let articleDetailTranslations: [String: [String: String]] = [
+        "reading_time": [
+            "ru": "Время чтения", "en": "Reading time", "de": "Lesezeit",
+            "tj": "Вақти хондан", "fa": "زمان مطالعه", "ar": "وقت القراءة", "uk": "Час читання"
+        ],
+        "published": [
+            "ru": "Опубликовано", "en": "Published", "de": "Veröffentlicht",
+            "tj": "Нашр шудааст", "fa": "منتشر شده", "ar": "تم النشر", "uk": "Опубліковано"
+        ],
+        "min": [
+            "ru": "мин", "en": "min", "de": "Min",
+            "tj": "дақ", "fa": "دقیقه", "ar": "دقيقة", "uk": "хв"
+        ],
+        "hide": [
+            "ru": "Скрыть", "en": "Hide", "de": "Ausblenden",
+            "tj": "Пинҳон кардан", "fa": "پنهان کردن", "ar": "إخفاء", "uk": "Приховати"
+        ],
+        "show": [
+            "ru": "Показать", "en": "Show", "de": "Anzeigen",
+            "tj": "Намоиш додан", "fa": "نمایش دادن", "ar": "عرض", "uk": "Показати"
+        ],
+        "you_may_like": [
+            "ru": "Вам может понравиться", "en": "You may like", "de": "Das könnte Ihnen gefallen",
+            "tj": "Шумо дӯст медоред", "fa": "ممکن است دوست داشته باشید", "ar": "قد يعجبك", "uk": "Вам може сподобатися"
+        ]
     ]
     
     private let textSettingsTranslations: [String: [String: String]] = [
@@ -365,7 +391,7 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             .merging(mapTranslations) { $1 }
             .merging(componentTranslations) { $1 }
             .merging(textSettingsTranslations) { $1 }
-
+            .merging(articleDetailTranslations) { $1 } // ✅ ДОБАВЛЕНО: articleDetailTranslations
     }()
     
     // MARK: - API

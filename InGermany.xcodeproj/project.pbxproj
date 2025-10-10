@@ -36,6 +36,9 @@
 		AD459A5C2E97925900F540F3 /* ReadingStatsManagingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */; };
 		AD459A5E2E97927500F540F3 /* ReadingStatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */; };
 		AD459A652E97972B00F540F3 /* ReadingTimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459A642E97972A00F540F3 /* ReadingTimeCalculator.swift */; };
+		AD459C1B2E98B7EF00F540F3 /* FontProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459C1A2E98B7E700F540F3 /* FontProviding.swift */; };
+		AD459C1D2E98BB2800F540F3 /* ShareServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459C1C2E98BB2500F540F3 /* ShareServiceProtocol.swift */; };
+		AD459C212E98BF5E00F540F3 /* ArticleFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459C202E98BF5B00F540F3 /* ArticleFormatterProtocol.swift */; };
 		AD5D36C92E96D4BD00DB63EF /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36C82E96D4BB00DB63EF /* CacheManager.swift */; };
 		AD5D36CB2E96DF3900DB63EF /* DateFormattingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36CA2E96DF3700DB63EF /* DateFormattingService.swift */; };
 		AD5D36CD2E96DF4A00DB63EF /* TextAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36CC2E96DF4900DB63EF /* TextAnalysisService.swift */; };
@@ -96,6 +99,9 @@
 		AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManagingProtocol.swift; sourceTree = "<group>"; };
 		AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManager.swift; sourceTree = "<group>"; };
 		AD459A642E97972A00F540F3 /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
+		AD459C1A2E98B7E700F540F3 /* FontProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontProviding.swift; sourceTree = "<group>"; };
+		AD459C1C2E98BB2500F540F3 /* ShareServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareServiceProtocol.swift; sourceTree = "<group>"; };
+		AD459C202E98BF5B00F540F3 /* ArticleFormatterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleFormatterProtocol.swift; sourceTree = "<group>"; };
 		AD52FD452E8585B300CC9F61 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
@@ -183,6 +189,9 @@
 		AD2A65562E8FEBF2006A94DD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				AD459C202E98BF5B00F540F3 /* ArticleFormatterProtocol.swift */,
+				AD459C1C2E98BB2500F540F3 /* ShareServiceProtocol.swift */,
+				AD459C1A2E98B7E700F540F3 /* FontProviding.swift */,
 				AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */,
 				AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */,
 				AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */,
@@ -235,9 +244,9 @@
 				AD38F5882E76C15000E36EA4 /* update.sh */,
 				AD38F5862E76899600E36EA4 /* README.md */,
 				AD38F5842E76890C00E36EA4 /* .gitignore */,
+				AD52FD4E2E8585B300CC9F61 /* Docs */,
 				AD2A63B12E8C1AE4006A94DD /* ViewModels */,
 				AD8552B62E75B300003D3826 /* Views */,
-				AD52FD4E2E8585B300CC9F61 /* Docs */,
 				AD2A65562E8FEBF2006A94DD /* Protocols */,
 				AD2A65652E8FF0D1006A94DD /* UIUtils */,
 				AD8552A72E75AEBF003D3826 /* Core */,
@@ -446,12 +455,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD2A65662E8FF0D1006A94DD /* ProgressBar.swift in Sources */,
+				AD459C1B2E98B7EF00F540F3 /* FontProviding.swift in Sources */,
 				AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */,
 				AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */,
 				AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */,
 				AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */,
 				AD160DB42E955DF1009B49F2 /* RoundedCorner.swift in Sources */,
 				AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */,
+				AD459C212E98BF5E00F540F3 /* ArticleFormatterProtocol.swift in Sources */,
 				AD160DAE2E95290F009B49F2 /* ReadingProgressTrackerProtocol.swift in Sources */,
 				AD2A65672E8FF0D1006A94DD /* Color+Hex.swift in Sources */,
 				AD2A65682E8FF0D1006A94DD /* Animations.swift in Sources */,
@@ -474,6 +485,7 @@
 				ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */,
 				ADF3394E2E8850FA00AE4CBF /* ReadingHistoryManager.swift in Sources */,
 				AD5D36C92E96D4BD00DB63EF /* CacheManager.swift in Sources */,
+				AD459C1D2E98BB2800F540F3 /* ShareServiceProtocol.swift in Sources */,
 				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD5D36CF2E96DFAA00DB63EF /* ArticleFormatter.swift in Sources */,

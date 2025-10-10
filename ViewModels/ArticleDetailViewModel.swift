@@ -3,6 +3,8 @@
 //  InGermany
 //
 
+// ViewModels/ArticleDetailViewModel.swift - ОБНОВЛЕННАЯ ВЕРСИЯ
+
 import SwiftUI
 
 @MainActor
@@ -24,7 +26,10 @@ final class ArticleDetailViewModel: ObservableObject {
     let favoritesManager: FavoritesManager
     let ratingManager: RatingManager
     let readingStatsManager: ReadingStatsManaging
-    private let articleFormatter: ArticleFormatter
+    let articleFormatter: ArticleFormatter
+    
+    // ✅ НОВЫЙ dependency
+    private let shareService: ShareServiceProtocol
 
     init(
         article: Article,
@@ -34,7 +39,8 @@ final class ArticleDetailViewModel: ObservableObject {
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
         readingStatsManager: ReadingStatsManaging,
-        articleFormatter: ArticleFormatter
+        articleFormatter: ArticleFormatter,
+        shareService: ShareServiceProtocol  // ✅ НОВЫЙ параметр
     ) {
         self.article = article
         self.allArticles = allArticles
@@ -44,14 +50,14 @@ final class ArticleDetailViewModel: ObservableObject {
         self.ratingManager = ratingManager
         self.readingStatsManager = readingStatsManager
         self.articleFormatter = articleFormatter
+        self.shareService = shareService  // ✅ Сохраняем новый dependency
 
         self.rating = ratingManager.getRating(for: article.id)
         self.isFavorite = favoritesManager.isFavorite(article.id)
     }
 
-    var currentFont: Font {
-        .system(size: 16 * textSizeManager.customScale)
-    }
+    // ✅ УДАЛЯЕМ UI-логику - теперь используем textSizeManager.bodyFont напрямую
+    // var currentFont: Font { ... } // УДАЛЕНО!
 
     var progress: CGFloat {
         readingStatsManager.progressForArticle(article.id)
@@ -96,20 +102,14 @@ final class ArticleDetailViewModel: ObservableObject {
         readingStatsManager.endSession(articleId: article.id)
     }
 
+    // ✅ ОБНОВЛЯЕМ метод шаринга - используем ShareService
     func shareContent(selectedLanguage: String) -> String {
-        let title = article.localizedTitle(for: selectedLanguage)
-        let content = article.localizedContent(for: selectedLanguage)
-        let readingTimeMinutes = articleFormatter.readingTime(article, for: selectedLanguage)
-        let formattedReadingTime = readingStatsManager.formatReadingTime(readingTimeMinutes, language: selectedLanguage)
-
-        return """
-        \(title)
-
-        \(content)
-
-        \(t("Время чтения", lang: selectedLanguage)): \(formattedReadingTime)
-        \(t("Опубликовано", lang: selectedLanguage)): \(articleFormatter.formattedCreatedDate(article, for: selectedLanguage))
-        """
+        return shareService.generatePlainText(article: article, selectedLanguage: selectedLanguage)
+    }
+    
+    // ✅ НОВЫЙ метод для показа системного шаринга
+    func showShareSheet(selectedLanguage: String) {
+        shareService.showShareSheet(article: article, selectedLanguage: selectedLanguage)
     }
 
     // MARK: - Missing helpers used by the View
@@ -129,7 +129,9 @@ final class ArticleDetailViewModel: ObservableObject {
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
             readingStatsManager: readingStatsManager,
-            articleFormatter: articleFormatter
+            articleFormatter: articleFormatter,
+            shareService: shareService  // ✅ Передаем дальше
         )
     }
+    
 }

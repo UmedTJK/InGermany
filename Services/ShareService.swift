@@ -1,28 +1,61 @@
-//
-//  ShareService.swift
-//  InGermany
-//
-
+// Services/ShareService.swift
 import SwiftUI
 import UIKit
 
 /// Сервис для предоставления возможности шаринга статей через системное окно iOS.
-class ShareService {
-    /// Делится выбранной статьей через системное меню iOS.
-    /// - Parameters:
-    ///   - article: Статья, которую нужно поделиться.
-    ///   - language: Язык, на котором будет текст (по умолчанию русский).
-    static func shareArticle(_ article: Article, language: String = "ru") {
-        let title = article.localizedTitle(for: language)
-        let content = article.localizedContent(for: language)
+@MainActor
+final class ShareService: ShareServiceProtocol {
+    private let articleFormatter: ArticleFormatter
+    private let localizationManager: LocalizationManager
+    
+    init(
+        articleFormatter: ArticleFormatter,
+        localizationManager: LocalizationManager
+    ) {
+        self.articleFormatter = articleFormatter
+        self.localizationManager = localizationManager
+    }
+    
+    // MARK: - ShareServiceProtocol Implementation
+    
+    func generatePlainText(article: Article, selectedLanguage: String) -> String {
+        let title = article.localizedTitle(for: selectedLanguage)
+        let content = article.localizedContent(for: selectedLanguage)
+        let readingTimeMinutes = articleFormatter.readingTime(article, for: selectedLanguage)
+        let formattedReadingTime = formatReadingTime(readingTimeMinutes, language: selectedLanguage)
         
-        let shareText = """
+        return """
         \(title)
         
         \(content)
         
-        Читайте в приложении InGermany!
+        \(localize("Время чтения", language: selectedLanguage)): \(formattedReadingTime)
+        \(localize("Опубликовано", language: selectedLanguage)): \(articleFormatter.formattedCreatedDate(article, for: selectedLanguage))
+        
+        \(localize("Поделилось из", language: selectedLanguage)) InGermany App
         """
+    }
+    
+    func generateFormattedText(article: Article, selectedLanguage: String) -> String {
+        let title = article.localizedTitle(for: selectedLanguage)
+        let content = article.localizedContent(for: selectedLanguage)
+        let readingTimeMinutes = articleFormatter.readingTime(article, for: selectedLanguage)
+        let formattedReadingTime = formatReadingTime(readingTimeMinutes, language: selectedLanguage)
+        
+        return """
+        📖 \(title)
+        
+        \(content)
+        
+        ⏱️ \(localize("Время чтения", language: selectedLanguage)): \(formattedReadingTime)
+        📅 \(localize("Опубликовано", language: selectedLanguage)): \(articleFormatter.formattedCreatedDate(article, for: selectedLanguage))
+        
+        📱 \(localize("Поделилось из", language: selectedLanguage)) InGermany App
+        """
+    }
+    
+    func showShareSheet(article: Article, selectedLanguage: String) {
+        let shareText = generateFormattedText(article: article, selectedLanguage: selectedLanguage)
         
         let activityVC = UIActivityViewController(
             activityItems: [shareText],
@@ -33,5 +66,42 @@ class ShareService {
            let rootViewController = windowScene.windows.first?.rootViewController {
             rootViewController.present(activityVC, animated: true)
         }
+    }
+    
+    // MARK: - Private Helpers
+    
+    private func formatReadingTime(_ minutes: Int, language: String) -> String {
+        switch language {
+        case "ru":
+            return "\(minutes) мин."
+        case "en":
+            return "\(minutes) min"
+        case "de":
+            return "\(minutes) Min."
+        case "tj":
+            return "\(minutes) дақ."
+        default:
+            return "\(minutes) min"
+        }
+    }
+    
+    private func localize(_ key: String, language: String) -> String {
+        localizationManager.getTranslation(key: key, language: language)
+    }
+}
+
+// MARK: - Статический метод для обратной совместимости
+extension ShareService {
+    /// Статический метод для обратной совместимости (будет удален после рефакторинга)
+    static func shareArticle(_ article: Article, language: String = "ru") {
+        let formatter = ArticleFormatter()
+        let localizationManager = LocalizationManager.shared
+        
+        let service = ShareService(
+            articleFormatter: formatter,
+            localizationManager: localizationManager
+        )
+        
+        service.showShareSheet(article: article, selectedLanguage: language)
     }
 }

@@ -5,11 +5,12 @@
 
 import SwiftUI
 
-/// A detailed view displaying a single article with localized content, image, and user interactions.
 struct ArticleDetailView: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-
+    
+    @State private var showRelatedArticles = false
+    
     // MARK: - Dependencies
     private let localizationManager: LocalizationManager
     private let articleRowFactory: (Article) -> ArticleRowViewModel
@@ -24,104 +25,187 @@ struct ArticleDetailView: View {
         self.localizationManager = localizationManager
         self.articleRowFactory = articleRowFactory
     }
-
+    
+    private var relatedArticles: [Article] {
+        viewModel.relatedArticles(limit: 3)
+    }
+    
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                // MARK: - Image
-                // Используем imageName вместо imageNameOrNil
-                if !viewModel.article.imageName.isEmpty && viewModel.article.imageName != "Logo" {
-                    Image(viewModel.article.imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(12)
-                        .padding(.horizontal)
-                }
-
-                // MARK: - Title
-                Text(viewModel.article.localizedTitle(for: selectedLanguage))
-                    .font(.title2)
-                    .bold()
-                    .padding(.horizontal)
-
-                // MARK: - Tags
-                if !viewModel.article.tags.isEmpty {
-                    TagsView(
-                        tags: viewModel.article.tags,
-                        language: selectedLanguage,
-                        localizationManager: localizationManager
-                    )
-                    .padding(.horizontal)
-                }
-
-                // MARK: - Content
-                Text(viewModel.article.localizedContent(for: selectedLanguage))
-                    .font(viewModel.currentFont)
-                    .padding(.horizontal)
-
-                // MARK: - Related Articles
-                let related = viewModel.recommendedArticles
-                if !related.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(t("related_articles"))
-                            .font(.headline)
-                            .padding(.horizontal)
-
-                        ForEach(related) { relatedArticle in
-                            NavigationLink {
-                                // create a new detail VM via viewModel helper (DI-friendly)
-                                ArticleDetailView(
-                                    viewModel: viewModel.createChildViewModel(for: relatedArticle),
-                                    localizationManager: localizationManager,
-                                    articleRowFactory: articleRowFactory
-                                )
-                            } label: {
-                                ArticleRow(viewModel: articleRowFactory(relatedArticle))
-                                    .padding(.horizontal)
+        VStack(spacing: 0) {
+            // Прогресс бар чтения
+            ReadingProgressBar(
+                progress: viewModel.progress,
+                height: 3,
+                foregroundColor: .blue,
+                isReading: viewModel.progress > 0 && viewModel.progress < 1
+            )
+            .environmentObject(localizationManager)
+            .padding(.horizontal)
+            
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 20) {
+                        // Изображение статьи - ИСПРАВЛЕННАЯ ВЕРСИЯ
+                        if let imageName = viewModel.article.image,
+                           let uiImage = UIImage(named: imageName, in: .main, with: nil) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: .infinity)
+                                .cornerRadius(12)
+                                .padding(.horizontal)
+                        }
+                        
+                        // Заголовок и мета-информация
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(viewModel.article.localizedTitle(for: selectedLanguage))
+                                .font(viewModel.textSizeManager.titleFont)
+                                .bold()
+                                .fixedSize(horizontal: false, vertical: true)
+                            
+                            // Мета-информация
+                            HStack {
+                                Text("\(t("reading_time")): \(viewModel.articleFormatter.readingTime(viewModel.article, for: selectedLanguage)) \(t("min"))")
+                                    .font(viewModel.textSizeManager.captionFont)
+                                    .foregroundColor(.secondary)
+                                
+                                Spacer()
+                                
+                                if viewModel.article.createdAt != nil {
+                                    Text("\(t("published")): \(viewModel.articleFormatter.formattedCreatedDate(viewModel.article, for: selectedLanguage))")
+                                        .font(viewModel.textSizeManager.captionFont)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
+                        .padding(.horizontal)
+                        
+                        // Контент статьи
+                        Text(viewModel.article.localizedContent(for: selectedLanguage))
+                            .font(viewModel.textSizeManager.bodyFont)
+                            .lineSpacing(6)
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                            .background(
+                                GeometryReader { contentGeometry in
+                                    Color.clear
+                                        .onAppear {
+                                            viewModel.contentHeight = contentGeometry.size.height
+                                        }
+                                        .onChange(of: contentGeometry.size.height) { oldHeight, newHeight in
+                                            viewModel.contentHeight = newHeight
+                                        }
+                                }
+                            )
+                        
+                        // Рейтинг - ИСПРАВЛЕННЫЕ КЛЮЧИ ЛОКАЛИЗАЦИИ
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(t("Оцените статью"))
+                                .font(viewModel.textSizeManager.headlineFont)
+                            
+                            StarRatingView(
+                                rating: Binding(
+                                    get: { viewModel.rating },
+                                    set: { viewModel.setRating($0) }
+                                )
+                            )
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical)
+                        
+                        // Рекомендуемые статьи - ИСПРАВЛЕННЫЕ КЛЮЧИ ЛОКАЛИЗАЦИИ
+                        if !relatedArticles.isEmpty {
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Text(t("Вам может понравиться"))
+                                        .font(viewModel.textSizeManager.headlineFont)
+                                    
+                                    Spacer()
+                                    
+                                    Button(showRelatedArticles ? t("Скрыть") : t("Показать")) {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            showRelatedArticles.toggle()
+                                        }
+                                    }
+                                    .font(viewModel.textSizeManager.captionFont)
+                                }
+                                
+                                if showRelatedArticles {
+                                    LazyVStack(spacing: 12) {
+                                        ForEach(relatedArticles) { relatedArticle in
+                                            NavigationLink {
+                                                ArticleDetailView(
+                                                    viewModel: viewModel.createChildViewModel(for: relatedArticle),
+                                                    localizationManager: localizationManager,
+                                                    articleRowFactory: articleRowFactory
+                                                )
+                                            } label: {
+                                                ArticleRow(viewModel: articleRowFactory(relatedArticle))
+                                            }
+                                            .buttonStyle(PlainButtonStyle())
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                        
+                        Spacer(minLength: 50)
                     }
+                    .padding(.vertical, 8)
+                    .background(
+                        GeometryReader { scrollGeometry in
+                            Color.clear
+                                .onChange(of: scrollGeometry.frame(in: .global).minY) { oldOffset, newOffset in
+                                    viewModel.handleScrollOffset(newOffset)
+                                }
+                        }
+                    )
                 }
-
-                Spacer(minLength: 32)
             }
-            .padding(.vertical, 8)
         }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                HStack(spacing: 16) {
+                    // Кнопка размера шрифта
+                    Button(action: {
+                        viewModel.showTextSizePanel = true
+                    }) {
+                        Image(systemName: "textformat.size")
+                    }
+                    
+                    // Кнопка шаринга
+                    Button(action: {
+                        viewModel.showShareSheet(selectedLanguage: selectedLanguage)
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    
+                    // Кнопка избранного
+                    Button(action: {
+                        viewModel.toggleFavorite()
+                    }) {
+                        Image(systemName: viewModel.isFavorite ? "star.fill" : "star")
+                            .foregroundColor(viewModel.isFavorite ? .yellow : .primary)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $viewModel.showTextSizePanel) {
+            TextSizeSettingsPanel()
+                .environmentObject(AppContainer.shared)
+        }
         .task {
-            // Вызываем метод onAppear напрямую (не-async)
             viewModel.onAppear()
+        }
+        .onDisappear {
+            viewModel.endReadingSession()
         }
     }
 
     private func t(_ key: String) -> String {
         localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
-}
-
-// MARK: - Convenience Initializer for backward compatibility
-extension ArticleDetailView {
-    init(
-        article: Article,
-        allArticles: [Article],
-        appContainer: AppContainer
-    ) {
-        self.init(
-            viewModel: appContainer.makeArticleDetailViewModel(article: article, allArticles: allArticles),
-            localizationManager: appContainer.localizationManager,
-            articleRowFactory: appContainer.makeArticleRowViewModel
-        )
-    }
-}
-
-// MARK: - Preview
-#Preview {
-    let container = AppContainer.previewMock()
-    let article = Article.sampleArticle
-    return ArticleDetailView(
-        viewModel: container.makeArticleDetailViewModel(article: article, allArticles: Article.sampleArticles),
-        localizationManager: container.localizationManager,
-        articleRowFactory: container.makeArticleRowViewModel
-    )
 }

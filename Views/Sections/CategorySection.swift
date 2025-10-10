@@ -35,14 +35,11 @@ struct CategorySection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
                     ForEach(articles.prefix(10)) { article in
+                        // Views/Sections/CategorySection.swift - ИСПРАВЛЕННАЯ версия
                         NavigationLink {
-                            ArticleDetailView(
-                                article: article,
-                                allArticles: articles,
-                                appContainer: appContainer
-                            )
+                            // ✅ ИСПРАВЛЕНО: используем фабричный метод
+                            appContainer.makeArticleDetailView(article: article, allArticles: articles)
                         } label: {
-                            // ✅ ИСПРАВЛЕНО: используем ArticleCompactCard
                             ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
                         }
                     }

@@ -69,3 +69,21 @@ class ArticleFormatter {
         return translations[key]?[language] ?? key
     }
 }
+// MARK: - ArticleFormatterProtocol Implementation
+extension ArticleFormatter: ArticleFormatterProtocol {
+    func formatReadingTime(_ minutes: Int, language: String) -> String {
+        switch language {
+        case "ru":
+            return "\(minutes) мин."
+        case "en":
+            return "\(minutes) min"
+        case "de":
+            return "\(minutes) Min."
+        case "tj":
+            return "\(minutes) дақ."
+        default:
+            return "\(minutes) min"
+        }
+    }
+}
+
