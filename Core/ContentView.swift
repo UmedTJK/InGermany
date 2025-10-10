@@ -10,6 +10,7 @@ struct ContentView: View {
     @EnvironmentObject var favoritesManager: FavoritesManager
     @EnvironmentObject var readingStatsManager: ReadingStatsManager
     
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @State private var selectedTab: Int = 0
     
     var body: some View {
@@ -45,12 +46,14 @@ struct ContentView: View {
                 }
                 .tag(4)
         }
+        // 🔹 Глобальное управление темой
+        .environment(\.colorScheme, isDarkMode ? .dark : .light)
     }
 }
 
 #Preview {
     ContentView()
         .environmentObject(LocalizationManager.shared)
-        .environmentObject(FavoritesManager.shared)   // Используем .shared
+        .environmentObject(FavoritesManager.shared)
         .environmentObject(ReadingStatsManager.shared)
 }

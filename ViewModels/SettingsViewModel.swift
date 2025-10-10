@@ -6,9 +6,8 @@ final class SettingsViewModel: ObservableObject {
     // MARK: - AppStorage Properties
     @AppStorage("selectedLanguage") var selectedLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
-    @AppStorage("cardImageStyle") var cardImageStyle: CardImageStyle = .bottomCorners
     @AppStorage("relativeDates") var relativeDates: Bool = true
-
+    
     // MARK: - Published Properties
     @Published var isHistoryCleared: Bool = false
 
@@ -53,7 +52,6 @@ final class SettingsViewModel: ObservableObject {
 
     func resetToDefaults() {
         isDarkMode = false
-        cardImageStyle = .bottomCorners
         relativeDates = true
         selectedLanguage = Locale.current.language.languageCode?.identifier ?? "en"
     }
