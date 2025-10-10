@@ -34,11 +34,13 @@ struct SearchView: View {
 
                 List(viewModel.filteredArticles) { article in
                     NavigationLink {
-                        // ✅ ИСПРАВЛЕНО: используем правильный конструктор ArticleDetailView
                         ArticleDetailView(
-                            article: article,
-                            allArticles: viewModel.articles,
-                            appContainer: appContainer
+                            viewModel: appContainer.makeArticleDetailViewModel(
+                                article: article,
+                                allArticles: viewModel.articles
+                            ),
+                            localizationManager: appContainer.localizationManager,
+                            articleRowFactory: appContainer.makeArticleRowViewModel
                         )
                     } label: {
                         ArticleRow(

@@ -5,270 +5,123 @@
 
 import SwiftUI
 
+/// A detailed view displaying a single article with localized content, image, and user interactions.
 struct ArticleDetailView: View {
-    let article: Article
     @StateObject private var viewModel: ArticleDetailViewModel
-
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var appContainer: AppContainer
 
-    // Для отслеживания скролла
-    @State private var scrollViewContentSize: CGFloat = 0
-    @State private var scrollViewVisibleSize: CGFloat = 0
-    @State private var currentScrollOffset: CGFloat = 0
+    // MARK: - Dependencies
+    private let localizationManager: LocalizationManager
+    private let articleRowFactory: (Article) -> ArticleRowViewModel
 
-    init(article: Article, allArticles: [Article], appContainer: AppContainer) {
-        self.article = article
-        _viewModel = StateObject(
-            wrappedValue: appContainer.makeArticleDetailViewModel(
-                article: article,
-                allArticles: allArticles
-            )
-        )
+    // MARK: - Init with DI
+    init(
+        viewModel: ArticleDetailViewModel,
+        localizationManager: LocalizationManager,
+        articleRowFactory: @escaping (Article) -> ArticleRowViewModel
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self.localizationManager = localizationManager
+        self.articleRowFactory = articleRowFactory
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Правильное отслеживание скролла
-            ScrollViewReader { _ in
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 20) {
-                        // Изображение статьи
-                        articleImageView
-
-                        // Заголовок и мета-информация
-                        titleAndMetaView
-
-                        // Контент статьи
-                        contentView
-
-                        // Рейтинг
-                        ratingView
-
-                        // Рекомендации
-                        recommendationsView
-
-                        // Маркер для конца контента
-                        Color.clear
-                            .frame(height: 1)
-                            .id("content_end")
-                    }
-                    .padding(.vertical)
-                    .background(
-                        GeometryReader { contentGeometry in
-                            Color.clear
-                                .onAppear {
-                                    scrollViewContentSize = contentGeometry.size.height
-                                }
-                                .onChange(of: contentGeometry.size.height) { _, newValue in
-                                    scrollViewContentSize = newValue
-                                }
-                        }
-                    )
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                // MARK: - Image
+                // Используем imageName вместо imageNameOrNil
+                if !viewModel.article.imageName.isEmpty && viewModel.article.imageName != "Logo" {
+                    Image(viewModel.article.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(12)
+                        .padding(.horizontal)
                 }
-                .background(
-                    GeometryReader { scrollViewGeometry in
-                        Color.clear
-                            .onAppear {
-                                scrollViewVisibleSize = scrollViewGeometry.size.height
-                            }
-                            .onChange(of: scrollViewGeometry.size.height) { _, newValue in
-                                scrollViewVisibleSize = newValue
-                            }
-                    }
-                )
-                .coordinateSpace(name: "scroll")
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    currentScrollOffset = value
-                    updateProgress()
-                }
-            }
 
-            // Прогресс-бар
-            progressBarView
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            toolbarItems
-        }
-        .sheet(isPresented: $viewModel.showTextSizePanel) {
-            TextSizeSettingsPanel()
-        }
-        .onAppear {
-            viewModel.startReadingSession()
-        }
-        .onDisappear {
-            viewModel.endReadingSession()
-        }
-    }
-
-    // Правильная логика прогресса на основе скролла
-    private func updateProgress() {
-        guard scrollViewContentSize > 0, scrollViewVisibleSize > 0 else { return }
-        let denom = max(scrollViewContentSize - scrollViewVisibleSize, 1)
-        let scrollProgress = max(0, min(-currentScrollOffset / denom, 1.0))
-
-        // Обновляем прогресс через менеджер
-        viewModel.readingStatsManager.updateProgress(for: article.id, value: scrollProgress)
-    }
-
-    // MARK: - Subviews
-
-    private var articleImageView: some View {
-        Group {
-            if let imageName = article.image,
-               let uiImage = UIImage(named: imageName) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 250)
-                    .clipped()
-            } else {
-                Image("Logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 200)
-                    .background(Color.gray.opacity(0.1))
-            }
-        }
-    }
-    
-    private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
-    }
-
-    private var titleAndMetaView: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(article.localizedTitle(for: selectedLanguage))
-                .font(.title)
-                .bold()
-                .fixedSize(horizontal: false, vertical: true)
-
-            ArticleMetaView(article: article)
-        }
-        .padding(.horizontal)
-    }
-
-    private var contentView: some View {
-        Text(article.localizedContent(for: selectedLanguage))
-            .font(viewModel.currentFont)
-            .lineSpacing(6)
-            .multilineTextAlignment(.leading)
-            .padding(.horizontal)
-            .background(
-                GeometryReader { proxy in
-                    Color.clear.preference(
-                        key: ScrollOffsetPreferenceKey.self,
-                        value: proxy.frame(in: .named("scroll")).minY
-                    )
-                }
-            )
-    }
-
-    private var ratingView: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(viewModel.t("article_rate", lang: selectedLanguage))
-                .font(.headline)
-
-            StarRatingView(rating: $viewModel.rating)
-        }
-        .padding(.horizontal)
-        .padding(.vertical)
-    }
-
-    private var recommendationsView: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(viewModel.t("article_recommendations", lang: selectedLanguage))
-
-                .font(.title2)
-                .bold()
-                .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
-                    ForEach(viewModel.recommendedArticles.prefix(5)) { recommendedArticle in
-                        NavigationLink {
-                            ArticleDetailView(
-                                article: recommendedArticle,
-                                allArticles: viewModel.allArticles,
-                                appContainer: appContainer
-                            )
-                        } label: {
-                            ArticleCompactCard(
-                                viewModel: appContainer.makeArticleRowViewModel(article: recommendedArticle)
-                            )
-                            .frame(width: 280)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
-        .padding(.vertical)
-    }
-
-    private var progressBarView: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Text(t("article_reading_progress"))
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                Spacer()
-                Text("\(Int(viewModel.progress * 100))%")
-                    .font(.subheadline)
+                // MARK: - Title
+                Text(viewModel.article.localizedTitle(for: selectedLanguage))
+                    .font(.title2)
                     .bold()
-                    .foregroundColor(.blue)
-            }
-            .padding(.horizontal)
+                    .padding(.horizontal)
 
-            ZStack(alignment: .leading) {
-                Capsule()
-                    .frame(height: 6)
-                    .foregroundColor(.gray.opacity(0.2))
-
-                Capsule()
-                    .frame(
-                        width: max((UIScreen.main.bounds.width - 32) * CGFloat(viewModel.progress), 6),
-                        height: 6
+                // MARK: - Tags
+                if !viewModel.article.tags.isEmpty {
+                    TagsView(
+                        tags: viewModel.article.tags,
+                        language: selectedLanguage,
+                        localizationManager: localizationManager
                     )
-                    .foregroundColor(.blue)
-                    .animation(.spring(response: 0.5), value: viewModel.progress)
+                    .padding(.horizontal)
+                }
+
+                // MARK: - Content
+                Text(viewModel.article.localizedContent(for: selectedLanguage))
+                    .font(viewModel.currentFont)
+                    .padding(.horizontal)
+
+                // MARK: - Related Articles
+                let related = viewModel.recommendedArticles
+                if !related.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(t("related_articles"))
+                            .font(.headline)
+                            .padding(.horizontal)
+
+                        ForEach(related) { relatedArticle in
+                            NavigationLink {
+                                // create a new detail VM via viewModel helper (DI-friendly)
+                                ArticleDetailView(
+                                    viewModel: viewModel.createChildViewModel(for: relatedArticle),
+                                    localizationManager: localizationManager,
+                                    articleRowFactory: articleRowFactory
+                                )
+                            } label: {
+                                ArticleRow(viewModel: articleRowFactory(relatedArticle))
+                                    .padding(.horizontal)
+                            }
+                        }
+                    }
+                }
+
+                Spacer(minLength: 32)
             }
-            .padding(.horizontal)
-            .padding(.bottom, 8)
+            .padding(.vertical, 8)
+        }
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            // Вызываем метод onAppear напрямую (не-async)
+            viewModel.onAppear()
         }
     }
 
-    private var toolbarItems: some ToolbarContent {
-        ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button {
-                viewModel.toggleFavorite()
-            } label: {
-                Image(systemName: viewModel.isFavorite ? "star.fill" : "star")
-                    .foregroundColor(viewModel.isFavorite ? .yellow : .primary)
-            }
-
-            Button {
-                viewModel.showTextSizePanel.toggle()
-            } label: {
-                Image(systemName: "textformat.size")
-            }
-
-            ShareLink(
-                item: viewModel.shareContent(selectedLanguage: selectedLanguage),
-                preview: SharePreview(article.localizedTitle(for: selectedLanguage))
-            ) {
-                Image(systemName: "square.and.arrow.up")
-            }
-        }
+    private func t(_ key: String) -> String {
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
-// Ключ для отслеживания скролла
-private struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
+// MARK: - Convenience Initializer for backward compatibility
+extension ArticleDetailView {
+    init(
+        article: Article,
+        allArticles: [Article],
+        appContainer: AppContainer
+    ) {
+        self.init(
+            viewModel: appContainer.makeArticleDetailViewModel(article: article, allArticles: allArticles),
+            localizationManager: appContainer.localizationManager,
+            articleRowFactory: appContainer.makeArticleRowViewModel
+        )
     }
+}
+
+// MARK: - Preview
+#Preview {
+    let container = AppContainer.previewMock()
+    let article = Article.sampleArticle
+    return ArticleDetailView(
+        viewModel: container.makeArticleDetailViewModel(article: article, allArticles: Article.sampleArticles),
+        localizationManager: container.localizationManager,
+        articleRowFactory: container.makeArticleRowViewModel
+    )
 }

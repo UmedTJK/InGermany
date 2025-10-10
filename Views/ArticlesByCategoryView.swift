@@ -9,6 +9,7 @@ import SwiftUI
 struct ArticlesByCategoryView: View {
     let category: Category
     let articles: [Article]
+
     @EnvironmentObject private var appContainer: AppContainer
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
@@ -16,14 +17,15 @@ struct ArticlesByCategoryView: View {
         List(filteredArticles) { article in
             NavigationLink {
                 ArticleDetailView(
-                    article: article, // Убрать viewModel параметр
-                    allArticles: articles,
-                    appContainer: appContainer // Добавить
+                    viewModel: appContainer.makeArticleDetailViewModel(
+                        article: article,
+                        allArticles: articles
+                    ),
+                    localizationManager: appContainer.localizationManager,
+                    articleRowFactory: appContainer.makeArticleRowViewModel
                 )
             } label: {
-                ArticleRow(
-                    viewModel: appContainer.makeArticleRowViewModel(article: article)
-                )
+                ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
             }
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))

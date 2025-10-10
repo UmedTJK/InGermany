@@ -229,6 +229,7 @@
 │   │   ├── ReadingProgressBar.swift
 │   │   ├── StarRatingView.swift
 │   │   ├── TagFilterView.swift
+│   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
@@ -258,4 +259,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-57 directories, 202 files
+57 directories, 203 files

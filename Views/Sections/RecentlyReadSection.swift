@@ -3,11 +3,6 @@
 //  InGermany
 //
 
-//
-//  RecentlyReadSection.swift
-//  InGermany
-//
-
 import SwiftUI
 
 struct RecentlyReadSection: View {
@@ -31,12 +26,17 @@ struct RecentlyReadSection: View {
                         ForEach(recentArticles) { article in
                             NavigationLink {
                                 ArticleDetailView(
-                                    article: article,
-                                    allArticles: articles,
-                                    appContainer: appContainer
+                                    viewModel: appContainer.makeArticleDetailViewModel(
+                                        article: article,
+                                        allArticles: articles
+                                    ),
+                                    localizationManager: appContainer.localizationManager,
+                                    articleRowFactory: appContainer.makeArticleRowViewModel
                                 )
                             } label: {
-                                ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                                ArticleCompactCard(
+                                    viewModel: appContainer.makeArticleRowViewModel(article: article)
+                                )
                             }
                         }
                     }
@@ -52,4 +52,3 @@ struct RecentlyReadSection: View {
         appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
-

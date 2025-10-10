@@ -1,3 +1,4 @@
+// FavoritesView.swift
 import SwiftUI
 
 /// Displays the user's list of favorite articles with search and navigation.
@@ -7,17 +8,10 @@ struct FavoritesView: View {
     @State private var searchText = ""
     @EnvironmentObject private var appContainer: AppContainer
 
-    /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeFavoritesViewModel())
-    }
-
-    /// For preview and testing
     init(viewModel: FavoritesViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
-    /// Filters the favorites based on the search text and selected language.
     private var filteredFavoriteArticles: [Article] {
         let favoriteArticles = viewModel.favoriteArticles
         if searchText.isEmpty {
@@ -63,15 +57,16 @@ struct FavoritesView: View {
         }
     }
 
-    // MARK: - Favorites List
-
     private var favoritesList: some View {
         List(filteredFavoriteArticles) { article in
             NavigationLink {
                 ArticleDetailView(
-                    article: article,
-                    allArticles: viewModel.allArticles,
-                    appContainer: appContainer
+                    viewModel: appContainer.makeArticleDetailViewModel(
+                        article: article,
+                        allArticles: viewModel.allArticles
+                    ),
+                    localizationManager: appContainer.localizationManager,
+                    articleRowFactory: appContainer.makeArticleRowViewModel
                 )
             } label: {
                 ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
@@ -88,8 +83,6 @@ struct FavoritesView: View {
         default: return .gray
         }
     }
-
-    // MARK: - Localized Text Shortcut
 
     private func t(_ key: String) -> String {
         appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)

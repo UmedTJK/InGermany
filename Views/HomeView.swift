@@ -78,9 +78,12 @@ struct HomeView: View {
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {
                     ArticleDetailView(
-                        article: article,
-                        allArticles: viewModel.articles,
-                        appContainer: appContainer
+                        viewModel: appContainer.makeArticleDetailViewModel(
+                            article: article,
+                            allArticles: viewModel.articles
+                        ),
+                        localizationManager: appContainer.localizationManager,
+                        articleRowFactory: appContainer.makeArticleRowViewModel
                     )
                 }
             }

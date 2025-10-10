@@ -1,3 +1,8 @@
+//
+//  ArticleDetailViewModel.swift
+//  InGermany
+//
+
 import SwiftUI
 
 @MainActor
@@ -10,7 +15,8 @@ final class ArticleDetailViewModel: ObservableObject {
     @Published var rating: Int
     @Published var isFavorite: Bool
 
-    private let article: Article
+    // Сделал не-private, чтобы View мог читать данные статьи
+    let article: Article
     let allArticles: [Article]
 
     let localizationManager: LocalizationManager
@@ -51,10 +57,12 @@ final class ArticleDetailViewModel: ObservableObject {
         readingStatsManager.progressForArticle(article.id)
     }
 
-    var relatedArticles: [Article] {
-        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(3))
+    /// Возвращает связанные статьи (без текущей)
+    func relatedArticles(limit: Int) -> [Article] {
+        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(limit))
     }
 
+    /// Случайные рекомендации
     var recommendedArticles: [Article] {
         Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.shuffled().prefix(4))
     }
@@ -75,8 +83,9 @@ final class ArticleDetailViewModel: ObservableObject {
 
     func handleScrollOffset(_ value: CGFloat) {
         scrollOffset = -value
-        let progress = max(0, min(scrollOffset / max(contentHeight - viewHeight, 1), 1))
-        readingStatsManager.updateProgress(for: article.id, value: progress)
+        let denom = max(contentHeight - viewHeight, 1)
+        let progressVal = max(0, min(scrollOffset / denom, 1))
+        readingStatsManager.updateProgress(for: article.id, value: progressVal)
     }
 
     func startReadingSession() {
@@ -101,5 +110,26 @@ final class ArticleDetailViewModel: ObservableObject {
         \(t("Время чтения", lang: selectedLanguage)): \(formattedReadingTime)
         \(t("Опубликовано", lang: selectedLanguage)): \(articleFormatter.formattedCreatedDate(article, for: selectedLanguage))
         """
+    }
+
+    // MARK: - Missing helpers used by the View
+
+    /// Вызывается при появлении вью — стартуем сессию чтения
+    func onAppear() {
+        startReadingSession()
+    }
+
+    /// Создаёт child view model на основе текущих зависимостей — удобно для NavigationLink
+    func createChildViewModel(for article: Article) -> ArticleDetailViewModel {
+        ArticleDetailViewModel(
+            article: article,
+            allArticles: allArticles,
+            localizationManager: localizationManager,
+            textSizeManager: textSizeManager,
+            favoritesManager: favoritesManager,
+            ratingManager: ratingManager,
+            readingStatsManager: readingStatsManager,
+            articleFormatter: articleFormatter
+        )
     }
 }

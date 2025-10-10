@@ -37,12 +37,17 @@ struct FavoritesSection: View {
                         ForEach(favoriteArticles) { article in
                             NavigationLink {
                                 ArticleDetailView(
-                                    article: article,
-                                    allArticles: articles,
-                                    appContainer: appContainer
+                                    viewModel: appContainer.makeArticleDetailViewModel(
+                                        article: article,
+                                        allArticles: articles
+                                    ),
+                                    localizationManager: appContainer.localizationManager,
+                                    articleRowFactory: appContainer.makeArticleRowViewModel
                                 )
                             } label: {
-                                ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                                ArticleCompactCard(
+                                    viewModel: appContainer.makeArticleRowViewModel(article: article)
+                                )
                             }
                         }
                     }
