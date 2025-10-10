@@ -313,7 +313,18 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
         "Учёба": [
             "ru": "Учёба", "en": "Study", "de": "Studium",
             "tj": "Хондан", "fa": "تحصیل", "ar": "دراسة", "uk": "Навчання"
-        ]
+        ],
+        
+        "category_none": [
+            "ru": "Без категории",
+            "en": "No category",
+            "de": "Ohne Kategorie",
+            "tj": "Бе категория",
+            "fa": "بدون دسته‌بندی",
+            "ar": "بدون فئة",
+            "uk": "Без категорії"
+        ],
+
     ]
     
     private let sectionTranslations: [String: [String: String]] = [

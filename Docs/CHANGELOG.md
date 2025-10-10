@@ -1,3 +1,10 @@
+### Fixed
+- 🛠 Navigation in Categories flow:
+  - Migrated `CategoriesView` to `NavigationStack`
+  - Updated `ArticlesByCategoryView` to modern navigation API
+  - Ensured `Article` and `Category` conform to `Hashable` for stable navigation
+  - Fixed bug where articles were not clickable or closed immediately after opening
+
 ### v1.15.1 – 2025-10-10
 
 - ✨ enable global dark mode toggle via @AppStorage

@@ -38,7 +38,7 @@ class SearchViewModel: ObservableObject {
         self.categoriesRepo = categoriesRepo
         self.articlesRepo = articlesRepo
     }
-
+    
     /// Uses shared singletons for defaults.
     convenience init() {
         self.init(
@@ -58,7 +58,6 @@ class SearchViewModel: ObservableObject {
         if !searchText.isEmpty {
             let lowercased = searchText.lowercased()
             results = results.filter { article in
-                // 🔧 ИСПРАВЛЕНО: Все вызовы используют selectedLanguage
                 article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
                 article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
                 categoriesRepo.category(by: article.categoryId)?

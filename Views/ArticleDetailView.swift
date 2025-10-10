@@ -8,6 +8,7 @@ import SwiftUI
 struct ArticleDetailView: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
     
     // MARK: - Dependencies
     private let localizationManager: LocalizationManager
@@ -61,6 +62,11 @@ struct ArticleDetailView: View {
                                 .bold()
                                 .fixedSize(horizontal: false, vertical: true)
                             
+                            // ✅ Категория с фолбэком
+                            Text(viewModel.categoryName(for: selectedLanguage))
+                                .font(viewModel.textSizeManager.captionFont)
+                                .foregroundColor(.blue)
+                            
                             // Мета-информация
                             HStack {
                                 Text("\(t("reading_time")): \(viewModel.articleFormatter.readingTime(viewModel.article, for: selectedLanguage)) \(t("min"))")
@@ -111,7 +117,7 @@ struct ArticleDetailView: View {
                         .padding(.horizontal)
                         .padding(.vertical)
                         
-                        // Рекомендуемые статьи - УПРОЩЕННАЯ ВЕРСИЯ (показываются сразу)
+                        // Рекомендуемые статьи
                         if !relatedArticles.isEmpty {
                             VStack(alignment: .leading, spacing: 16) {
                                 Text(t("you_may_like"))
@@ -128,6 +134,7 @@ struct ArticleDetailView: View {
                                             )
                                         } label: {
                                             ArticleRow(viewModel: articleRowFactory(relatedArticle))
+                                                .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard)
                                         }
                                         .buttonStyle(PlainButtonStyle())
                                     }

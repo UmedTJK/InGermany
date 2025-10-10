@@ -15,7 +15,7 @@ final class ArticleDetailViewModel: ObservableObject {
     @Published var rating: Int
     @Published var isFavorite: Bool
 
-    // Сделал не-private, чтобы View мог читать данные статьи
+    // Оставляем открытым для чтения во View
     let article: Article
     let allArticles: [Article]
 
@@ -25,8 +25,11 @@ final class ArticleDetailViewModel: ObservableObject {
     let ratingManager: RatingManager
     let readingStatsManager: ReadingStatsManaging
     let articleFormatter: ArticleFormatter
-    
-    // ✅ НОВЫЙ dependency
+
+    // Репозиторий категорий — для разрешения categoryId → Category
+    private let categoriesRepository: CategoriesRepositoryProtocol
+
+    // Сервис шаринга
     private let shareService: ShareServiceProtocol
 
     init(
@@ -38,6 +41,7 @@ final class ArticleDetailViewModel: ObservableObject {
         ratingManager: RatingManager,
         readingStatsManager: ReadingStatsManaging,
         articleFormatter: ArticleFormatter,
+        categoriesRepository: CategoriesRepositoryProtocol,
         shareService: ShareServiceProtocol
     ) {
         self.article = article
@@ -48,30 +52,47 @@ final class ArticleDetailViewModel: ObservableObject {
         self.ratingManager = ratingManager
         self.readingStatsManager = readingStatsManager
         self.articleFormatter = articleFormatter
-        self.shareService = shareService  // ✅ Сохраняем новый dependency
+        self.categoriesRepository = categoriesRepository
+        self.shareService = shareService
 
         self.rating = ratingManager.getRating(for: article.id)
         self.isFavorite = favoritesManager.isFavorite(article.id)
     }
 
+    // MARK: - Progress
 
     var progress: CGFloat {
         readingStatsManager.progressForArticle(article.id)
     }
 
+    // MARK: - Related
+
     /// Возвращает связанные статьи (без текущей)
     func relatedArticles(limit: Int) -> [Article] {
-        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.prefix(limit))
+        Array(
+            allArticles
+                .filter { $0.categoryId == article.categoryId && $0.id != article.id }
+                .prefix(limit)
+        )
     }
 
     /// Случайные рекомендации
     var recommendedArticles: [Article] {
-        Array(allArticles.filter { $0.categoryId == article.categoryId && $0.id != article.id }.shuffled().prefix(4))
+        Array(
+            allArticles
+                .filter { $0.categoryId == article.categoryId && $0.id != article.id }
+                .shuffled()
+                .prefix(4)
+        )
     }
+
+    // MARK: - Localization shortcut
 
     func t(_ key: String, lang: String) -> String {
         localizationManager.getTranslation(key: key, language: lang)
     }
+
+    // MARK: - Favorites & Rating
 
     func toggleFavorite() {
         favoritesManager.toggleFavorite(for: article.id)
@@ -82,6 +103,8 @@ final class ArticleDetailViewModel: ObservableObject {
         ratingManager.setRating(newRating, for: article.id)
         rating = newRating
     }
+
+    // MARK: - Reading progress
 
     func handleScrollOffset(_ value: CGFloat) {
         scrollOffset = -value
@@ -98,24 +121,30 @@ final class ArticleDetailViewModel: ObservableObject {
         readingStatsManager.endSession(articleId: article.id)
     }
 
-    // ✅ ОБНОВЛЯЕМ метод шаринга - используем ShareService
+    // MARK: - Share
+
     func shareContent(selectedLanguage: String) -> String {
-        return shareService.generatePlainText(article: article, selectedLanguage: selectedLanguage)
+        shareService.generatePlainText(article: article, selectedLanguage: selectedLanguage)
     }
-    
-    // ✅ НОВЫЙ метод для показа системного шаринга
+
     func showShareSheet(selectedLanguage: String) {
         shareService.showShareSheet(article: article, selectedLanguage: selectedLanguage)
     }
 
-    // MARK: - Missing helpers used by the View
+    // MARK: - Category (с фолбэком)
 
-    /// Вызывается при появлении вью — стартуем сессию чтения
-    func onAppear() {
-        startReadingSession()
+    /// Локализованное имя категории для заданного языка или «Без категории», если id не найден.
+    func categoryName(for language: String) -> String {
+        if let category = categoriesRepository.category(by: article.categoryId) {
+            return category.localizedName(for: language)
+        } else {
+            return localizationManager.getTranslation(key: "category_none", language: language)
+        }
     }
 
-    /// Создаёт child view model на основе текущих зависимостей — удобно для NavigationLink
+    // MARK: - Child VM
+
+    /// Создаёт дочернюю VM для перехода по NavigationLink
     func createChildViewModel(for article: Article) -> ArticleDetailViewModel {
         ArticleDetailViewModel(
             article: article,
@@ -126,8 +155,14 @@ final class ArticleDetailViewModel: ObservableObject {
             ratingManager: ratingManager,
             readingStatsManager: readingStatsManager,
             articleFormatter: articleFormatter,
+            categoriesRepository: categoriesRepository,
             shareService: shareService
         )
     }
-    
+
+    // MARK: - Lifecycle
+
+    func onAppear() {
+        startReadingSession()
+    }
 }
