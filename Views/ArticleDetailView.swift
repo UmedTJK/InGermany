@@ -9,8 +9,6 @@ struct ArticleDetailView: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    @State private var showRelatedArticles = false
-    
     // MARK: - Dependencies
     private let localizationManager: LocalizationManager
     private let articleRowFactory: (Article) -> ArticleRowViewModel
@@ -45,7 +43,7 @@ struct ArticleDetailView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 20) {
-                        // Изображение статьи - ИСПРАВЛЕННАЯ ВЕРСИЯ
+                        // Изображение статьи
                         if let imageName = viewModel.article.image,
                            let uiImage = UIImage(named: imageName, in: .main, with: nil) {
                             Image(uiImage: uiImage)
@@ -98,7 +96,7 @@ struct ArticleDetailView: View {
                                 }
                             )
                         
-                        // Рейтинг - ИСПРАВЛЕННЫЕ КЛЮЧИ ЛОКАЛИЗАЦИИ
+                        // Рейтинг
                         VStack(alignment: .leading, spacing: 12) {
                             Text(t("article_rate"))
                                 .font(viewModel.textSizeManager.headlineFont)
@@ -113,41 +111,30 @@ struct ArticleDetailView: View {
                         .padding(.horizontal)
                         .padding(.vertical)
                         
-                        // Рекомендуемые статьи - ИСПРАВЛЕННЫЕ КЛЮЧИ ЛОКАЛИЗАЦИИ
+                        // Рекомендуемые статьи - УПРОЩЕННАЯ ВЕРСИЯ (показываются сразу)
                         if !relatedArticles.isEmpty {
-                            VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Text(t("you_may_like"))
-                                        .font(viewModel.textSizeManager.headlineFont)
-                                    
-                                    Spacer()
-                                    
-                                    Button(showRelatedArticles ? t("hide") : t("show")) {
-                                        withAnimation(.easeInOut(duration: 0.3)) {
-                                            showRelatedArticles.toggle()
-                                        }
-                                    }
-                                    .font(viewModel.textSizeManager.captionFont)
-                                }
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text(t("you_may_like"))
+                                    .font(viewModel.textSizeManager.headlineFont)
+                                    .padding(.horizontal)
                                 
-                                if showRelatedArticles {
-                                    LazyVStack(spacing: 12) {
-                                        ForEach(relatedArticles) { relatedArticle in
-                                            NavigationLink {
-                                                ArticleDetailView(
-                                                    viewModel: viewModel.createChildViewModel(for: relatedArticle),
-                                                    localizationManager: localizationManager,
-                                                    articleRowFactory: articleRowFactory
-                                                )
-                                            } label: {
-                                                ArticleRow(viewModel: articleRowFactory(relatedArticle))
-                                            }
-                                            .buttonStyle(PlainButtonStyle())
+                                LazyVStack(spacing: 12) {
+                                    ForEach(relatedArticles) { relatedArticle in
+                                        NavigationLink {
+                                            ArticleDetailView(
+                                                viewModel: viewModel.createChildViewModel(for: relatedArticle),
+                                                localizationManager: localizationManager,
+                                                articleRowFactory: articleRowFactory
+                                            )
+                                        } label: {
+                                            ArticleRow(viewModel: articleRowFactory(relatedArticle))
                                         }
+                                        .buttonStyle(PlainButtonStyle())
                                     }
                                 }
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
+                            .padding(.vertical)
                         }
                         
                         Spacer(minLength: 50)
