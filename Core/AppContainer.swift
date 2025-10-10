@@ -55,7 +55,7 @@ final class AppContainer: ObservableObject {
         self.dataService = dataServiceInstance
 
         self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: dataServiceInstance)
-        self.categoriesRepo = categoriesRepo ?? DefaultCategoriesRepository.shared
+        self.categoriesRepo = categoriesRepo ?? CategoryManager.shared
 
         // ✅ Managers
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared

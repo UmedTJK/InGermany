@@ -39,6 +39,7 @@
 		AD459C1B2E98B7EF00F540F3 /* FontProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459C1A2E98B7E700F540F3 /* FontProviding.swift */; };
 		AD459C1D2E98BB2800F540F3 /* ShareServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459C1C2E98BB2500F540F3 /* ShareServiceProtocol.swift */; };
 		AD459C212E98BF5E00F540F3 /* ArticleFormatterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459C202E98BF5B00F540F3 /* ArticleFormatterProtocol.swift */; };
+		AD459C232E98EA3D00F540F3 /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459C222E98EA3B00F540F3 /* CategoryManager.swift */; };
 		AD5D36C92E96D4BD00DB63EF /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36C82E96D4BB00DB63EF /* CacheManager.swift */; };
 		AD5D36CB2E96DF3900DB63EF /* DateFormattingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36CA2E96DF3700DB63EF /* DateFormattingService.swift */; };
 		AD5D36CD2E96DF4A00DB63EF /* TextAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5D36CC2E96DF4900DB63EF /* TextAnalysisService.swift */; };
@@ -102,6 +103,7 @@
 		AD459C1A2E98B7E700F540F3 /* FontProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontProviding.swift; sourceTree = "<group>"; };
 		AD459C1C2E98BB2500F540F3 /* ShareServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareServiceProtocol.swift; sourceTree = "<group>"; };
 		AD459C202E98BF5B00F540F3 /* ArticleFormatterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleFormatterProtocol.swift; sourceTree = "<group>"; };
+		AD459C222E98EA3B00F540F3 /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
 		AD52FD452E8585B300CC9F61 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 		ADF339482E8850FA00AE4CBF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				AD459C222E98EA3B00F540F3 /* CategoryManager.swift */,
 				AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */,
 				AD5D36C82E96D4BB00DB63EF /* CacheManager.swift */,
 				ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */,
@@ -464,6 +467,7 @@
 				AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */,
 				AD459C212E98BF5E00F540F3 /* ArticleFormatterProtocol.swift in Sources */,
 				AD160DAE2E95290F009B49F2 /* ReadingProgressTrackerProtocol.swift in Sources */,
+				AD459C232E98EA3D00F540F3 /* CategoryManager.swift in Sources */,
 				AD2A65672E8FF0D1006A94DD /* Color+Hex.swift in Sources */,
 				AD2A65682E8FF0D1006A94DD /* Animations.swift in Sources */,
 				AD675BA82E93D85E007B0994 /* FavoritesManagingProtocol.swift in Sources */,

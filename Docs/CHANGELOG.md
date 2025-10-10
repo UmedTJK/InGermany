@@ -1,3 +1,10 @@
+
+echo "- COMPLETE ARCHITECTURE REFACTORING: All core issues resolved" >> Docs/CHANGELOG.md
+echo "- DI Perfection: Zero AppContainer.shared in ViewModels" >> Docs/CHANGELOG.md
+echo "- Offline-First: Multi-level caching system implemented" >> Docs/CHANGELOG.md
+git add Docs/CHANGELOG.md
+git commit -m "docs: update changelog with architecture milestone"
+
 ## [v1.14.1] - 2025-10-09
 
 ### 🛠 Изменения

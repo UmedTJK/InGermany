@@ -3,8 +3,6 @@
 //  InGermany
 //
 
-// ViewModels/ArticleDetailViewModel.swift - ОБНОВЛЕННАЯ ВЕРСИЯ
-
 import SwiftUI
 
 @MainActor
@@ -40,7 +38,7 @@ final class ArticleDetailViewModel: ObservableObject {
         ratingManager: RatingManager,
         readingStatsManager: ReadingStatsManaging,
         articleFormatter: ArticleFormatter,
-        shareService: ShareServiceProtocol  // ✅ НОВЫЙ параметр
+        shareService: ShareServiceProtocol
     ) {
         self.article = article
         self.allArticles = allArticles
@@ -56,8 +54,6 @@ final class ArticleDetailViewModel: ObservableObject {
         self.isFavorite = favoritesManager.isFavorite(article.id)
     }
 
-    // ✅ УДАЛЯЕМ UI-логику - теперь используем textSizeManager.bodyFont напрямую
-    // var currentFont: Font { ... } // УДАЛЕНО!
 
     var progress: CGFloat {
         readingStatsManager.progressForArticle(article.id)
@@ -130,7 +126,7 @@ final class ArticleDetailViewModel: ObservableObject {
             ratingManager: ratingManager,
             readingStatsManager: readingStatsManager,
             articleFormatter: articleFormatter,
-            shareService: shareService  // ✅ Передаем дальше
+            shareService: shareService
         )
     }
     
