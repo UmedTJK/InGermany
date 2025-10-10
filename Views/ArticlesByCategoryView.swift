@@ -3,32 +3,43 @@
 //  InGermany
 //
 
+//
+//  ArticlesByCategoryView.swift
+//  InGermany
+//
+
 import SwiftUI
 
-/// Displays a list of articles filtered by a specific category.
+/// Экран, отображающий список статей, относящихся к определённой категории.
 struct ArticlesByCategoryView: View {
     let category: Category
     let articles: [Article]
 
     @EnvironmentObject private var appContainer: AppContainer
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
 
     var body: some View {
         List(filteredArticles) { article in
-            NavigationLink {
-                ArticleDetailView(
-                    viewModel: appContainer.makeArticleDetailViewModel(
-                        article: article,
-                        allArticles: articles
-                    ),
-                    localizationManager: appContainer.localizationManager,
-                    articleRowFactory: appContainer.makeArticleRowViewModel
+            NavigationLink(value: article) {
+                ArticleRow(
+                    viewModel: appContainer.makeArticleRowViewModel(article: article)
                 )
-            } label: {
-                ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard)
             }
         }
         .navigationTitle(category.localizedName(for: selectedLanguage))
+        // ✅ Навигация по Article
+        .navigationDestination(for: Article.self) { article in
+            ArticleDetailView(
+                viewModel: appContainer.makeArticleDetailViewModel(
+                    article: article,
+                    allArticles: articles
+                ),
+                localizationManager: appContainer.localizationManager,
+                articleRowFactory: appContainer.makeArticleRowViewModel
+            )
+        }
     }
 
     private var filteredArticles: [Article] {
@@ -36,16 +47,18 @@ struct ArticlesByCategoryView: View {
     }
 }
 
-// MARK: - Preview
 #Preview {
-    ArticlesByCategoryView(
-        category: Category(
-            id: "11111111-1111-1111-1111-aaaaaaaaaaaa",
-            name: ["ru": "Финансы", "en": "Finance", "de": "Finanzen", "tj": "Молия"],
-            icon: "banknote",
-            colorHex: "#4A90E2"
-        ),
-        articles: Article.sampleArticles
+    let container = AppContainer.shared
+    let sampleCategory = Category(
+        id: "finance",
+        name: ["ru": "Финансы", "en": "Finance"],
+        icon: "banknote",
+        colorHex: "#008000"
     )
-    .environmentObject(AppContainer.previewMock())
+    let sampleArticles = Article.sampleArticles
+
+    return NavigationStack {
+        ArticlesByCategoryView(category: sampleCategory, articles: sampleArticles)
+            .environmentObject(container)
+    }
 }

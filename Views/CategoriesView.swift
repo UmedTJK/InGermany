@@ -17,16 +17,10 @@ struct CategoriesView: View {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
-    /// Builds a navigation list of categories leading to `ArticlesByCategoryView`.
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List(viewModel.categories) { category in
-                NavigationLink {
-                    ArticlesByCategoryView(
-                        category: category,
-                        articles: viewModel.articles(for: category.id)
-                    )
-                } label: {
+                NavigationLink(value: category) {
                     HStack(spacing: 12) {
                         ZStack {
                             Circle()
@@ -47,6 +41,14 @@ struct CategoriesView: View {
             .listStyle(PlainListStyle())
             .task {
                 await viewModel.load()
+            }
+            // ✅ новый способ навигации: при клике по категории → список статей
+            .navigationDestination(for: Category.self) { category in
+                ArticlesByCategoryView(
+                    category: category,
+                    articles: viewModel.articles(for: category.id)
+                )
+                .environmentObject(appContainer)
             }
         }
     }
