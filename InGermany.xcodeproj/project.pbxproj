@@ -13,6 +13,12 @@
 		AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */; };
 		AD160DB42E955DF1009B49F2 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */; };
 		AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */; };
+		AD16243B2E9AD9D700E6E14B /* ShimmerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD16243A2E9AD9D600E6E14B /* ShimmerEffect.swift */; };
+		AD16243D2E9ADA0300E6E14B /* ShakeEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD16243C2E9ADA0100E6E14B /* ShakeEffect.swift */; };
+		AD16243F2E9ADA4600E6E14B /* ScaleOnTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */; };
+		AD1624412E9ADA7300E6E14B /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1624402E9ADA7200E6E14B /* LoadingView.swift */; };
+		AD1624432E9ADA9900E6E14B /* Accessibility+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */; };
+		AD1624452E9ADB4F00E6E14B /* UIUTILS_GUIDE.md in Sources */ = {isa = PBXBuildFile; fileRef = AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */; };
 		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D02E8FAD42006A94DD /* git_snapshot.md */; };
 		AD2A64D32E8FAD42006A94DD /* project_tree.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D12E8FAD42006A94DD /* project_tree.md */; };
@@ -80,6 +86,12 @@
 		AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManagerProtocol.swift; sourceTree = "<group>"; };
 		AD160DB32E955DF0009B49F2 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Environment+ScreenSize.swift"; sourceTree = "<group>"; };
+		AD16243A2E9AD9D600E6E14B /* ShimmerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerEffect.swift; sourceTree = "<group>"; };
+		AD16243C2E9ADA0100E6E14B /* ShakeEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeEffect.swift; sourceTree = "<group>"; };
+		AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleOnTap.swift; sourceTree = "<group>"; };
+		AD1624402E9ADA7200E6E14B /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Accessibility+Extensions.swift"; sourceTree = "<group>"; };
+		AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = UIUTILS_GUIDE.md; sourceTree = "<group>"; };
 		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD2A64D02E8FAD42006A94DD /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
 		AD2A64D12E8FAD42006A94DD /* project_tree.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = project_tree.md; sourceTree = "<group>"; };
@@ -210,6 +222,11 @@
 		AD2A65652E8FF0D1006A94DD /* UIUtils */ = {
 			isa = PBXGroup;
 			children = (
+				AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */,
+				AD1624402E9ADA7200E6E14B /* LoadingView.swift */,
+				AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */,
+				AD16243C2E9ADA0100E6E14B /* ShakeEffect.swift */,
+				AD16243A2E9AD9D600E6E14B /* ShimmerEffect.swift */,
 				AD459D012E99692900F540F3 /* CardStyle.swift */,
 				AD459A642E97972A00F540F3 /* ReadingTimeCalculator.swift */,
 				AD160DB52E955F90009B49F2 /* Environment+ScreenSize.swift */,
@@ -227,6 +244,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */,
 				AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */,
 				AD52FD452E8585B300CC9F61 /* CHANGELOG.md */,
 				ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */,
@@ -489,12 +507,18 @@
 				ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */,
 				AD5D36CB2E96DF3900DB63EF /* DateFormattingService.swift in Sources */,
 				ADF3394A2E8850FA00AE4CBF /* RatingManager.swift in Sources */,
+				AD16243B2E9AD9D700E6E14B /* ShimmerEffect.swift in Sources */,
 				ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */,
 				ADF3394E2E8850FA00AE4CBF /* ReadingHistoryManager.swift in Sources */,
 				AD5D36C92E96D4BD00DB63EF /* CacheManager.swift in Sources */,
 				AD459C1D2E98BB2800F540F3 /* ShareServiceProtocol.swift in Sources */,
+				AD16243F2E9ADA4600E6E14B /* ScaleOnTap.swift in Sources */,
+				AD1624412E9ADA7300E6E14B /* LoadingView.swift in Sources */,
+				AD16243D2E9ADA0300E6E14B /* ShakeEffect.swift in Sources */,
 				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
+				AD1624452E9ADB4F00E6E14B /* UIUTILS_GUIDE.md in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
+				AD1624432E9ADA9900E6E14B /* Accessibility+Extensions.swift in Sources */,
 				AD459D022E99692C00F540F3 /* CardStyle.swift in Sources */,
 				AD5D36CF2E96DFAA00DB63EF /* ArticleFormatter.swift in Sources */,
 				AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */,
