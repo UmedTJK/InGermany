@@ -14,6 +14,7 @@
 │   ├── CLEAN_CODE_CHECKLIST.md
 │   ├── Git_Mini_Guide.md
 │   ├── PROMPTS_FOR_AI_AGENTS.md
+│   ├── README.md
 │   ├── UIUTILS_GUIDE.md
 │   ├── di_refactoring_progress.md
 │   ├── git_snapshot.md
@@ -220,4 +221,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-52 directories, 169 files
+52 directories, 170 files
