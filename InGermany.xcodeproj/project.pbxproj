@@ -92,6 +92,7 @@
 		AD1624402E9ADA7200E6E14B /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Accessibility+Extensions.swift"; sourceTree = "<group>"; };
 		AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = UIUTILS_GUIDE.md; sourceTree = "<group>"; };
+		AD1626002E9ADD3400E6E14B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD2A64D02E8FAD42006A94DD /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
 		AD2A64D12E8FAD42006A94DD /* project_tree.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = project_tree.md; sourceTree = "<group>"; };
@@ -146,7 +147,33 @@
 		ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AD16260C2E9AE04D00E6E14B /* Exceptions for "screenshots" folder in "InGermany" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				aboutView.png,
+				articlesByCategoryView.png,
+				categoriesView.png,
+				detail.png,
+				FavoritesView.png,
+				home.png,
+				map.png,
+				SearchView.png,
+				settings.png,
+			);
+			target = AD8552912E75ABEC003D3826 /* InGermany */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		AD1626022E9ADDD900E6E14B /* screenshots */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AD16260C2E9AE04D00E6E14B /* Exceptions for "screenshots" folder in "InGermany" target */,
+			);
+			path = screenshots;
+			sourceTree = "<group>";
+		};
 		AD2A63B12E8C1AE4006A94DD /* ViewModels */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ViewModels;
@@ -244,6 +271,8 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD1626022E9ADDD900E6E14B /* screenshots */,
+				AD1626002E9ADD3400E6E14B /* README.md */,
 				AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */,
 				AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */,
 				AD52FD452E8585B300CC9F61 /* CHANGELOG.md */,
@@ -375,6 +404,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				AD1626022E9ADDD900E6E14B /* screenshots */,
 				AD2A63B12E8C1AE4006A94DD /* ViewModels */,
 				AD52FCF22E84765A00CC9F61 /* Images */,
 				AD8552942E75ABEC003D3826 /* InGermany */,
