@@ -7,7 +7,7 @@ import SwiftUI
 
 @main
 struct InGermanyApp: App {
-    @StateObject private var appContainer = AppContainer() // ⬅️ убрали .shared
+    @StateObject private var appContainer = AppContainer() // ⬅️ DI контейнер
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @Environment(\.scenePhase) private var scenePhase
 
@@ -23,9 +23,9 @@ struct InGermanyApp: App {
                 .environmentObject(appContainer.readingStatsManager)
                 .preferredColorScheme(isDarkMode ? .dark : .light)
                 .environment(\.screenSize, UIScreen.main.bounds.size)
-                .task {
-                    // 🔹 Асинхронный preload — UI не блокируется
-                    await appContainer.bootstrap()
+                .onAppear {
+                    // 🔹 Неблокирующий preload — UI открывается сразу
+                    appContainer.bootstrap()
                 }
         }
     }

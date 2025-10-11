@@ -9,38 +9,35 @@ import Foundation
 /// The main dependency injection container for the app.
 @MainActor
 final class AppContainer: ObservableObject {
-    // ❌ Убираем .shared — DI должен работать через @StateObject в InGermanyApp
-    // static let shared = AppContainer()
-
     // MARK: - Core Repositories
     let articlesRepo: ArticlesRepositoryProtocol
     let categoriesRepo: CategoriesRepositoryProtocol
-
+    
     // MARK: - Managers
     let favoritesManager: FavoritesManager
     let ratingManager: RatingManager
     let textSizeManager: TextSizeManager
     let localizationManager: LocalizationManager
-
+    
     /// Конкретный экземпляр для SwiftUI
     let readingStatsManager: ReadingStatsManager
     /// Доступ через протокол (для ViewModel)
     var readingStatsService: ReadingStatsManaging { readingStatsManager }
-
+    
     private let dateFormattingService = DateFormattingService.shared
     private let textAnalysisService = TextAnalysisService.shared
-
+    
     // MARK: - Services
     let dataService: DataService
     private let articleFormatter: ArticleFormatter
     
-    // ✅ НОВЫЙ СЕРВИС
+    // ✅ ShareService
     private let shareService: ShareService
-
+    
     func makeArticleFormatter() -> ArticleFormatter {
         return articleFormatter
     }
-
+    
     init(
         articlesRepo: ArticlesRepositoryProtocol? = nil,
         categoriesRepo: CategoriesRepositoryProtocol? = nil,
@@ -54,10 +51,10 @@ final class AppContainer: ObservableObject {
         // ✅ Services & Repos
         let dataServiceInstance = dataService ?? DataService.shared
         self.dataService = dataServiceInstance
-
+        
         self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: dataServiceInstance)
         self.categoriesRepo = categoriesRepo ?? CategoryManager.shared
-
+        
         // ✅ Managers
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared
         self.ratingManager = ratingManager ?? RatingManager.shared
@@ -68,15 +65,15 @@ final class AppContainer: ObservableObject {
         // ✅ Formatters & Services
         self.articleFormatter = ArticleFormatter()
         
-        // ✅ НОВЫЙ ShareService
+        // ✅ ShareService
         self.shareService = ShareService(
             articleFormatter: articleFormatter,
             localizationManager: self.localizationManager
         )
     }
-
+    
     // MARK: - ViewModel Factory Methods
-
+    
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesManager,
@@ -85,7 +82,7 @@ final class AppContainer: ObservableObject {
             articlesRepo: articlesRepo
         )
     }
-
+    
     func makeSearchViewModel() -> SearchViewModel {
         SearchViewModel(
             favoritesManager: favoritesManager,
@@ -93,7 +90,7 @@ final class AppContainer: ObservableObject {
             articlesRepo: articlesRepo
         )
     }
-
+    
     func makeCategoriesViewModel() -> CategoriesViewModel {
         CategoriesViewModel(
             categoriesRepo: categoriesRepo,
@@ -101,21 +98,21 @@ final class AppContainer: ObservableObject {
             favoritesManager: favoritesManager
         )
     }
-
+    
     func makeFavoritesViewModel() -> FavoritesViewModel {
         FavoritesViewModel(
             favoritesManager: favoritesManager,
             articlesRepo: articlesRepo
         )
     }
-
+    
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(
             localizationManager: localizationManager,
             statsManager: readingStatsService
         )
     }
-
+    
     func makeArticleDetailViewModel(article: Article, allArticles: [Article]) -> ArticleDetailViewModel {
         ArticleDetailViewModel(
             article: article,
@@ -130,11 +127,11 @@ final class AppContainer: ObservableObject {
             shareService: shareService
         )
     }
-
+    
     func makeAboutViewModel() -> AboutViewModel {
         AboutViewModel()
     }
-
+    
     func makeArticleRowViewModel(article: Article) -> ArticleRowViewModel {
         ArticleRowViewModel(
             article: article,
@@ -146,24 +143,23 @@ final class AppContainer: ObservableObject {
             articleFormatter: articleFormatter
         )
     }
-
+    
     func makeArticleCompactCardViewModel(article: Article) -> ArticleRowViewModel {
         makeArticleRowViewModel(article: article)
     }
-
+    
     func makeArticleCardViewModel(article: Article) -> ArticleRowViewModel {
         makeArticleRowViewModel(article: article)
     }
-
+    
     func makeLocationsViewModel() -> LocationsViewModel {
         LocationsViewModel(dataService: dataService)
     }
-
+    
     func makePDFViewerViewModel() -> PDFViewerViewModel {
         PDFViewerViewModel(localizationManager: localizationManager)
     }
     
-    // ✅ НОВЫЙ метод для получения ShareService
     func makeShareService() -> ShareServiceProtocol {
         return shareService
     }
@@ -177,9 +173,9 @@ final class AppContainer: ObservableObject {
             }
         )
     }
-
+    
     // MARK: - Global Environment Injection
-
+    
     func provideEnvironmentObjects() -> some View {
         EmptyView()
             .environmentObject(self)
@@ -189,21 +185,26 @@ final class AppContainer: ObservableObject {
             .environmentObject(ratingManager)
             .environmentObject(readingStatsManager)
     }
-
+    
     // MARK: - Clear All Data (for testing)
-
+    
     func clearAllData() {
         favoritesManager.clearForTesting()
         ratingManager.clearForTesting()
         readingStatsManager.clearHistory()
     }
-
-    // MARK: - Bootstrap (async preload)
-    func bootstrap() async {
-        async let articles = dataService.loadArticles()
-        async let categories = dataService.loadCategories()
-        async let locations = dataService.loadLocations()
-        _ = await (articles, categories, locations)
+    
+    // MARK: - Bootstrap (non-blocking preload)
+    func bootstrap() {
+        // ✅ прогреваем словарь локализаций (убирает лаг на первом t(_:))
+        localizationManager.preload()
+        
+        // ✅ запускаем подгрузку данных в фоне
+        Task.detached(priority: .background) {
+            _ = await self.dataService.loadArticles()
+            _ = await self.dataService.loadCategories()
+            _ = await self.dataService.loadLocations()
+        }
     }
 }
 

@@ -1,3 +1,39 @@
+# 📖 CHANGELOG
+
+## [Unreleased]
+
+### 🚀 Performance
+- **perf(startup):** Переписан `DataService` → убраны блокирующие вызовы `Data(contentsOf:)`, добавлены `AsyncStream` для подписки на данные и быстрые `getCached…()` методы для мгновенного UI.
+- **perf(startup):** Обновлён `AppContainer.bootstrap()` → теперь запускает preload данных в фоне через `Task.detached` (UI не блокируется).
+- **perf(startup):** В `InGermanyApp` убран `await` при вызове `bootstrap()`, вместо этого preload вызывается неблокирующе в `.onAppear`.
+- **perf(startup):** В `ContentView` добавлен вызов `appContainer.bootstrap()` в `.onAppear` как запасной запуск; все вкладки обёрнуты в `LazyView` для ленивой инициализации.
+- **perf(startup):** В `LocalizationManager` добавлен метод `preload()` для подготовки словарей; вызов интегрирован в `AppContainer.bootstrap()` → убран лаг на первом `t(_:)`.
+
+---
+
+## [1.3.1] – 2025-10-10
+- fix(navigation): migrate Categories & ArticlesByCategory to NavigationStack
+- docs(tree): обновлён Docs/project_tree.md
+
+## [1.4.0] - 2025-10-11
+### 🚀 Perf / i18n Optimization
+- ⚡️ Optimized app startup: moved JSON/repository bootstrap to async tasks → UI now loads instantly
+- 🧩 Introduced `LazyView` for TabView (Views are created only on first access)
+- 🗂 Removed `AppContainer.shared`, full migration to `EnvironmentObject`-based DI
+- 🌐 Internationalization:
+  - Removed hardcoded UI strings in `MapView`, `AboutView`, `FavoritesView`, `SettingsView`
+  - Added missing localization keys:
+    - `map_title`, `map_my_location`, `map_refresh`, `map_loading`
+    - `app_name`, `about_build_label`
+    - `settings_card_style_title`, `settings_card_style_picker`, `settings_language_picker`
+- 🔧 Updated all Previews to use `AppContainer.previewMock()`
+
+### ✅ Notes
+- Verified with Instruments: startup time reduced from ~10s ⏩ ~1s
+- Verified localization for RU / EN / DE  
+- No compiler warnings on Xcode 15 / Swift 5.9
+
+
 ### v1.13.1 – 2025-10-10
 
 - fix: navigation flow in Categories → Articles → Detail
