@@ -72,6 +72,10 @@ open InGermany.xcodeproj
 * [ ] Публикация в **App Store**
 
 
+## 📲 Загрузка
+
+Скоро доступно в [App Store](https://apps.apple.com/app/idXXXXXXXXX) 🎉
+_(ссылка будет обновлена после публикации приложения)_
 
 ## 👨‍💻 Автор
 
