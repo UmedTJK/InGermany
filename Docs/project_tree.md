@@ -22,7 +22,17 @@
 │   │   └── pre-push.template
 │   ├── locations_README.md
 │   ├── next_steps.md
-│   └── project_tree.md
+│   ├── project_tree.md
+│   └── screenshots
+│       ├── FavoritesView.png
+│       ├── SearchView.png
+│       ├── aboutView.png
+│       ├── articlesByCategoryView.png
+│       ├── categoriesView.png
+│       ├── detail.png
+│       ├── home.png
+│       ├── map.png
+│       └── settings.png
 ├── Formatters
 ├── InGermany
 │   ├── Assets.xcassets
@@ -124,13 +134,6 @@
 │   ├── guide.pdf
 │   ├── insurance.pdf
 │   └── locations.json
-├── Screenshots
-│   ├── article.png
-│   ├── categories.png
-│   ├── favorites.png
-│   ├── home.png
-│   ├── search.png
-│   └── settings.png
 ├── Services
 │   ├── ArticleFormatter.swift
 │   ├── ArticlesRepositoryImpl.swift
@@ -221,4 +224,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-52 directories, 170 files
+52 directories, 173 files
