@@ -81,12 +81,9 @@
 │   ├── FavoritesManager.swift
 │   ├── ProtocolConformances.swift
 │   ├── RatingManager.swift
-│   ├── ReadingHistoryManager.swift
 │   ├── ReadingProgressHelper.swift
-│   ├── ReadingProgressTracker.swift
 │   ├── ReadingStatsManager.swift
 │   ├── ReadingTimeCalculator.swift
-│   ├── ReadingTimeTracker.swift
 │   └── TextSizeManager.swift
 ├── Models
 │   ├── Article.swift
@@ -224,4 +221,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-52 directories, 173 files
+52 directories, 170 files
