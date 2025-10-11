@@ -2,8 +2,6 @@
 //  MapView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 15.09.25.
-//
 
 import SwiftUI
 import MapKit
@@ -12,7 +10,6 @@ import CoreLocation
 /// A manager responsible for requesting location permissions and tracking the user's current location.
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
-    /// The current user location coordinates, updated when the location changes.
     @Published var userLocation: CLLocationCoordinate2D?
 
     override init() {
@@ -33,28 +30,21 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
 /// A view that displays a map with annotations for predefined locations and provides controls for user location and refreshing.
 struct MapView: View {
-    /// The list of locations to be displayed on the map.
     @State private var locations: [Location] = []
-    /// The location manager used to retrieve and observe the user's current location.
     @StateObject private var locationManager = LocationManager()
-    /// A flag indicating whether the map is currently loading data.
     @State private var isLoading = true
-    /// The current language setting used for localizing map UI text.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    /// The current visible region of the map.
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 50.4250, longitude: 10.7317),
         span: MKCoordinateSpan(latitudeDelta: 5.0, longitudeDelta: 5.0)
     )
-    /// Контейнер зависимостей для получения сервисов.
     @EnvironmentObject private var appContainer: AppContainer
 
-    /// Builds the main map view with navigation, annotations, and toolbar controls.
     var body: some View {
         NavigationStack {
             Group {
                 if isLoading {
-                    ProgressView(t("Загрузка карты..."))
+                    ProgressView(t("map_loading"))
                         .progressViewStyle(CircularProgressViewStyle())
                 } else {
                     Group {
@@ -90,7 +80,7 @@ struct MapView: View {
                     }
                 }
             }
-            .navigationTitle(t("Карта"))
+            .navigationTitle(t("map_title"))
             .edgesIgnoringSafeArea(.all)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -100,7 +90,7 @@ struct MapView: View {
                             region.span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
                         }
                     }) {
-                        Label(t("Моё местоположение"), systemImage: "location.fill")
+                        Label(t("map_my_location"), systemImage: "location.fill")
                     }
                 }
                 
@@ -110,7 +100,7 @@ struct MapView: View {
                             await refreshLocations()
                         }
                     }) {
-                        Label(t("Обновить"), systemImage: "arrow.clockwise")
+                        Label(t("map_refresh"), systemImage: "arrow.clockwise")
                     }
                 }
             }
@@ -120,13 +110,11 @@ struct MapView: View {
         }
     }
     
-    /// Loads locations asynchronously from the data service and updates the map.
     private func loadLocations() async {
         locations = await appContainer.dataService.loadLocations()
         isLoading = false
     }
     
-    /// Refreshes locations by clearing cache, reloading data, and updating the map.
     private func refreshLocations() async {
         isLoading = true
         await appContainer.dataService.refreshData()
@@ -134,7 +122,6 @@ struct MapView: View {
         isLoading = false
     }
 
-    /// Shortcut helper for retrieving localized translations via AppContainer's LocalizationManager.
     private func t(_ key: String) -> String {
         appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }

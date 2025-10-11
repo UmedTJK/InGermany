@@ -7,12 +7,12 @@ struct CategoriesView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @EnvironmentObject var appContainer: AppContainer
 
-    /// Initializes the view with AppContainer for dependency injection
-    init() {
-        _viewModel = StateObject(wrappedValue: AppContainer.shared.makeCategoriesViewModel())
+    /// Основной init через DI
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeCategoriesViewModel())
     }
 
-    /// For preview and testing
+    /// Для превью и тестов
     init(viewModel: CategoriesViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -42,7 +42,6 @@ struct CategoriesView: View {
             .task {
                 await viewModel.load()
             }
-            // ✅ новый способ навигации: при клике по категории → список статей
             .navigationDestination(for: Category.self) { category in
                 ArticlesByCategoryView(
                     category: category,
@@ -61,6 +60,6 @@ struct CategoriesView: View {
 
 // MARK: - Preview
 #Preview {
-    CategoriesView()
+    CategoriesView(appContainer: AppContainer.previewMock())
         .environmentObject(AppContainer.previewMock())
 }

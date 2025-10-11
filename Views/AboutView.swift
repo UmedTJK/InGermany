@@ -6,8 +6,6 @@ struct AboutView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @EnvironmentObject var appContainer: AppContainer
 
-
-
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
         _viewModel = StateObject(wrappedValue: appContainer.makeAboutViewModel())
@@ -21,7 +19,7 @@ struct AboutView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("InGermany")
+                Text(t("app_name"))
                     .font(.largeTitle)
                     .bold()
 
@@ -31,7 +29,7 @@ struct AboutView: View {
                     .multilineTextAlignment(.leading)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(t("Сборка")): \(viewModel.buildNumber)")
+                    Text("\(t("about_build_label")): \(viewModel.buildNumber)")
                     Text("\(t("about_build")): \(viewModel.buildNumber)")
 
                     Link(viewModel.repositoryURL, destination: URL(string: viewModel.repositoryURL)!)
@@ -51,6 +49,6 @@ struct AboutView: View {
 
 // MARK: - Preview
 #Preview {
-    AboutView(appContainer: AppContainer.shared)
+    AboutView(appContainer: AppContainer.previewMock())
         .environmentObject(AppContainer.previewMock())
 }

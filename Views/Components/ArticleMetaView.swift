@@ -121,10 +121,13 @@ struct BadgeView: View {
     }
 }
 
+
+
+
 #if DEBUG
 #Preview {
     ArticleMetaView(article: Article.sampleArticle)
-        .environmentObject(AppContainer.shared)
+        .environmentObject(AppContainer.previewMock())
         .padding()
 }
 #endif

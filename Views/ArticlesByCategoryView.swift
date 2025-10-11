@@ -3,11 +3,6 @@
 //  InGermany
 //
 
-//
-//  ArticlesByCategoryView.swift
-//  InGermany
-//
-
 import SwiftUI
 
 /// Экран, отображающий список статей, относящихся к определённой категории.
@@ -48,7 +43,7 @@ struct ArticlesByCategoryView: View {
 }
 
 #Preview {
-    let container = AppContainer.shared
+    let container = AppContainer.previewMock()
     let sampleCategory = Category(
         id: "finance",
         name: ["ru": "Финансы", "en": "Finance"],
@@ -57,7 +52,7 @@ struct ArticlesByCategoryView: View {
     )
     let sampleArticles = Article.sampleArticles
 
-    return NavigationStack {
+    NavigationStack {
         ArticlesByCategoryView(category: sampleCategory, articles: sampleArticles)
             .environmentObject(container)
     }

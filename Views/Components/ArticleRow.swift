@@ -80,8 +80,8 @@ struct ArticleRow: View {
 }
 
 #Preview {
-    let container = AppContainer.shared
+    let container = AppContainer.previewMock()
     let vm = container.makeArticleRowViewModel(article: Article.sampleArticles[0])
-    return ArticleRow(viewModel: vm)
+    ArticleRow(viewModel: vm)
         .environmentObject(container)
 }

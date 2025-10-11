@@ -9,7 +9,8 @@ import Foundation
 /// The main dependency injection container for the app.
 @MainActor
 final class AppContainer: ObservableObject {
-    static let shared = AppContainer()
+    // ❌ Убираем .shared — DI должен работать через @StateObject в InGermanyApp
+    // static let shared = AppContainer()
 
     // MARK: - Core Repositories
     let articlesRepo: ArticlesRepositoryProtocol
@@ -110,8 +111,8 @@ final class AppContainer: ObservableObject {
 
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(
-             readingStatsManager: readingStatsService,
-             localizationManager: localizationManager
+            localizationManager: localizationManager,
+            statsManager: readingStatsService
         )
     }
 
@@ -126,7 +127,7 @@ final class AppContainer: ObservableObject {
             readingStatsManager: readingStatsService,
             articleFormatter: articleFormatter,
             categoriesRepository: categoriesRepo,
-            shareService: shareService  // ✅ ДОБАВЛЯЕМ новый dependency
+            shareService: shareService
         )
     }
 
@@ -167,8 +168,6 @@ final class AppContainer: ObservableObject {
         return shareService
     }
     
-    // В Core/AppContainer.swift добавляем:
-
     func makeArticleDetailView(article: Article, allArticles: [Article]) -> ArticleDetailView {
         ArticleDetailView(
             viewModel: makeArticleDetailViewModel(article: article, allArticles: allArticles),
@@ -197,6 +196,14 @@ final class AppContainer: ObservableObject {
         favoritesManager.clearForTesting()
         ratingManager.clearForTesting()
         readingStatsManager.clearHistory()
+    }
+
+    // MARK: - Bootstrap (async preload)
+    func bootstrap() async {
+        async let articles = dataService.loadArticles()
+        async let categories = dataService.loadCategories()
+        async let locations = dataService.loadLocations()
+        _ = await (articles, categories, locations)
     }
 }
 

@@ -1,4 +1,3 @@
-// FavoritesView.swift
 import SwiftUI
 
 /// Displays the user's list of favorite articles with search and navigation.
@@ -8,6 +7,12 @@ struct FavoritesView: View {
     @State private var searchText = ""
     @EnvironmentObject private var appContainer: AppContainer
 
+    /// Основной init через DI
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeFavoritesViewModel())
+    }
+
+    /// Для превью и тестов
     init(viewModel: FavoritesViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -18,7 +23,8 @@ struct FavoritesView: View {
             return favoriteArticles
         } else {
             return favoriteArticles.filter {
-                $0.localizedTitle(for: selectedLanguage).localizedCaseInsensitiveContains(searchText)
+                $0.localizedTitle(for: selectedLanguage)
+                    .localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -68,6 +74,7 @@ struct FavoritesView: View {
                     localizationManager: appContainer.localizationManager,
                     articleRowFactory: appContainer.makeArticleRowViewModel
                 )
+                .environmentObject(appContainer)
             } label: {
                 ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
             }
@@ -84,7 +91,15 @@ struct FavoritesView: View {
         }
     }
 
+    /// Унифицированная функция перевода
     private func t(_ key: String) -> String {
         appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
+}
+
+// MARK: - Preview
+#Preview {
+    let container = AppContainer.previewMock()
+    FavoritesView(appContainer: container)
+        .environmentObject(container)
 }
