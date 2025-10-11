@@ -9,9 +9,6 @@ import Foundation
 /// The main dependency injection container for the app.
 @MainActor
 final class AppContainer: ObservableObject {
-    // ❌ Убираем .shared — DI должен работать через @StateObject в InGermanyApp
-    // static let shared = AppContainer()
-
     // MARK: - Core Repositories
     let articlesRepo: ArticlesRepositoryProtocol
     let categoriesRepo: CategoriesRepositoryProtocol
@@ -34,7 +31,7 @@ final class AppContainer: ObservableObject {
     let dataService: DataService
     private let articleFormatter: ArticleFormatter
     
-    // ✅ НОВЫЙ СЕРВИС
+    // ✅ ShareService
     private let shareService: ShareService
 
     func makeArticleFormatter() -> ArticleFormatter {
@@ -68,7 +65,7 @@ final class AppContainer: ObservableObject {
         // ✅ Formatters & Services
         self.articleFormatter = ArticleFormatter()
         
-        // ✅ НОВЫЙ ShareService
+        // ✅ ShareService
         self.shareService = ShareService(
             articleFormatter: articleFormatter,
             localizationManager: self.localizationManager
@@ -163,7 +160,6 @@ final class AppContainer: ObservableObject {
         PDFViewerViewModel(localizationManager: localizationManager)
     }
     
-    // ✅ НОВЫЙ метод для получения ShareService
     func makeShareService() -> ShareServiceProtocol {
         return shareService
     }
@@ -198,12 +194,13 @@ final class AppContainer: ObservableObject {
         readingStatsManager.clearHistory()
     }
 
-    // MARK: - Bootstrap (async preload)
-    func bootstrap() async {
-        async let articles = dataService.loadArticles()
-        async let categories = dataService.loadCategories()
-        async let locations = dataService.loadLocations()
-        _ = await (articles, categories, locations)
+    // MARK: - Bootstrap (non-blocking preload)
+    func bootstrap() {
+        Task.detached(priority: .background) {
+            _ = await self.dataService.loadArticles()
+            _ = await self.dataService.loadCategories()
+            _ = await self.dataService.loadLocations()
+        }
     }
 }
 
