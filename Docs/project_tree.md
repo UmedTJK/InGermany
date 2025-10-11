@@ -14,6 +14,7 @@
 │   ├── CLEAN_CODE_CHECKLIST.md
 │   ├── Git_Mini_Guide.md
 │   ├── PROMPTS_FOR_AI_AGENTS.md
+│   ├── UIUTILS_GUIDE.md
 │   ├── di_refactoring_progress.md
 │   ├── git_snapshot.md
 │   ├── hooks
@@ -142,15 +143,20 @@
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
 ├── UIUtils
+│   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
 │   ├── CardImageStyle.swift
 │   ├── CardSize.swift
 │   ├── CardStyle.swift
 │   ├── Color+Hex.swift
 │   ├── Environment+ScreenSize.swift
+│   ├── LoadingView.swift
 │   ├── ProgressBar.swift
 │   ├── ReadingTimeCalculator.swift
 │   ├── RoundedCorner.swift
+│   ├── ScaleOnTap.swift
+│   ├── ShakeEffect.swift
+│   ├── ShimmerEffect.swift
 │   └── Theme.swift
 ├── ViewModels
 │   ├── AboutViewModel.swift
@@ -214,4 +220,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-52 directories, 163 files
+52 directories, 169 files
