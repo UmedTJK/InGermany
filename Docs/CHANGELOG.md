@@ -1,3 +1,20 @@
+# 📖 CHANGELOG
+
+## [Unreleased]
+
+### 🚀 Performance
+- **perf(startup):** Переписан `DataService` → убраны блокирующие вызовы `Data(contentsOf:)`, добавлены `AsyncStream` для подписки на данные и быстрые `getCached…()` методы для мгновенного UI.
+- **perf(startup):** Обновлён `AppContainer.bootstrap()` → теперь запускает preload данных в фоне через `Task.detached` (UI не блокируется).
+- **perf(startup):** В `InGermanyApp` убран `await` при вызове `bootstrap()`, вместо этого preload вызывается неблокирующе в `.onAppear`.
+- **perf(startup):** В `ContentView` добавлен вызов `appContainer.bootstrap()` в `.onAppear` как запасной запуск; все вкладки обёрнуты в `LazyView` для ленивой инициализации.
+- **perf(startup):** В `LocalizationManager` добавлен метод `preload()` для подготовки словарей; вызов интегрирован в `AppContainer.bootstrap()` → убран лаг на первом `t(_:)`.
+
+---
+
+## [1.3.1] – 2025-10-10
+- fix(navigation): migrate Categories & ArticlesByCategory to NavigationStack
+- docs(tree): обновлён Docs/project_tree.md
+
 ## [1.4.0] - 2025-10-11
 ### 🚀 Perf / i18n Optimization
 - ⚡️ Optimized app startup: moved JSON/repository bootstrap to async tasks → UI now loads instantly
