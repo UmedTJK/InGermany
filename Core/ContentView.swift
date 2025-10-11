@@ -61,6 +61,10 @@ struct ContentView: View {
         }
         // 🔹 Глобальное управление темой
         .environment(\.colorScheme, isDarkMode ? .dark : .light)
+        .onAppear {
+            // 🔹 Стартуем неблокирующий preload
+            appContainer.bootstrap()
+        }
     }
 }
 
