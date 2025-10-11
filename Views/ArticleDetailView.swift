@@ -13,6 +13,9 @@ struct ArticleDetailView: View {
     // MARK: - Dependencies
     private let localizationManager: LocalizationManager
     private let articleRowFactory: (Article) -> ArticleRowViewModel
+    
+    // MARK: - DI через Environment
+    @EnvironmentObject private var appContainer: AppContainer
 
     // MARK: - Init with DI
     init(
@@ -62,7 +65,7 @@ struct ArticleDetailView: View {
                                 .bold()
                                 .fixedSize(horizontal: false, vertical: true)
                             
-                            // ✅ Категория с фолбэком
+                            // Категория с фолбэком
                             Text(viewModel.categoryName(for: selectedLanguage))
                                 .font(viewModel.textSizeManager.captionFont)
                                 .foregroundColor(.blue)
@@ -132,6 +135,7 @@ struct ArticleDetailView: View {
                                                 localizationManager: localizationManager,
                                                 articleRowFactory: articleRowFactory
                                             )
+                                            .environmentObject(appContainer) // 👈 пробрасываем контейнер дальше
                                         } label: {
                                             ArticleRow(viewModel: articleRowFactory(relatedArticle))
                                                 .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard)
@@ -189,7 +193,7 @@ struct ArticleDetailView: View {
         }
         .sheet(isPresented: $viewModel.showTextSizePanel) {
             TextSizeSettingsPanel()
-                .environmentObject(AppContainer.shared)
+                .environmentObject(appContainer) // ✅ вместо AppContainer.shared
         }
         .task {
             viewModel.onAppear()
@@ -202,4 +206,15 @@ struct ArticleDetailView: View {
     private func t(_ key: String) -> String {
         localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
+}
+
+#Preview {
+    let container = AppContainer.previewMock()
+    let vm = container.makeArticleDetailViewModel(article: Article.sampleArticles[0], allArticles: Article.sampleArticles)
+    ArticleDetailView(
+        viewModel: vm,
+        localizationManager: container.localizationManager,
+        articleRowFactory: container.makeArticleRowViewModel
+    )
+    .environmentObject(container)
 }

@@ -124,15 +124,19 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "fa": "برنامه‌ای برای کمک به سازگاری و اطلاعات زندگی در آلمان.",
             "ar": "تطبيق لدعم الاندماج وتقديم معلومات عن الحياة في ألمانيا.",
             "uk": "Додаток для підтримки інтеграції та інформації про життя в Німеччині."
+        
         ],
-        "about_version": [
-            "ru": "Версия", "en": "Version", "de": "Version",
-            "tj": "Версия", "fa": "نسخه", "ar": "الإصدار", "uk": "Версія"
+        
+        "reading_status": [
+            "ru": "Прогресс чтения",
+            "en": "Reading progress",
+            "de": "Lesefortschritt",
+            "tj": "Раванди хондан",
+            "fa": "پیشرفت مطالعه",
+            "ar": "تقدم القراءة",
+            "uk": "Прогрес читання"
         ],
-        "about_build": [
-            "ru": "Сборка", "en": "Build", "de": "Build",
-            "tj": "Сборка", "fa": "بیلد", "ar": "البنية", "uk": "Білд"
-        ],
+
         
         "tab_map": [
             "ru": "Карта", "en": "Map", "de": "Karte",
@@ -228,6 +232,45 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "ru": "О приложении", "en": "About", "de": "Über",
             "tj": "Дар бораи", "fa": "درباره", "ar": "حول", "uk": "Про застосунок"
         ],
+        // новые строки в словарь translations
+        "tab_about": [
+            "ru": "О приложении",
+            "en": "About",
+            "de": "Über",
+            "tj": "Дар бораи барнома",
+            "fa": "درباره برنامه",
+            "ar": "حول التطبيق",
+            "uk": "Про застосунок"
+        ],
+        "settings_history_cleared": [
+            "ru": "История очищена",
+            "en": "History cleared",
+            "de": "Verlauf gelöscht",
+            "tj": "Таърих пок шуд",
+            "fa": "سابقه پاک شد",
+            "ar": "تم مسح السجل",
+            "uk": "Історію очищено"
+      
+        ],
+        "about_version": [
+            "ru": "Версия",
+            "en": "Version",
+            "de": "Version",
+            "tj": "Силсила",
+            "fa": "نسخه",
+            "ar": "الإصدار",
+            "uk": "Версія"
+        ],
+        "about_build": [
+            "ru": "Сборка",
+            "en": "Build",
+            "de": "Build",
+            "tj": "Сохтмон",
+            "fa": "بیلد",
+            "ar": "البناء",
+            "uk": "Збірка"
+        ],
+
         
 
         
@@ -294,10 +337,6 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "ru": "Готово", "en": "Done", "de": "Fertig",
             "tj": "Тайёр", "fa": "انجام شد", "ar": "تم", "uk": "Готово"
         ],
-        "settings_history_cleared": [
-            "ru": "История очищена", "en": "History cleared", "de": "Verlauf gelöscht",
-            "tj": "Таърих пок шуд", "fa": "تاریخچه پاک شد", "ar": "تم مسح السجل", "uk": "Історію очищено"
-        ]
 
     ]
     
@@ -324,6 +363,7 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "ar": "بدون فئة",
             "uk": "Без категорії"
         ],
+        
 
     ]
     

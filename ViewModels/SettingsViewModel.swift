@@ -1,69 +1,103 @@
+//
+//  SettingsViewModel.swift
+//  InGermany
+//
+
 import SwiftUI
 import Combine
 
+/// ViewModel для экрана настроек
 @MainActor
 final class SettingsViewModel: ObservableObject {
-    // MARK: - AppStorage Properties
-    @AppStorage("selectedLanguage") var selectedLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
-    @AppStorage("isDarkMode") var isDarkMode: Bool = false
-    @AppStorage("relativeDates") var relativeDates: Bool = true
-    
-    // MARK: - Published Properties
-    @Published var isHistoryCleared: Bool = false
 
     // MARK: - Dependencies
-    private let readingStatsManager: ReadingStatsManaging
     private let localizationManager: LocalizationManager
-    private var cancellables = Set<AnyCancellable>()
+    private let statsManager: ReadingStatsManaging
+
+    // MARK: - AppStorage / Published properties
+    @AppStorage("selectedLanguage") var selectedLanguage: String = "ru"
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
+    @AppStorage("relativeDates") var relativeDates: Bool = true
+    @AppStorage("selectedCardStyleIndex") private var selectedCardStyleIndex: Int = 0
+
+    @Published var isHistoryCleared: Bool = false
+
+    // MARK: - Supported languages
+    let supportedLanguages = ["ru", "en", "de", "tj", "fa", "ar", "uk"]
 
     // MARK: - Init
-    init(
-        readingStatsManager: ReadingStatsManaging,
-        localizationManager: LocalizationManager = LocalizationManager.shared
-    ) {
-        self.readingStatsManager = readingStatsManager
+    init(localizationManager: LocalizationManager, statsManager: ReadingStatsManaging) {
         self.localizationManager = localizationManager
-        setupReactiveBindings()
+        self.statsManager = statsManager
     }
 
-    // MARK: - Public Methods
-    func clearHistory() {
-        readingStatsManager.clearHistory()
-        isHistoryCleared = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.isHistoryCleared = false
+    // MARK: - Localization
+    func localizedText(_ key: String) -> String {
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
+    }
+
+    func displayName(for code: String) -> String {
+        switch code {
+        case "ru": return "Русский"
+        case "en": return "English"
+        case "de": return "Deutsch"
+        case "tj": return "Тоҷикӣ"
+        case "fa": return "فارسی"
+        case "ar": return "العربية"
+        case "uk": return "Українська"
+        default:   return code
         }
     }
 
-    func changeLanguage(to lang: String) {
-        selectedLanguage = lang
+    // MARK: - Card Style (через индекс)
+    var selectedCardStyle: CardImageStyle {
+        get {
+            let all = Array(CardImageStyle.allCases)
+            return all.indices.contains(selectedCardStyleIndex) ? all[selectedCardStyleIndex] : all.first!
+        }
+        set {
+            if let idx = Array(CardImageStyle.allCases).firstIndex(of: newValue) {
+                selectedCardStyleIndex = idx
+            }
+        }
     }
 
-    public func getStats() -> ReadingStats {
-        return readingStatsManager.getStats()
+    // MARK: - Stats
+    var totalArticlesRead: Int {
+        statsManager.totalArticlesRead
     }
 
-    func localizedText(_ key: String, language: String? = nil) -> String {
-        localizationManager.getTranslation(
-            key: key,
-            language: language ?? selectedLanguage
-        )
+    var formattedTotalReadingTime: String {
+        statsManager.formatReadingTime(statsManager.totalReadingTimeMinutes, language: selectedLanguage)
+    }
+
+    var formattedAverageReadingTime: String {
+        let total = statsManager.totalReadingTimeMinutes
+        let count = max(statsManager.totalArticlesRead, 1)
+        return statsManager.formatReadingTime(total / count, language: selectedLanguage)
+    }
+
+    var currentStreak: Int {
+        // пока ReadingStats не хранит streak → возвращаем 0
+        0
+    }
+
+    // MARK: - Actions
+    func clearHistory() {
+        statsManager.clearHistory()
+        isHistoryCleared = true
+
+        Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            isHistoryCleared = false
+        }
     }
 
     func resetToDefaults() {
+        selectedLanguage = "ru"
         isDarkMode = false
         relativeDates = true
-        selectedLanguage = Locale.current.language.languageCode?.identifier ?? "en"
-    }
-
-    private func setupReactiveBindings() {}
-
-    // MARK: - Preview Support
-    static func previewMock() -> SettingsViewModel {
-        SettingsViewModel(readingStatsManager: ReadingStatsManager.shared)
-    }
-
-    static func previewMockWithStats() -> SettingsViewModel {
-        SettingsViewModel(readingStatsManager: ReadingStatsManager.shared)
+        selectedCardStyleIndex = 0
+        clearHistory()
     }
 }

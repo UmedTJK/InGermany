@@ -6,8 +6,6 @@ struct AboutView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @EnvironmentObject var appContainer: AppContainer
 
-
-
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
         _viewModel = StateObject(wrappedValue: appContainer.makeAboutViewModel())
@@ -51,6 +49,6 @@ struct AboutView: View {
 
 // MARK: - Preview
 #Preview {
-    AboutView(appContainer: AppContainer.shared)
+    AboutView(appContainer: AppContainer.previewMock())
         .environmentObject(AppContainer.previewMock())
 }

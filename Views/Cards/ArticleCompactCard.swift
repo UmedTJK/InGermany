@@ -123,9 +123,10 @@ struct ArticleCompactCard: View {
 
 #if DEBUG
 #Preview {
-    let container = AppContainer.shared
+    let container = AppContainer.previewMock()
     let vm = container.makeArticleRowViewModel(article: Article.sampleArticles[0])
-    return ArticleCompactCard(viewModel: vm)
+    ArticleCompactCard(viewModel: vm)
         .environmentObject(container)
 }
 #endif
+

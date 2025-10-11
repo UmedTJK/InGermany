@@ -1,7 +1,12 @@
+//
+//  SettingsView.swift
+//  InGermany
+//
+
 import SwiftUI
 
-/// The settings screen of the app, allowing the user to configure appearance, language, date format, statistics, and history.
 struct SettingsView: View {
+    @EnvironmentObject var appContainer: AppContainer
     @StateObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
     
@@ -9,16 +14,14 @@ struct SettingsView: View {
     init(viewModel: SettingsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-    
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeSettingsViewModel())
-    }
 
+    // MARK: - Body
     var body: some View {
         NavigationView {
             Form {
                 languageSection
                 appearanceSection
+                cardStyleSection
                 dateFormatSection
                 statisticsSection
                 aboutSection
@@ -35,153 +38,124 @@ struct SettingsView: View {
             }
             .overlay {
                 if viewModel.isHistoryCleared {
-                    HistoryClearedToast()
+                    HistoryClearedToast(
+                        message: viewModel.localizedText("settings_history_cleared")
+                    )
                 }
             }
         }
     }
 
-    // MARK: - Section Views
-    
+    // MARK: - Sections
     private var languageSection: some View {
-        Section {
-            LanguagePickerView(selectedLanguage: $viewModel.selectedLanguage)
-        } header: {
-            Text(viewModel.localizedText("settings_language_section"))
-        }
-    }
-    
-    private var appearanceSection: some View {
-        Section {
-            Toggle(isOn: $viewModel.isDarkMode) {
-                Text(viewModel.localizedText("settings_dark_mode"))
-                    .accessibilityLabel(viewModel.localizedText("settings_dark_mode_accessibility"))
+        Section(header: Text(viewModel.localizedText("settings_language_section"))) {
+            Picker("Language", selection: $viewModel.selectedLanguage) {
+                ForEach(viewModel.supportedLanguages, id: \.self) { code in
+                    Text(viewModel.displayName(for: code)).tag(code)
+                }
             }
-        } header: {
-            Text(viewModel.localizedText("settings_appearance_title"))
         }
     }
 
-    
-    
-    
+    private var appearanceSection: some View {
+        Section(header: Text(viewModel.localizedText("settings_appearance_title"))) {
+            Toggle(isOn: $viewModel.isDarkMode) {
+                Text(viewModel.localizedText("settings_dark_mode"))
+            }
+            .accessibilityLabel(viewModel.localizedText("settings_dark_mode_accessibility"))
+        }
+    }
+
+    private var cardStyleSection: some View {
+        Section(header: Text("Card Style")) {
+            Picker("Card Style", selection: Binding<CardImageStyle>(
+                get: { viewModel.selectedCardStyle },
+                set: { viewModel.selectedCardStyle = $0 }
+            )) {
+                ForEach(Array(CardImageStyle.allCases), id: \.self) { style in
+                    Text(style.title).tag(style)
+                }
+            }
+        }
+    }
+
     private var dateFormatSection: some View {
-        Section {
+        Section(header: Text(viewModel.localizedText("settings_date_format_title"))) {
             Toggle(isOn: $viewModel.relativeDates) {
                 Text(viewModel.localizedText("settings_relative_dates"))
-                    .accessibilityLabel(viewModel.localizedText("settings_relative_dates_accessibility"))
             }
-        } header: {
-            Text(viewModel.localizedText("settings_date_format_title"))
+            .accessibilityLabel(viewModel.localizedText("settings_relative_dates_accessibility"))
         }
     }
-    
+
     private var statisticsSection: some View {
-        Section {
-            let stats = viewModel.getStats()
-            let avgMinutes = stats.totalArticlesRead > 0
-                ? Double(stats.totalReadingTimeMinutes) / Double(stats.totalArticlesRead)
-                : 0.0
-            
-            StatisticRow(
-                title: viewModel.localizedText("settings_articles_read"),
-                value: "\(stats.totalArticlesRead)"
-            )
-            
-            StatisticRow(
-                title: viewModel.localizedText("settings_total_time"),
-                value: formatHMS(fromSeconds: stats.totalReadingTimeMinutes * 60)
-            )
-            
-            StatisticRow(
-                title: viewModel.localizedText("settings_average_time"),
-                value: formatHMS(fromSeconds: Int(avgMinutes * 60))
-            )
-            
-            StatisticRow(
-                title: viewModel.localizedText("settings_streak"),
-                value: "\(stats.readingStreak)"
-            )
-        } header: {
-            Text(viewModel.localizedText("settings_stats_title"))
-        }
-    }
-    
-    private var aboutSection: some View {
-        Section {
-            NavigationLink(destination: AboutView(appContainer: AppContainer.shared)) {
-                Text(viewModel.localizedText("settings_about_title"))
+        Section(header: Text(viewModel.localizedText("settings_stats_title"))) {
+            HStack {
+                Text(viewModel.localizedText("settings_articles_read"))
+                Spacer()
+                Text("\(viewModel.totalArticlesRead)")
+            }
+            HStack {
+                Text(viewModel.localizedText("settings_total_time"))
+                Spacer()
+                Text(viewModel.formattedTotalReadingTime)
+            }
+            HStack {
+                Text(viewModel.localizedText("settings_average_time"))
+                Spacer()
+                Text(viewModel.formattedAverageReadingTime)
+            }
+            HStack {
+                Text(viewModel.localizedText("settings_streak"))
+                Spacer()
+                Text("\(viewModel.currentStreak)")
             }
         }
     }
-    
+
+    private var aboutSection: some View {
+        Section(header: Text(viewModel.localizedText("settings_about_title"))) {
+            NavigationLink(destination: AboutView(viewModel: appContainer.makeAboutViewModel())) {
+                Text(viewModel.localizedText("tab_about"))
+            }
+        }
+    }
+
     private var clearHistorySection: some View {
         Section {
             Button(role: .destructive) {
                 viewModel.clearHistory()
             } label: {
-                HStack {
-                    Image(systemName: "trash")
-                    Text(viewModel.localizedText("settings_clear_history"))
-                }
+                Text(viewModel.localizedText("settings_clear_history"))
             }
             .accessibilityLabel(viewModel.localizedText("settings_clear_history_accessibility"))
         }
     }
-    
+
     private var resetSection: some View {
         Section {
             Button(role: .destructive) {
                 viewModel.resetToDefaults()
             } label: {
-                HStack {
-                    Image(systemName: "arrow.clockwise")
-                    Text(viewModel.localizedText("settings_reset_defaults"))
-                }
+                Text(viewModel.localizedText("settings_reset_defaults"))
             }
             .accessibilityLabel(viewModel.localizedText("settings_reset_defaults_accessibility"))
         }
     }
-    
-    // MARK: - Helper Methods
-    private func formatHMS(fromSeconds totalSeconds: Int) -> String {
-        let hours = totalSeconds / 3600
-        let mins = (totalSeconds % 3600) / 60
-        let secs = totalSeconds % 60
-        
-        if hours > 0 {
-            return String(format: "%d:%02d:%02d", hours, mins, secs)
-        } else {
-            return String(format: "%d:%02d", mins, secs)
-        }
-    }
 }
 
-// MARK: - Supporting Views
-
-private struct StatisticRow: View {
-    let title: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Text(value)
-                .foregroundColor(.secondary)
-                .monospacedDigit()
-        }
-    }
-}
+// MARK: - HistoryClearedToast
 
 private struct HistoryClearedToast: View {
+    let message: String
+
     var body: some View {
         VStack {
             Spacer()
             HStack {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)
-                Text("История очищена")
+                Text(message)
                     .foregroundColor(.primary)
             }
             .padding()
@@ -193,15 +167,4 @@ private struct HistoryClearedToast: View {
         .transition(.scale.combined(with: .opacity))
         .animation(.spring(), value: true)
     }
-}
-
-// MARK: - Preview
-#Preview("Default Settings") {
-    SettingsView(viewModel: .previewMock())
-        .environmentObject(AppContainer.shared)
-}
-
-#Preview("With Stats") {
-    SettingsView(viewModel: .previewMockWithStats())
-        .environmentObject(AppContainer.shared)
 }

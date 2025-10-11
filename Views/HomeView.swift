@@ -10,10 +10,12 @@ struct HomeView: View {
     @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var appContainer: AppContainer
 
-    init() {
-        _viewModel = StateObject(wrappedValue: AppContainer.shared.makeHomeViewModel())
+    /// Основной init через DI (используется в приложении)
+    init(appContainer: AppContainer) {
+        _viewModel = StateObject(wrappedValue: appContainer.makeHomeViewModel())
     }
 
+    /// Для превью и тестов
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -106,6 +108,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(appContainer: AppContainer.previewMock())
         .environmentObject(AppContainer.previewMock())
 }
