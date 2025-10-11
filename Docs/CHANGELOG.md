@@ -1,3 +1,22 @@
+## [1.4.0] - 2025-10-11
+### 🚀 Perf / i18n Optimization
+- ⚡️ Optimized app startup: moved JSON/repository bootstrap to async tasks → UI now loads instantly
+- 🧩 Introduced `LazyView` for TabView (Views are created only on first access)
+- 🗂 Removed `AppContainer.shared`, full migration to `EnvironmentObject`-based DI
+- 🌐 Internationalization:
+  - Removed hardcoded UI strings in `MapView`, `AboutView`, `FavoritesView`, `SettingsView`
+  - Added missing localization keys:
+    - `map_title`, `map_my_location`, `map_refresh`, `map_loading`
+    - `app_name`, `about_build_label`
+    - `settings_card_style_title`, `settings_card_style_picker`, `settings_language_picker`
+- 🔧 Updated all Previews to use `AppContainer.previewMock()`
+
+### ✅ Notes
+- Verified with Instruments: startup time reduced from ~10s ⏩ ~1s
+- Verified localization for RU / EN / DE  
+- No compiler warnings on Xcode 15 / Swift 5.9
+
+
 ### v1.13.1 – 2025-10-10
 
 - fix: navigation flow in Categories → Articles → Detail
