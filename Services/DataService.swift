@@ -15,15 +15,20 @@ actor DataService {
 
     private let networkService = NetworkService.shared
     private let cacheManager = CacheManager.shared
-    
-    // 🔄 СОХРАНЯЕМ: Существующие кэши для обратной совместимости
+
+    // 🔄 Backward-compatible in-memory caches
     private var articlesCache: [Article]?
     private var categoriesCache: [Category]?
     private var locationsCache: [Location]?
 
     private var lastDataSource: [String: String] = [:]
-    
-    // 🔄 ДОБАВЛЯЕМ: Константы для ключей кэша
+
+    // 🔔 Streams for non-blocking UI updates
+    private var articleContinuations: [AsyncStream<[Article]>.Continuation] = []
+    private var categoryContinuations: [AsyncStream<[Category]>.Continuation] = []
+    private var locationContinuations: [AsyncStream<[Location]>.Continuation] = []
+
+    // 🔑 Cache keys
     private enum CacheKeys {
         static let articles = "articles"
         static let categories = "categories"
@@ -32,78 +37,111 @@ actor DataService {
 
     private init() {}
 
-    // MARK: - Асинхронные методы (Unified Offline-First)
+    // MARK: - Fast cache access (non-blocking)
+
+    /// Returns current cached articles or empty array immediately (no I/O).
+    func getCachedArticles() -> [Article] {
+        articlesCache ?? []
+    }
+
+    /// Returns current cached categories or empty array immediately (no I/O).
+    func getCachedCategories() -> [Category] {
+        categoriesCache ?? []
+    }
+
+    /// Returns current cached locations or empty array immediately (no I/O).
+    func getCachedLocations() -> [Location] {
+        locationsCache ?? []
+    }
+
+    // MARK: - Streams (UI can subscribe and update incrementally)
+
+    /// Subscribe to articles updates. Yields current cache immediately, then future updates.
+    func articlesStream() -> AsyncStream<[Article]> {
+        AsyncStream { continuation in
+            // store continuation
+            articleContinuations.append(continuation)
+            // yield current value immediately
+            continuation.yield(articlesCache ?? [])
+        }
+    }
+
+    /// Subscribe to categories updates.
+    func categoriesStream() -> AsyncStream<[Category]> {
+        AsyncStream { continuation in
+            categoryContinuations.append(continuation)
+            continuation.yield(categoriesCache ?? [])
+        }
+    }
+
+    /// Subscribe to locations updates.
+    func locationsStream() -> AsyncStream<[Location]> {
+        AsyncStream { continuation in
+            locationContinuations.append(continuation)
+            continuation.yield(locationsCache ?? [])
+        }
+    }
+
+    // MARK: - Fire-and-forget preload (does not block UI)
+
+    /// Kicks off background loading of all datasets. UI can render immediately.
+    func preloadAll() {
+        Task.detached(priority: .background) { [weak self] in
+            guard let self else { return }
+            _ = await self.loadArticles()
+            _ = await self.loadCategories()
+            _ = await self.loadLocations()
+        }
+    }
+
+    // MARK: - Unified Offline-First loaders (keep API)
 
     /// Loads articles with unified offline-first strategy:
     /// Memory Cache → NetworkService (Bundle → File Cache → Network)
     /// - Returns: Array of Article objects.
     func loadArticles() async -> [Article] {
-        // 🔄 УЛУЧШЕНО: Единая стратегия через CacheManager
+        // Try unified cache first
         if let cached: [Article] = await cacheManager.get(CacheKeys.articles) {
             lastDataSource["articles"] = "memory_cache"
-            print("📦 [DataService] Articles из унифицированного кэша")
-            
-            // 🔄 СОХРАНЯЕМ: Асинхронное обновление
-            Task {
-                await refreshArticlesIfNeeded()
-            }
-            
-            // 🔄 СОХРАНЯЕМ: Совместимость со старым кэшем
+            // keep legacy cache
             articlesCache = cached
-            
-            // 🔍 ДОБАВЛЕНО: Отладочная информация
-            print("🔍 [DEBUG] Загружено статей из кэша: \(cached.count)")
-            if !cached.isEmpty {
-                print("✅ [DEBUG] Первая статья из кэша: \(cached[0].id) - \(cached[0].localizedTitle(for: "ru"))")
+            // broadcast
+            yieldArticles(cached)
+
+            // Soft refresh in the background (non-blocking for caller)
+            Task { [weak self] in
+                await self?.refreshArticlesIfNeeded()
             }
-            
+
             return cached
         }
 
-        // 🔄 УЛУЧШЕНО: Используем NetworkService как единый источник
+        // Load via NetworkService (which itself tries Bundle → File Cache → Network)
         do {
             let (articles, source): ([Article], NetworkService.DataSource) =
                 try await networkService.loadJSONWithSource(from: "articles.json")
-            
-            // 🔄 СОХРАНЯЕМ: Все уровни кэширования
+
             await cacheManager.set(CacheKeys.articles, value: articles)
             articlesCache = articles
             lastDataSource["articles"] = source.rawValue
-            
-            print("📥 [DataService] Articles загружены из: \(source)")
-            
-            // 🔍 ДОБАВЛЕНО: Отладочная информация
-            print("🔍 [DEBUG] Загружено статей: \(articles.count)")
-            if articles.isEmpty {
-                print("❌ [DEBUG] Статьи не загружены - проверьте структуру JSON")
-            } else {
-                print("✅ [DEBUG] Первая статья: \(articles[0].id) - \(articles[0].localizedTitle(for: "ru"))")
-                print("✅ [DEBUG] Поля статьи: title=\(articles[0].title.count) языков, content=\(articles[0].content.count) языков, categoryId=\(articles[0].categoryId)")
-            }
-            
+
+            // broadcast
+            yieldArticles(articles)
             return articles
-            
+
         } catch {
-            print("⚠️ [DataService] Ошибка загрузки Articles: \(error)")
-            
-            // 🔄 СОХРАНЯЕМ: Fallback на локальные данные если NetworkService не сработал
+            // Fallback to direct Bundle load
             let localArticles = await loadLocalArticles()
             if !localArticles.isEmpty {
                 await cacheManager.set(CacheKeys.articles, value: localArticles)
                 articlesCache = localArticles
                 lastDataSource["articles"] = "local_fallback"
-                print("🔄 [DataService] Articles из локального fallback")
-                
-                // 🔍 ДОБАВЛЕНО: Отладочная информация для fallback
-                print("🔍 [DEBUG] Fallback статей: \(localArticles.count)")
-                if !localArticles.isEmpty {
-                    print("✅ [DEBUG] Первая fallback статья: \(localArticles[0].id) - \(localArticles[0].localizedTitle(for: "ru"))")
-                }
-                
+
+                // broadcast
+                yieldArticles(localArticles)
                 return localArticles
             }
-            
-            print("❌ [DEBUG] Нет статей даже в fallback")
+
             return []
         }
     }
@@ -119,64 +157,38 @@ actor DataService {
     func loadCategories() async -> [Category] {
         if let cached: [Category] = await cacheManager.get(CacheKeys.categories) {
             lastDataSource["categories"] = "memory_cache"
-            print("📦 [DataService] Categories из унифицированного кэша")
-            
-            Task {
-                await refreshCategoriesIfNeeded()
-            }
-            
             categoriesCache = cached
-            
-            // 🔍 ДОБАВЛЕНО: Отладочная информация
-            print("🔍 [DEBUG] Загружено категорий из кэша: \(cached.count)")
-            if !cached.isEmpty {
-                print("✅ [DEBUG] Первая категория из кэша: \(cached[0].id) - \(cached[0].localizedName(for: "ru"))")
+            yieldCategories(cached)
+
+            Task { [weak self] in
+                await self?.refreshCategoriesIfNeeded()
             }
-            
+
             return cached
         }
 
         do {
             let (categories, source): ([Category], NetworkService.DataSource) =
                 try await networkService.loadJSONWithSource(from: "categories.json")
-            
+
             await cacheManager.set(CacheKeys.categories, value: categories)
             categoriesCache = categories
             lastDataSource["categories"] = source.rawValue
-            
-            print("📥 [DataService] Categories загружены из: \(source)")
-            
-            // 🔍 ДОБАВЛЕНО: Отладочная информация
-            print("🔍 [DEBUG] Загружено категорий: \(categories.count)")
-            if categories.isEmpty {
-                print("❌ [DEBUG] Категории не загружены - проверьте структуру JSON")
-            } else {
-                print("✅ [DEBUG] Первая категория: \(categories[0].id) - \(categories[0].localizedName(for: "ru"))")
-                print("✅ [DEBUG] Поля категории: name=\(categories[0].name.count) языков, icon=\(categories[0].icon), colorHex=\(categories[0].colorHex)")
-            }
-            
+
+            yieldCategories(categories)
             return categories
-            
+
         } catch {
-            print("⚠️ [DataService] Ошибка загрузки Categories: \(error)")
-            
             let localCategories = await loadLocalCategories()
             if !localCategories.isEmpty {
                 await cacheManager.set(CacheKeys.categories, value: localCategories)
                 categoriesCache = localCategories
                 lastDataSource["categories"] = "local_fallback"
-                print("🔄 [DataService] Categories из локального fallback")
-                
-                // 🔍 ДОБАВЛЕНО: Отладочная информация для fallback
-                print("🔍 [DEBUG] Fallback категорий: \(localCategories.count)")
-                if !localCategories.isEmpty {
-                    print("✅ [DEBUG] Первая fallback категория: \(localCategories[0].id) - \(localCategories[0].localizedName(for: "ru"))")
-                }
-                
+
+                yieldCategories(localCategories)
                 return localCategories
             }
-            
-            print("❌ [DEBUG] Нет категорий даже в fallback")
+
             return []
         }
     }
@@ -185,59 +197,57 @@ actor DataService {
     func loadLocations() async -> [Location] {
         if let cached: [Location] = await cacheManager.get(CacheKeys.locations) {
             lastDataSource["locations"] = "memory_cache"
-            print("📦 [DataService] Locations из унифицированного кэша")
-            
-            Task {
-                await refreshLocationsIfNeeded()
-            }
-            
             locationsCache = cached
+            yieldLocations(cached)
+
+            Task { [weak self] in
+                await self?.refreshLocationsIfNeeded()
+            }
+
             return cached
         }
 
         do {
             let (locations, source): ([Location], NetworkService.DataSource) =
                 try await networkService.loadJSONWithSource(from: "locations.json")
-            
+
             await cacheManager.set(CacheKeys.locations, value: locations)
             locationsCache = locations
             lastDataSource["locations"] = source.rawValue
-            
-            print("📥 [DataService] Locations загружены из: \(source)")
+
+            yieldLocations(locations)
             return locations
-            
+
         } catch {
-            print("⚠️ [DataService] Ошибка загрузки Locations: \(error)")
-            
             let localLocations = await loadLocalLocations()
             if !localLocations.isEmpty {
                 await cacheManager.set(CacheKeys.locations, value: localLocations)
                 locationsCache = localLocations
                 lastDataSource["locations"] = "local_fallback"
-                print("🔄 [DataService] Locations из локального fallback")
+
+                yieldLocations(localLocations)
                 return localLocations
             }
-            
+
             return []
         }
     }
 
-    // MARK: - Умное обновление (сохраненная логика)
+    // MARK: - Smart refresh (kept logic)
 
     private func refreshArticlesIfNeeded() async {
         do {
             let (articles, source): ([Article], NetworkService.DataSource) =
                 try await networkService.loadJSONWithSource(from: "articles.json")
-            
-            // 🔄 СОХРАНЯЕМ: Обновляем только если данные с сети
+
             if source == .network {
                 await cacheManager.set(CacheKeys.articles, value: articles)
                 articlesCache = articles
                 lastDataSource["articles"] = source.rawValue
-                print("🔄 [DataService] Articles обновлены из сети")
+                yieldArticles(articles)
             }
         } catch {
-            print("⚠️ [DataService] Не удалось обновить Articles: \(error)")
+            // ignore refresh errors
         }
     }
 
@@ -247,9 +257,9 @@ actor DataService {
             await cacheManager.set(CacheKeys.categories, value: categories)
             categoriesCache = categories
             lastDataSource["categories"] = "network"
-            print("🌐 [DataService] Categories обновлены из сети")
+            yieldCategories(categories)
         } catch {
-            print("⚠️ [DataService] Ошибка обновления Categories: \(error)")
+            // ignore refresh errors
         }
     }
 
@@ -259,30 +269,26 @@ actor DataService {
             await cacheManager.set(CacheKeys.locations, value: locations)
             locationsCache = locations
             lastDataSource["locations"] = "network"
-            print("🌐 [DataService] Locations обновлены из сети")
+            yieldLocations(locations)
         } catch {
-            print("⚠️ [DataService] Ошибка обновления Locations: \(error)")
+            // ignore refresh errors
         }
     }
 
-    // MARK: - Локальные fallback (СОХРАНЯЕМ без изменений)
-    
+    // MARK: - Local fallbacks
+
     private func loadLocalArticles() async -> [Article] {
         await withCheckedContinuation { continuation in
             DispatchQueue.global().async {
                 guard let file = Bundle.main.url(forResource: "articles", withExtension: "json") else {
-                    print("❌ [DEBUG] Файл articles.json не найден в Bundle")
                     continuation.resume(returning: [])
                     return
                 }
                 do {
                     let data = try Data(contentsOf: file)
-                    print("✅ [DEBUG] articles.json найден, размер: \(data.count) байт")
                     let decoded = try JSONDecoder().decode([Article].self, from: data)
-                    print("✅ [DEBUG] articles.json успешно декодирован: \(decoded.count) статей")
                     continuation.resume(returning: decoded)
                 } catch {
-                    print("❌ [DEBUG] Ошибка декодирования articles.json: \(error)")
                     continuation.resume(returning: [])
                 }
             }
@@ -293,18 +299,14 @@ actor DataService {
         await withCheckedContinuation { continuation in
             DispatchQueue.global().async {
                 guard let file = Bundle.main.url(forResource: "categories", withExtension: "json") else {
-                    print("❌ [DEBUG] Файл categories.json не найден в Bundle")
                     continuation.resume(returning: [])
                     return
                 }
                 do {
                     let data = try Data(contentsOf: file)
-                    print("✅ [DEBUG] categories.json найден, размер: \(data.count) байт")
                     let decoded = try JSONDecoder().decode([Category].self, from: data)
-                    print("✅ [DEBUG] categories.json успешно декодирован: \(decoded.count) категорий")
                     continuation.resume(returning: decoded)
                 } catch {
-                    print("❌ [DEBUG] Ошибка декодирования categories.json: \(error)")
                     continuation.resume(returning: [])
                 }
             }
@@ -329,28 +331,42 @@ actor DataService {
         }
     }
 
-    // MARK: - Cache control (СОХРАНЯЕМ ВСЕ методы)
+    // MARK: - Broadcasting helpers
+
+    private func yieldArticles(_ value: [Article]) {
+        for c in articleContinuations { c.yield(value) }
+    }
+
+    private func yieldCategories(_ value: [Category]) {
+        for c in categoryContinuations { c.yield(value) }
+    }
+
+    private func yieldLocations(_ value: [Location]) {
+        for c in locationContinuations { c.yield(value) }
+    }
+
+    // MARK: - Cache control
 
     /// Clears all cached data and resets the last data source information.
     func clearCache() {
-        // 🔄 УЛУЧШЕНО: Очищаем все уровни кэширования
-        Task {
-            await cacheManager.clear()
-        }
+        Task { await cacheManager.clear() }
         articlesCache = nil
         categoriesCache = nil
         locationsCache = nil
         networkService.clearCache()
         lastDataSource.removeAll()
-        print("🗑️ [DataService] Кэш очищен на всех уровнях")
+        // Do not close streams; just yield empty to subscribers
+        yieldArticles([])
+        yieldCategories([])
+        yieldLocations([])
     }
-    
+
     /// Clears only articles cache while preserving categories and locations
     func clearArticlesCache() async {
         await cacheManager.clear(CacheKeys.articles)
         articlesCache = nil
         lastDataSource["articles"] = nil
-        print("🗑️ [DataService] Articles cache cleared")
+        yieldArticles([])
     }
 
     /// Clears only categories cache while preserving articles and locations
@@ -358,7 +374,7 @@ actor DataService {
         await cacheManager.clear(CacheKeys.categories)
         categoriesCache = nil
         lastDataSource["categories"] = nil
-        print("🗑️ [DataService] Categories cache cleared")
+        yieldCategories([])
     }
 
     /// Clears only locations cache while preserving articles and categories
@@ -366,7 +382,7 @@ actor DataService {
         await cacheManager.clear(CacheKeys.locations)
         locationsCache = nil
         lastDataSource["locations"] = nil
-        print("🗑️ [DataService] Locations cache cleared")
+        yieldLocations([])
     }
 
     /// Forces a refresh by clearing caches and reloading all data.
@@ -375,14 +391,13 @@ actor DataService {
         _ = await loadArticles()
         _ = await loadCategories()
         _ = await loadLocations()
-        print("🔄 [DataService] Данные обновлены")
     }
 
-    // MARK: - API для UI (СОХРАНЯЕМ без изменений)
+    // MARK: - UI API
 
     /// Returns a dictionary containing the last used data source information for articles, categories, and locations.
     /// - Returns: Dictionary with keys as data types and values as the last data source string.
     func getLastDataSource() async -> [String: String] {
-        return lastDataSource
+        lastDataSource
     }
 }
