@@ -68,6 +68,40 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
             "tj": "Статистика", "fa": "آمار", "ar": "إحصائيات", "uk": "Статистика"
         ],
         
+        "settings_card_style_title": [
+            "ru": "Стиль карточек", "en": "Card Style", "de": "Kartenstil",
+            "tj": "Услуби корт", "fa": "سبک کارت", "ar": "نمط البطاقات", "uk": "Стиль карток"
+        ],
+        "settings_card_style_picker": [
+            "ru": "Выбор стиля карточек", "en": "Select card style", "de": "Kartendesign auswählen",
+            "tj": "Интихоби услуби корт", "fa": "انتخاب سبک کارت", "ar": "اختيار نمط البطاقات", "uk": "Вибір стилю карток"
+        ],
+        "settings_language_picker": [
+            "ru": "Выбор языка", "en": "Select language", "de": "Sprache auswählen",
+            "tj": "Интихоби забон", "fa": "انتخاب زبان", "ar": "اختيار اللغة", "uk": "Вибір мови"
+        ],
+        
+        "map_title": [
+            "ru": "Карта", "en": "Map", "de": "Karte",
+            "tj": "Харита", "fa": "نقشه", "ar": "الخريطة", "uk": "Карта"
+        ],
+        "map_loading": [
+            "ru": "Загрузка карты...", "en": "Loading map...", "de": "Karte wird geladen...",
+            "tj": "Боркунии харита...", "fa": "در حال بارگذاری نقشه...", "ar": "جارٍ تحميل الخريطة...", "uk": "Завантаження карти..."
+        ],
+        
+        "app_name": [
+            "ru": "InGermany", "en": "InGermany", "de": "InGermany",
+            "tj": "InGermany", "fa": "InGermany", "ar": "InGermany", "uk": "InGermany"
+        ],
+        "about_build_label": [
+            "ru": "Сборка", "en": "Build", "de": "Build",
+            "tj": "Сохтмон", "fa": "نسخه", "ar": "إصدار", "uk": "Збірка"
+        ],
+
+
+
+        
         "Загрузка данных...": [
             "ru": "Загрузка данных...", "en": "Loading data...", "de": "Daten werden geladen...",
             "tj": "Маълумот бор мешавад...", "fa": "در حال بارگذاری داده‌ها...", "ar": "جارٍ تحميل البيانات...", "uk": "Завантаження даних..."

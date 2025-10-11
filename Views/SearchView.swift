@@ -42,6 +42,7 @@ struct SearchView: View {
                             localizationManager: appContainer.localizationManager,
                             articleRowFactory: appContainer.makeArticleRowViewModel
                         )
+                        .environmentObject(appContainer) // ✅ проброс контейнера
                     } label: {
                         ArticleRow(
                             viewModel: appContainer.makeArticleRowViewModel(article: article)
@@ -70,6 +71,6 @@ struct SearchView: View {
 // MARK: - Preview
 #Preview {
     let container = AppContainer.previewMock()
-    return SearchView(appContainer: container)
+    SearchView(appContainer: container)
         .environmentObject(container)
 }

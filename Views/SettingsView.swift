@@ -3,6 +3,11 @@
 //  InGermany
 //
 
+//
+//  SettingsView.swift
+//  InGermany
+//
+
 import SwiftUI
 
 struct SettingsView: View {
@@ -49,7 +54,7 @@ struct SettingsView: View {
     // MARK: - Sections
     private var languageSection: some View {
         Section(header: Text(viewModel.localizedText("settings_language_section"))) {
-            Picker("Language", selection: $viewModel.selectedLanguage) {
+            Picker(viewModel.localizedText("settings_language_picker"), selection: $viewModel.selectedLanguage) {
                 ForEach(viewModel.supportedLanguages, id: \.self) { code in
                     Text(viewModel.displayName(for: code)).tag(code)
                 }
@@ -67,8 +72,8 @@ struct SettingsView: View {
     }
 
     private var cardStyleSection: some View {
-        Section(header: Text("Card Style")) {
-            Picker("Card Style", selection: Binding<CardImageStyle>(
+        Section(header: Text(viewModel.localizedText("settings_card_style_title"))) {
+            Picker(viewModel.localizedText("settings_card_style_picker"), selection: Binding<CardImageStyle>(
                 get: { viewModel.selectedCardStyle },
                 set: { viewModel.selectedCardStyle = $0 }
             )) {
