@@ -491,7 +491,17 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
     func hasKey(_ key: String) -> Bool {
         translations[key] != nil
     }
-}
+    
+    // ✅ preload должен быть тут, внутри класса
+    private static var didPreload = false
+    func preload() {
+        if !Self.didPreload {
+            _ = translations   // форсируем инициализацию lazy
+            _ = t("app_name")  // делаем первый вызов
+            Self.didPreload = true
+        }
+    }
+} // <-- закрываем класс здесь
 
 // MARK: - Шорткат для SwiftUI
 extension View {
@@ -499,3 +509,4 @@ extension View {
         LocalizationManager.shared.t(key)
     }
 }
+
