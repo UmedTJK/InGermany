@@ -1,5 +1,12 @@
 # 📖 CHANGELOG
 
+## [v1.14.0-20251012] - 2025-10-12
+### Changed
+- Moved **DemoArticleView** from a separate TabBar tab into **Settings → Debug section**
+- TabBar now limited to 5 tabs (Home, Categories, Search, Favorites, Settings)
+- Demo content isolated for debug builds only
+
+
 ## [Unreleased]
 
 ### 🚀 Performance
