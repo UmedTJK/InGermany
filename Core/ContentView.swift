@@ -19,15 +19,48 @@ struct ContentView: View {
     @EnvironmentObject var readingStatsManager: ReadingStatsManager
     
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    @State private var selectedTab: Int = 0
     
     var body: some View {
-        CustomTabBarView(appContainer: appContainer)
-            // 🔹 Глобальное управление темой
-            .environment(\.colorScheme, isDarkMode ? .dark : .light)
-            .onAppear {
-                // 🔹 Стартуем неблокирующий preload
-                appContainer.bootstrap()
-            }
+        TabView(selection: $selectedTab) {
+            
+            LazyView { HomeView(appContainer: appContainer) }
+                .tabItem {
+                    Label(localizationManager.t("tab_home"), systemImage: "house.fill")
+                }
+                .tag(0)
+            
+            LazyView { CategoriesView(appContainer: appContainer) }
+                .tabItem {
+                    Label(localizationManager.t("tab_categories"), systemImage: "square.grid.2x2")
+                }
+                .tag(1)
+            
+            LazyView { SearchView(viewModel: appContainer.makeSearchViewModel()) }
+                .tabItem {
+                    Label(localizationManager.t("tab_search"), systemImage: "magnifyingglass")
+                }
+                .tag(2)
+            
+            LazyView { FavoritesView(viewModel: appContainer.makeFavoritesViewModel()) }
+                .tabItem {
+                    Label(localizationManager.t("tab_favorites"), systemImage: "star.fill")
+                }
+                .tag(3)
+            
+            LazyView { SettingsView(viewModel: appContainer.makeSettingsViewModel()) }
+                .tabItem {
+                    Label(localizationManager.t("tab_settings"), systemImage: "gearshape.fill")
+                }
+                .tag(4)
+        }
+        // ✅ Blur-эффект для iOS 17 SDK
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(.ultraThinMaterial, for: .tabBar)
+        .environment(\.colorScheme, isDarkMode ? ColorScheme.dark : ColorScheme.light)
+        .onAppear {
+            appContainer.bootstrap()
+        }
     }
 }
 
