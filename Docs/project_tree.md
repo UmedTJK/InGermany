@@ -49,7 +49,6 @@
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
-│   │   ├── xcshareddata
 │   │   └── xcuserdata
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
@@ -72,7 +71,6 @@
 │       ├── Helpers
 │       ├── Managers
 │       ├── Modeld
-│       ├── New Folder
 │       ├── Services
 │       └── ViewModels
 ├── Managers
@@ -89,7 +87,9 @@
 │   ├── Article.swift
 │   ├── Category.swift
 │   ├── Location.swift
-│   └── ReadingSession.swift
+│   ├── ReadingHistoryEntry.swift
+│   ├── ReadingSession.swift
+│   └── ReadingStats.swift
 ├── Protocols
 │   ├── ArticleFormatterProtocol.swift
 │   ├── ArticlesRepositoryProtocol.swift
@@ -221,4 +221,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-52 directories, 170 files
+50 directories, 172 files
