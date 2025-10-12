@@ -133,6 +133,7 @@
 │   └── locations.json
 ├── Services
 │   ├── ArticleFormatter.swift
+│   ├── ArticleRenderer.swift
 │   ├── ArticlesRepositoryImpl.swift
 │   ├── AuthService.swift
 │   ├── DataService.swift
@@ -142,10 +143,16 @@
 │   ├── LocalizationManager.swift
 │   ├── NetworkService.swift
 │   ├── ShareService.swift
-│   └── TextAnalysisService.swift
+│   ├── TextAnalysisService.swift
+│   └── articles
+│       └── burgeramt_registration.json
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
+│   ├── ArticleComponents
+│   │   ├── ArticleBlockView.swift
+│   │   ├── ChecklistCardView.swift
+│   │   └── FAQBlockView.swift
 │   ├── CardImageStyle.swift
 │   ├── CardSize.swift
 │   ├── CardStyle.swift
@@ -193,6 +200,7 @@
 │   │   ├── TagFilterView.swift
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
+│   ├── DemoArticleView.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
@@ -221,4 +229,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-50 directories, 172 files
+52 directories, 178 files
