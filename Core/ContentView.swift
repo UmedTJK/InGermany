@@ -53,11 +53,23 @@ struct ContentView: View {
                 .tag(3)
             
             // ✅ SettingsView через фабрику из контейнера
+            // внутри TabView
             LazyView { SettingsView(viewModel: appContainer.makeSettingsViewModel()) }
                 .tabItem {
                     Label(localizationManager.t("tab_settings"), systemImage: "gearshape")
                 }
                 .tag(4)
+
+            #if DEBUG
+            // 🧪 Demo Article screen (Debug only)
+            LazyView { appContainer.makeDemoArticleView() }
+                .tabItem {
+                    // 👇 меняем иконку, делаем её явно другой
+                    Label("Demo", systemImage: "ladybug")
+                }
+                .tag(5) // 👈 меняем тег, чтобы не пересекался с Settings
+            #endif
+
         }
         // 🔹 Глобальное управление темой
         .environment(\.colorScheme, isDarkMode ? .dark : .light)
@@ -70,7 +82,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environmentObject(AppContainer.previewMock())   // ✅ вместо shared
+        .environmentObject(AppContainer.previewMock())
         .environmentObject(LocalizationManager.shared)
         .environmentObject(FavoritesManager.shared)
         .environmentObject(ReadingStatsManager.shared)
