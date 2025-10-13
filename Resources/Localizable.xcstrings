@@ -262,6 +262,9 @@
     "Open Article Editor" : {
 
     },
+    "Preview" : {
+
+    },
     "Question" : {
 
     },
@@ -922,6 +925,9 @@
           }
         }
       }
+    },
+    "Share JSON" : {
+
     },
     "tab_about" : {
       "extractionState" : "manual",

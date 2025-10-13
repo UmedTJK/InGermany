@@ -54,6 +54,7 @@
 		AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */; };
 		AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */; };
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
+		AD70954A2E9D81AE00E79E19 /* ARTICLE_EDITOR_ROADMAP.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */; };
 		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
@@ -135,6 +136,7 @@
 		AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
+		AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARTICLE_EDITOR_ROADMAP.md; sourceTree = "<group>"; };
 		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
@@ -287,6 +289,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */,
 				AD1626022E9ADDD900E6E14B /* screenshots */,
 				AD1626002E9ADD3400E6E14B /* README.md */,
 				AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */,
@@ -522,6 +525,7 @@
 				AD38F5852E76891600E36EA4 /* .gitignore in Resources */,
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
+				AD70954A2E9D81AE00E79E19 /* ARTICLE_EDITOR_ROADMAP.md in Resources */,
 				AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */,
 				AD2A67B62E90DDF6006A94DD /* next_steps.md in Resources */,
 				ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */,

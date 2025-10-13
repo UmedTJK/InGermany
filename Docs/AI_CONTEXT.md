@@ -1159,3 +1159,28 @@
    - Интеграция Firebase или Supabase (синхронизация и облачное хранение).  
    - UI-улучшения: плавные анимации ( Shimmer-loading), расширение ArticleRenderer (списки, ссылки, изображения).  
    
+
+
+---
+
+## 📄 Документация редактора статей (Article Editor / Mini-CMS)
+
+В проекте реализован **Article Editor**, превращающий приложение InGermany в мини-CMS для создания и редактирования статей.
+
+- **Основной roadmap и инструкция для AI-агентов**:  
+  [Docs/ARTICLE_EDITOR_ROADMAP.md](Docs/ARTICLE_EDITOR_ROADMAP.md)
+
+### Ключевые возможности
+- Создание и редактирование статей с заголовком и блоками (paragraph, info, warning, tip, quote, list, checklist, faq, links).  
+- Live Preview через `ArticleRenderer`.  
+- Экспорт JSON в файл `Documents/article.json`.  
+- Поддержка сериализации `{ title, blocks }`.  
+- Подготовка к будущим шагам: импорт JSON, библиотека статей, дублирование блоков, MacOS Admin App.  
+
+### Ключевые файлы
+- `Shared/Models/ArticleBlock.swift`  
+- `Shared/ViewModels/ArticleEditorViewModel.swift`  
+- `Views/Editor/ArticleEditorView.swift`  
+- `Views/Editor/BlockPickerView.swift`  
+- `Services/ArticleRenderer.swift`  
+

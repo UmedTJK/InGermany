@@ -64,19 +64,29 @@ struct ArticleEditorView: View {
 
                     Button {
                         do {
-                            let data = try viewModel.exportToJSON()
-                            if let json = String(data: data, encoding: .utf8) {
-                                print("=== Article JSON ===\n\(json)\n=====================")
-                            }
+                            let _ = try viewModel.exportToJSON()
                         } catch {
                             print("Export error: \(error)")
                         }
                     } label: {
                         Label("Export JSON", systemImage: "square.and.arrow.up")
                     }
+
+                    Button {
+                        if let fileURL = viewModel.exportedFileURL() {
+                            let av = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
+                            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                               let root = scene.windows.first?.rootViewController {
+                                root.present(av, animated: true, completion: nil)
+                            }
+                        }
+                    } label: {
+                        Label("Share JSON", systemImage: "square.and.arrow.up.on.square")
+                    }
                 }
                 .padding()
                 .background(.ultraThinMaterial)
+
             }
             .navigationTitle("Article Editor")
             .sheet(isPresented: $showPicker) {
