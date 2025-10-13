@@ -18,7 +18,6 @@
 		AD16243F2E9ADA4600E6E14B /* ScaleOnTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */; };
 		AD1624412E9ADA7300E6E14B /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1624402E9ADA7200E6E14B /* LoadingView.swift */; };
 		AD1624432E9ADA9900E6E14B /* Accessibility+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */; };
-		AD1624452E9ADB4F00E6E14B /* UIUTILS_GUIDE.md in Sources */ = {isa = PBXBuildFile; fileRef = AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */; };
 		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D02E8FAD42006A94DD /* git_snapshot.md */; };
 		AD2A64D32E8FAD42006A94DD /* project_tree.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D12E8FAD42006A94DD /* project_tree.md */; };
@@ -60,11 +59,16 @@
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */ = {isa = PBXBuildFile; fileRef = ADA942002E78930B008D1364 /* Test_Document.pdf */; };
 		ADA942092E78950F008D1364 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = ADA942082E78950B008D1364 /* locations.json */; };
+		ADE23B712E9BEE5400BD152B /* ArticleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B702E9BEE5400BD152B /* ArticleRenderer.swift */; };
+		ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */ = {isa = PBXBuildFile; fileRef = ADE23B732E9BEED400BD152B /* burgeramt_registration.json */; };
+		ADE23B7A2E9BEEF000BD152B /* ArticleBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B762E9BEEF000BD152B /* ArticleBlockView.swift */; };
+		ADE23B7B2E9BEEF000BD152B /* FAQBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B782E9BEEF000BD152B /* FAQBlockView.swift */; };
+		ADE23B7C2E9BEEF000BD152B /* ChecklistCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B772E9BEEF000BD152B /* ChecklistCardView.swift */; };
+		ADE23B7F2E9BF8F500BD152B /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */; };
 		ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */; };
 		ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */; };
 		ADF3394A2E8850FA00AE4CBF /* RatingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339452E8850FA00AE4CBF /* RatingManager.swift */; };
 		ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339472E8850FA00AE4CBF /* TextSizeManager.swift */; };
-		ADF3394E2E8850FA00AE4CBF /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339462E8850FA00AE4CBF /* ReadingHistoryManager.swift */; };
 		ADFDC50E2E85B3AF004EC7ED /* AI_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */; };
 /* End PBXBuildFile section */
 
@@ -139,10 +143,15 @@
 		AD8552C82E75B4C4003D3826 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = categories.json; path = Resources/categories.json; sourceTree = SOURCE_ROOT; };
 		ADA942002E78930B008D1364 /* Test_Document.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = Test_Document.pdf; sourceTree = "<group>"; };
 		ADA942082E78950B008D1364 /* locations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
+		ADE23B702E9BEE5400BD152B /* ArticleRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleRenderer.swift; sourceTree = "<group>"; };
+		ADE23B732E9BEED400BD152B /* burgeramt_registration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration.json; sourceTree = "<group>"; };
+		ADE23B762E9BEEF000BD152B /* ArticleBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBlockView.swift; sourceTree = "<group>"; };
+		ADE23B772E9BEEF000BD152B /* ChecklistCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistCardView.swift; sourceTree = "<group>"; };
+		ADE23B782E9BEEF000BD152B /* FAQBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQBlockView.swift; sourceTree = "<group>"; };
+		ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
 		ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
 		ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
 		ADF339452E8850FA00AE4CBF /* RatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingManager.swift; sourceTree = "<group>"; };
-		ADF339462E8850FA00AE4CBF /* ReadingHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHistoryManager.swift; sourceTree = "<group>"; };
 		ADF339472E8850FA00AE4CBF /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
 		ADFDC50D2E85B3AF004EC7ED /* AI_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AI_CONTEXT.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -249,6 +258,8 @@
 		AD2A65652E8FF0D1006A94DD /* UIUtils */ = {
 			isa = PBXGroup;
 			children = (
+				ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */,
+				ADE23B792E9BEEF000BD152B /* ArticleComponents */,
 				AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */,
 				AD1624402E9ADA7200E6E14B /* LoadingView.swift */,
 				AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */,
@@ -324,6 +335,7 @@
 		AD8552C32E75B452003D3826 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				ADE23B702E9BEE5400BD152B /* ArticleRenderer.swift */,
 				AD5D36CE2E96DFA800DB63EF /* ArticleFormatter.swift */,
 				AD5D36CC2E96DF4900DB63EF /* TextAnalysisService.swift */,
 				AD5D36CA2E96DF3700DB63EF /* DateFormattingService.swift */,
@@ -342,14 +354,34 @@
 		AD8552C62E75B48D003D3826 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				ADE23B7D2E9BF11300BD152B /* articles */,
 				AD52FCF22E84765A00CC9F61 /* Images */,
 				ADA942082E78950B008D1364 /* locations.json */,
 				ADA942002E78930B008D1364 /* Test_Document.pdf */,
 				AD8552C82E75B4C4003D3826 /* categories.json */,
 				AD8552C72E75B4AF003D3826 /* articles.json */,
+				ADE23B732E9BEED400BD152B /* burgeramt_registration.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
+		};
+		ADE23B792E9BEEF000BD152B /* ArticleComponents */ = {
+			isa = PBXGroup;
+			children = (
+				ADE23B762E9BEEF000BD152B /* ArticleBlockView.swift */,
+				ADE23B772E9BEEF000BD152B /* ChecklistCardView.swift */,
+				ADE23B782E9BEEF000BD152B /* FAQBlockView.swift */,
+			);
+			path = ArticleComponents;
+			sourceTree = "<group>";
+		};
+		ADE23B7D2E9BF11300BD152B /* articles */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = articles;
+			path = Resources/articles;
+			sourceTree = SOURCE_ROOT;
 		};
 		ADF339482E8850FA00AE4CBF /* Managers */ = {
 			isa = PBXGroup;
@@ -359,7 +391,6 @@
 				AD5D36C82E96D4BB00DB63EF /* CacheManager.swift */,
 				ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */,
 				ADF339452E8850FA00AE4CBF /* RatingManager.swift */,
-				ADF339462E8850FA00AE4CBF /* ReadingHistoryManager.swift */,
 				ADF339472E8850FA00AE4CBF /* TextSizeManager.swift */,
 			);
 			path = Managers;
@@ -478,6 +509,7 @@
 			files = (
 				AD38F5872E76899D00E36EA4 /* README.md in Resources */,
 				AD2A66942E90D803006A94DD /* locations_README.md in Resources */,
+				ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */,
 				AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */,
 				AD2A64D32E8FAD42006A94DD /* project_tree.md in Resources */,
 				AD38F5852E76891600E36EA4 /* .gitignore in Resources */,
@@ -511,6 +543,7 @@
 				AD2A65662E8FF0D1006A94DD /* ProgressBar.swift in Sources */,
 				AD459C1B2E98B7EF00F540F3 /* FontProviding.swift in Sources */,
 				AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */,
+				ADE23B712E9BEE5400BD152B /* ArticleRenderer.swift in Sources */,
 				AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */,
 				AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */,
 				AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */,
@@ -530,23 +563,25 @@
 				AD2A655C2E8FEF44006A94DD /* ExportToPDF.swift in Sources */,
 				AD459A5C2E97925900F540F3 /* ReadingStatsManagingProtocol.swift in Sources */,
 				AD2A655D2E8FEF44006A94DD /* DefaultsStore.swift in Sources */,
+				ADE23B7A2E9BEEF000BD152B /* ArticleBlockView.swift in Sources */,
+				ADE23B7B2E9BEEF000BD152B /* FAQBlockView.swift in Sources */,
+				ADE23B7C2E9BEEF000BD152B /* ChecklistCardView.swift in Sources */,
 				AD2A655E2E8FEF44006A94DD /* LocalizationManager.swift in Sources */,
 				AD5D36CD2E96DF4A00DB63EF /* TextAnalysisService.swift in Sources */,
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
 				AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */,
 				ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */,
+				ADE23B7F2E9BF8F500BD152B /* CustomTabBarView.swift in Sources */,
 				AD5D36CB2E96DF3900DB63EF /* DateFormattingService.swift in Sources */,
 				ADF3394A2E8850FA00AE4CBF /* RatingManager.swift in Sources */,
 				AD16243B2E9AD9D700E6E14B /* ShimmerEffect.swift in Sources */,
 				ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */,
-				ADF3394E2E8850FA00AE4CBF /* ReadingHistoryManager.swift in Sources */,
 				AD5D36C92E96D4BD00DB63EF /* CacheManager.swift in Sources */,
 				AD459C1D2E98BB2800F540F3 /* ShareServiceProtocol.swift in Sources */,
 				AD16243F2E9ADA4600E6E14B /* ScaleOnTap.swift in Sources */,
 				AD1624412E9ADA7300E6E14B /* LoadingView.swift in Sources */,
 				AD16243D2E9ADA0300E6E14B /* ShakeEffect.swift in Sources */,
 				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
-				AD1624452E9ADB4F00E6E14B /* UIUTILS_GUIDE.md in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
 				AD1624432E9ADA9900E6E14B /* Accessibility+Extensions.swift in Sources */,
 				AD459D022E99692C00F540F3 /* CardStyle.swift in Sources */,

@@ -1,5 +1,29 @@
 # 📖 CHANGELOG
 
+
+# Changelog
+
+## [v1.15.0] - 2025-10-13
+### ✨ Added
+- Adopted **system Liquid Glass TabBar** on iOS 18+ (matches Apple Music/Safari look & feel)
+- Automatic switching: iOS 18+ → Liquid Glass, iOS 17 → blur fallback
+
+### 🔧 Changed
+- Removed unsupported manual modifiers (`.tabBarStyle`, `.tabBarMinimizeBehavior`)
+- Simplified `ContentView` to rely on native `TabView` behavior
+
+### 🛠 Internal
+- Verified compatibility on iPhone 16 Pro Max (iOS 26.1)
+- Ensured fallback blur styling for older devices (iOS 17)
+
+
+## [v1.14.0-20251012] - 2025-10-12
+### Changed
+- Moved **DemoArticleView** from a separate TabBar tab into **Settings → Debug section**
+- TabBar now limited to 5 tabs (Home, Categories, Search, Favorites, Settings)
+- Demo content isolated for debug builds only
+
+
 ## [Unreleased]
 
 ### 🚀 Performance

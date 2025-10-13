@@ -3,11 +3,6 @@
 //  InGermany
 //
 
-//
-//  SettingsView.swift
-//  InGermany
-//
-
 import SwiftUI
 
 struct SettingsView: View {
@@ -30,6 +25,11 @@ struct SettingsView: View {
                 dateFormatSection
                 statisticsSection
                 aboutSection
+
+                #if DEBUG
+                debugSection
+                #endif
+
                 clearHistorySection
                 resetSection
             }
@@ -125,6 +125,16 @@ struct SettingsView: View {
             }
         }
     }
+
+    #if DEBUG
+    private var debugSection: some View {
+        Section(header: Text("Debug")) {
+            NavigationLink("Demo Article") {
+                appContainer.makeDemoArticleView()
+            }
+        }
+    }
+    #endif
 
     private var clearHistorySection: some View {
         Section {

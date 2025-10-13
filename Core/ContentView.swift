@@ -24,45 +24,41 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             
-            // ✅ HomeView через DI
             LazyView { HomeView(appContainer: appContainer) }
                 .tabItem {
-                    Label(localizationManager.t("tab_home"), systemImage: "house")
+                    Label(localizationManager.t("tab_home"), systemImage: "house.fill")
                 }
                 .tag(0)
             
-            // ✅ CategoriesView через DI
             LazyView { CategoriesView(appContainer: appContainer) }
                 .tabItem {
                     Label(localizationManager.t("tab_categories"), systemImage: "square.grid.2x2")
                 }
                 .tag(1)
             
-            // ✅ SearchView через фабрику из контейнера
             LazyView { SearchView(viewModel: appContainer.makeSearchViewModel()) }
                 .tabItem {
                     Label(localizationManager.t("tab_search"), systemImage: "magnifyingglass")
                 }
                 .tag(2)
             
-            // ✅ FavoritesView через фабрику из контейнера
             LazyView { FavoritesView(viewModel: appContainer.makeFavoritesViewModel()) }
                 .tabItem {
                     Label(localizationManager.t("tab_favorites"), systemImage: "star.fill")
                 }
                 .tag(3)
             
-            // ✅ SettingsView через фабрику из контейнера
             LazyView { SettingsView(viewModel: appContainer.makeSettingsViewModel()) }
                 .tabItem {
-                    Label(localizationManager.t("tab_settings"), systemImage: "gearshape")
+                    Label(localizationManager.t("tab_settings"), systemImage: "gearshape.fill")
                 }
                 .tag(4)
         }
-        // 🔹 Глобальное управление темой
-        .environment(\.colorScheme, isDarkMode ? .dark : .light)
+        // ⚡ Для iOS 17 остаётся blur, на iOS 18+ Liquid Glass включится автоматически
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(.ultraThinMaterial, for: .tabBar)
+        .environment(\.colorScheme, isDarkMode ? ColorScheme.dark : ColorScheme.light)
         .onAppear {
-            // 🔹 Стартуем неблокирующий preload
             appContainer.bootstrap()
         }
     }
@@ -70,7 +66,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environmentObject(AppContainer.previewMock())   // ✅ вместо shared
+        .environmentObject(AppContainer.previewMock())
         .environmentObject(LocalizationManager.shared)
         .environmentObject(FavoritesManager.shared)
         .environmentObject(ReadingStatsManager.shared)

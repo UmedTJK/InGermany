@@ -1,9 +1,4 @@
-//
-//  ArticleRenderer.swift
-//  InGermany
-//
-//  Created by SUM TJK on 12.10.25.
-//
+// Services/ArticleRenderer.swift
 import SwiftUI
 
 // MARK: - Article Models
@@ -93,7 +88,6 @@ struct ArticleRenderer: View {
                             Text("🔗 \(title)")
                                 .foregroundColor(.blue)
                                 .onTapGesture {
-                                    // тут можно сделать переход по articleId
                                     print("Открыть статью: \(item.articleId ?? "")")
                                 }
                         }
@@ -102,6 +96,19 @@ struct ArticleRenderer: View {
                 .padding()
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(12)
+            }
+
+        case "list": // 🆕 поддержка списков
+            if let items = section.items {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(items) { item in
+                        Text("• \(item.text ?? "")")
+                            .font(.body)
+                            .foregroundColor(.primary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .padding(.vertical, 4)
             }
 
         default:
@@ -114,8 +121,7 @@ struct ArticleRenderer: View {
 
 func loadArticle(named filename: String) -> [ArticleSection] {
     guard let url = Bundle.main.url(forResource: filename,
-                                    withExtension: "json",
-                                    subdirectory: "articles"),
+                                    withExtension: "json"),
           let data = try? Data(contentsOf: url),
           let decoded = try? JSONDecoder().decode([ArticleSection].self, from: data)
     else {
@@ -124,5 +130,3 @@ func loadArticle(named filename: String) -> [ArticleSection] {
     }
     return decoded
 }
-
-

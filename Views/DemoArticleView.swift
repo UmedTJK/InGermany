@@ -1,20 +1,64 @@
-//
-//  DemoArticleView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 12.10.25.
-//
+// Views/DemoArticleView.swift
 import SwiftUI
 
+/// Demo screen that loads a JSON article from the app bundle and renders it with ArticleRenderer.
 struct DemoArticleView: View {
-    let sections = loadArticle(named: "burgeramt_registration")
+    @State private var sections: [ArticleSection] = []
+    @State private var loadError: String?
+    @State private var isLoading: Bool = true
+
+    private let localizationManager: LocalizationManager
+
+    // MARK: - Init через DI
+    init(localizationManager: LocalizationManager) {
+        self.localizationManager = localizationManager
+    }
 
     var body: some View {
-        ArticleRenderer(sections: sections)
+        ScrollView {
+            VStack(spacing: 16) {
+                if isLoading {
+                    LoadingView()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else if let loadError {
+                    Text("Ошибка загрузки JSON:\n\(loadError)")
+                        .font(.callout)
+                        .foregroundColor(.red)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } else if !sections.isEmpty {
+                    ArticleRenderer(sections: sections)
+                } else {
+                    Text("Нет данных для отображения")
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding()
+            .navigationTitle(localizationManager.t("demo_article_title"))
+        }
+        .onAppear {
+            loadDemoArticle()
+        }
+    }
+
+    private func loadDemoArticle() {
+        isLoading = true
+        loadError = nil
+
+        guard let url = Bundle.main.url(forResource: "burgeramt_registration",
+                                        withExtension: "json") else {
+            isLoading = false
+            loadError = "Файл burgeramt_registration.json не найден в Resources"
+            return
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            sections = try JSONDecoder().decode([ArticleSection].self, from: data)
+            isLoading = false
+        } catch {
+            loadError = error.localizedDescription
+            isLoading = false
+        }
     }
 }
-
-#Preview {
-    DemoArticleView()
-}
-

@@ -49,6 +49,7 @@
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
+│   │   ├── xcshareddata
 │   │   └── xcuserdata
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
@@ -125,7 +126,9 @@
 │   │   └── uk.lproj
 │   ├── Localizable.xcstrings
 │   ├── Test_Document.pdf
+│   ├── articles
 │   ├── articles.json
+│   ├── burgeramt_registration.json
 │   ├── burgergeld.pdf
 │   ├── categories.json
 │   ├── guide.pdf
@@ -143,9 +146,7 @@
 │   ├── LocalizationManager.swift
 │   ├── NetworkService.swift
 │   ├── ShareService.swift
-│   ├── TextAnalysisService.swift
-│   └── articles
-│       └── burgeramt_registration.json
+│   └── TextAnalysisService.swift
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
@@ -157,6 +158,7 @@
 │   ├── CardSize.swift
 │   ├── CardStyle.swift
 │   ├── Color+Hex.swift
+│   ├── CustomTabBarView.swift
 │   ├── Environment+ScreenSize.swift
 │   ├── LoadingView.swift
 │   ├── ProgressBar.swift
@@ -229,4 +231,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-52 directories, 178 files
+53 directories, 179 files

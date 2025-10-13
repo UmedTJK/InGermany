@@ -160,6 +160,12 @@ final class AppContainer: ObservableObject {
         PDFViewerViewModel(localizationManager: localizationManager)
     }
     
+    func makeDemoArticleView() -> DemoArticleView {
+        DemoArticleView(localizationManager: localizationManager)
+    }
+
+
+    
     func makeShareService() -> ShareServiceProtocol {
         return shareService
     }
