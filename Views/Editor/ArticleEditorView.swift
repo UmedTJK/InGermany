@@ -2,9 +2,7 @@
 //  ArticleEditorView.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.10.25.
-//
-// Views/ArticleEditorView.swift
+
 import SwiftUI
 
 struct ArticleEditorView: View {
@@ -45,6 +43,12 @@ struct ArticleEditorView: View {
                             }
                             .onMove(perform: viewModel.moveBlock)
                         }
+                    }
+
+                    // 🆕 Live Preview
+                    Section(header: Text("Preview")) {
+                        ArticleRenderer(sections: viewModel.toSections())
+                            .frame(minHeight: 200)
                     }
                 }
 
@@ -98,7 +102,6 @@ struct ArticleEditorView: View {
     }
 
     // MARK: - Per-Block Editors
-
     @ViewBuilder
     private func blockEditor(for block: ArticleBlock) -> some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -107,7 +110,6 @@ struct ArticleEditorView: View {
 
             switch block.payload {
             case .content(let text):
-                // inline editor for text-like blocks
                 TextEditor(text: bindingContent(for: block.id, original: text))
                     .frame(minHeight: 80)
                     .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary))
@@ -127,6 +129,16 @@ struct ArticleEditorView: View {
         }
         .padding(.vertical, 6)
     }
+
+    // MARK: - Вспомогательные редакторы и биндинги (оставляем всё как у тебя было!)
+    // сюда идут твои listEditor, checklistEditor, faqEditor, linksEditor,
+    // bindingContent, updateListItem, updateChecklistText и т.д.
+
+
+
+    // MARK: - Per-Block Editors
+
+
 
     // MARK: - Editors Implementations
 

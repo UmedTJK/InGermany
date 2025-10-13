@@ -4,6 +4,7 @@
 //
 //  Created by SUM TJK on 13.10.25.
 //
+
 import Foundation
 
 @MainActor
@@ -45,9 +46,17 @@ final class ArticleEditorViewModel: ObservableObject {
         blocks.move(fromOffsets: source, toOffset: destination)
     }
 
-    // MARK: - Export (strictly matches ArticleRenderer / burgeramt_registration.json)
+    // MARK: - Export (strict JSON)
     func exportToJSON() throws -> Data {
-        let sections: [ArticleSection] = blocks.map { block in
+        let sections = toSections()
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        return try encoder.encode(sections)
+    }
+
+    // MARK: - Convert to ArticleRenderer model (for live preview)
+    func toSections() -> [ArticleSection] {
+        blocks.map { block in
             switch block.payload {
             case .content(let text):
                 return ArticleSection(
@@ -57,26 +66,18 @@ final class ArticleEditorViewModel: ObservableObject {
                     question: nil,
                     answer: nil
                 )
-
             case .list(let items):
                 let mapped = items.map { ArticleItem(text: $0, isDone: nil, title: nil, articleId: nil) }
                 return ArticleSection(type: "list", content: nil, items: mapped, question: nil, answer: nil)
-
             case .checklist(let entries):
                 let mapped = entries.map { ArticleItem(text: $0.text, isDone: $0.isDone, title: nil, articleId: nil) }
                 return ArticleSection(type: "checklist", content: nil, items: mapped, question: nil, answer: nil)
-
             case .faq(let q, let a):
                 return ArticleSection(type: "faq", content: nil, items: nil, question: q, answer: a)
-
             case .links(let links):
                 let mapped = links.map { ArticleItem(text: nil, isDone: nil, title: $0.title, articleId: $0.articleId) }
                 return ArticleSection(type: "links", content: nil, items: mapped, question: nil, answer: nil)
             }
         }
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-        return try encoder.encode(sections)
     }
 }
