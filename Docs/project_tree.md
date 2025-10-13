@@ -157,7 +157,8 @@
 │   │   ├── ArticleBlock.swift
 │   │   └── ArticleSectionDTO.swift
 │   └── ViewModels
-│       └── ArticleEditorViewModel.swift
+│       ├── ArticleEditorViewModel.swift
+│       └── ArticleLibraryViewModel.swift
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
@@ -216,6 +217,7 @@
 │   ├── DemoArticleView.swift
 │   ├── Editor
 │   │   ├── ArticleEditorView.swift
+│   │   ├── ArticleLibraryView.swift
 │   │   └── BlockPickerView.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
@@ -245,4 +247,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-58 directories, 188 files
+58 directories, 190 files
