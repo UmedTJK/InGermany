@@ -164,8 +164,16 @@ final class AppContainer: ObservableObject {
         DemoArticleView(localizationManager: localizationManager)
     }
 
+    // MARK: - Editor
 
-    
+    func makeArticleEditorViewModel() -> ArticleEditorViewModel {
+        ArticleEditorViewModel(title: "", blocks: [])
+    }
+
+    func makeArticleEditorView() -> ArticleEditorView {
+        ArticleEditorView(viewModel: makeArticleEditorViewModel())
+    }
+
     func makeShareService() -> ShareServiceProtocol {
         return shareService
     }
@@ -191,6 +199,7 @@ final class AppContainer: ObservableObject {
             .environmentObject(ratingManager)
             .environmentObject(readingStatsManager)
     }
+    
     
     // MARK: - Clear All Data (for testing)
     
@@ -219,3 +228,5 @@ extension AppContainer {
         AppContainer()
     }
 }
+
+
