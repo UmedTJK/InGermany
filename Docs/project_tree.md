@@ -54,6 +54,8 @@
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
 ├── InGermanyTests
+│   ├── Editor
+│   │   └── ArticleEditorViewModelTests.swift
 │   ├── InGermanyTests.swift
 │   ├── Mocks
 │   │   ├── MockArticlesRepository.swift
@@ -147,6 +149,12 @@
 │   ├── NetworkService.swift
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
+├── Shared
+│   ├── Models
+│   │   ├── ArticleBlock.swift
+│   │   └── ArticleSectionDTO.swift
+│   └── ViewModels
+│       └── ArticleEditorViewModel.swift
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
@@ -203,6 +211,9 @@
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
 │   ├── DemoArticleView.swift
+│   ├── Editor
+│   │   ├── ArticleEditorView.swift
+│   │   └── BlockPickerView.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
@@ -231,4 +242,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-53 directories, 179 files
+58 directories, 185 files
