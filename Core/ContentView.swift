@@ -54,7 +54,7 @@ struct ContentView: View {
                 }
                 .tag(4)
         }
-        // ✅ Blur-эффект для iOS 17 SDK
+        // ⚡ Для iOS 17 остаётся blur, на iOS 18+ Liquid Glass включится автоматически
         .toolbarBackground(.visible, for: .tabBar)
         .toolbarBackground(.ultraThinMaterial, for: .tabBar)
         .environment(\.colorScheme, isDarkMode ? ColorScheme.dark : ColorScheme.light)
