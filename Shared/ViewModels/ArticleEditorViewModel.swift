@@ -7,65 +7,71 @@
 import Foundation
 
 @MainActor
-public final class ArticleEditorViewModel: ObservableObject {
-    @Published public var title: String
-    @Published public var blocks: [ArticleBlock]
+final class ArticleEditorViewModel: ObservableObject {
+    // MARK: - State
+    @Published var title: String
+    @Published var blocks: [ArticleBlock]
 
-    public init(title: String = "", blocks: [ArticleBlock] = []) {
+    init(title: String = "", blocks: [ArticleBlock] = []) {
         self.title = title
         self.blocks = blocks
     }
 
-    // MARK: Mutations
-    public func addBlock(type: BlockType) {
-        blocks.append(ArticleBlock(type: type))
+    // MARK: - Mutations
+    func addBlock(type: BlockType) {
+        let newBlock: ArticleBlock
+        switch type {
+        case .paragraph, .info, .warning, .tip, .quote:
+            newBlock = ArticleBlock(type: type, payload: .content(""))
+        case .list:
+            newBlock = ArticleBlock(type: .list, payload: .list([""]))
+        case .checklist:
+            newBlock = ArticleBlock(type: .checklist, payload: .checklist([ChecklistEntry(text: "", isDone: false)]))
+        case .faq:
+            newBlock = ArticleBlock(type: .faq, payload: .faq(question: "", answer: ""))
+        case .links:
+            newBlock = ArticleBlock(type: .links, payload: .links([LinkEntry(title: "", articleId: "")]))
+        }
+        blocks.append(newBlock)
     }
 
-    public func deleteBlock(id: UUID) {
+    func deleteBlock(id: UUID) {
         if let idx = blocks.firstIndex(where: { $0.id == id }) {
             blocks.remove(at: idx)
         }
     }
 
-    public func moveBlock(from source: IndexSet, to destination: Int) {
+    func moveBlock(from source: IndexSet, to destination: Int) {
         blocks.move(fromOffsets: source, toOffset: destination)
     }
 
-    // MARK: Export → JSON строго по контракту ArticleRenderer
-    public func exportToJSON() throws -> Data {
-        let sections: [ArticleSectionDTO] = blocks.map { block in
-            switch block.type {
-            case .paragraph, .info, .warning, .tip, .quote:
-                return ArticleSectionDTO(
+    // MARK: - Export (strictly matches ArticleRenderer / burgeramt_registration.json)
+    func exportToJSON() throws -> Data {
+        let sections: [ArticleSection] = blocks.map { block in
+            switch block.payload {
+            case .content(let text):
+                return ArticleSection(
                     type: block.type.rawValue,
-                    content: block.content,
+                    content: text,
                     items: nil,
                     question: nil,
                     answer: nil
                 )
 
-            case .list:
-                // Каждая строка content → item.text
-                let items = block.content
-                    .split(whereSeparator: \.isNewline)
-                    .map { ArticleItemDTO(text: String($0), isDone: nil, title: nil, articleId: nil) }
-                return ArticleSectionDTO(type: "list", content: nil, items: items, question: nil, answer: nil)
+            case .list(let items):
+                let mapped = items.map { ArticleItem(text: $0, isDone: nil, title: nil, articleId: nil) }
+                return ArticleSection(type: "list", content: nil, items: mapped, question: nil, answer: nil)
 
-            case .checklist:
-                // Каждая строка content → item.text (isDone = false по умолчанию)
-                let items = block.content
-                    .split(whereSeparator: \.isNewline)
-                    .map { ArticleItemDTO(text: String($0), isDone: false, title: nil, articleId: nil) }
-                return ArticleSectionDTO(type: "checklist", content: nil, items: items, question: nil, answer: nil)
+            case .checklist(let entries):
+                let mapped = entries.map { ArticleItem(text: $0.text, isDone: $0.isDone, title: nil, articleId: nil) }
+                return ArticleSection(type: "checklist", content: nil, items: mapped, question: nil, answer: nil)
 
-            case .faq:
-                return ArticleSectionDTO(
-                    type: "faq",
-                    content: nil,
-                    items: nil,
-                    question: block.extra?["question"],
-                    answer: block.extra?["answer"]
-                )
+            case .faq(let q, let a):
+                return ArticleSection(type: "faq", content: nil, items: nil, question: q, answer: a)
+
+            case .links(let links):
+                let mapped = links.map { ArticleItem(text: nil, isDone: nil, title: $0.title, articleId: $0.articleId) }
+                return ArticleSection(type: "links", content: nil, items: mapped, question: nil, answer: nil)
             }
         }
 
@@ -74,4 +80,3 @@ public final class ArticleEditorViewModel: ObservableObject {
         return try encoder.encode(sections)
     }
 }
-

@@ -167,13 +167,14 @@ final class AppContainer: ObservableObject {
     // MARK: - Editor
 
     func makeArticleEditorViewModel() -> ArticleEditorViewModel {
+        // здесь не тянем ничего из .shared — чистый DI
         ArticleEditorViewModel(title: "", blocks: [])
     }
 
     func makeArticleEditorView() -> ArticleEditorView {
         ArticleEditorView(viewModel: makeArticleEditorViewModel())
     }
-
+    
     func makeShareService() -> ShareServiceProtocol {
         return shareService
     }
@@ -200,7 +201,6 @@ final class AppContainer: ObservableObject {
             .environmentObject(readingStatsManager)
     }
     
-    
     // MARK: - Clear All Data (for testing)
     
     func clearAllData() {
@@ -211,7 +211,7 @@ final class AppContainer: ObservableObject {
     
     // MARK: - Bootstrap (non-blocking preload)
     func bootstrap() {
-        // ✅ прогреваем словарь локализаций (убирает лаг на первом t(_:))
+        // ⚠️ вызов preload() оставляю как есть; если метода нет — убери строку или добавь реализацию в LocalizationManager
         localizationManager.preload()
         
         // ✅ запускаем подгрузку данных в фоне
@@ -223,10 +223,10 @@ final class AppContainer: ObservableObject {
     }
 }
 
+// MARK: - Preview / Mocks
+
 extension AppContainer {
     static func previewMock() -> AppContainer {
         AppContainer()
     }
 }
-
-

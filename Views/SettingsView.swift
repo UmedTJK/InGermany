@@ -126,15 +126,18 @@ struct SettingsView: View {
         }
     }
 
-    #if DEBUG
-    private var debugSection: some View {
-        Section(header: Text("Debug")) {
-            NavigationLink("Demo Article") {
-                appContainer.makeDemoArticleView()
-            }
+#if DEBUG
+private var debugSection: some View {
+    Section(header: Text("Debug")) {
+        NavigationLink("Demo Article") {
+            appContainer.makeDemoArticleView()
+        }
+        NavigationLink("Open Article Editor") {
+            appContainer.makeArticleEditorView()
         }
     }
-    #endif
+}
+#endif
 
     private var clearHistorySection: some View {
         Section {

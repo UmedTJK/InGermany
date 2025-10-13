@@ -114,6 +114,33 @@
         }
       }
     },
+    "Add Block" : {
+
+    },
+    "Add checklist item" : {
+
+    },
+    "Add item" : {
+
+    },
+    "Add link" : {
+
+    },
+    "Answer" : {
+
+    },
+    "Article Editor" : {
+
+    },
+    "Article ID" : {
+
+    },
+    "Blocks" : {
+
+    },
+    "Cancel" : {
+
+    },
     "common_cancel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -211,7 +238,31 @@
     "Debug" : {
 
     },
+    "Delete" : {
+
+    },
+    "Delete block?" : {
+
+    },
     "Demo Article" : {
+
+    },
+    "Enter title" : {
+
+    },
+    "Export JSON" : {
+
+    },
+    "Item %lld" : {
+
+    },
+    "No blocks yet" : {
+
+    },
+    "Open Article Editor" : {
+
+    },
+    "Question" : {
 
     },
     "settings_about" : {
@@ -1200,6 +1251,15 @@
           }
         }
       }
+    },
+    "Text" : {
+
+    },
+    "This action cannot be undone." : {
+
+    },
+    "Title" : {
+
     },
     "Все статьи" : {
 
