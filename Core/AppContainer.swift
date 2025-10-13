@@ -179,6 +179,10 @@ final class AppContainer: ObservableObject {
         return shareService
     }
     
+    func makeArticleLibraryViewModel() -> ArticleLibraryViewModel {
+        ArticleLibraryViewModel()
+    }
+    
     func makeArticleDetailView(article: Article, allArticles: [Article]) -> ArticleDetailView {
         ArticleDetailView(
             viewModel: makeArticleDetailViewModel(article: article, allArticles: allArticles),

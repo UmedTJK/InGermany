@@ -118,11 +118,12 @@
 - [x] Включение `title` в экспортированный JSON  
 - [x] Сохранение JSON в `Documents/article.json`  
 - [x] Импорт JSON обратно в редактор  
-- [x] Юнит-тест симметрии Export → Import  
+- [x] Юнит-тест симметрии Export → Import 
+- [x] JSON Import implemented in `ArticleEditorViewModel`
+- [x] Export→Import symmetry test covered
+- [x] Integrated Article Library → Article Editor navigation (SettingsView via NavigationStack)
 
-## 🚧 В процессе / План
-- [ ] Article Library (список сохранённых статей в `Documents/`)  
-- [ ] Share JSON (системный диалог для экспорта)  
-- [ ] Улучшенный UI (форматирование текста, предпросмотр стилей, drag&drop блоков)  
+
+## 🚧 В процессе / План 
 - [ ] Версия для macOS (Admin App для контент-менеджера)  
 - [ ] Поддержка мультимедийных блоков (например, изображения)  

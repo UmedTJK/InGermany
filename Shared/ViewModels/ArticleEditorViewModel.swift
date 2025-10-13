@@ -13,8 +13,9 @@ struct ArticleDocument: Codable {
 }
 
 @MainActor
-final class ArticleEditorViewModel: ObservableObject {
-    // MARK: - State
+final class ArticleEditorViewModel: ObservableObject, Identifiable {
+    nonisolated let id = UUID()   // ⚡ nonisolated — значит доступен и вне MainActor
+    
     @Published var title: String
     @Published var blocks: [ArticleBlock]
 
@@ -130,10 +131,18 @@ final class ArticleEditorViewModel: ObservableObject {
         let data = try Data(contentsOf: url)
         try importFromJSON(data)
     }
+    
+    
+}
 
-    
-    
-    
-    
-    
+
+// MARK: - Hashable & Equatable
+extension ArticleEditorViewModel: Hashable {
+    nonisolated static func == (lhs: ArticleEditorViewModel, rhs: ArticleEditorViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
