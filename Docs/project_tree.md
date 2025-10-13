@@ -10,6 +10,7 @@
 │   ├── AI_CONTEXT_20251006.md
 │   ├── ARCHITECTURE_ISSUES.md
 │   ├── ARCHITECTURE_ISSUES_old.md
+│   ├── ARTICLE_EDITOR_ROADMAP.md
 │   ├── CHANGELOG.md
 │   ├── CLEAN_CODE_CHECKLIST.md
 │   ├── Git_Mini_Guide.md
@@ -55,6 +56,7 @@
 │       └── sumtjk.xcuserdatad
 ├── InGermanyTests
 │   ├── Editor
+│   │   ├── ArticleEditorImportExportTests.swift
 │   │   └── ArticleEditorViewModelTests.swift
 │   ├── InGermanyTests.swift
 │   ├── Mocks
@@ -82,6 +84,7 @@
 │   ├── FavoritesManager.swift
 │   ├── ProtocolConformances.swift
 │   ├── RatingManager.swift
+│   ├── ReadingHistoryManager.swift
 │   ├── ReadingProgressHelper.swift
 │   ├── ReadingStatsManager.swift
 │   ├── ReadingTimeCalculator.swift
@@ -242,4 +245,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-58 directories, 185 files
+58 directories, 188 files
