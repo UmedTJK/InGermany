@@ -253,6 +253,9 @@
     "Export JSON" : {
 
     },
+    "Import JSON" : {
+
+    },
     "Item %lld" : {
 
     },
@@ -925,9 +928,6 @@
           }
         }
       }
-    },
-    "Share JSON" : {
-
     },
     "tab_about" : {
       "extractionState" : "manual",

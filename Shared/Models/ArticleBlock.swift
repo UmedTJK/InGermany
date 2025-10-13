@@ -94,3 +94,35 @@ public struct ArticleBlock: Identifiable, Codable, Equatable {
         self.payload = payload
     }
 }
+
+extension ArticleBlock {
+    static func fromSection(_ section: ArticleSection) -> ArticleBlock {
+        switch section.type {
+        case "paragraph", "info", "warning", "tip", "quote":
+            return ArticleBlock(
+                type: BlockType(rawValue: section.type) ?? .paragraph,
+                payload: .content(section.content ?? "")
+            )
+        case "list":
+            let items = section.items?.compactMap { $0.text } ?? []
+            return ArticleBlock(type: .list, payload: .list(items))
+        case "checklist":
+            let entries = section.items?.map {
+                ChecklistEntry(text: $0.text ?? "", isDone: $0.isDone ?? false)
+            } ?? []
+            return ArticleBlock(type: .checklist, payload: .checklist(entries))
+        case "faq":
+            return ArticleBlock(
+                type: .faq,
+                payload: .faq(question: section.question ?? "", answer: section.answer ?? "")
+            )
+        case "links":
+            let links = section.items?.map {
+                LinkEntry(title: $0.title ?? "", articleId: $0.articleId ?? "")
+            } ?? []
+            return ArticleBlock(type: .links, payload: .links(links))
+        default:
+            return ArticleBlock(type: .paragraph, payload: .content(section.content ?? ""))
+        }
+    }
+}

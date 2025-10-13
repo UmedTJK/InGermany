@@ -117,4 +117,23 @@ final class ArticleEditorViewModel: ObservableObject {
             }
         }
     }
+    
+    // MARK: - Import
+    func importFromJSON(_ data: Data) throws {
+        let decoder = JSONDecoder()
+        let document = try decoder.decode(ArticleDocument.self, from: data)
+        self.title = document.title
+        self.blocks = document.blocks.map { ArticleBlock.fromSection($0) }
+    }
+
+    func loadFromFile(url: URL) throws {
+        let data = try Data(contentsOf: url)
+        try importFromJSON(data)
+    }
+
+    
+    
+    
+    
+    
 }

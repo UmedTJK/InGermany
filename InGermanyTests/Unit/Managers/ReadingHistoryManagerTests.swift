@@ -11,20 +11,20 @@ import Combine
 @MainActor
 final class ReadingHistoryManagerTests: XCTestCase {
     
-    private var sut: ReadingHistoryManager!
+    private var sut: ReadingStatsManager!
     private var cancellables: Set<AnyCancellable>!
     
     // MARK: - Setup & Teardown
     
     override func setUp() {
         super.setUp()
-        sut = ReadingHistoryManager.shared
+        sut = ReadingStatsManager.shared
         cancellables = []
-        sut.clearForTesting()
+        sut.clearHistory()
     }
     
     override func tearDown() {
-        sut.clearForTesting()
+        sut.clearHistory()
         cancellables = []
         super.tearDown()
     }
@@ -155,11 +155,10 @@ final class ReadingHistoryManagerTests: XCTestCase {
         // When
         let stats = sut.getStats()
         
-        // Then
-        XCTAssertEqual(stats.totalArticlesRead, 3, "Should count unique articles")
-        XCTAssertEqual(stats.totalReadingTimeMinutes, 10, "Should calculate total time") // 2+3+5=10
-        XCTAssertEqual(stats.averageReadingTimeMinutes, 10.0 / 3.0, accuracy: 0.1, "Should calculate average time")
-        XCTAssertGreaterThanOrEqual(stats.readingStreak, 0, "Reading streak should be non-negative")
+        // Then - Используем актуальные свойства из ReadingStats
+        XCTAssertEqual(stats.totalReadCount, 3, "Should count total read entries")
+        XCTAssertEqual(stats.totalReadingTimeSeconds, 600, "Should calculate total time in seconds") // 120+180+300=600
+        XCTAssertNotNil(stats.lastReadDate, "Should have last read date")
     }
     
     // MARK: - Clear Methods Tests
@@ -178,18 +177,6 @@ final class ReadingHistoryManagerTests: XCTestCase {
         XCTAssertEqual(sut.totalArticlesRead, 0, "Total articles should be 0")
     }
     
-    func test_clearForTesting_shouldResetManager() {
-        // Given
-        sut.addReadingEntry(articleId: "article-1", readingTime: 120)
-        XCTAssertEqual(sut.history.count, 1, "Should have entry before clear")
-        
-        // When
-        sut.clearForTesting()
-        
-        // Then
-        XCTAssertTrue(sut.history.isEmpty, "Should clear history")
-    }
-    
     // MARK: - Persistence Tests
     
     func test_persistence_shouldSaveAndLoadHistory() {
@@ -200,7 +187,7 @@ final class ReadingHistoryManagerTests: XCTestCase {
         // When - Add entry and create new instance
         sut.addReadingEntry(articleId: articleId, readingTime: readingTime)
         
-        let newInstance = ReadingHistoryManager.shared
+        let newInstance = ReadingStatsManager.shared
         
         // Then
         XCTAssertTrue(newInstance.isRead(articleId), "Should persist history between instances")

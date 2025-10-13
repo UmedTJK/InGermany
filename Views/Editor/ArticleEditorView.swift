@@ -64,28 +64,37 @@ struct ArticleEditorView: View {
 
                     Button {
                         do {
-                            let _ = try viewModel.exportToJSON()
+                            let data = try viewModel.exportToJSON()
+                            if let json = String(data: data, encoding: .utf8) {
+                                print("=== Article JSON ===\n\(json)\n=====================")
+                            }
                         } catch {
-                            print("Export error: \(error)")
+                            print("⚠️ Export error: \(error)")
                         }
                     } label: {
                         Label("Export JSON", systemImage: "square.and.arrow.up")
                     }
 
+                    Spacer()
+
                     Button {
-                        if let fileURL = viewModel.exportedFileURL() {
-                            let av = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
-                            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                               let root = scene.windows.first?.rootViewController {
-                                root.present(av, animated: true, completion: nil)
+                        if let url = viewModel.exportedFileURL() {
+                            do {
+                                try viewModel.loadFromFile(url: url)
+                                print("📂 Article imported from \(url.lastPathComponent)")
+                            } catch {
+                                print("⚠️ Import error: \(error)")
                             }
+                        } else {
+                            print("⚠️ No exported file found")
                         }
                     } label: {
-                        Label("Share JSON", systemImage: "square.and.arrow.up.on.square")
+                        Label("Import JSON", systemImage: "tray.and.arrow.down")
                     }
                 }
                 .padding()
                 .background(.ultraThinMaterial)
+
 
             }
             .navigationTitle("Article Editor")
