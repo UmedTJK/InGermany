@@ -3,6 +3,24 @@
 
 # Changelog
 
+## [v1.16.0] - 2025-10-14
+### Added
+- 📄 **PDF Library** — новый раздел для работы с PDF-документами:
+  - `PDFLibraryView` — экран со списком документов.
+  - `PDFLibraryViewModel` — управление документами и локализация названий/описаний.
+  - `PDFViewerViewModel` — восстановлен и унифицирован для отображения PDF.
+  - Тестовые документы `test1.pdf`, `test2.pdf`, `test3.pdf` добавлены в `Resources/`.
+
+### Changed
+- 🔗 В `UsefulToolsSection` ссылка на одиночный PDF заменена на переход в библиотеку PDF.
+- 🧩 `AppContainer` расширен фабрикой `makePDFLibraryViewModel()` для DI.
+
+### Localization
+- 🌍 Добавлены ключи для PDF-документов (`pdf_title_*`, `pdf_desc_*`) во все 7 языков (ru, en, de, tj, fa, ar, uk).
+
+---
+
+
 ## [v1.15.0] - 2025-10-13
 ### ✨ Added
 - Adopted **system Liquid Glass TabBar** on iOS 18+ (matches Apple Music/Safari look & feel)
