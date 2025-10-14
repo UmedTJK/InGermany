@@ -134,6 +134,7 @@
 │   ├── articles
 │   ├── articles.json
 │   ├── burgeramt_registration.json
+│   ├── burgeramt_registration_base64.json
 │   ├── burgergeld.pdf
 │   ├── categories.json
 │   ├── guide.pdf
@@ -247,4 +248,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-58 directories, 190 files
+58 directories, 191 files
