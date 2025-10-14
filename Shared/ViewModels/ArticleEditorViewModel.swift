@@ -2,19 +2,17 @@
 //  ArticleEditorViewModel.swift
 //  InGermany
 //
-//  Created by SUM TJK on 13.10.25.
-//
 
 import Foundation
 
 struct ArticleDocument: Codable {
     let title: String
-    let blocks: [ArticleSection]
+    let blocks: [ArticleSectionDTO] // ✅ используем DTO
 }
 
 @MainActor
 final class ArticleEditorViewModel: ObservableObject, Identifiable {
-    nonisolated let id = UUID()   // ⚡ nonisolated — значит доступен и вне MainActor
+    nonisolated let id = UUID()
     
     @Published var title: String
     @Published var blocks: [ArticleBlock]
@@ -33,11 +31,17 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
         case .list:
             newBlock = ArticleBlock(type: .list, payload: .list([""]))
         case .checklist:
-            newBlock = ArticleBlock(type: .checklist, payload: .checklist([ChecklistEntry(text: "", isDone: false)]))
+            newBlock = ArticleBlock(type: .checklist,
+                                    payload: .checklist([ChecklistEntry(text: "", isDone: false)]))
         case .faq:
-            newBlock = ArticleBlock(type: .faq, payload: .faq(question: "", answer: ""))
+            newBlock = ArticleBlock(type: .faq,
+                                    payload: .faq(question: "", answer: ""))
         case .links:
-            newBlock = ArticleBlock(type: .links, payload: .links([LinkEntry(title: "", articleId: "")]))
+            newBlock = ArticleBlock(type: .links,
+                                    payload: .links([LinkEntry(title: "", articleId: "")]))
+        case .image: // ✅ image block
+            newBlock = ArticleBlock(type: .image,
+                                    payload: .image(url: nil, caption: "", base64: nil))
         }
         blocks.append(newBlock)
     }
@@ -52,8 +56,7 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
         blocks.move(fromOffsets: source, toOffset: destination)
     }
 
-    // MARK: - Export (with title + file save + pretty print)
-
+    // MARK: - Export
     @discardableResult
     func exportToJSON() throws -> Data {
         let document = ArticleDocument(title: title, blocks: toSections())
@@ -62,14 +65,10 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
 
         let data = try encoder.encode(document)
 
-        // ✅ Pretty print
         if let jsonString = String(data: data, encoding: .utf8) {
-            print("=== Article JSON ===")
-            print(jsonString)
-            print("=====================")
+            print("=== Article JSON ===\n\(jsonString)\n=====================")
         }
 
-        // ✅ Save to Documents/article.json
         if let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let fileURL = documentsURL.appendingPathComponent("article.json")
             do {
@@ -79,42 +78,55 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
                 print("⚠️ Failed to save JSON: \(error)")
             }
         }
-
         return data
     }
     
-    // MARK: - Export URL helper
     func exportedFileURL() -> URL? {
-        let fileManager = FileManager.default
-        if let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+        let fm = FileManager.default
+        if let documentsURL = fm.urls(for: .documentDirectory, in: .userDomainMask).first {
             return documentsURL.appendingPathComponent("article.json")
         }
         return nil
     }
 
-
-
-    // MARK: - Convert to ArticleRenderer model
-    func toSections() -> [ArticleSection] {
+    // MARK: - Convert to DTO
+    func toSections() -> [ArticleSectionDTO] {
         blocks.map { block in
             switch block.payload {
             case .content(let text):
-                return ArticleSection(type: block.type.rawValue,
-                                      content: text,
-                                      items: nil,
-                                      question: nil,
-                                      answer: nil)
+                return ArticleSectionDTO(type: block.type.rawValue,
+                                         content: text,
+                                         items: nil,
+                                         question: nil,
+                                         answer: nil,
+                                         url: nil,
+                                         caption: nil,
+                                         base64: nil)
             case .list(let items):
-                let mapped = items.map { ArticleItem(text: $0, isDone: nil, title: nil, articleId: nil) }
-                return ArticleSection(type: "list", content: nil, items: mapped, question: nil, answer: nil)
+                let mapped = items.map { ArticleItemDTO(text: $0, isDone: nil, title: nil, articleId: nil) }
+                return ArticleSectionDTO(type: "list", content: nil, items: mapped,
+                                         question: nil, answer: nil,
+                                         url: nil, caption: nil, base64: nil)
             case .checklist(let entries):
-                let mapped = entries.map { ArticleItem(text: $0.text, isDone: $0.isDone, title: nil, articleId: nil) }
-                return ArticleSection(type: "checklist", content: nil, items: mapped, question: nil, answer: nil)
+                let mapped = entries.map { ArticleItemDTO(text: $0.text, isDone: $0.isDone,
+                                                          title: nil, articleId: nil) }
+                return ArticleSectionDTO(type: "checklist", content: nil, items: mapped,
+                                         question: nil, answer: nil,
+                                         url: nil, caption: nil, base64: nil)
             case .faq(let q, let a):
-                return ArticleSection(type: "faq", content: nil, items: nil, question: q, answer: a)
+                return ArticleSectionDTO(type: "faq", content: nil, items: nil,
+                                         question: q, answer: a,
+                                         url: nil, caption: nil, base64: nil)
             case .links(let links):
-                let mapped = links.map { ArticleItem(text: nil, isDone: nil, title: $0.title, articleId: $0.articleId) }
-                return ArticleSection(type: "links", content: nil, items: mapped, question: nil, answer: nil)
+                let mapped = links.map { ArticleItemDTO(text: nil, isDone: nil,
+                                                        title: $0.title, articleId: $0.articleId) }
+                return ArticleSectionDTO(type: "links", content: nil, items: mapped,
+                                         question: nil, answer: nil,
+                                         url: nil, caption: nil, base64: nil)
+            case .image(let url, let caption, let base64): // ✅ image
+                return ArticleSectionDTO(type: "image", content: nil, items: nil,
+                                         question: nil, answer: nil,
+                                         url: url, caption: caption, base64: base64)
             }
         }
     }
@@ -131,17 +143,13 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
         let data = try Data(contentsOf: url)
         try importFromJSON(data)
     }
-    
-    
 }
-
 
 // MARK: - Hashable & Equatable
 extension ArticleEditorViewModel: Hashable {
     nonisolated static func == (lhs: ArticleEditorViewModel, rhs: ArticleEditorViewModel) -> Bool {
         lhs.id == rhs.id
     }
-
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

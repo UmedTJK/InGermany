@@ -56,6 +56,7 @@
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
 		AD70954A2E9D81AE00E79E19 /* ARTICLE_EDITOR_ROADMAP.md in Resources */ = {isa = PBXBuildFile; fileRef = AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */; };
 		AD70954F2E9D8ECD00E79E19 /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */; };
+		AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */ = {isa = PBXBuildFile; fileRef = AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */; };
 		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
@@ -139,6 +140,7 @@
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARTICLE_EDITOR_ROADMAP.md; sourceTree = "<group>"; };
 		AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHistoryManager.swift; sourceTree = "<group>"; };
+		AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration_base64.json; sourceTree = "<group>"; };
 		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
@@ -365,6 +367,7 @@
 		AD8552C62E75B48D003D3826 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */,
 				ADE23B7D2E9BF11300BD152B /* articles */,
 				AD52FCF22E84765A00CC9F61 /* Images */,
 				ADA942082E78950B008D1364 /* locations.json */,
@@ -534,6 +537,7 @@
 				ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */,
 				ADFDC50E2E85B3AF004EC7ED /* AI_CONTEXT.md in Resources */,
 				ADA942012E78930B008D1364 /* Test_Document.pdf in Resources */,
+				AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
 				AD38F5892E76C15600E36EA4 /* update.sh in Resources */,
 			);

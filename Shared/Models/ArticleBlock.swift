@@ -4,10 +4,12 @@
 //
 //  Created by SUM TJK on 13.10.25.
 //
+
 import Foundation
 
 public enum BlockType: String, Codable, CaseIterable {
     case paragraph, info, warning, tip, quote, checklist, faq, list, links
+    case image // ✅ новый тип
 }
 
 // MARK: - Payloads used by the editor
@@ -36,10 +38,15 @@ public enum BlockPayload: Codable, Equatable {
     case checklist([ChecklistEntry])              // checklist
     case faq(question: String, answer: String)    // faq
     case links([LinkEntry])                       // links
+    case image(url: String?, caption: String?, base64: String?) // ✅ image
 
-    // Codable boilerplate
-    private enum CodingKeys: String, CodingKey { case kind, content, list, checklist, question, answer, links }
-    private enum Kind: String, Codable { case content, list, checklist, faq, links }
+    // MARK: - Codable support
+    private enum CodingKeys: String, CodingKey {
+        case kind, content, list, checklist, question, answer, links
+        case url, caption, base64
+    }
+
+    private enum Kind: String, Codable { case content, list, checklist, faq, links, image }
 
     public func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
@@ -60,6 +67,11 @@ public enum BlockPayload: Codable, Equatable {
         case .links(let links):
             try c.encode(Kind.links, forKey: .kind)
             try c.encode(links, forKey: .links)
+        case .image(let url, let caption, let base64):
+            try c.encode(Kind.image, forKey: .kind)
+            try c.encodeIfPresent(url, forKey: .url)
+            try c.encodeIfPresent(caption, forKey: .caption)
+            try c.encodeIfPresent(base64, forKey: .base64)
         }
     }
 
@@ -79,6 +91,11 @@ public enum BlockPayload: Codable, Equatable {
             self = .faq(question: q, answer: a)
         case .links:
             self = .links(try c.decode([LinkEntry].self, forKey: .links))
+        case .image:
+            let url = try c.decodeIfPresent(String.self, forKey: .url)
+            let caption = try c.decodeIfPresent(String.self, forKey: .caption)
+            let base64 = try c.decodeIfPresent(String.self, forKey: .base64)
+            self = .image(url: url, caption: caption, base64: base64)
         }
     }
 }
@@ -95,8 +112,10 @@ public struct ArticleBlock: Identifiable, Codable, Equatable {
     }
 }
 
+// MARK: - Mapping from DTO
+
 extension ArticleBlock {
-    static func fromSection(_ section: ArticleSection) -> ArticleBlock {
+    static func fromSection(_ section: ArticleSectionDTO) -> ArticleBlock {
         switch section.type {
         case "paragraph", "info", "warning", "tip", "quote":
             return ArticleBlock(
@@ -121,6 +140,15 @@ extension ArticleBlock {
                 LinkEntry(title: $0.title ?? "", articleId: $0.articleId ?? "")
             } ?? []
             return ArticleBlock(type: .links, payload: .links(links))
+        case "image":
+            return ArticleBlock(
+                type: .image,
+                payload: .image(
+                    url: section.url,
+                    caption: section.caption,
+                    base64: section.base64
+                )
+            )
         default:
             return ArticleBlock(type: .paragraph, payload: .content(section.content ?? ""))
         }

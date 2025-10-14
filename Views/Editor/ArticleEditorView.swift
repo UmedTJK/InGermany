@@ -5,6 +5,10 @@
 
 import SwiftUI
 
+#if os(iOS)
+import PhotosUI
+#endif
+
 struct ArticleEditorView: View {
     @StateObject private var viewModel: ArticleEditorViewModel
     @State private var showPicker = false
@@ -144,20 +148,109 @@ struct ArticleEditorView: View {
 
             case .links(let links):
                 linksEditor(blockID: block.id, links: links)
+
+            case .image(let url, let caption, let base64):
+                imageEditor(blockID: block.id, url: url, caption: caption, base64: base64)
             }
         }
         .padding(.vertical, 6)
     }
 
-    // MARK: - Вспомогательные редакторы и биндинги (оставляем всё как у тебя было!)
-    // сюда идут твои listEditor, checklistEditor, faqEditor, linksEditor,
-    // bindingContent, updateListItem, updateChecklistText и т.д.
+    // MARK: - Image Editor
+    @ViewBuilder
+    private func imageEditor(blockID: UUID, url: String?, caption: String?, base64: String?) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Превью
+            if let url, let u = URL(string: url) {
+                AsyncImage(url: u) { phase in
+                    switch phase {
+                    case .empty: ProgressView()
+                    case .success(let img): img.resizable().scaledToFit()
+                    case .failure: Image(systemName: "xmark.octagon")
+                    @unknown default: EmptyView()
+                    }
+                }
+                .frame(maxHeight: 200)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            } else if let base64, let data = Data(base64Encoded: base64) {
+                #if os(iOS)
+                if let ui = UIImage(data: data) {
+                    Image(uiImage: ui)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                #elseif os(macOS)
+                if let ns = NSImage(data: data) {
+                    Image(nsImage: ns)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                #endif
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(style: StrokeStyle(lineWidth: 1, dash: [6]))
+                    Text("No image selected")
+                }
+                .frame(height: 160)
+            }
 
+            // Caption
+            TextField("Caption", text: Binding(
+                get: { caption ?? "" },
+                set: { newValue in
+                    if let idx = viewModel.blocks.firstIndex(where: { $0.id == blockID }) {
+                        if case .image(let u, _, let b64) = viewModel.blocks[idx].payload {
+                            viewModel.blocks[idx].payload = .image(url: u, caption: newValue, base64: b64)
+                        }
+                    }
+                }
+            ))
 
-
-    // MARK: - Per-Block Editors
-
-
+            // Button for picking
+            #if os(iOS)
+            PhotosPicker(selection: Binding(
+                get: { nil },
+                set: { newItem in
+                    guard let newItem else { return }
+                    Task {
+                        if let data = try? await newItem.loadTransferable(type: Data.self) {
+                            let b64 = data.base64EncodedString()
+                            if let idx = viewModel.blocks.firstIndex(where: { $0.id == blockID }) {
+                                if case .image(let u, let c, _) = viewModel.blocks[idx].payload {
+                                    viewModel.blocks[idx].payload = .image(url: u, caption: c, base64: b64)
+                                }
+                            }
+                        }
+                    }
+                }
+            ), matching: .images) {
+                Label("Choose Image", systemImage: "photo")
+            }
+            #elseif os(macOS)
+            Button {
+                let panel = NSOpenPanel()
+                panel.allowsMultipleSelection = false
+                panel.canChooseDirectories = false
+                panel.allowedContentTypes = [.image]
+                if panel.runModal() == .OK, let url = panel.url, let data = try? Data(contentsOf: url) {
+                    let b64 = data.base64EncodedString()
+                    if let idx = viewModel.blocks.firstIndex(where: { $0.id == blockID }) {
+                        if case .image(_, let c, _) = viewModel.blocks[idx].payload {
+                            viewModel.blocks[idx].payload = .image(url: url.absoluteString, caption: c, base64: b64)
+                        }
+                    }
+                }
+            } label: {
+                Label("Choose Image", systemImage: "photo.on.rectangle")
+            }
+            #endif
+        }
+    }
 
     // MARK: - Editors Implementations
 

@@ -144,6 +144,12 @@
     "Cancel" : {
 
     },
+    "Caption" : {
+
+    },
+    "Choose Image" : {
+
+    },
     "common_cancel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -256,6 +262,9 @@
     "Export JSON" : {
 
     },
+    "Image unavailable" : {
+
+    },
     "Import JSON" : {
 
     },
@@ -263,6 +272,9 @@
 
     },
     "No blocks yet" : {
+
+    },
+    "No image selected" : {
 
     },
     "Open" : {

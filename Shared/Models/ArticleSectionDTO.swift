@@ -14,6 +14,11 @@ struct ArticleSectionDTO: Codable {
     let items: [ArticleItemDTO]?
     let question: String?
     let answer: String?
+
+    // ✅ image block
+    let url: String?
+    let caption: String?
+    let base64: String?
 }
 
 struct ArticleItemDTO: Codable {
