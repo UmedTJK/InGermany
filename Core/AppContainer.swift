@@ -160,6 +160,22 @@ final class AppContainer: ObservableObject {
         PDFViewerViewModel(localizationManager: localizationManager)
     }
     
+    // MARK: - PDF Library
+
+    func makePDFLibraryViewModel() -> PDFLibraryViewModel {
+        let seedItems: [PDFItem] = [
+            PDFItem(titleKey: "pdf_title_test1", descriptionKey: "pdf_desc_test1", fileName: "test1"),
+            PDFItem(titleKey: "pdf_title_test2", descriptionKey: "pdf_desc_test2", fileName: "test2"),
+            PDFItem(titleKey: "pdf_title_test3", descriptionKey: "pdf_desc_test3", fileName: "test3")
+        ]
+        
+        return PDFLibraryViewModel(
+            localizationManager: localizationManager,
+            items: seedItems
+        )
+    }
+
+    
     func makeDemoArticleView() -> DemoArticleView {
         DemoArticleView(localizationManager: localizationManager)
     }

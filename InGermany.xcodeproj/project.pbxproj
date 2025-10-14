@@ -18,6 +18,9 @@
 		AD16243F2E9ADA4600E6E14B /* ScaleOnTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */; };
 		AD1624412E9ADA7300E6E14B /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1624402E9ADA7200E6E14B /* LoadingView.swift */; };
 		AD1624432E9ADA9900E6E14B /* Accessibility+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */; };
+		AD239D592E9F0237003B263D /* test2.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AD239D572E9F0237003B263D /* test2.pdf */; };
+		AD239D5A2E9F0237003B263D /* test3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AD239D582E9F0237003B263D /* test3.pdf */; };
+		AD239D5B2E9F0237003B263D /* test1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AD239D562E9F0237003B263D /* test1.pdf */; };
 		AD2A64972E8F8981006A94DD /* ArticlesRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */; };
 		AD2A64D22E8FAD42006A94DD /* git_snapshot.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D02E8FAD42006A94DD /* git_snapshot.md */; };
 		AD2A64D32E8FAD42006A94DD /* project_tree.md in Resources */ = {isa = PBXBuildFile; fileRef = AD2A64D12E8FAD42006A94DD /* project_tree.md */; };
@@ -100,6 +103,9 @@
 		AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Accessibility+Extensions.swift"; sourceTree = "<group>"; };
 		AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = UIUTILS_GUIDE.md; sourceTree = "<group>"; };
 		AD1626002E9ADD3400E6E14B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		AD239D562E9F0237003B263D /* test1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = test1.pdf; sourceTree = "<group>"; };
+		AD239D572E9F0237003B263D /* test2.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = test2.pdf; sourceTree = "<group>"; };
+		AD239D582E9F0237003B263D /* test3.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = test3.pdf; sourceTree = "<group>"; };
 		AD2A64962E8F8980006A94DD /* ArticlesRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryImpl.swift; sourceTree = "<group>"; };
 		AD2A64D02E8FAD42006A94DD /* git_snapshot.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = git_snapshot.md; sourceTree = "<group>"; };
 		AD2A64D12E8FAD42006A94DD /* project_tree.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = project_tree.md; sourceTree = "<group>"; };
@@ -367,6 +373,9 @@
 		AD8552C62E75B48D003D3826 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AD239D562E9F0237003B263D /* test1.pdf */,
+				AD239D572E9F0237003B263D /* test2.pdf */,
+				AD239D582E9F0237003B263D /* test3.pdf */,
 				AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */,
 				ADE23B7D2E9BF11300BD152B /* articles */,
 				AD52FCF22E84765A00CC9F61 /* Images */,
@@ -531,6 +540,9 @@
 				AD38F5852E76891600E36EA4 /* .gitignore in Resources */,
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
+				AD239D592E9F0237003B263D /* test2.pdf in Resources */,
+				AD239D5A2E9F0237003B263D /* test3.pdf in Resources */,
+				AD239D5B2E9F0237003B263D /* test1.pdf in Resources */,
 				AD70954A2E9D81AE00E79E19 /* ARTICLE_EDITOR_ROADMAP.md in Resources */,
 				AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */,
 				AD2A67B62E90DDF6006A94DD /* next_steps.md in Resources */,

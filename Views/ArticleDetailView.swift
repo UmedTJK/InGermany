@@ -185,8 +185,8 @@ struct ArticleDetailView: View {
                     Button(action: {
                         viewModel.toggleFavorite()
                     }) {
-                        Image(systemName: viewModel.isFavorite ? "star.fill" : "star")
-                            .foregroundColor(viewModel.isFavorite ? .yellow : .primary)
+                        Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                            .foregroundColor(viewModel.isFavorite ? .red : .primary)
                     }
                 }
             }

@@ -2,13 +2,13 @@ import SwiftUI
 
 @MainActor
 final class PDFViewerViewModel: ObservableObject {
-    let localizationManager: LocalizationManager
+    private let localizationManager: LocalizationManager
     
     init(localizationManager: LocalizationManager) {
         self.localizationManager = localizationManager
     }
     
-    func localizedPDFText(_ key: String) -> String {
-        localizationManager.getTranslation(key: key, language: localizationManager.selectedLanguage)
+    func t(_ key: String, language: String? = nil) -> String {
+        localizationManager.t(key, language: language)
     }
 }

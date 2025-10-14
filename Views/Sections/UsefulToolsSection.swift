@@ -25,9 +25,10 @@ struct UsefulToolsSection: View {
                         ToolCard(title: t("tool_map"), systemImage: "map", color: .blue)
                     }
 
-                    NavigationLink(destination: PDFViewer(fileName: "sample")) {
+                    NavigationLink(destination: PDFLibraryView(viewModel: appContainer.makePDFLibraryViewModel())) {
                         ToolCard(title: t("tool_pdf_docs"), systemImage: "doc.richtext", color: .green)
                     }
+
 
                     Button {
                         if let random = articles.randomElement() {

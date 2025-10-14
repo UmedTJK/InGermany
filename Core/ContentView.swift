@@ -44,7 +44,7 @@ struct ContentView: View {
             
             LazyView { FavoritesView(viewModel: appContainer.makeFavoritesViewModel()) }
                 .tabItem {
-                    Label(localizationManager.t("tab_favorites"), systemImage: "star.fill")
+                    Label(localizationManager.t("tab_favorites"), systemImage: "heart.fill")
                 }
                 .tag(3)
             

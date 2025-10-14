@@ -437,8 +437,68 @@ final class LocalizationManager: ObservableObject, LocalizationManagerProtocol {
         ],
         "tool_pdf_docs": [
             "ru": "PDF Документы", "en": "PDF Documents", "de": "PDF-Dokumente",
-            "tj": "Ҳуҷҷатҳои PDF", "fa": "اسناد PDF", "ar": "مستندات PDF", "uk": "PDF документи"
+            "tj": "Ҳуҷҷатҳои PDF", "fa": "اسناد PDF", "ar": "مستندات PDF", "uk": "PDF документи",
+            
+            
         ],
+        
+        // Внутри sectionTranslations или отдельного словаря
+        "pdf_title_test1": [
+            "ru": "Руководство по регистрации",
+            "en": "Registration guide",
+            "de": "Anmelde-Leitfaden",
+            "tj": "Дастури бақайдгирӣ",
+            "fa": "راهنمای ثبت‌نام",
+            "ar": "دليل التسجيل",
+            "uk": "Посібник з реєстрації"
+        ],
+        "pdf_desc_test1": [
+            "ru": "Пошаговое руководство по Anmeldung в Германии",
+            "en": "Step-by-step guide for Anmeldung in Germany",
+            "de": "Schritt-für-Schritt-Anleitung für die Anmeldung in Deutschland",
+            "tj": "Дастури қадам ба қадам барои Anmeldung дар Олмон",
+            "fa": "راهنمای گام به گام برای Anmeldung در آلمان",
+            "ar": "دليل خطوة بخطوة لـ Anmeldung في ألمانيا",
+            "uk": "Покроковий посібник з Anmeldung у Німеччині"
+        ],
+        "pdf_title_test2": [
+            "ru": "Список документов для Bürgeramt",
+            "en": "Bürgeramt documents list",
+            "de": "Dokumentenliste fürs Bürgeramt",
+            "tj": "Рӯйхати ҳуҷҷатҳо барои Bürgeramt",
+            "fa": "لیست مدارک برای Bürgeramt",
+            "ar": "قائمة المستندات لمكتب Bürgeramt",
+            "uk": "Список документів для Bürgeramt"
+        ],
+        "pdf_desc_test2": [
+            "ru": "Актуальный перечень бумаг и справок для визитов",
+            "en": "Up-to-date list of papers and certificates for visits",
+            "de": "Aktuelle Liste von Unterlagen und Bescheinigungen für Termine",
+            "tj": "Рӯйхати навшудаи ҳуҷҷатҳо ва шаҳодатномаҳо барои вохӯриҳо",
+            "fa": "فهرست به‌روز مدارک و گواهی‌ها برای ملاقات‌ها",
+            "ar": "قائمة محدثة بالأوراق والشهادات للزيارات",
+            "uk": "Актуальний перелік документів і довідок для візитів"
+        ],
+        "pdf_title_test3": [
+            "ru": "Памятка новоприбывшего",
+            "en": "Newcomer checklist",
+            "de": "Checkliste für Neuankömmlinge",
+            "tj": "Рӯйхати корҳои навомадагон",
+            "fa": "چک‌لیست تازه‌واردان",
+            "ar": "قائمة المراجعة للوافدين الجدد",
+            "uk": "Пам’ятка новоприбулого"
+        ],
+        "pdf_desc_test3": [
+            "ru": "Краткое руководство по первым шагам в Германии",
+            "en": "Quick guide to first steps in Germany",
+            "de": "Kurzanleitung für die ersten Schritte in Deutschland",
+            "tj": "Дастури кӯтоҳ барои қадамҳои аввал дар Олмон",
+            "fa": "راهنمای سریع برای اولین قدم‌ها در آلمان",
+            "ar": "دليل سريع للخطوات الأولى في ألمانيا",
+            "uk": "Короткий посібник для перших кроків у Німеччині"
+        ],
+
+        
         "tool_random_article": [
             "ru": "Случайная статья", "en": "Random Article", "de": "Zufälliger Artikel",
             "tj": "Мақолаи тасодуфӣ", "fa": "مقاله تصادفی", "ar": "مقالة عشوائية", "uk": "Випадкова стаття"
