@@ -42,6 +42,11 @@
     "content": "«Знание языка открывает двери»"
   },
   {
+    "type": "image",
+    "url": "https://picsum.photos/600/300",
+    "caption": "Пример изображения: здание Bürgeramt"
+  },
+  {
     "type": "links",
     "items": [
       { "title": "Как снять жильё в Германии", "articleId": "article_housing" },
@@ -49,4 +54,3 @@
     ]
   }
 ]
-
