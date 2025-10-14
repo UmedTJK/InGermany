@@ -1,9 +1,8 @@
-// Views/DemoArticleView.swift
 import SwiftUI
 
 /// Demo screen that loads a JSON article from the app bundle and renders it with ArticleRenderer.
 struct DemoArticleView: View {
-    @State private var sections: [ArticleSection] = []
+    @State private var sections: [ArticleSectionDTO] = []   // ✅ используем DTO
     @State private var loadError: String?
     @State private var isLoading: Bool = true
 
@@ -27,7 +26,7 @@ struct DemoArticleView: View {
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                 } else if !sections.isEmpty {
-                    ArticleRenderer(sections: sections)
+                    ArticleRenderer(sections: sections)   // ✅ работает с ArticleSectionDTO
                 } else {
                     Text("Нет данных для отображения")
                         .foregroundColor(.secondary)
@@ -54,7 +53,8 @@ struct DemoArticleView: View {
 
         do {
             let data = try Data(contentsOf: url)
-            sections = try JSONDecoder().decode([ArticleSection].self, from: data)
+            // ✅ декодим сразу в ArticleSectionDTO
+            sections = try JSONDecoder().decode([ArticleSectionDTO].self, from: data)
             isLoading = false
         } catch {
             loadError = error.localizedDescription

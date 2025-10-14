@@ -1,36 +1,15 @@
 // Services/ArticleRenderer.swift
 import SwiftUI
 
-// MARK: - Article Models
-
-struct ArticleSection: Codable, Identifiable {
-    var id: String { UUID().uuidString }
-
-    let type: String
-    let content: String?
-    let items: [ArticleItem]?
-    let question: String?
-    let answer: String?
-}
-
-struct ArticleItem: Codable, Identifiable {
-    var id: String { UUID().uuidString }
-
-    let text: String?
-    let isDone: Bool?
-    let title: String?
-    let articleId: String?
-}
-
-// MARK: - Article Renderer
+// MARK: - Article Renderer (works with DTO)
 
 struct ArticleRenderer: View {
-    let sections: [ArticleSection]
+    let sections: [ArticleSectionDTO]   // ✅ используем единый DTO
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                ForEach(sections) { section in
+                ForEach(Array(sections.enumerated()), id: \.offset) { _, section in
                     renderSection(section)
                 }
             }
@@ -39,13 +18,14 @@ struct ArticleRenderer: View {
     }
 
     @ViewBuilder
-    private func renderSection(_ section: ArticleSection) -> some View {
+    private func renderSection(_ section: ArticleSectionDTO) -> some View {
         switch section.type {
         case "paragraph":
             if let content = section.content {
                 Text(content)
                     .font(.body)
                     .foregroundColor(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
 
         case "info":
@@ -76,20 +56,19 @@ struct ArticleRenderer: View {
             }
 
         case "faq":
-            if let question = section.question, let answer = section.answer {
-                FAQBlockView(question: question, answer: answer)
+            if let q = section.question, let a = section.answer {
+                FAQBlockView(question: q, answer: a)
             }
 
         case "links":
             if let items = section.items {
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(items) { item in
+                    ForEach(Array(items.enumerated()), id: \.offset) { _, item in
                         if let title = item.title {
                             Text("🔗 \(title)")
                                 .foregroundColor(.blue)
-                                .onTapGesture {
-                                    print("Открыть статью: \(item.articleId ?? "")")
-                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .onTapGesture { print("Открыть статью: \(item.articleId ?? "")") }
                         }
                     }
                 }
@@ -98,10 +77,13 @@ struct ArticleRenderer: View {
                 .cornerRadius(12)
             }
 
-        case "list": // 🆕 поддержка списков
+        case "image":
+            imageBlock(urlString: section.url, base64: section.base64, caption: section.caption)
+
+        case "list":
             if let items = section.items {
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(items) { item in
+                    ForEach(Array(items.enumerated()), id: \.offset) { _, item in
                         Text("• \(item.text ?? "")")
                             .font(.body)
                             .foregroundColor(.primary)
@@ -115,16 +97,63 @@ struct ArticleRenderer: View {
             EmptyView()
         }
     }
+
+    // MARK: - Image block view
+    @ViewBuilder
+    private func imageBlock(urlString: String?, base64: String?, caption: String?) -> some View {
+        VStack(spacing: 8) {
+            if let s = urlString, let url = URL(string: s) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty: ProgressView()
+                    case .success(let img): img.resizable().scaledToFit()
+                    case .failure: Image(systemName: "xmark.octagon")
+                    @unknown default: EmptyView()
+                    }
+                }
+            } else if let base64, let data = Data(base64Encoded: base64) {
+                #if canImport(UIKit)
+                if let ui = UIImage(data: data) {
+                    Image(uiImage: ui).resizable().scaledToFit()
+                } else {
+                    Image(systemName: "xmark.octagon")
+                }
+                #elseif canImport(AppKit)
+                if let ns = NSImage(data: data) {
+                    Image(nsImage: ns).resizable().scaledToFit()
+                } else {
+                    Image(systemName: "xmark.octagon")
+                }
+                #else
+                Image(systemName: "xmark.octagon")
+                #endif
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(style: StrokeStyle(lineWidth: 1, dash: [6]))
+                    Text("Image unavailable")
+                }
+                .frame(height: 160)
+            }
+
+            if let c = caption, !c.isEmpty {
+                Text(c)
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.vertical, 4)
+    }
 }
 
-// MARK: - Loader
+// MARK: - Loader (DTO-based)
 
-func loadArticle(named filename: String) -> [ArticleSection] {
-    guard let url = Bundle.main.url(forResource: filename,
-                                    withExtension: "json"),
+func loadArticleDTO(named filename: String) -> [ArticleSectionDTO] {
+    guard let url = Bundle.main.url(forResource: filename, withExtension: "json"),
           let data = try? Data(contentsOf: url),
-          let decoded = try? JSONDecoder().decode([ArticleSection].self, from: data)
-    else {
+          let decoded = try? JSONDecoder().decode([ArticleSectionDTO].self, from: data) else {
         print("⚠️ Не удалось загрузить \(filename).json")
         return []
     }

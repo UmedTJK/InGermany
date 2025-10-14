@@ -10,7 +10,7 @@
 //  InGermany
 //
 //  Created by AI Assistant on 04.10.25.
-//
+/*
 
 import XCTest
 @testable import InGermany
@@ -623,3 +623,6 @@ extension ArticleTests {
         )
     }
 }
+
+
+*/

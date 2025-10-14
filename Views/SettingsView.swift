@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @State private var importedEditorVM: ArticleEditorViewModel?
     @EnvironmentObject var appContainer: AppContainer
     @StateObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
@@ -17,7 +18,7 @@ struct SettingsView: View {
 
     // MARK: - Body
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 languageSection
                 appearanceSection
@@ -47,6 +48,10 @@ struct SettingsView: View {
                         message: viewModel.localizedText("settings_history_cleared")
                     )
                 }
+            }
+            // ✅ переход в редактор, если выбран JSON
+            .navigationDestination(item: $importedEditorVM) { vm in
+                ArticleEditorView(viewModel: vm)
             }
         }
     }
@@ -126,11 +131,31 @@ struct SettingsView: View {
         }
     }
 
+    // MARK: - Debug Section
     #if DEBUG
     private var debugSection: some View {
         Section(header: Text("Debug")) {
             NavigationLink("Demo Article") {
                 appContainer.makeDemoArticleView()
+            }
+            NavigationLink("Open Article Editor") {
+                appContainer.makeArticleEditorView()
+            }
+            NavigationLink("Article Library") {
+                ArticleLibraryView(
+                    viewModel: appContainer.makeArticleLibraryViewModel()
+                ) { url in
+                    if let data = try? Data(contentsOf: url) {
+                        do {
+                            let editorVM = ArticleEditorViewModel()
+                            try editorVM.importFromJSON(data)
+                            importedEditorVM = editorVM  // 👉 триггер перехода
+                            print("✅ Imported article, triggering navigation")
+                        } catch {
+                            print("⚠️ Failed to load article: \(error)")
+                        }
+                    }
+                }
             }
         }
     }
@@ -160,7 +185,6 @@ struct SettingsView: View {
 }
 
 // MARK: - HistoryClearedToast
-
 private struct HistoryClearedToast: View {
     let message: String
 

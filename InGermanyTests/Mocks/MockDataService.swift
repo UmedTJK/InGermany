@@ -1,62 +1,68 @@
 import Foundation
 @testable import InGermany
 
-/// Мок-репозиторий для тестов
-final class MockDataService: ArticlesRepository {
-    private var articles: [Article]
-    private var categories: [InGermany.Category]
-
+/// Мок-сервис данных для тестов
+@MainActor
+final class MockDataService {
+    let articlesRepository: ArticlesRepositoryProtocol
+    let categoriesRepository: CategoriesRepositoryProtocol
+    
     // MARK: - Инициализаторы для тестов
-    init(articlesJSON: String) {
+    init(articlesRepository: ArticlesRepositoryProtocol, categoriesRepository: CategoriesRepositoryProtocol) {
+        self.articlesRepository = articlesRepository
+        self.categoriesRepository = categoriesRepository
+    }
+    
+    convenience init(articlesJSON: String) {
         let data = Data(articlesJSON.utf8)
-        self.articles = (try? JSONDecoder().decode([Article].self, from: data)) ?? []
-        self.categories = []
+        let articles = (try? JSONDecoder().decode([InGermany.Article].self, from: data)) ?? []
+        
+        let mockArticlesRepo = MockArticlesRepository()
+        // Устанавливаем статьи в мок-репозиторий
+        mockArticlesRepo.setArticles(articles)
+        
+        self.init(
+            articlesRepository: mockArticlesRepo,
+            categoriesRepository: MockCategoriesRepository()
+        )
     }
 
-    init(categoriesJSON: String) {
+    convenience init(categoriesJSON: String) {
         let data = Data(categoriesJSON.utf8)
-        self.categories = (try? JSONDecoder().decode([InGermany.Category].self, from: data)) ?? []
-        self.articles = []
+        let categories = (try? JSONDecoder().decode([InGermany.Category].self, from: data)) ?? []
+        
+        let mockCategoriesRepo = MockCategoriesRepository()
+        mockCategoriesRepo.categories = categories
+        
+        self.init(
+            articlesRepository: MockArticlesRepository(),
+            categoriesRepository: mockCategoriesRepo
+        )
     }
 
-    // MARK: - ArticlesRepository
+    // MARK: - Методы для статей
     func loadArticles() async -> [Article] {
-        articles
+        await articlesRepository.loadArticles()
     }
 
     func refreshArticles() async -> [Article] {
-        articles
+        await articlesRepository.refreshArticles()
     }
 
-    func getLastSource() async -> String {
-        "mock"
+    func getLastSource() -> String {
+        // Note: Это свойство есть только у ArticlesRepositoryProtocol
+        if let articlesRepo = articlesRepository as? MockArticlesRepository {
+            return articlesRepo.getLastSource()
+        }
+        return "mock"
     }
 
-    // MARK: - Методы для категорий (используются в VM-тестах)
+    // MARK: - Методы для категорий
     func loadCategories() async -> [InGermany.Category] {
-        categories
+        categoriesRepository.allCategories()
     }
 
     func refreshCategories() async -> [InGermany.Category] {
-        categories
+        categoriesRepository.allCategories()
     }
-    
-    var refreshedArticles: [Article] {
-        get { return [] }
-        set { }
-    }
-    
-    var lastDataSource: [String: String?] {
-        get { return [:] }
-        set { }
-    }
-    
-    var onRefreshData: (() -> Void)? {
-        get { return nil }
-        set { }
-    }
-    
-    
 }
-
-

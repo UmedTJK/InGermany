@@ -10,6 +10,7 @@
 │   ├── AI_CONTEXT_20251006.md
 │   ├── ARCHITECTURE_ISSUES.md
 │   ├── ARCHITECTURE_ISSUES_old.md
+│   ├── ARTICLE_EDITOR_ROADMAP.md
 │   ├── CHANGELOG.md
 │   ├── CLEAN_CODE_CHECKLIST.md
 │   ├── Git_Mini_Guide.md
@@ -54,6 +55,9 @@
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
 ├── InGermanyTests
+│   ├── Editor
+│   │   ├── ArticleEditorImportExportTests.swift
+│   │   └── ArticleEditorViewModelTests.swift
 │   ├── InGermanyTests.swift
 │   ├── Mocks
 │   │   ├── MockArticlesRepository.swift
@@ -80,6 +84,7 @@
 │   ├── FavoritesManager.swift
 │   ├── ProtocolConformances.swift
 │   ├── RatingManager.swift
+│   ├── ReadingHistoryManager.swift
 │   ├── ReadingProgressHelper.swift
 │   ├── ReadingStatsManager.swift
 │   ├── ReadingTimeCalculator.swift
@@ -129,6 +134,7 @@
 │   ├── articles
 │   ├── articles.json
 │   ├── burgeramt_registration.json
+│   ├── burgeramt_registration_base64.json
 │   ├── burgergeld.pdf
 │   ├── categories.json
 │   ├── guide.pdf
@@ -147,6 +153,13 @@
 │   ├── NetworkService.swift
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
+├── Shared
+│   ├── Models
+│   │   ├── ArticleBlock.swift
+│   │   └── ArticleSectionDTO.swift
+│   └── ViewModels
+│       ├── ArticleEditorViewModel.swift
+│       └── ArticleLibraryViewModel.swift
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
@@ -203,6 +216,10 @@
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
 │   ├── DemoArticleView.swift
+│   ├── Editor
+│   │   ├── ArticleEditorView.swift
+│   │   ├── ArticleLibraryView.swift
+│   │   └── BlockPickerView.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
@@ -231,4 +248,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-53 directories, 179 files
+58 directories, 191 files

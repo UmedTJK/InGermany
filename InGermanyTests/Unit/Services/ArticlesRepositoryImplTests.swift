@@ -5,6 +5,7 @@ import XCTest
 final class ArticlesRepositoryImplTests: XCTestCase {
     
     private var sut: ArticlesRepositoryImpl!
+    private var articleFormatter: ArticleFormatter!
     
     // MARK: - Setup & Teardown
     
@@ -12,10 +13,12 @@ final class ArticlesRepositoryImplTests: XCTestCase {
         super.setUp()
         // 🔧 ИСПРАВЛЕНО: Передаем DataService в инициализатор
         sut = ArticlesRepositoryImpl(dataService: DataService.shared)
+        articleFormatter = ArticleFormatter()
     }
     
     override func tearDown() {
         sut = nil
+        articleFormatter = nil
         super.tearDown()
     }
     
@@ -335,8 +338,9 @@ final class ArticlesRepositoryImplTests: XCTestCase {
         
         // Then
         for article in articles {
-            let createdDate = article.formattedCreatedDate()
-            let updatedDate = article.formattedUpdatedDate()
+            // Используем ArticleFormatter для форматирования дат
+            let createdDate = articleFormatter.formattedCreatedDate(article, for: "ru")
+            let updatedDate = articleFormatter.formattedUpdatedDate(article, for: "ru")
             
             XCTAssertFalse(createdDate.isEmpty, "Article should have formatted created date")
             XCTAssertFalse(updatedDate.isEmpty, "Article should have formatted updated date")
@@ -358,6 +362,24 @@ final class ArticlesRepositoryImplTests: XCTestCase {
             for tag in article.tags {
                 XCTAssertFalse(tag.isEmpty, "Tag should not be empty string")
             }
+        }
+    }
+    
+    // MARK: - Article Formatter Integration Tests
+    
+    func test_articleFormatter_integration() async {
+        // When
+        let articles = await sut.loadArticles()
+        
+        // Then - Test that articles work with ArticleFormatter
+        for article in articles {
+            let wordCount = articleFormatter.wordCount(article, for: "ru")
+            let readingTime = articleFormatter.readingTime(article, for: "ru")
+            let formattedReadingTime = articleFormatter.formatReadingTime(readingTime, language: "ru")
+            
+            XCTAssertGreaterThanOrEqual(wordCount, 0, "Word count should be non-negative")
+            XCTAssertGreaterThanOrEqual(readingTime, 0, "Reading time should be non-negative")
+            XCTAssertFalse(formattedReadingTime.isEmpty, "Formatted reading time should not be empty")
         }
     }
 }
