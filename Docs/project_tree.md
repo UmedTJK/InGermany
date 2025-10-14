@@ -139,7 +139,10 @@
 │   ├── categories.json
 │   ├── guide.pdf
 │   ├── insurance.pdf
-│   └── locations.json
+│   ├── locations.json
+│   ├── test1.pdf
+│   ├── test2.pdf
+│   └── test3.pdf
 ├── Services
 │   ├── ArticleFormatter.swift
 │   ├── ArticleRenderer.swift
@@ -190,6 +193,7 @@
 │   ├── FavoritesViewModel.swift
 │   ├── HomeViewModel.swift
 │   ├── LocationsViewModel.swift
+│   ├── PDFLibraryViewModel.swift
 │   ├── PDFViewerViewModel.swift
 │   ├── SearchViewModel.swift
 │   ├── SettingsViewModel.swift
@@ -223,6 +227,7 @@
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
+│   ├── PDFLibraryView.swift
 │   ├── SearchView.swift
 │   ├── Sections
 │   │   ├── AllArticlesSection.swift
@@ -255,4 +260,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-59 directories, 197 files
+59 directories, 202 files
