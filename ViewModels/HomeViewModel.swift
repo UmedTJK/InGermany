@@ -69,19 +69,60 @@ class HomeViewModel: ObservableObject {
     }
 
     // MARK: - Data loading
+    // MARK: - Data loading
     func loadData() async {
+        let start = Date()
+        print("⏱ loadData started at \(start)")
+
         isLoading = true
-        defer { isLoading = false }
-        self.articles = await articlesRepo.loadArticles()
-        self.dataSource = await articlesRepo.getLastSource()
+
+        // 1. Сначала bootstrap категорий (быстро)
+        await categoriesRepository.bootstrap()
+
+        // 2. UI готов к показу
+        await MainActor.run {
+            self.isLoading = false
+            print("⏱ UI ready in \(Date().timeIntervalSince(start)) sec")
+        }
+
+        // 3. Параллельно загружаем статьи
+        let articles = await articlesRepo.loadArticles()
+        let source = await articlesRepo.getLastSource()
+
+        await MainActor.run {
+            self.articles = articles
+            self.dataSource = source
+            print("⏱ Articles loaded in \(Date().timeIntervalSince(start)) sec")
+        }
+
+
+        // 4. Фоновое обновление из сети
+        Task.detached { [weak self] in
+            guard let self else { return }
+            let fresh = await self.articlesRepo.refreshArticles()
+            if !fresh.isEmpty {
+                await MainActor.run {
+                    self.articles = fresh
+                    self.dataSource = "network"
+                }
+            }
+        }
+    }
+    
+    // MARK: - Refresh
+    func refreshData() async {
+        print("🔄 refreshData triggered from HomeView")
+        await categoriesRepository.refresh()
+        let refreshed = await articlesRepo.refreshArticles()
+        await MainActor.run {
+            if !refreshed.isEmpty {
+                self.articles = refreshed
+                self.dataSource = "network"
+            }
+        }
     }
 
-    func refreshData() async {
-        isLoading = true
-        defer { isLoading = false }
-        self.articles = await articlesRepo.refreshArticles()
-        self.dataSource = await articlesRepo.getLastSource()
-    }
+
 
     // MARK: - Random article
     func selectRandomArticle() {

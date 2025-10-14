@@ -215,16 +215,10 @@ final class AppContainer: ObservableObject {
     
     // MARK: - Bootstrap (non-blocking preload)
     func bootstrap() {
-        // ⚠️ вызов preload() оставляю как есть; если метода нет — убери строку или добавь реализацию в LocalizationManager
+        // ⚡ Инициализируем только локализацию, без подгрузки статей/категорий
         localizationManager.preload()
-        
-        // ✅ запускаем подгрузку данных в фоне
-        Task.detached(priority: .background) {
-            _ = await self.dataService.loadArticles()
-            _ = await self.dataService.loadCategories()
-            _ = await self.dataService.loadLocations()
-        }
     }
+
 }
 
 // MARK: - Preview / Mocks
