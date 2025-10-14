@@ -234,6 +234,13 @@
 ├── appcontainer_patch.diff
 ├── check_di_violations.sh
 ├── di_violations_report.md
+├── iterm
+│   ├── Dracula.itermcolors
+│   ├── INSTALL.md
+│   ├── LICENSE
+│   ├── README.md
+│   ├── dracula-pro.png
+│   └── screenshot.png
 ├── project_structure.txt
 ├── scripts
 │   ├── release.sh
@@ -248,4 +255,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-58 directories, 191 files
+59 directories, 197 files
