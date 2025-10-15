@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AD0826D42E85A50F009C30CC /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AD0826D32E85A50A009C30CC /* .swiftlint.yml */; };
+		AD108D332E9F701B0032F0D9 /* PDFThumbnailGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD108D322E9F70130032F0D9 /* PDFThumbnailGenerator.swift */; };
 		AD160DAE2E95290F009B49F2 /* ReadingProgressTrackerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DAD2E95290E009B49F2 /* ReadingProgressTrackerProtocol.swift */; };
 		AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */; };
 		AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD160DB12E95292E009B49F2 /* LocalizationManagerProtocol.swift */; };
@@ -90,6 +91,7 @@
 
 /* Begin PBXFileReference section */
 		AD0826D32E85A50A009C30CC /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		AD108D322E9F70130032F0D9 /* PDFThumbnailGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFThumbnailGenerator.swift; sourceTree = "<group>"; };
 		AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARCHITECTURE_ISSUES.md; sourceTree = "<group>"; };
 		AD160DAD2E95290E009B49F2 /* ReadingProgressTrackerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressTrackerProtocol.swift; sourceTree = "<group>"; };
 		AD160DAF2E95291D009B49F2 /* RatingManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingManagerProtocol.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 		AD2A65652E8FF0D1006A94DD /* UIUtils */ = {
 			isa = PBXGroup;
 			children = (
+				AD108D322E9F70130032F0D9 /* PDFThumbnailGenerator.swift */,
 				ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */,
 				ADE23B792E9BEEF000BD152B /* ArticleComponents */,
 				AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */,
@@ -586,6 +589,7 @@
 				AD2A65672E8FF0D1006A94DD /* Color+Hex.swift in Sources */,
 				AD2A65682E8FF0D1006A94DD /* Animations.swift in Sources */,
 				AD675BA82E93D85E007B0994 /* FavoritesManagingProtocol.swift in Sources */,
+				AD108D332E9F701B0032F0D9 /* PDFThumbnailGenerator.swift in Sources */,
 				AD2A65692E8FF0D1006A94DD /* CardSize.swift in Sources */,
 				AD2A656A2E8FF0D1006A94DD /* Theme.swift in Sources */,
 				AD2A656B2E8FF0D1006A94DD /* CardImageStyle.swift in Sources */,
