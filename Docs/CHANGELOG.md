@@ -1,6 +1,24 @@
 # 📖 CHANGELOG
 
 
+## [v1.16.1-20251015] – 2025-10-15
+### Added
+- PDF Library UI улучшен:
+  - Добавлены превью (thumbnails) для PDF-документов
+  - Поддержка shimmer-эффекта для fallback-иконок
+  - Каскадные анимации появления карточек при первом открытии экрана
+  - Плавные анимации появления при скролле
+- Новый утилитарный класс `PDFThumbnailGenerator` в `UIUtils/`
+
+### Changed
+- Обновлён `PDFLibraryView` для более современного и «живого» интерфейса
+- Улучшена интеграция в `UsefulToolsSection`
+
+### Technical
+- Проект переведён на value-based animation (без `withAnimation` предупреждений)
+- Обновлён `InGermany.xcodeproj` для поддержки новых файлов
+
+
 ## [v1.16.1] - 2025-10-15
 ### Changed
 - 🎨 **PDF Library UI**:
