@@ -177,6 +177,7 @@
 │   ├── CustomTabBarView.swift
 │   ├── Environment+ScreenSize.swift
 │   ├── LoadingView.swift
+│   ├── PDFThumbnailGenerator.swift
 │   ├── ProgressBar.swift
 │   ├── ReadingTimeCalculator.swift
 │   ├── RoundedCorner.swift
@@ -260,4 +261,4 @@
 │   └── update_project_tree.sh
 └── update.sh
 
-59 directories, 202 files
+59 directories, 203 files
