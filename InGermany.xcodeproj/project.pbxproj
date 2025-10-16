@@ -41,6 +41,10 @@
 		AD2E60EC2EA172C900436C9A /* ArticleFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E60E92EA172C900436C9A /* ArticleFormatter.swift */; };
 		AD2E60EF2EA1733100436C9A /* ReadingTimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E60EE2EA1733100436C9A /* ReadingTimeCalculator.swift */; };
 		AD2E60F02EA1733100436C9A /* ReadingProgressHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E60ED2EA1733100436C9A /* ReadingProgressHelper.swift */; };
+		AD2E63C82EA19F4A00436C9A /* ArticleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E63BD2EA19F4A00436C9A /* ArticleKit.swift */; };
+		AD2E63C92EA19F4A00436C9A /* ArticleKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E63C02EA19F4A00436C9A /* ArticleKitTests.swift */; };
+		AD2E63CE2EA1A11000436C9A /* ArticleBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E63CB2EA1A11000436C9A /* ArticleBlock.swift */; };
+		AD2E63CF2EA1A11000436C9A /* ArticleSectionDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E63CC2EA1A11000436C9A /* ArticleSectionDTO.swift */; };
 		AD38F5852E76891600E36EA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5842E76890C00E36EA4 /* .gitignore */; };
 		AD38F5872E76899D00E36EA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5862E76899600E36EA4 /* README.md */; };
 		AD40EEF02E75C3DC00866648 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C82E75B4C4003D3826 /* categories.json */; };
@@ -123,6 +127,11 @@
 		AD2E60EA2EA172C900436C9A /* DateFormattingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormattingService.swift; sourceTree = "<group>"; };
 		AD2E60ED2EA1733100436C9A /* ReadingProgressHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingProgressHelper.swift; sourceTree = "<group>"; };
 		AD2E60EE2EA1733100436C9A /* ReadingTimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTimeCalculator.swift; sourceTree = "<group>"; };
+		AD2E63BD2EA19F4A00436C9A /* ArticleKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleKit.swift; sourceTree = "<group>"; };
+		AD2E63C02EA19F4A00436C9A /* ArticleKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleKitTests.swift; sourceTree = "<group>"; };
+		AD2E63C42EA19F4A00436C9A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		AD2E63CB2EA1A11000436C9A /* ArticleBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBlock.swift; sourceTree = "<group>"; };
+		AD2E63CC2EA1A11000436C9A /* ArticleSectionDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleSectionDTO.swift; sourceTree = "<group>"; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManagingProtocol.swift; sourceTree = "<group>"; };
@@ -306,6 +315,66 @@
 			path = Formatters;
 			sourceTree = "<group>";
 		};
+		AD2E63BE2EA19F4A00436C9A /* ArticleKit */ = {
+			isa = PBXGroup;
+			children = (
+				AD2E63CD2EA1A11000436C9A /* Models */,
+				AD2E63BD2EA19F4A00436C9A /* ArticleKit.swift */,
+			);
+			path = ArticleKit;
+			sourceTree = "<group>";
+		};
+		AD2E63BF2EA19F4A00436C9A /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AD2E63BE2EA19F4A00436C9A /* ArticleKit */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		AD2E63C12EA19F4A00436C9A /* ArticleKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				AD2E63C02EA19F4A00436C9A /* ArticleKitTests.swift */,
+			);
+			path = ArticleKitTests;
+			sourceTree = "<group>";
+		};
+		AD2E63C22EA19F4A00436C9A /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				AD2E63C12EA19F4A00436C9A /* ArticleKitTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		AD2E63C52EA19F4A00436C9A /* ArticleKit */ = {
+			isa = PBXGroup;
+			children = (
+				AD2E63BF2EA19F4A00436C9A /* Sources */,
+				AD2E63C22EA19F4A00436C9A /* Tests */,
+				AD2E63C42EA19F4A00436C9A /* Package.swift */,
+			);
+			path = ArticleKit;
+			sourceTree = "<group>";
+		};
+		AD2E63C62EA19F4A00436C9A /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				AD2E63C52EA19F4A00436C9A /* ArticleKit */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		AD2E63CD2EA1A11000436C9A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AD2E63CB2EA1A11000436C9A /* ArticleBlock.swift */,
+				AD2E63CC2EA1A11000436C9A /* ArticleSectionDTO.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,6 +400,7 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD2E63C62EA19F4A00436C9A /* Packages */,
 				AD70941C2E9D21FB00E79E19 /* Shared */,
 				AD0826D32E85A50A009C30CC /* .swiftlint.yml */,
 				AD38F5862E76899600E36EA4 /* README.md */,
@@ -575,7 +645,11 @@
 				ADE23B712E9BEE5400BD152B /* ArticleRenderer.swift in Sources */,
 				AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */,
 				AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */,
+				AD2E63CE2EA1A11000436C9A /* ArticleBlock.swift in Sources */,
+				AD2E63CF2EA1A11000436C9A /* ArticleSectionDTO.swift in Sources */,
 				AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */,
+				AD2E63C82EA19F4A00436C9A /* ArticleKit.swift in Sources */,
+				AD2E63C92EA19F4A00436C9A /* ArticleKitTests.swift in Sources */,
 				AD160DB42E955DF1009B49F2 /* RoundedCorner.swift in Sources */,
 				AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */,
 				AD459C212E98BF5E00F540F3 /* ArticleFormatterProtocol.swift in Sources */,
