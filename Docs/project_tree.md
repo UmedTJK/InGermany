@@ -11,9 +11,6 @@
 │   ├── ARTICLE_EDITOR_ROADMAP.md
 │   ├── CHANGELOG.md
 │   ├── CLEAN_CODE_CHECKLIST.md
-│   ├── Formatters
-│   │   ├── ArticleFormatter.swift
-│   │   └── DateFormattingService.swift
 │   ├── Git_Mini_Guide.md
 │   ├── PROMPTS_FOR_AI_AGENTS.md
 │   ├── README.md
@@ -35,48 +32,28 @@
 │       ├── home.png
 │       ├── map.png
 │       └── settings.png
+├── Formatters
+│   ├── ArticleFormatter.swift
+│   └── DateFormattingService.swift
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
-│   │   │   └── Contents.json
 │   │   ├── AppIcon.appiconset
-│   │   │   ├── Contents.json
-│   │   │   ├── Logo 1.png
-│   │   │   └── Logo.png
 │   │   ├── Contents.json
 │   │   └── Logo.imageset
-│   │       ├── Contents.json
-│   │       └── Logo.png
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
 │   └── Preview Content
 │       └── Preview Assets.xcassets
-│           ├── Contents.json
-│           ├── LogoDark.imageset
-│           │   ├── Contents.json
-│           │   └── LogoDark.png
-│           └── LogoLight.imageset
-│               ├── Contents.json
-│               └── LogoLight.png
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
 │   │   ├── xcshareddata
-│   │   │   ├── WorkspaceSettings.xcsettings
-│   │   │   └── swiftpm
-│   │   │       └── configuration
 │   │   └── xcuserdata
-│   │       └── sumtjk.xcuserdatad
-│   │           ├── UserInterfaceState.xcuserstate
-│   │           └── WorkspaceSettings.xcsettings
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
-│           ├── xcdebugger
-│           │   └── Breakpoints_v2.xcbkptlist
-│           └── xcschemes
-│               └── xcschememanagement.plist
 ├── InGermanyTests
 │   ├── Editor
 │   │   ├── ArticleEditorImportExportTests.swift
@@ -97,27 +74,10 @@
 │   │   └── AppUITests.swift
 │   └── Unit
 │       ├── Helpers
-│       │   └── ReadingTimeCalculatorTests.swift
 │       ├── Managers
-│       │   ├── FavoritesManagerTests.swift
-│       │   ├── RatingManagerTests.swift
-│       │   └── ReadingHistoryManagerTests.swift
 │       ├── Models
-│       │   └── ArticlesCategoriesConsistencyTests.swift
 │       ├── Services
-│       │   ├── ArticlesRepositoryImplTests.swift
-│       │   ├── DataServiceTests.swift
-│       │   ├── LocalizationKeysTests.swift
-│       │   └── NetworkServiceTests.swift
 │       └── ViewModels
-│           ├── AboutViewModelTests.swift
-│           ├── ArticleDetailViewModelTests.swift
-│           ├── ArticleRowViewModelTests.swift
-│           ├── CategoriesViewModelTests.swift
-│           ├── FavoritesViewModelTests.swift
-│           ├── HomeViewModelTests.swift
-│           ├── SearchViewModelTests.swift
-│           └── SettingsViewModelTests.swift
 ├── Managers
 │   ├── CacheManager.swift
 │   ├── CategoryManager.swift
@@ -153,22 +113,10 @@
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── ar.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── de.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── en.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── fa.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── germany10.jpg
 │   │   ├── germany11.jpg
 │   │   ├── germany12.jpg
@@ -181,14 +129,8 @@
 │   │   ├── germany8.jpg
 │   │   ├── germany9.jpg
 │   │   ├── ru.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── tg-TJ.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   └── uk.lproj
-│   │       ├── germany1.jpg
-│   │       └── germany3.jpg
 │   ├── Localizable.xcstrings
 │   ├── Test_Document.pdf
 │   ├── articles
@@ -312,4 +254,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-67 directories, 246 files
+60 directories, 195 files
