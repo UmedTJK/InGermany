@@ -15,7 +15,7 @@ final class ArticleRowViewModel: ObservableObject, Identifiable {
     private let favoritesManager: FavoritesManager
     private let ratingManager: RatingManager
     private let categoriesRepo: CategoriesRepositoryProtocol
-    private let readingStatsManager: ReadingStatsManaging
+    private let readingStatsManager: ReadingStatsManagingProtocol
     private let articleFormatter: ArticleFormatter
     
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
@@ -29,7 +29,7 @@ final class ArticleRowViewModel: ObservableObject, Identifiable {
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
         categoriesRepo: CategoriesRepositoryProtocol,
-        readingStatsManager: ReadingStatsManaging,
+        readingStatsManager: ReadingStatsManagingProtocol,
         articleFormatter: ArticleFormatter
     ) {
         self.id = article.id

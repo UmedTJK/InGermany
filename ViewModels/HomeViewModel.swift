@@ -17,7 +17,7 @@ class HomeViewModel: ObservableObject {
 
     // MARK: - Dependencies
     let favoritesManager: FavoritesManager
-    let readingStatsManager: ReadingStatsManaging
+    let readingStatsManager: ReadingStatsManagingProtocol
     let categoriesRepository: CategoriesRepositoryProtocol
     let articlesRepo: ArticlesRepositoryProtocol
 
@@ -27,7 +27,7 @@ class HomeViewModel: ObservableObject {
     // MARK: - Init
     init(
         favoritesManager: FavoritesManager,
-        readingStatsManager: ReadingStatsManaging,
+        readingStatsManager: ReadingStatsManagingProtocol,
         categoriesRepository: CategoriesRepositoryProtocol,
         articlesRepo: ArticlesRepositoryProtocol,
         localizationManager: LocalizationManager = LocalizationManager.shared

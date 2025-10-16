@@ -23,7 +23,7 @@ final class ArticleDetailViewModel: ObservableObject {
     let textSizeManager: TextSizeManager
     let favoritesManager: FavoritesManager
     let ratingManager: RatingManager
-    let readingStatsManager: ReadingStatsManaging
+    let readingStatsManager: ReadingStatsManagingProtocol
     let articleFormatter: ArticleFormatter
 
     // Репозиторий категорий — для разрешения categoryId → Category
@@ -39,7 +39,7 @@ final class ArticleDetailViewModel: ObservableObject {
         textSizeManager: TextSizeManager,
         favoritesManager: FavoritesManager,
         ratingManager: RatingManager,
-        readingStatsManager: ReadingStatsManaging,
+        readingStatsManager: ReadingStatsManagingProtocol,
         articleFormatter: ArticleFormatter,
         categoriesRepository: CategoriesRepositoryProtocol,
         shareService: ShareServiceProtocol

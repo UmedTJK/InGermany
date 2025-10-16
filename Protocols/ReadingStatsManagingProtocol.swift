@@ -8,7 +8,7 @@
 import SwiftUI
 
 @MainActor
-protocol ReadingStatsManaging {
+protocol ReadingStatsManagingProtocol {
     // Progress
     func updateProgress(for articleID: String, value: CGFloat)
     func progressForArticle(_ articleID: String) -> CGFloat

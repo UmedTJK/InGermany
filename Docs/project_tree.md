@@ -1,6 +1,4 @@
 .
-├── 0001-add-missing-categories.patch
-├── 0001-add-missing-categories.patch.save
 ├── Core
 │   ├── AppContainer.swift
 │   ├── ContentView.swift
@@ -35,6 +33,9 @@
 │       ├── map.png
 │       └── settings.png
 ├── Formatters
+│   ├── ArticleFormatter.swift
+│   ├── DateFormattingService.swift
+│   └── ReadingTimeCalculator.swift
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
@@ -75,24 +76,20 @@
 │   └── Unit
 │       ├── Helpers
 │       ├── Managers
-│       ├── Modeld
+│       ├── Models
 │       ├── Services
 │       └── ViewModels
 ├── Managers
-│   ├── CacheManager.swift
-│   ├── CategoryManager.swift
 │   ├── FavoritesManager.swift
-│   ├── ProtocolConformances.swift
 │   ├── RatingManager.swift
 │   ├── ReadingHistoryManager.swift
-│   ├── ReadingProgressHelper.swift
 │   ├── ReadingStatsManager.swift
-│   ├── ReadingTimeCalculator.swift
 │   └── TextSizeManager.swift
 ├── Models
 │   ├── Article.swift
 │   ├── Category.swift
 │   ├── Location.swift
+│   ├── ProtocolConformances.swift
 │   ├── ReadingHistoryEntry.swift
 │   ├── ReadingSession.swift
 │   └── ReadingStats.swift
@@ -108,6 +105,9 @@
 │   ├── ReadingStatsManagingProtocol.swift
 │   └── ShareServiceProtocol.swift
 ├── README.md
+├── Repositories
+│   ├── ArticlesRepositoryImpl.swift
+│   └── CategoriesRepositoryImpl.swift
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
@@ -144,12 +144,10 @@
 │   ├── test2.pdf
 │   └── test3.pdf
 ├── Services
-│   ├── ArticleFormatter.swift
 │   ├── ArticleRenderer.swift
-│   ├── ArticlesRepositoryImpl.swift
 │   ├── AuthService.swift
+│   ├── CacheService.swift
 │   ├── DataService.swift
-│   ├── DateFormattingService.swift
 │   ├── DefaultsStore.swift
 │   ├── ExportToPDF.swift
 │   ├── LocalizationManager.swift
@@ -157,12 +155,10 @@
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
 ├── Shared
-│   ├── Models
-│   │   ├── ArticleBlock.swift
-│   │   └── ArticleSectionDTO.swift
-│   └── ViewModels
-│       ├── ArticleEditorViewModel.swift
-│       └── ArticleLibraryViewModel.swift
+│   └── Editor
+│       ├── Models
+│       ├── ViewModels
+│       └── Views
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
@@ -179,7 +175,7 @@
 │   ├── LoadingView.swift
 │   ├── PDFThumbnailGenerator.swift
 │   ├── ProgressBar.swift
-│   ├── ReadingTimeCalculator.swift
+│   ├── ReadingProgressHelper.swift
 │   ├── RoundedCorner.swift
 │   ├── ScaleOnTap.swift
 │   ├── ShakeEffect.swift
@@ -221,10 +217,6 @@
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
 │   ├── DemoArticleView.swift
-│   ├── Editor
-│   │   ├── ArticleEditorView.swift
-│   │   ├── ArticleLibraryView.swift
-│   │   └── BlockPickerView.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
@@ -237,9 +229,6 @@
 │   │   ├── RecentlyReadSection.swift
 │   │   └── UsefulToolsSection.swift
 │   └── SettingsView.swift
-├── appcontainer_patch.diff
-├── check_di_violations.sh
-├── di_violations_report.md
 ├── iterm
 │   ├── Dracula.itermcolors
 │   ├── INSTALL.md
@@ -247,18 +236,16 @@
 │   ├── README.md
 │   ├── dracula-pro.png
 │   └── screenshot.png
-├── project_structure.txt
-├── scripts
-│   ├── release.sh
-│   ├── release_v2.sh
-│   ├── release_v3.sh
-│   ├── release_v4.sh
-│   ├── release_v4.sh.save
-│   ├── release_v5.sh
-│   ├── release_v6.sh
-│   ├── release_v7.sh
-│   ├── tag_with_date.sh
-│   └── update_project_tree.sh
-└── update.sh
+└── scripts
+    ├── release.sh
+    ├── release_v2.sh
+    ├── release_v3.sh
+    ├── release_v4.sh
+    ├── release_v4.sh.save
+    ├── release_v5.sh
+    ├── release_v6.sh
+    ├── release_v7.sh
+    ├── tag_with_date.sh
+    └── update_project_tree.sh
 
-59 directories, 203 files
+61 directories, 188 files
