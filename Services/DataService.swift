@@ -11,7 +11,7 @@ actor DataService {
     static let shared = DataService()
 
     private let networkService = NetworkService.shared
-    private let cacheManager = CacheManager.shared
+    private let cacheManager = CacheService.shared
 
     private var articlesCache: [Article]?
     private var categoriesCache: [Category]?

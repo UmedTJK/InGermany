@@ -7,8 +7,8 @@
 import Foundation
 
 @MainActor
-final class CategoryManager: ObservableObject, CategoriesRepositoryProtocol {
-    static let shared = CategoryManager()
+final class CategoriesRepositoryImpl: ObservableObject, CategoriesRepositoryProtocol {
+    static let shared = CategoriesRepositoryImpl()
 
     @Published private(set) var categories: [Category] = []
     private var byId: [String: Category] = [:]

@@ -1,17 +1,16 @@
 //
-//  CacheManager.swift
+//  CacheService.swift
 //  InGermany
 //
 //  Created by SUM TJK on 08.10.25.
 //
-// CacheManager.swift
-// Managers/CacheManager.swift
+
 import Foundation
 
-/// Unified cache manager for memory caching with TTL support
-actor CacheManager {
+/// Unified CacheService for memory caching with TTL support
+actor CacheService {
     /// Shared singleton instance
-    static let shared = CacheManager()
+    static let shared = CacheService()
     
     private var memoryCache: [String: Any] = [:]
     private let defaultCacheLifetime: TimeInterval = 15 * 60 // 15 минут
