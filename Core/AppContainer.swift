@@ -22,7 +22,8 @@ final class AppContainer: ObservableObject {
     /// Конкретный экземпляр для SwiftUI
     let readingStatsManager: ReadingStatsManager
     /// Доступ через протокол (для ViewModel)
-    var readingStatsService: ReadingStatsManaging { readingStatsManager }
+    var readingStatsService: ReadingStatsManagingProtocol { readingStatsManager }
+
     
     private let dateFormattingService = DateFormattingService.shared
     private let textAnalysisService = TextAnalysisService.shared

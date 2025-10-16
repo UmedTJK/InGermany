@@ -8,7 +8,7 @@ import SwiftUI
 import Foundation
 
 @MainActor
-final class ReadingStatsManager: ObservableObject, ReadingStatsManaging {
+final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol {
     static let shared = ReadingStatsManager()
 
     // MARK: - Internal State

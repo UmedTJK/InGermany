@@ -12,7 +12,7 @@ final class SettingsViewModel: ObservableObject {
 
     // MARK: - Dependencies
     private let localizationManager: LocalizationManager
-    private let statsManager: ReadingStatsManaging
+    private let statsManager: ReadingStatsManagingProtocol
 
     // MARK: - AppStorage / Published properties
     @AppStorage("selectedLanguage") var selectedLanguage: String = "ru"
@@ -26,7 +26,7 @@ final class SettingsViewModel: ObservableObject {
     let supportedLanguages = ["ru", "en", "de", "tj", "fa", "ar", "uk"]
 
     // MARK: - Init
-    init(localizationManager: LocalizationManager, statsManager: ReadingStatsManaging) {
+    init(localizationManager: LocalizationManager, statsManager: ReadingStatsManagingProtocol) {
         self.localizationManager = localizationManager
         self.statsManager = statsManager
     }
