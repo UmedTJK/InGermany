@@ -127,71 +127,82 @@
 ## 6. Managers Layer
 
 ### FavoritesManager.swift
-- Управляет списком избранных статей.
-- Хранение в `UserDefaults` через `DefaultsStore`.
-- Методы:
-  - `toggleFavorite(articleID:)`
-  - `isFavorite(articleID:)`
-  - `favoriteArticles` (publisher).
+- `@MainActor`, `ObservableObject`.  
+- Singleton `FavoritesManager.shared`.  
+- Управляет списком избранных статей.  
+- Хранение: `DefaultsStore`.  
+- Свойства:  
+  - `favorites: Set<String>` — набор избранных id.  
+- Методы:  
+  - `toggleFavorite(for:)` — переключает состояние избранного.  
+  - `isFavorite(_:)` и `isFavorite(id:)` — проверка.  
+  - `favoriteArticles(from:)` — фильтрация списка статей.  
+  - `clearForTesting()` — очистка для тестов.  
+
+---
 
 ### RatingManager.swift
-- Управляет системой оценок статей (звезды).
-- Хранение: `UserDefaults` (по articleID).
-- Методы:
-  - `setRating(_ rating: Int, for articleID: String)`
-  - `getRating(for articleID:) -> Int?`
+- `@MainActor`, `ObservableObject`.  
+- Singleton `RatingManager.shared`.  
+- Управляет пользовательскими рейтингами статей.  
+- Хранение: `UserDefaults`.  
+- Свойства:  
+  - `ratings: [String: Int]` — id статьи → рейтинг.  
+- Методы:  
+  - `getRating(for:)` — получить рейтинг.  
+  - `setRating(_:for:)` — установить рейтинг.  
+  - `clearForTesting()` — очистка.  
 
-### CategoryManager.swift
-- Предоставляет доступ к категориям.
-- Работает с локальным JSON (`categories.json`) и репозиторием.
-- Методы:
-  - `allCategories()`
-  - `category(by id:)`
+---
 
-### TextSizeManager.swift
-- Управляет настройками размера текста.
-- Использует `@AppStorage("textSize")`.
-- Методы:
-  - `increaseTextSize()`
-  - `decreaseTextSize()`
-  - `resetTextSize()`
+### ReadingHistoryManager.swift
+- `@MainActor`, `ObservableObject`.  
+- Singleton `ReadingHistoryManager.shared`.  
+- Управляет **простым списком прочитанных статей**.  
+- Хранение: локально (`DefaultsStore` в будущем).  
+- Свойства:  
+  - `readingHistory: [String: Date]` — id статьи → дата чтения.  
+- Методы:  
+  - `markAsRead(_:)` — отметить статью прочитанной.  
+  - `isRead(_:)` — проверка.  
+  - `lastReadDate(for:)` — дата последнего прочтения.  
+  - `clearForTesting()` — очистка.  
+
+---
 
 ### ReadingStatsManager.swift
-- Собирает статистику чтения:
-  - общее время,
-  - количество статей,
-  - среднее время,
-  - streak (дни подряд).
-- Хранение: `UserDefaults` (через `DefaultsStore`).
-- Методы:
-  - `recordSession(articleID:, duration:)`
-  - `getStats() -> ReadingStats`
-  - `clearStats()`
+- `@MainActor`, `ObservableObject`.  
+- Singleton `ReadingStatsManager.shared`.  
+- Реализует `ReadingStatsManagingProtocol`.  
+- Управляет прогрессом, сессиями чтения, статистикой и историей.  
+- Хранение: `DefaultsStore`.  
+- Свойства:  
+  - `progress: [String: CGFloat]` — прогресс по статьям.  
+  - `completedSessions: [ReadingSession]`.  
+  - `history: [ReadingHistoryEntry]`.  
+- Методы:  
+  - Прогресс: `updateProgress(for:value:)`, `progressForArticle(_:)`, `resetProgress(for:)`.  
+  - Сессии: `startSession(articleId:)`, `endSession(articleId:)`, `currentReadingTime(for:)`.  
+  - История: `addReadingEntry(articleId:readingTime:)`, `recentlyReadArticles(from:limit:)`, `isRead(_:)`, `lastReadDate(for:)`, `clearHistory()`.  
+  - Статистика: `totalReadingTimeMinutes`, `totalArticlesRead`, `getStats()`.  
+  - Поддержка: `estimateReadingTime(for:language:)`, `formatReadingTime(_:language:)`, `progressStatus(for:language:)`.  
 
-### CacheManager.swift
-- Менеджер для кэширования JSON-файлов.
-- Используется `NetworkService` и `DataService`.
-- Методы:
-  - `saveCache(fileName:data:)`
-  - `loadCache(fileName:)`
-  - `clearCache()`
+---
 
-### ReadingProgressHelper.swift
-- Управляет прогрессом чтения статей.
-- Рассчитывает процент прокрутки.
-- Методы:
-  - `calculateProgress(offset: contentHeight: screenHeight:) -> Double`
+### TextSizeManager.swift
+- `@MainActor`, `ObservableObject`.  
+- Singleton `TextSizeManager.shared`.  
+- Управляет размером текста и поддерживает кастомный масштаб.  
+- Хранение: `DefaultsStore`.  
+- Свойства:  
+  - `textSize: TextSize` (small, medium, large).  
+  - `customScale: Double`.  
+- Методы:  
+  - `setTextSize(_:)` — выбор размера текста.  
+  - Автосохранение при изменении.  
+- Реализует `FontProviding`:  
+  - `bodyFont`, `titleFont`, `headlineFont`, `captionFont`, `subheadlineFont`.  
 
-### ReadingTimeCalculator.swift
-- Подсчёт времени чтения статьи.
-- Использует количество слов и скорость чтения.
-- Методы:
-  - `calculateReadingTime(for article:, language:) -> Int`
-
-### ProtocolConformances.swift
-- Содержит расширения для реализации протоколов.
-- Пример: `Article` может соответствовать `Identifiable`, `Codable`.
-- Обеспечивает удобное использование моделей в SwiftUI.
 
 
 ## 7. Models Layer
@@ -250,90 +261,146 @@
 
 ## 8. Protocols Layer
 
-### ArticlesRepositoryProtocol.swift
-- Контракт для работы со статьями.
-- Методы:
-  - `loadArticles() async throws -> [Article]`
-  - `refreshArticles() async throws -> [Article]`
-  - `getLastSource() -> String`
+### FavoritesManagingProtocol.swift
+- `@MainActor`.  
+- Используется во ViewModel для доступа к `FavoritesManager`.  
+- Методы:  
+  - `isFavorite(_:) -> Bool` — проверка, находится ли статья в избранном.  
+  - `toggleFavorite(for:)` — переключение состояния избранного.  
 
-### CategoriesRepositoryProtocol.swift
-- Контракт для работы с категориями.
-- Методы:
-  - `loadCategories() async throws -> [Category]`
-
-### ArticleFormatterProtocol.swift
-- Контракт для форматирования статей.
-- Методы:
-  - форматирование даты,
-  - подсчёт слов,
-  - оценка времени чтения.
-
-### ShareServiceProtocol.swift
-- Контракт для шаринга статьи.
-- Методы:
-  - `generatePlainText(article:, language:)`
-  - `generateFormattedText(article:, language:)`
-  - `showShareSheet(...)`
-
-### LocalizationManagerProtocol.swift
-- Контракт для локализации.
-- Методы:
-  - `t(_ key: String, language:) -> String`
-  - `hasKey(_:) -> Bool`
-
-### ReadingStatsManagingProtocol.swift
-- Контракт для работы со статистикой чтения.
-- Методы:
-  - `recordSession(articleID:, duration:)`
-  - `getStats() -> ReadingStats`
-  - `clearStats()`
-
-### ReadingProgressTrackerProtocol.swift
-- Контракт для отслеживания прогресса.
-- Методы:
-  - `calculateProgress(offset:, contentHeight:, screenHeight:)`
+---
 
 ### RatingManagerProtocol.swift
-- Контракт для системы рейтингов.
-- Методы:
-  - `getRating(for articleID:)`
-  - `setRating(_:, for:)`
+- `@MainActor`.  
+- Используется во ViewModel для доступа к `RatingManager`.  
+- Методы:  
+  - `getRating(for:) -> Int` — получить рейтинг статьи.  
+  - `setRating(_:for:)` — установить рейтинг.  
+  - `clearForTesting()` — очистить данные (например, для тестов).  
+
+---
+
+### ReadingStatsManagingProtocol.swift
+- `@MainActor`.  
+- Контракт для менеджера статистики чтения.  
+- Методы:  
+  - **Progress**: `updateProgress(for:value:)`, `progressForArticle(_:)`, `resetProgress(for:)`.  
+  - **Sessions**: `startSession(articleId:)`, `endSession(articleId:)`, `currentReadingTime(for:)`.  
+  - **History**: `addReadingEntry(articleId:readingTime:)`, `recentlyReadArticles(from:limit:)`, `isRead(_:)`, `lastReadDate(for:)`, `clearHistory()`.  
+  - **Stats**: `totalReadingTimeMinutes`, `totalArticlesRead`, `getStats() -> ReadingStats`.  
+  - **Helpers**: `estimateReadingTime(for:language:)`, `formatReadingTime(_:language:)`, `progressStatus(for:language:)`.  
+
+---
+
+### CategoriesRepositoryProtocol.swift
+- `@MainActor`.  
+- Репозиторий для работы с категориями.  
+- Свойства:  
+  - `categories: [Category]` — список категорий.  
+- Методы:  
+  - `bootstrap()` — первичная загрузка.  
+  - `refresh()` — обновление данных.  
+  - `category(by:) -> Category?` — поиск категории по id.  
+  - `allCategories() -> [Category]` — список всех категорий.  
+- ⚡ Включает реализацию `DefaultCategoriesRepository` (singleton).  
+
+---
+
+### ArticlesRepositoryProtocol.swift
+- Контракт репозитория статей.  
+- Методы:  
+  - `loadArticles() async -> [Article]` — загрузить все статьи.  
+  - `refreshArticles() async -> [Article]` — обновить данные.  
+  - `getLastSource() async -> String` — источник данных (например, "local", "remote").  
+
+---
+
+### ArticleFormatterProtocol.swift
+- Контракт для форматирования статей.  
+- Методы:  
+  - `formattedCreatedDate(_:, for:)` — форматированная дата создания.  
+  - `formattedUpdatedDate(_:, for:)` — дата обновления.  
+  - `relativeCreatedDate(_:, for:)` — относительная дата (например, "2 дня назад").  
+  - `wordCount(_:, for:) -> Int` — подсчёт слов.  
+  - `readingTime(_:, for:) -> Int` — оценка времени чтения.  
+  - `formatReadingTime(_:, language:) -> String` — форматированное время чтения.  
+
+---
+
+### ShareServiceProtocol.swift
+- `@MainActor`.  
+- Контракт сервиса шаринга.  
+- Методы:  
+  - `generatePlainText(article:, selectedLanguage:)` — plain text.  
+  - `generateFormattedText(article:, selectedLanguage:)` — форматированный текст.  
+  - `showShareSheet(article:, selectedLanguage:)` — системное окно шаринга.  
+
+---
 
 ### FontProviding.swift
-- Протокол для динамического выбора шрифтов.
-- Используется в UI-компонентах.
+- `@MainActor`.  
+- Контракт для типографики.  
+- Свойства:  
+  - `bodyFont: Font`  
+  - `titleFont: Font`  
+  - `headlineFont: Font`  
+  - `captionFont: Font`  
+  - `subheadlineFont: Font`  
 
-### FavoritesManagingProtocol.swift
-- ⚠️ В проекте пустой (без методов).
-- Требует заполнения для унификации работы с избранным.
+---
+
+### LocalizationManagerProtocol.swift
+- Контракт для менеджера локализации.  
+- Свойства:  
+  - `selectedLanguage: String` — текущий язык.  
+- Методы:  
+  - `getTranslation(key:, language:) -> String` — перевод по ключу.  
+  - `t(_ key:, language:) -> String` — упрощённый доступ (автоопределение языка).  
+
+---
+
+### ReadingProgressTrackerProtocol.swift
+- Контракт для трекинга прогресса чтения.  
+- Методы:  
+  - `progressForArticle(_:) -> Double` — прогресс по статье.  
+
 
 ---
 
 ## 9. Services Layer
 
+### CacheService.swift
+- `actor` (thread-safe).
+- Унифицированный in-memory кэш с поддержкой TTL (time-to-live).
+- Синглтон `CacheService.shared`.
+- Методы:
+  - `get(_ key:, lifetime:) -> T?`
+  - `set(_ key:, value:)`
+  - `clear(_ key:)`
+  - `hasValidCache(_ key:, lifetime:) -> Bool`
+- Применение: быстрый доступ к объектам без обращения к диску/сети.
+- ⚠️ Ранее назывался `CacheManager`, перенесён в `Services/`.
+
 ### DataService.swift
 - `actor` (thread-safe).
 - Offline-first загрузка данных.
-- Источники: Bundle → Cache → Network.
+- Источники: Memory → Disk (CacheService) → Bundle → Network.
 - Методы:
-  - `articlesStream() -> AsyncStream<[Article]>`
-  - `categoriesStream() -> AsyncStream<[Category]>`
-  - `locationsStream() -> AsyncStream<[Location]>`
+  - `articlesStream()`, `categoriesStream()`, `locationsStream()`
   - `loadArticles()`, `loadCategories()`, `loadLocations()`
   - `preloadAll()`
-  - `clearCache()`
-  - `refreshData()`
-  - `getLastDataSource() -> [String: String]`
+  - `clearCache()`, `refreshData()`
+  - `getLastDataSource()`
+- Использует: `CacheService`, `NetworkService`.
 
 ### NetworkService.swift
-- Singleton для загрузки JSON.
-- Источники: Bundle, File Cache, Network.
+- Singleton для загрузки JSON (offline-first).
+- Источники: Bundle → File Cache → Network (async refresh).
 - Методы:
   - `loadJSON(from:)`
   - `loadJSONWithSource(from:)`
   - `clearCache()`
-- Сохраняет кэш в директорию `InGermanyCache`.
+- Использует файловый кэш в директории `InGermanyCache`.
 
 ### LocalizationManager.swift
 - ObservableObject + Singleton.
@@ -341,13 +408,13 @@
 - Управляет текущим языком через `@AppStorage("selectedLanguage")`.
 - Хранит словари переводов.
 - Методы:
-  - `t(_ key:, language:) -> String`
+  - `getTranslation(key:language:)`
   - `hasKey(_:)`
   - `preload()`
 
 ### ArticleFormatter.swift
 - Реализация `ArticleFormatterProtocol`.
-- Использует `DateFormattingService` и `TextAnalysisService`.
+- Зависимости: `DateFormattingService`, `TextAnalysisService`.
 - Методы:
   - `formattedCreatedDate`
   - `formattedUpdatedDate`
@@ -360,31 +427,36 @@
 - Реализация `ShareServiceProtocol`.
 - Зависимости: `ArticleFormatter`, `LocalizationManager`.
 - Методы:
-  - генерация текста (plain, formatted),
-  - показ системного ShareSheet.
+  - `generatePlainText`
+  - `generateFormattedText`
+  - `showShareSheet`
+- Показывает системный `UIActivityViewController`.
 
 ### ArticleRenderer.swift
-- Рендеринг статей из JSON.
+- SwiftUI-вью для рендеринга JSON-статей.
 - Поддерживает блоки:
-  - paragraph, info, warning, tip, quote, checklist, faq, links, list.
+  - paragraph, info, warning, tip, quote, checklist, faq, links, image, list.
 - Используется в `ArticleDetailView`.
 
 ### ExportToPDF.swift
-- Генерация PDF-документов.
-- Использует `UIGraphicsPDFRenderer`.
-- Сохраняет файл в Documents.
+- Генерация PDF документов через `UIGraphicsPDFRenderer`.
+- Методы:
+  - `export(title:content:fileName:)`
+- Сохраняет в `Documents/`.
 
 ### AuthService.swift
-- Заготовка для будущей аутентификации.
-- ⚠️ Пока без реализации (TODO).
+- Заготовка для аутентификации.
+- TODO:
+  - sign-in / sign-out
+  - token storage
+  - user session validation
 
 ### TextAnalysisService.swift
 - Подсчёт слов и времени чтения.
-- Поддержка разных скоростей чтения по языкам:
-  - de=180, en=200, ru=190, tj=170.
+- Поддержка разных скоростей чтения (de=180, en=200, ru=190, tj=170).
 - Методы:
   - `wordCount(for:)`
-  - `readingTime(for:, language:)`
+  - `readingTime(for:language:)`
 
 ### DefaultsStore.swift
 - Обёртка над `UserDefaults` с Codable.
@@ -394,11 +466,10 @@
   - `remove(_:)`
 
 ### DateFormattingService.swift
-- Форматирование дат.
 - Реализация `DateFormattingServiceProtocol`.
 - Методы:
-  - `formattedDate(_:for:)`
-  - `relativeDate(_:for:)`
+  - `formattedDate`
+  - `relativeDate`
 
 ### ArticlesRepositoryImpl.swift
 - Реализация `ArticlesRepositoryProtocol`.
@@ -406,6 +477,129 @@
   - `loadArticles()`
   - `refreshArticles()`
   - `getLastSource()`
+
+
+## 10. Formatters Layer
+
+### ReadingTimeCalculator.swift
+- Утилита для расчёта времени чтения текста/статьи.
+- Использует скорости чтения из `TextAnalysisService`.
+- Методы:
+  - `calculate(for text: String, language: String) -> Int`
+- ⚠️ Перенесён из `Managers/` в `Formatters/`.
+
+
+## 11. UIUtils Layer
+
+### Animations.swift
+- Набор `View`-модификаторов для анимаций.  
+- Методы:  
+  - `cardStyle()` — стандартный стиль карточки (фон, скругление, тень).  
+  - `lightCardStyle()` — облегчённый стиль карточки с мягкой тенью.  
+  - `scaleOnAppear()` — анимация масштаба при появлении.  
+  - `pressAnimation()` — анимация при нажатии.  
+  - `slideInAnimation(delay:)` — слайд-ин с прозрачностью.  
+
+---
+
+### CardStyle.swift
+- Enum `CardStyle` (standard, light).  
+- Реализует `CaseIterable`, `Identifiable`, `Codable`.  
+- Свойства:  
+  - `title` — локализуемое имя стиля.  
+- Расширение `View`: метод `applyCardStyle(_:)` применяет соответствующий визуальный стиль карточки.  
+
+---
+
+### CardImageStyle.swift
+- Enum `CardImageStyle` (allCorners, bottomCorners, fullWidth).  
+- Реализует `CaseIterable`, `Identifiable`.  
+- Свойства:  
+  - `localizedTitle` — локализованное название стиля.  
+- Используется в UI для настройки отображения изображений внутри карточек.  
+
+---
+
+### CardSize.swift
+- Утилита для вычисления размеров карточек.  
+- Методы:  
+  - `width(for:) -> CGFloat` — рекомендуемая ширина карточки по ширине экрана.  
+  - `height(for:screenWidth:) -> CGFloat` — рекомендуемая высота карточки по размеру экрана.  
+
+---
+
+### Color+Hex.swift
+- Расширение `Color` с инициализатором из HEX-строки.  
+- Поддерживает строки с `#` и без него.  
+- Пример: `Color(hex: "#FF0000")`.  
+
+---
+
+### Environment+ScreenSize.swift
+- Расширение `EnvironmentValues` для передачи размера экрана.  
+- Свойство:  
+  - `screenSize: CGSize` — доступ к размеру экрана через `@Environment(\.screenSize)`.  
+
+---
+
+### ProgressBar.swift
+- SwiftUI-компонент прогресс-бара.  
+- Свойства:  
+  - `value: CGFloat` — от `0.0` до `1.0`.  
+- Реализация: серый фон + синий индикатор, анимация `easeInOut`.  
+- Применяется для отображения прогресса чтения или загрузки.  
+
+---
+
+### ReadingProgressHelper.swift
+- Структура для управления визуализацией прогресса чтения.  
+- Зависит от `LocalizationManager`.  
+- Методы:  
+  - `color(for:) -> Color` — цвет индикатора (зелёный, оранжевый, красный).  
+  - `status(for:language:) -> String` — локализованная строка статуса (“Начало”, “В процессе”, “Почти готово”, “Готово”).  
+  - `progressView(progress:, language:) -> some View` — комбинированный прогресс-бар с текстом.  
+
+---
+
+### RoundedCorner.swift
+- Shape `RoundedCorner`.  
+- Свойства:  
+  - `radius: CGFloat` — радиус скругления.  
+  - `corners: UIRectCorner` — скругляемые углы.  
+- Расширение `View`: метод `cornerRadius(_:corners:)` для скругления конкретных углов.  
+
+---
+
+### Theme.swift
+- Определяет глобальные константы стиля приложения.  
+- Содержит:  
+  - Цвета (`primaryBlue`, `secondaryGray`, `backgroundCard`, `backgroundMain`).  
+  - Градиенты (`cardGradient`, `favoriteCardGradient`).  
+  - Отступы (`smallPadding`, `mediumPadding`, `largePadding`, `cardPadding`).  
+  - Радиус (`cardCornerRadius`).  
+  - Тени (`cardShadow`, `lightShadow`).  
+- Расширение `View`:  
+  - `sectionCardStyle()` — стандартный стиль секции с отступами и тенью.  
+  
+  ### Accessibility+Extensions.swift
+- Расширения для упрощения добавления доступности (VoiceOver).  
+- Методы:  
+  - `a11yLabel(_:)` — добавляет читаемую метку для VoiceOver.  
+  - `a11yHint(_:)` — добавляет подсказку, которую VoiceOver озвучит.  
+  - `a11yAddTraits(_:)` — добавляет атрибуты (например, “кнопка”).  
+- Применяется для повышения доступности интерфейса.  
+
+---
+
+### ScaleOnTap.swift
+- `ViewModifier`, добавляющий анимацию уменьшения при нажатии.  
+- Реализует эффект “нажатой” кнопки или карточки.  
+- Использует `@GestureState` для отслеживания касания.  
+- Методы:  
+  - `scaleOnTap()` — расширение для `View`, применяющее модификатор.  
+- Пример: `Button("Tap me") { ... }.scaleOnTap()`.  
+
+
 
 
 ## 10. ViewModels Layer
@@ -909,10 +1103,46 @@
 Ожидается: расширения для улучшения доступности (label, hint, traits).
 
 
+
 ## 13. Formatters Layer
 
-⚠️ Папка `Formatters/` пуста.  
-Раздел зарезервирован для будущих реализаций (например, `ReadingStatsFormatter`, `AppErrorFormatter`).
+### ReadingTimeCalculator.swift
+- `struct` (утилита без состояния).  
+- Используется для оценки времени чтения текста.  
+- Поддерживает языки: `ru`, `en`, `de`, `tj`.  
+- Методы:  
+  - `estimateReadingTime(for:, language:) -> Int` — оценка времени чтения в минутах.  
+  - `formatReadingTime(_:, language:) -> String` — форматированная строка (“3 мин чтения”, “3 min read”).  
+- Реализует простую подсчётную логику слов и скорости чтения (WPM).  
+
+---
+
+### ArticleFormatter.swift
+- Класс для форматирования метаданных статей.  
+- Зависимости: `DateFormattingServiceProtocol`, `TextAnalysisServiceProtocol`.  
+- Методы:  
+  - `formattedCreatedDate(_:, for:)` — дата создания.  
+  - `formattedUpdatedDate(_:, for:)` — дата обновления.  
+  - `relativeCreatedDate(_:, for:)` — относительная дата (“2 дня назад”).  
+  - `wordCount(_:, for:) -> Int` — подсчёт слов.  
+  - `readingTime(_:, for:) -> Int` — расчёт времени чтения.  
+  - `formatReadingTime(_:, language:) -> String` — компактное форматирование (“3 мин.”).  
+- ⚡ Реализует `ArticleFormatterProtocol`.  
+- Имеет встроенные fallback-переводы для случаев, когда дата отсутствует.  
+
+---
+
+### DateFormattingService.swift
+- Реализует `DateFormattingServiceProtocol`.  
+- Singleton `DateFormattingService.shared`.  
+- Методы:  
+  - `formattedDate(_:, for:)` — локализованная дата.  
+  - `relativeDate(_:, for:)` — относительное время (“вчера”, “2 дня назад”).  
+- Использует:  
+  - `DateFormatter` (medium style).  
+  - `RelativeDateTimeFormatter` (full style).  
+- Поддержка локалей: `ru_RU`, `en_US`, `de_DE`, `tj → ru_RU`.  
+
 
 ## 14. Tests Layer
 
