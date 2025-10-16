@@ -67,9 +67,6 @@
 		ADA942092E78950F008D1364 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = ADA942082E78950B008D1364 /* locations.json */; };
 		ADE23B712E9BEE5400BD152B /* ArticleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B702E9BEE5400BD152B /* ArticleRenderer.swift */; };
 		ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */ = {isa = PBXBuildFile; fileRef = ADE23B732E9BEED400BD152B /* burgeramt_registration.json */; };
-		ADE23B7A2E9BEEF000BD152B /* ArticleBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B762E9BEEF000BD152B /* ArticleBlockView.swift */; };
-		ADE23B7B2E9BEEF000BD152B /* FAQBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B782E9BEEF000BD152B /* FAQBlockView.swift */; };
-		ADE23B7C2E9BEEF000BD152B /* ChecklistCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B772E9BEEF000BD152B /* ChecklistCardView.swift */; };
 		ADE23B7F2E9BF8F500BD152B /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */; };
 		ADF3387B2E863F0800AE4CBF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */; };
 		ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */; };
@@ -157,9 +154,6 @@
 		ADA942082E78950B008D1364 /* locations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		ADE23B702E9BEE5400BD152B /* ArticleRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleRenderer.swift; sourceTree = "<group>"; };
 		ADE23B732E9BEED400BD152B /* burgeramt_registration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration.json; sourceTree = "<group>"; };
-		ADE23B762E9BEEF000BD152B /* ArticleBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBlockView.swift; sourceTree = "<group>"; };
-		ADE23B772E9BEEF000BD152B /* ChecklistCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistCardView.swift; sourceTree = "<group>"; };
-		ADE23B782E9BEEF000BD152B /* FAQBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQBlockView.swift; sourceTree = "<group>"; };
 		ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
 		ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
 		ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
@@ -282,7 +276,6 @@
 			children = (
 				AD108D322E9F70130032F0D9 /* PDFThumbnailGenerator.swift */,
 				ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */,
-				ADE23B792E9BEEF000BD152B /* ArticleComponents */,
 				AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */,
 				AD1624402E9ADA7200E6E14B /* LoadingView.swift */,
 				AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */,
@@ -317,7 +310,6 @@
 			isa = PBXGroup;
 			children = (
 				AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */,
-				AD1626022E9ADDD900E6E14B /* screenshots */,
 				AD1626002E9ADD3400E6E14B /* README.md */,
 				AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */,
 				AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */,
@@ -331,6 +323,7 @@
 				AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */,
 				AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */,
 				AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */,
+				AD1626022E9ADDD900E6E14B /* screenshots */,
 			);
 			path = Docs;
 			sourceTree = "<group>";
@@ -351,12 +344,12 @@
 				ADF339482E8850FA00AE4CBF /* Managers */,
 				AD8552C32E75B452003D3826 /* Services */,
 				AD8552C62E75B48D003D3826 /* Resources */,
-				AD2A67CD2E910028006A94DD /* InGermanyTests */,
 				AD8552932E75ABEC003D3826 /* Products */,
 				AD8552942E75ABEC003D3826 /* InGermany */,
 				AD2E60DE2EA1703100436C9A /* Repositories */,
 				AD2A65652E8FF0D1006A94DD /* UIUtils */,
 				AD2E60E42EA1709700436C9A /* Formatters */,
+				AD2A67CD2E910028006A94DD /* InGermanyTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -402,16 +395,6 @@
 				ADE23B732E9BEED400BD152B /* burgeramt_registration.json */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		ADE23B792E9BEEF000BD152B /* ArticleComponents */ = {
-			isa = PBXGroup;
-			children = (
-				ADE23B762E9BEEF000BD152B /* ArticleBlockView.swift */,
-				ADE23B772E9BEEF000BD152B /* ChecklistCardView.swift */,
-				ADE23B782E9BEEF000BD152B /* FAQBlockView.swift */,
-			);
-			path = ArticleComponents;
 			sourceTree = "<group>";
 		};
 		ADE23B7D2E9BF11300BD152B /* articles */ = {
@@ -610,9 +593,6 @@
 				AD2E60F02EA1733100436C9A /* ReadingProgressHelper.swift in Sources */,
 				AD459A5C2E97925900F540F3 /* ReadingStatsManagingProtocol.swift in Sources */,
 				AD2A655D2E8FEF44006A94DD /* DefaultsStore.swift in Sources */,
-				ADE23B7A2E9BEEF000BD152B /* ArticleBlockView.swift in Sources */,
-				ADE23B7B2E9BEEF000BD152B /* FAQBlockView.swift in Sources */,
-				ADE23B7C2E9BEEF000BD152B /* ChecklistCardView.swift in Sources */,
 				AD2A655E2E8FEF44006A94DD /* LocalizationManager.swift in Sources */,
 				AD5D36CD2E96DF4A00DB63EF /* TextAnalysisService.swift in Sources */,
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
