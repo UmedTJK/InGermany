@@ -7,14 +7,28 @@
 import SwiftUI
 
 /// Чеклист для статей (список шагов с возможностью отмечать выполненные)
-struct ChecklistCardView: View {
+import SwiftUI
+
+/// Элемент чеклиста
+public struct ChecklistItem {
+    public var text: String
+    public var isDone: Bool = false
+
+    public init(text: String, isDone: Bool = false) {
+        self.text = text
+        self.isDone = isDone
+    }
+}
+
+/// Чеклист для статей (список шагов с возможностью отмечать выполненные)
+public struct ChecklistCardView: View {
     @State private var items: [ChecklistItem]
 
-    init(items: [ChecklistItem]) {
+    public init(items: [ChecklistItem]) {
         _items = State(initialValue: items)
     }
 
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             ForEach(items.indices, id: \.self) { index in
                 HStack {
@@ -38,10 +52,3 @@ struct ChecklistCardView: View {
         .cornerRadius(12)
     }
 }
-
-struct ChecklistItem {
-    var text: String
-    var isDone: Bool = false
-}
-
-

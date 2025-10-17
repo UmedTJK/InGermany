@@ -9,10 +9,15 @@ import SwiftUI
 
 /// Полноэкранный оверлей с индикатором загрузки.
 /// Используется для долгих операций (экспорт PDF, сетевые запросы).
-struct LoadingView: View {
-    var message: String?
+public struct LoadingView: View {
+    public var message: String?
 
-    var body: some View {
+    /// Публичный инициализатор, чтобы можно было использовать `LoadingView()` в других модулях
+    public init(message: String? = nil) {
+        self.message = message
+    }
+
+    public var body: some View {
         ZStack {
             Color.black.opacity(0.3).ignoresSafeArea()
             VStack(spacing: 12) {

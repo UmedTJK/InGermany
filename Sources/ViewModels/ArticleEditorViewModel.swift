@@ -2,6 +2,8 @@
 //  ArticleEditorViewModel.swift
 //  InGermany
 //
+import Foundation
+import SwiftUI
 
 import Foundation
 

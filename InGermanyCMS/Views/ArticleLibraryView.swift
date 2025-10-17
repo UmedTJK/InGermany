@@ -5,8 +5,10 @@
 //
 
 import SwiftUI
+import ArticleKit
 
-struct ArticleLibraryView: View {
+
+public struct ArticleLibraryView: View {
     @StateObject private var viewModel: ArticleLibraryViewModel
     let onOpen: (URL) -> Void
 
@@ -15,7 +17,7 @@ struct ArticleLibraryView: View {
         self.onOpen = onOpen
     }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.articles) { article in
@@ -29,7 +31,7 @@ struct ArticleLibraryView: View {
                         }
                         Spacer()
                         Button("Open") {
-                            onOpen(article.url)
+                            onOpen(article.url)  // ✅ используем url из ArticleMetadata
                         }
                         .buttonStyle(.bordered)
                     }

@@ -7,12 +7,17 @@
 import SwiftUI
 
 /// Accordion блок для FAQ (вопрос-ответ)
-struct FAQBlockView: View {
-    let question: String
-    let answer: String
+public struct FAQBlockView: View {
+    public let question: String
+    public let answer: String
     @State private var isExpanded: Bool = false
 
-    var body: some View {
+    public init(question: String, answer: String) {
+        self.question = question
+        self.answer = answer
+    }
+
+    public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(question)
@@ -39,5 +44,3 @@ struct FAQBlockView: View {
         .cornerRadius(12)
     }
 }
-
-

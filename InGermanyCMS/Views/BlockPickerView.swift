@@ -7,11 +7,12 @@
 
 // Views/BlockPickerView.swift
 import SwiftUI
+import ArticleKit   // 👈 добавляем
 
-struct BlockPickerView: View {
+public struct BlockPickerView: View {
     let onPick: (BlockType) -> Void
 
-    var body: some View {
+    public var body: some View {
         List {
             ForEach(BlockType.allCases, id: \.self) { type in
                 Button {

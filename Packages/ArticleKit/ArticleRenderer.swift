@@ -1,12 +1,21 @@
-// Services/ArticleRenderer.swift
+//
+//  ArticleRenderer.swift
+//  InGermany
+//
+//  Created by SUM TJK on 17.10.25.
+//
+// ArticleRenderer.swift
 import SwiftUI
 
-// MARK: - Article Renderer (works with DTO)
+/// Article Renderer (работает с DTO)
+public struct ArticleRenderer: View {
+    public let sections: [ArticleSectionDTO]
 
-struct ArticleRenderer: View {
-    let sections: [ArticleSectionDTO]   // ✅ используем единый DTO
+    public init(sections: [ArticleSectionDTO]) {
+        self.sections = sections
+    }
 
-    var body: some View {
+    public var body: some View {
         ScrollView {
             VStack(spacing: 16) {
                 ForEach(Array(sections.enumerated()), id: \.offset) { _, section in
@@ -17,8 +26,9 @@ struct ArticleRenderer: View {
         }
     }
 
+    // MARK: - Section rendering
     @ViewBuilder
-    private func renderSection(_ section: ArticleSectionDTO) -> some View {
+    public func renderSection(_ section: ArticleSectionDTO) -> some View {
         switch section.type {
         case "paragraph":
             if let content = section.content {
@@ -68,7 +78,6 @@ struct ArticleRenderer: View {
                             Text("🔗 \(title)")
                                 .foregroundColor(.blue)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .onTapGesture { print("Открыть статью: \(item.articleId ?? "")") }
                         }
                     }
                 }
@@ -100,7 +109,7 @@ struct ArticleRenderer: View {
 
     // MARK: - Image block view
     @ViewBuilder
-    private func imageBlock(urlString: String?, base64: String?, caption: String?) -> some View {
+    public func imageBlock(urlString: String?, base64: String?, caption: String?) -> some View {
         VStack(spacing: 8) {
             if let s = urlString, let url = URL(string: s) {
                 AsyncImage(url: url) { phase in
@@ -146,16 +155,4 @@ struct ArticleRenderer: View {
         }
         .padding(.vertical, 4)
     }
-}
-
-// MARK: - Loader (DTO-based)
-
-func loadArticleDTO(named filename: String) -> [ArticleSectionDTO] {
-    guard let url = Bundle.main.url(forResource: filename, withExtension: "json"),
-          let data = try? Data(contentsOf: url),
-          let decoded = try? JSONDecoder().decode([ArticleSectionDTO].self, from: data) else {
-        print("⚠️ Не удалось загрузить \(filename).json")
-        return []
-    }
-    return decoded
 }

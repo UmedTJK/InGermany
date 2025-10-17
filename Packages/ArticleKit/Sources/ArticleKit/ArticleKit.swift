@@ -1,2 +1,9 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+// ArticleKit/Sources/ArticleKit/ArticleKit.swift
+// Основной файл пакета ArticleKit
+
+// Экспортируем публичные API
+@_exported import SwiftUI
+
+public struct ArticleKit {
+    public init() {}
+}

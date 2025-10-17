@@ -51,15 +51,16 @@
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
-│   └── Preview Content
-│       └── Preview Assets.xcassets
-│           ├── Contents.json
-│           ├── LogoDark.imageset
-│           │   ├── Contents.json
-│           │   └── LogoDark.png
-│           └── LogoLight.imageset
-│               ├── Contents.json
-│               └── LogoLight.png
+│   ├── Preview Content
+│   │   └── Preview Assets.xcassets
+│   │       ├── Contents.json
+│   │       ├── LogoDark.imageset
+│   │       │   ├── Contents.json
+│   │       │   └── LogoDark.png
+│   │       └── LogoLight.imageset
+│   │           ├── Contents.json
+│   │           └── LogoLight.png
+│   └── Views
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
@@ -78,6 +79,27 @@
 │           │   └── Breakpoints_v2.xcbkptlist
 │           └── xcschemes
 │               └── xcschememanagement.plist
+├── InGermanyCMS
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
+│   │   ├── AppIcon.appiconset
+│   │   │   └── Contents.json
+│   │   └── Contents.json
+│   ├── ContentView.swift
+│   ├── InGermanyCMSApp.swift
+│   ├── Item.swift
+│   └── Views
+│       ├── ArticleComponents
+│       ├── ArticleEditorView.swift
+│       ├── ArticleLibraryView.swift
+│       ├── BlockPickerView.swift
+│       └── DemoArticleView.swift
+├── InGermanyCMSTests
+│   └── InGermanyCMSTests.swift
+├── InGermanyCMSUITests
+│   ├── InGermanyCMSUITests.swift
+│   └── InGermanyCMSUITestsLaunchTests.swift
 ├── InGermanyTests
 │   ├── Editor
 │   │   ├── ArticleEditorImportExportTests.swift
@@ -134,14 +156,39 @@
 │   ├── ReadingSession.swift
 │   └── ReadingStats.swift
 ├── Packages
-│   └── ArticleKit
+│   ├── ArticleKit
+│   │   ├── ArticleDocument.swift
+│   │   ├── ArticleRenderer.swift
+│   │   ├── Components
+│   │   │   ├── ArticleBlockView.swift
+│   │   │   ├── ChecklistCardView.swift
+│   │   │   └── FAQBlockView.swift
+│   │   ├── Package.swift
+│   │   ├── Renderer
+│   │   │   └── ArticleRenderer.swift
+│   │   ├── Sources
+│   │   │   ├── ArticleKit
+│   │   │   │   ├── ArticleKit.swift
+│   │   │   │   ├── Components
+│   │   │   │   ├── Models
+│   │   │   │   ├── Renderer
+│   │   │   │   └── ViewModels
+│   │   │   └── ViewModels
+│   │   │       ├── ArticleEditorViewModel.swift
+│   │   │       └── ArticleLibraryViewModel.swift
+│   │   └── Tests
+│   │       └── ArticleKitTests
+│   │           └── ArticleKitTests.swift
+│   └── SharedKit
 │       ├── Package.swift
 │       ├── Sources
-│       │   └── ArticleKit
-│       │       └── ArticleKit.swift
+│       │   └── SharedKit
+│       │       ├── Services
+│       │       ├── SharedKit.swift
+│       │       └── UI
 │       └── Tests
-│           └── ArticleKitTests
-│               └── ArticleKitTests.swift
+│           └── SharedKitTests
+│               └── SharedKitTests.swift
 ├── Protocols
 │   ├── ArticleFormatterProtocol.swift
 │   ├── ArticlesRepositoryProtocol.swift
@@ -211,32 +258,26 @@
 │   ├── test2.pdf
 │   └── test3.pdf
 ├── Services
-│   ├── ArticleRenderer.swift
 │   ├── AuthService.swift
 │   ├── CacheService.swift
 │   ├── DataService.swift
 │   ├── DefaultsStore.swift
 │   ├── ExportToPDF.swift
-│   ├── LocalizationManager.swift
 │   ├── NetworkService.swift
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
-├── Shared
-│   └── Editor
-│       ├── Models
-│       │   ├── ArticleBlock.swift
-│       │   └── ArticleSectionDTO.swift
-│       ├── ViewModels
-│       │   ├── ArticleEditorViewModel.swift
-│       │   └── ArticleLibraryViewModel.swift
-│       └── Views
-│           ├── ArticleComponents
-│           │   ├── ArticleBlockView.swift
-│           │   ├── ChecklistCardView.swift
-│           │   └── FAQBlockView.swift
-│           ├── ArticleEditorView.swift
-│           ├── ArticleLibraryView.swift
-│           └── BlockPickerView.swift
+├── Sources
+│   ├── ArticleKit
+│   │   ├── ArticleKit.swift
+│   │   ├── Components
+│   │   ├── Models
+│   │   │   ├── ArticleBlock.swift
+│   │   │   └── ArticleSectionDTO.swift
+│   │   ├── Renderer
+│   │   └── ViewModels
+│   └── ViewModels
+│       ├── ArticleEditorViewModel.swift
+│       └── ArticleLibraryViewModel.swift
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
@@ -246,7 +287,6 @@
 │   ├── Color+Hex.swift
 │   ├── CustomTabBarView.swift
 │   ├── Environment+ScreenSize.swift
-│   ├── LoadingView.swift
 │   ├── PDFThumbnailGenerator.swift
 │   ├── ProgressBar.swift
 │   ├── ReadingProgressHelper.swift
@@ -290,7 +330,6 @@
 │   │   ├── TagFilterView.swift
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
-│   ├── DemoArticleView.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
@@ -322,4 +361,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-74 directories, 249 files
+98 directories, 264 files

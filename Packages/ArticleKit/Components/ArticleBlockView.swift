@@ -7,15 +7,20 @@
 import SwiftUI
 
 /// Универсальный блок для оформления статей (Info, Warning, Tip, Quote)
-struct ArticleBlockView: View {
-    enum BlockStyle {
+public struct ArticleBlockView: View {
+    public enum BlockStyle {
         case info, warning, tip, quote
     }
 
-    let text: String
-    let style: BlockStyle
+    public let text: String
+    public let style: BlockStyle
 
-    var body: some View {
+    public init(text: String, style: BlockStyle) {
+        self.text = text
+        self.style = style
+    }
+
+    public var body: some View {
         HStack(alignment: .top, spacing: 8) {
             icon
                 .font(.system(size: 20))
@@ -76,7 +81,7 @@ struct ArticleBlockView: View {
     }
 }
 
-extension Color {
+public extension Color {
     /// Утилита для затемнения цветов
     func darker(by percentage: Double = 0.2) -> Color {
         let uiColor = UIColor(self)
@@ -87,4 +92,3 @@ extension Color {
                      blue: max(b - percentage, 0))
     }
 }
-

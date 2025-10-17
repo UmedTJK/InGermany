@@ -1,39 +1,37 @@
 import SwiftUI
+import ArticleKit
 
 /// Demo screen that loads a JSON article from the app bundle and renders it with ArticleRenderer.
-struct DemoArticleView: View {
-    @State private var sections: [ArticleSectionDTO] = []   // ✅ используем DTO
+public struct DemoArticleView: View {
+    @State private var sections: [ArticleSectionDTO] = []
     @State private var loadError: String?
     @State private var isLoading: Bool = true
 
-    private let localizationManager: LocalizationManager
+    // Упрощенный инициализатор без зависимостей
+    public init() {}
 
-    // MARK: - Init через DI
-    init(localizationManager: LocalizationManager) {
-        self.localizationManager = localizationManager
-    }
-
-    var body: some View {
+    public var body: some View {
         ScrollView {
             VStack(spacing: 16) {
                 if isLoading {
-                    LoadingView()
+                    // Простая замена LoadingView
+                    ProgressView("Загрузка...")
                         .frame(maxWidth: .infinity, alignment: .center)
-                } else if let loadError {
+                } else if let loadError = loadError {
                     Text("Ошибка загрузки JSON:\n\(loadError)")
                         .font(.callout)
                         .foregroundColor(.red)
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                 } else if !sections.isEmpty {
-                    ArticleRenderer(sections: sections)   // ✅ работает с ArticleSectionDTO
+                    ArticleRenderer(sections: sections)
                 } else {
                     Text("Нет данных для отображения")
                         .foregroundColor(.secondary)
                 }
             }
             .padding()
-            .navigationTitle(localizationManager.t("demo_article_title"))
+            .navigationTitle("Demo Article") // Упростили без LocalizationManager
         }
         .onAppear {
             loadDemoArticle()
@@ -53,7 +51,6 @@ struct DemoArticleView: View {
 
         do {
             let data = try Data(contentsOf: url)
-            // ✅ декодим сразу в ArticleSectionDTO
             sections = try JSONDecoder().decode([ArticleSectionDTO].self, from: data)
             isLoading = false
         } catch {
