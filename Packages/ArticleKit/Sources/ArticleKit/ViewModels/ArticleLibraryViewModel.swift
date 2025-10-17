@@ -1,16 +1,3 @@
-//
-//  ArticleLibraryViewModel.swift
-//  InGermany
-//
-//  Created by SUM TJK on 13.10.25.
-//
-//
-//  ArticleLibraryViewModel.swift
-//  InGermany
-//
-//  Created by SUM TJK on 14.10.25.
-//
-
 import Foundation
 
 @MainActor
@@ -48,7 +35,8 @@ public final class ArticleLibraryViewModel: ObservableObject {
             for url in files where url.pathExtension == "json" {
                 do {
                     let data = try Data(contentsOf: url)
-                    let doc = try JSONDecoder().decode(ArticleDocument.self, from: data)
+                    // ✅ ИСПРАВЛЕНО: ArticleDocumentModel вместо ArticleDocument
+                    let doc = try JSONDecoder().decode(ArticleDocumentModel.self, from: data)
                     let attrs = try url.resourceValues(forKeys: [.contentModificationDateKey])
                     let modified = attrs.contentModificationDate ?? Date()
                     let meta = ArticleMetadata(url: url, title: doc.title, modified: modified)
@@ -68,5 +56,42 @@ public final class ArticleLibraryViewModel: ObservableObject {
             try? FileManager.default.removeItem(at: article.url)
         }
         refreshLibrary()
+    }
+    
+    public func createNewArticle() -> ArticleMetadata? {
+        let fm = FileManager.default
+        guard let docsURL = fm.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        
+        let newArticleURL = docsURL.appendingPathComponent("new-article-\(UUID().uuidString).json")
+        // ✅ ИСПРАВЛЕНО: ArticleDocumentModel вместо ArticleDocument
+        let newDocument = ArticleDocumentModel(
+            title: "Новая статья",
+            sections: [
+                ArticleSectionDTO(
+                    type: "paragraph",
+                    content: "Начните писать вашу статью здесь..."
+                )
+            ]
+        )
+        
+        do {
+            let data = try JSONEncoder().encode(newDocument)
+            try data.write(to: newArticleURL)
+            
+            let meta = ArticleMetadata(
+                url: newArticleURL,
+                title: newDocument.title,
+                modified: Date()
+            )
+            
+            refreshLibrary()
+            return meta
+            
+        } catch {
+            print("⚠️ Failed to create new article: \(error)")
+            return nil
+        }
     }
 }

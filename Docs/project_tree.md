@@ -157,25 +157,14 @@
 │   └── ReadingStats.swift
 ├── Packages
 │   ├── ArticleKit
-│   │   ├── ArticleDocument.swift
-│   │   ├── ArticleRenderer.swift
-│   │   ├── Components
-│   │   │   ├── ArticleBlockView.swift
-│   │   │   ├── ChecklistCardView.swift
-│   │   │   └── FAQBlockView.swift
 │   │   ├── Package.swift
-│   │   ├── Renderer
-│   │   │   └── ArticleRenderer.swift
 │   │   ├── Sources
-│   │   │   ├── ArticleKit
-│   │   │   │   ├── ArticleKit.swift
-│   │   │   │   ├── Components
-│   │   │   │   ├── Models
-│   │   │   │   ├── Renderer
-│   │   │   │   └── ViewModels
-│   │   │   └── ViewModels
-│   │   │       ├── ArticleEditorViewModel.swift
-│   │   │       └── ArticleLibraryViewModel.swift
+│   │   │   └── ArticleKit
+│   │   │       ├── ArticleKit.swift
+│   │   │       ├── Components
+│   │   │       ├── Models
+│   │   │       ├── Renderer
+│   │   │       └── ViewModels
 │   │   └── Tests
 │   │       └── ArticleKitTests
 │   │           └── ArticleKitTests.swift
@@ -361,4 +350,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-98 directories, 264 files
+95 directories, 256 files

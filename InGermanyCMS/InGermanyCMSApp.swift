@@ -13,18 +13,7 @@ import ArticleKit
 struct InGermanyCMSApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationSplitView {
-                ArticleLibraryView(
-                    viewModel: ArticleLibraryViewModel(),
-                    onOpen: { url in
-                        print("Open article at: \(url)")
-                        // Здесь будет логика открытия статьи для редактирования
-                    }
-                )
-            } detail: {
-                Text("Выберите статью для редактирования")
-                    .foregroundStyle(.secondary)
-            }
+            ContentView()
         }
     }
 }

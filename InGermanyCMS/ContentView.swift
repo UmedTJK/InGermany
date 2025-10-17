@@ -6,54 +6,38 @@
 //
 
 import SwiftUI
-import SwiftData
+import ArticleKit
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @StateObject private var libraryVM = ArticleLibraryViewModel()
+    @State private var selectedArticle: ArticleLibraryViewModel.ArticleMetadata?
+    
     var body: some View {
         NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+            // Боковая панель - библиотека статей
+            ArticleLibraryView(
+                viewModel: libraryVM,
+                onOpen: { url in
+                    selectedArticle = libraryVM.articles.first { $0.url == url }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
+            )
         } detail: {
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            // Детальная панель
+            if let article = selectedArticle {
+                VStack {
+                    Text(article.title)
+                        .font(.title)
+                    Text("URL: \(article.url.path)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                .padding()
+                .navigationTitle("Редактор")
+            } else {
+                DemoArticleView()
+                    .navigationTitle("Демо статья")
             }
         }
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
