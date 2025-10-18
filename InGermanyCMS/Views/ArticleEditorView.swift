@@ -21,7 +21,9 @@ struct ArticleEditorView: View {
             HStack(spacing: 0) {
                 // Список блоков
                 blocksListView
-                    .frame(width: 400)
+                    .frame(width: 300)
+                
+                Divider()
                 
                 // Редактор выбранного блока
                 blockEditorView
@@ -29,10 +31,25 @@ struct ArticleEditorView: View {
             }
         }
         .navigationTitle(document.title)
+        .onAppear {
+            print("🔄 ArticleEditorView загружен с \(viewModel.blocks.count) блоками")
+        }
         .sheet(isPresented: $viewModel.showBlockPicker) {
-            BlockPickerView { blockType in
-                viewModel.addBlock(blockType)
+            NavigationStack {
+                BlockPickerView { blockType in
+                    viewModel.addBlock(blockType)
+                    viewModel.showBlockPicker = false
+                }
+                .navigationTitle("Выберите тип блока")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Отмена") {
+                            viewModel.showBlockPicker = false
+                        }
+                    }
+                }
             }
+            .frame(width: 400, height: 500)
         }
     }
     
@@ -40,8 +57,10 @@ struct ArticleEditorView: View {
     
     private var editorToolbar: some View {
         HStack {
-            Button("Добавить блок") {
+            Button(action: {
                 viewModel.showBlockPicker = true
+            }) {
+                Label("Добавить блок", systemImage: "plus")
             }
             
             Spacer()
@@ -59,25 +78,47 @@ struct ArticleEditorView: View {
     }
     
     private var blocksListView: some View {
-        List(selection: $selectedBlockId) {
-            ForEach(viewModel.blocks) { block in
-                BlockRowView(block: block)
-                    .tag(block.id)
-                    .contextMenu {
-                        Button("Удалить", role: .destructive) {
-                            viewModel.removeBlock(block)
-                        }
+        VStack {
+            Text("Блоки статьи")
+                .font(.headline)
+                .padding()
+            
+            if viewModel.blocks.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "doc.text")
+                        .font(.system(size: 40))
+                        .foregroundColor(.secondary)
+                    Text("Нет блоков")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    Text("Добавьте первый блок чтобы начать")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                List(selection: $selectedBlockId) {
+                    ForEach(viewModel.blocks) { block in
+                        BlockRowView(block: block)
+                            .tag(block.id)
+                            .contextMenu {
+                                Button("Удалить", role: .destructive) {
+                                    viewModel.removeBlock(block)
+                                }
+                            }
                     }
-            }
-            .onMove { indices, newOffset in
-                viewModel.moveBlocks(from: indices, to: newOffset)
+                    .onMove { indices, newOffset in
+                        viewModel.moveBlocks(from: indices, to: newOffset)
+                    }
+                }
+                .listStyle(SidebarListStyle())
             }
         }
-        .listStyle(SidebarListStyle())
     }
     
     private var blockEditorView: some View {
-        ScrollView {
+        VStack {
             if let selectedId = selectedBlockId,
                let selectedBlockIndex = viewModel.blocks.firstIndex(where: { $0.id == selectedId }) {
                 BlockEditor(
@@ -88,11 +129,28 @@ struct ArticleEditorView: View {
                 )
                 .padding()
             } else {
-                Text("Выберите блок для редактирования")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                emptyEditorView
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private var emptyEditorView: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "cursorarrow.rays")
+                .font(.system(size: 50))
+                .foregroundColor(.secondary)
+            
+            Text("Выберите блок для редактирования")
+                .font(.title2)
+                .foregroundColor(.secondary)
+            
+            Text("Выберите блок из списка слева чтобы начать редактирование")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -104,10 +162,21 @@ struct BlockRowView: View {
     var body: some View {
         HStack {
             Image(systemName: blockTypeIcon)
-            Text(block.type.rawValue.capitalized)
+                .foregroundColor(blockTypeColor)
+                .frame(width: 20)
+            VStack(alignment: .leading) {
+                Text(block.type.rawValue.capitalized)
+                    .font(.headline)
+                if !block.content.isEmpty {
+                    Text(block.content.prefix(30) + (block.content.count > 30 ? "..." : ""))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
             Spacer()
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
+        .contentShape(Rectangle())
     }
     
     private var blockTypeIcon: String {
@@ -122,6 +191,16 @@ struct BlockRowView: View {
         case .list: return "list.bullet"
         case .links: return "link"
         case .image: return "photo"
+        }
+    }
+    
+    private var blockTypeColor: Color {
+        switch block.type {
+        case .info: return .blue
+        case .warning: return .orange
+        case .tip: return .green
+        case .quote: return .purple
+        default: return .primary
         }
     }
 }
