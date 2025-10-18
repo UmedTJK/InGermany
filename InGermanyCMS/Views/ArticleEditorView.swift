@@ -1,9 +1,11 @@
 import SwiftUI
 import ArticleKit
+import Combine  // ✅ Добавляем импорт Combine
 
 struct ArticleEditorView: View {
     @StateObject private var viewModel: ArticleEditorViewModel
     @State private var selectedBlockId: UUID?
+    @State private var showPreview = true // По умолчанию показываем превью
     
     let document: ArticleDocument
     
@@ -17,18 +19,8 @@ struct ArticleEditorView: View {
             // Панель инструментов
             editorToolbar
             
-            // Основной контент
-            HStack(spacing: 0) {
-                // Список блоков
-                blocksListView
-                    .frame(width: 300)
-                
-                Divider()
-                
-                // Редактор выбранного блока
-                blockEditorView
-                    .frame(maxWidth: .infinity)
-            }
+            // Основной контент - Split View
+            mainContentView
         }
         .navigationTitle(document.title)
         .onAppear {
@@ -53,28 +45,160 @@ struct ArticleEditorView: View {
         }
     }
     
+    // MARK: - Основной контент с Split View
+    
+    private var mainContentView: some View {
+        Group {
+            if showPreview {
+                // Split View с редактором и превью
+                HSplitView {
+                    // Левая панель - редактор
+                    editorPanel
+                        .frame(minWidth: 300, maxWidth: .infinity)
+                    
+                    // Правая панель - превью
+                    previewPanel
+                        .frame(minWidth: 300, maxWidth: .infinity)
+                }
+            } else {
+                // Полноэкранный редактор
+                editorPanel
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    // MARK: - Панель редактора
+    
+    private var editorPanel: some View {
+        HStack(spacing: 0) {
+            // Список блоков
+            blocksListView
+                .frame(width: 280)
+            
+            Divider()
+            
+            // Редактор выбранного блока
+            blockEditorView
+                .frame(maxWidth: .infinity)
+        }
+    }
+    
+    // MARK: - Панель превью
+    
+    private var previewPanel: some View {
+        VStack(spacing: 0) {
+            // Заголовок превью
+            previewHeader
+            
+            // Контент превью
+            previewContent
+        }
+        .background(Color(NSColor.controlBackgroundColor))
+    }
+    
+    private var previewHeader: some View {
+        HStack {
+            Text("Предпросмотр")
+                .font(.headline)
+                .foregroundColor(.secondary)
+            
+            Spacer()
+            
+            // Кнопка обновления превью
+            Button(action: {
+                // Принудительное обновление превью
+                viewModel.objectWillChange.send()
+            }) {
+                Image(systemName: "arrow.clockwise")
+                    .foregroundColor(.secondary)
+            }
+            .buttonStyle(.plain)
+            .help("Обновить предпросмотр")
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color(NSColor.windowBackgroundColor))
+    }
+    
+    private var previewContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                // Заголовок статьи
+                Text(document.title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                // Рендерер статьи
+                ArticleRenderer(sections: viewModel.blocks.map { $0.toSectionDTO() })
+            }
+            .padding()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
     // MARK: - Компоненты интерфейса
     
     private var editorToolbar: some View {
         HStack {
-            Button(action: {
-                viewModel.showBlockPicker = true
-            }) {
-                Label("Добавить блок", systemImage: "plus")
+            // Левая часть - управление блоками
+            HStack {
+                Button(action: {
+                    viewModel.showBlockPicker = true
+                }) {
+                    Label("Добавить блок", systemImage: "plus")
+                }
+                
+                // Кнопка переключения превью
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        showPreview.toggle()
+                    }
+                }) {
+                    Label(
+                        showPreview ? "Скрыть превью" : "Показать превью",
+                        systemImage: showPreview ? "eye.slash" : "eye"
+                    )
+                }
             }
             
             Spacer()
             
-            Button("Сохранить") {
-                viewModel.saveDocument()
-            }
-            
-            Button("Предпросмотр") {
-                viewModel.togglePreview()
+            // Правая часть - действия
+            HStack {
+                // Индикатор состояния
+                if viewModel.isSaving {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("Сохранение...")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } else {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                        .opacity(viewModel.hasUnsavedChanges ? 0.3 : 1.0)
+                    Text("Сохранено")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .opacity(viewModel.hasUnsavedChanges ? 0.3 : 1.0)
+                }
+                
+                Button("Сохранить") {
+                    viewModel.saveDocument()
+                }
+                .disabled(!viewModel.hasUnsavedChanges)
             }
         }
         .padding()
         .background(Color(NSColor.controlBackgroundColor))
+        .overlay(
+            Rectangle()
+                .frame(height: 1)
+                .foregroundColor(Color(NSColor.separatorColor)),
+            alignment: .bottom
+        )
     }
     
     private var blocksListView: some View {
@@ -84,19 +208,7 @@ struct ArticleEditorView: View {
                 .padding()
             
             if viewModel.blocks.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "doc.text")
-                        .font(.system(size: 40))
-                        .foregroundColor(.secondary)
-                    Text("Нет блоков")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text("Добавьте первый блок чтобы начать")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                emptyBlocksView
             } else {
                 List(selection: $selectedBlockId) {
                     ForEach(viewModel.blocks) { block in
@@ -115,6 +227,23 @@ struct ArticleEditorView: View {
                 .listStyle(SidebarListStyle())
             }
         }
+        .background(Color(NSColor.controlBackgroundColor))
+    }
+    
+    private var emptyBlocksView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "doc.text")
+                .font(.system(size: 40))
+                .foregroundColor(.secondary)
+            Text("Нет блоков")
+                .font(.headline)
+                .foregroundColor(.secondary)
+            Text("Добавьте первый блок чтобы начать")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var blockEditorView: some View {
@@ -124,7 +253,10 @@ struct ArticleEditorView: View {
                 BlockEditor(
                     block: Binding(
                         get: { viewModel.blocks[selectedBlockIndex] },
-                        set: { viewModel.blocks[selectedBlockIndex] = $0 }
+                        set: {
+                            viewModel.blocks[selectedBlockIndex] = $0
+                            viewModel.markAsModified()
+                        }
                     )
                 )
                 .padding()
@@ -133,6 +265,7 @@ struct ArticleEditorView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(NSColor.textBackgroundColor))
     }
     
     private var emptyEditorView: some View {
@@ -154,7 +287,7 @@ struct ArticleEditorView: View {
     }
 }
 
-// MARK: - Вспомогательные View
+// MARK: - Восстанавливаем BlockRowView
 
 struct BlockRowView: View {
     let block: ArticleBlock

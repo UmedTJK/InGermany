@@ -5,12 +5,17 @@ public class ArticleEditorViewModel: ObservableObject {
     @Published public var blocks: [ArticleBlock] = []
     @Published public var showBlockPicker = false
     @Published public var showPreview = false
+    @Published public var isSaving = false
+    @Published public var hasUnsavedChanges = false
     
     private var document: ArticleDocument
+    private var originalBlocks: [ArticleBlock] = []
+    private var cancellables = Set<AnyCancellable>()
     
     public init(document: ArticleDocument) {
         self.document = document
         loadDocument(document)
+        setupChangeTracking()
     }
     
     // MARK: - Public Methods
@@ -18,40 +23,100 @@ public class ArticleEditorViewModel: ObservableObject {
     public func loadDocument(_ document: ArticleDocument) {
         self.document = document
         self.blocks = document.sections.map { ArticleBlock.fromSection($0) }
+        self.originalBlocks = blocks // Сохраняем оригинальное состояние
+        self.hasUnsavedChanges = false
     }
     
     public func saveDocument() {
-        let updatedSections = blocks.map { $0.toSectionDTO() }
-        let updatedDocument = ArticleDocument(
-            title: document.title,
-            sections: updatedSections,
-            url: document.url
-        )
+        guard hasUnsavedChanges else { return }
         
-        // Временная реализация - логируем
-        print("💾 Сохранение документа: \(updatedDocument.title) с \(updatedSections.count) секциями")
+        isSaving = true
+        
+        // Имитация процесса сохранения
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let updatedSections = self.blocks.map { $0.toSectionDTO() }
+            let updatedDocument = ArticleDocument(
+                title: self.document.title,
+                sections: updatedSections,
+                url: self.document.url
+            )
+            
+            // Сохранение через FileManager
+            self.saveToFileSystem(updatedDocument)
+            
+            self.originalBlocks = self.blocks
+            self.hasUnsavedChanges = false
+            self.isSaving = false
+            
+            print("💾 Документ сохранен: \(updatedDocument.title)")
+        }
     }
     
     public func addBlock(_ type: BlockType) {
         let newBlock = ArticleBlock(type: type)
         blocks.append(newBlock)
+        markAsModified()
     }
     
     public func removeBlock(_ block: ArticleBlock) {
         blocks.removeAll { $0.id == block.id }
+        markAsModified()
     }
     
     public func updateBlock(_ updatedBlock: ArticleBlock) {
         if let index = blocks.firstIndex(where: { $0.id == updatedBlock.id }) {
             blocks[index] = updatedBlock
+            markAsModified()
         }
     }
     
     public func moveBlocks(from source: IndexSet, to destination: Int) {
         blocks.move(fromOffsets: source, toOffset: destination)
+        markAsModified()
     }
     
     public func togglePreview() {
         showPreview.toggle()
+    }
+    
+    public func markAsModified() {
+        if !hasUnsavedChanges {
+            hasUnsavedChanges = true
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupChangeTracking() {
+        // Отслеживаем изменения в блоках
+        $blocks
+            .dropFirst() // Пропускаем начальное значение
+            .sink { [weak self] newBlocks in
+                guard let self = self else { return }
+                
+                // Сравниваем с оригинальными блоками
+                let hasChanges = newBlocks != self.originalBlocks
+                if self.hasUnsavedChanges != hasChanges {
+                    self.hasUnsavedChanges = hasChanges
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func saveToFileSystem(_ document: ArticleDocument) {
+        guard let url = document.url else {
+            print("⚠️ Не удалось сохранить: URL документа не указан")
+            return
+        }
+        
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let data = try encoder.encode(document)
+            try data.write(to: url)
+            print("✅ Документ сохранен по пути: \(url.path)")
+        } catch {
+            print("❌ Ошибка сохранения: \(error)")
+        }
     }
 }

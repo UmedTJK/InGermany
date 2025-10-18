@@ -13,7 +13,10 @@ public struct ArticleBlock: Identifiable, Equatable {
     }
     
     public static func == (lhs: ArticleBlock, rhs: ArticleBlock) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id &&
+        lhs.type == rhs.type &&
+        lhs.content == rhs.content &&
+        lhs.items == rhs.items
     }
     
     // MARK: - Transformations
