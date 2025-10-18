@@ -6,16 +6,20 @@ struct ArticleEditorView: View {
     @StateObject private var viewModel: ArticleEditorViewModel
     @State private var selectedBlockId: UUID?
     @State private var showPreview = true
+    @State private var isEditingTitle = false
+    @State private var editedTitle: String = ""
     
     let document: ArticleDocument
     
     init(document: ArticleDocument) {
         self.document = document
         _viewModel = StateObject(wrappedValue: ArticleEditorViewModel(document: document))
+        _editedTitle = State(initialValue: document.title)
     }
     
     var body: some View {
         VStack(spacing: 0) {
+            titleHeader // ✅ ДОБАВЛЯЕМ ЗАГОЛОВОК С РЕДАКТИРОВАНИЕМ
             editorToolbar
             mainContentView
         }
@@ -53,6 +57,93 @@ struct ArticleEditorView: View {
                 .keyboardShortcut("i", modifiers: .command)
                 .opacity(0) // Скрываем кнопку
         )
+    }
+    
+    // ✅ НОВЫЙ КОМПОНЕНТ: Заголовок с редактированием
+    private var titleHeader: some View {
+        HStack {
+            if isEditingTitle {
+                HStack {
+                    TextField("Название статьи", text: $editedTitle)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .onSubmit {
+                            saveTitle()
+                        }
+                    
+                    Button("Сохранить") {
+                        saveTitle()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
+                    
+                    Button("Отмена") {
+                        cancelTitleEditing()
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            } else {
+                HStack {
+                    Text(document.title.isEmpty ? "Без названия" : document.title)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .lineLimit(1)
+                    
+                    Button(action: {
+                        startTitleEditing()
+                    }) {
+                        Image(systemName: "pencil")
+                            .font(.system(size: 14))
+                            .foregroundColor(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Редактировать название (⌘T)")
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            }
+        }
+        .background(Color(NSColor.controlBackgroundColor))
+        .overlay(
+            Rectangle()
+                .frame(height: 1)
+                .foregroundColor(Color(NSColor.separatorColor)),
+            alignment: .bottom
+        )
+    }
+    
+    // ✅ МЕТОДЫ ДЛЯ РЕДАКТИРОВАНИЯ ЗАГОЛОВКА
+    private func startTitleEditing() {
+        editedTitle = document.title
+        isEditingTitle = true
+    }
+    
+    private func saveTitle() {
+        guard !editedTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        
+        // Обновляем документ с новым названием
+        let updatedDocument = ArticleDocument(
+            title: editedTitle,
+            sections: document.sections,
+            url: document.url
+        )
+        
+        // Перезагружаем ViewModel с обновленным документом
+        viewModel.loadDocument(updatedDocument)
+        
+        // Сохраняем изменения
+        viewModel.saveDocument()
+        
+        isEditingTitle = false
+    }
+    
+    private func cancelTitleEditing() {
+        editedTitle = document.title
+        isEditingTitle = false
     }
     
     // ✅ ОБРАБОТЧИК ВСЕХ ГОРЯЧИХ КЛАВИШ

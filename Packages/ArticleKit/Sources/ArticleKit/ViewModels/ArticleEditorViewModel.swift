@@ -108,6 +108,14 @@ public class ArticleEditorViewModel: ObservableObject {
         }
     }
     
+    // ✅ ДОБАВЛЯЕМ МЕТОД ДЛЯ ОБНОВЛЕНИЯ ДОКУМЕНТА
+    public func updateDocument(_ newDocument: ArticleDocument) {
+        self.document = newDocument
+        self.blocks = newDocument.sections.map { ArticleBlock.fromSection($0) }
+        self.originalBlocks = blocks
+        self.hasUnsavedChanges = true
+    }
+    
     // MARK: - Экспорт/Импорт
     
     public func exportDocument() {

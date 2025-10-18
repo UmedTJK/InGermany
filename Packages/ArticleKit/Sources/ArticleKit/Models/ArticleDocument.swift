@@ -2,7 +2,7 @@ import Foundation
 
 public struct ArticleDocument: Codable, Identifiable, Hashable {
     public let id = UUID()
-    public var title: String
+    public var title: String // ✅ ИЗМЕНИЛИ НА var ДЛЯ РЕДАКТИРОВАНИЯ
     public var sections: [ArticleSectionDTO]
     public let url: URL?
     
