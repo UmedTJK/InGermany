@@ -1,97 +1,182 @@
+import SwiftUI
 import Foundation
 
-@MainActor
-public final class ArticleLibraryViewModel: ObservableObject {
-    @Published public private(set) var articles: [ArticleMetadata] = []
-
-    public struct ArticleMetadata: Identifiable, Hashable {
-        public let id: UUID
-        public let url: URL
+public class ArticleLibraryViewModel: ObservableObject {
+    @Published public var articles: [ArticleMetadata] = []
+    
+    private let fileManager = FileManager.default
+    private let libraryDirectory: URL
+    
+    public struct ArticleMetadata: Identifiable {
+        public let id = UUID()
         public let title: String
+        public let url: URL
         public let modified: Date
-
-        public init(id: UUID = UUID(), url: URL, title: String, modified: Date) {
-            self.id = id
-            self.url = url
+        
+        public init(title: String, url: URL, modified: Date) {
             self.title = title
+            self.url = url
             self.modified = modified
         }
     }
-
+    
     public init() {
-        refreshLibrary()
-    }
-
-    public func refreshLibrary() {
-        articles.removeAll()
-        let fm = FileManager.default
-        guard let docsURL = fm.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-
-        if let files = try? fm.contentsOfDirectory(
-            at: docsURL,
-            includingPropertiesForKeys: [.contentModificationDateKey],
-            options: [.skipsHiddenFiles]
-        ) {
-            for url in files where url.pathExtension == "json" {
-                do {
-                    let data = try Data(contentsOf: url)
-                    // ✅ ИСПРАВЛЕНО: Используем ArticleDocument вместо ArticleDocumentModel
-                    let doc = try JSONDecoder().decode(ArticleDocument.self, from: data)
-                    let attrs = try url.resourceValues(forKeys: [.contentModificationDateKey])
-                    let modified = attrs.contentModificationDate ?? Date()
-                    let meta = ArticleMetadata(url: url, title: doc.title, modified: modified)
-                    articles.append(meta)
-                } catch {
-                    print("⚠️ Failed to load \(url.lastPathComponent): \(error)")
-                }
-            }
-        }
-
-        articles.sort { $0.modified > $1.modified }
-    }
-
-    public func deleteArticle(at offsets: IndexSet) {
-        for idx in offsets {
-            let article = articles[idx]
-            try? FileManager.default.removeItem(at: article.url)
-        }
+        // Определяем директорию для библиотеки статей
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        libraryDirectory = documentsURL.appendingPathComponent("ArticleLibrary")
+        
+        // Создаем директорию если она не существует
+        try? fileManager.createDirectory(at: libraryDirectory, withIntermediateDirectories: true)
+        
+        // Загружаем статьи при инициализации
         refreshLibrary()
     }
     
-    public func createNewArticle() -> ArticleMetadata? {
-        let fm = FileManager.default
-        guard let docsURL = fm.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
+    // MARK: - Public Methods
+    
+    public func refreshLibrary() {
+        do {
+            let files = try fileManager.contentsOfDirectory(
+                at: libraryDirectory,
+                includingPropertiesForKeys: [.contentModificationDateKey],
+                options: [.skipsHiddenFiles]
+            )
+            
+            let jsonFiles = files.filter { $0.pathExtension == "json" }
+            
+            articles = try jsonFiles.compactMap { url in
+                guard let metadata = try? fileManager.attributesOfItem(atPath: url.path),
+                      let modifiedDate = metadata[.modificationDate] as? Date else {
+                    return nil
+                }
+                
+                // Читаем заголовок из файла
+                let data = try Data(contentsOf: url)
+                let document = try JSONDecoder().decode(ArticleDocument.self, from: data)
+                
+                return ArticleMetadata(
+                    title: document.title,
+                    url: url,
+                    modified: modifiedDate
+                )
+            }.sorted { $0.modified > $1.modified } // Сортируем по дате изменения
+            
+        } catch {
+            print("❌ Ошибка загрузки библиотеки: \(error)")
+            articles = []
         }
+    }
+    
+    public func createNewArticle() -> ArticleMetadata? {
+        let timestamp = Date().timeIntervalSince1970
+        let fileName = "article_\(Int(timestamp)).json"
+        let fileURL = libraryDirectory.appendingPathComponent(fileName)
         
-        let newArticleURL = docsURL.appendingPathComponent("new-article-\(UUID().uuidString).json")
-        // ✅ ИСПРАВЛЕНО: Используем ArticleDocument вместо ArticleDocumentModel
         let newDocument = ArticleDocument(
             title: "Новая статья",
-            sections: [
-                ArticleSectionDTO(
-                    type: "paragraph",
-                    content: "Начните писать вашу статью здесь..."
-                )
-            ]
+            sections: [],
+            url: fileURL
         )
         
         do {
-            let data = try JSONEncoder().encode(newDocument)
-            try data.write(to: newArticleURL)
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let data = try encoder.encode(newDocument)
+            try data.write(to: fileURL)
             
-            let meta = ArticleMetadata(
-                url: newArticleURL,
+            let metadata = ArticleMetadata(
                 title: newDocument.title,
+                url: fileURL,
                 modified: Date()
             )
             
-            refreshLibrary()
-            return meta
+            articles.insert(metadata, at: 0)
+            return metadata
             
         } catch {
-            print("⚠️ Failed to create new article: \(error)")
+            print("❌ Ошибка создания новой статьи: \(error)")
             return nil
         }
+    }
+    
+    public func deleteArticle(at offsets: IndexSet) {
+        for index in offsets {
+            let article = articles[index]
+            do {
+                try fileManager.removeItem(at: article.url)
+                articles.remove(at: index)
+                print("✅ Статья удалена: \(article.title)")
+            } catch {
+                print("❌ Ошибка удаления статьи: \(error)")
+            }
+        }
+    }
+    
+    // MARK: - Импорт статьи
+    
+    public func importArticle() -> ArticleDocument? {
+        let openPanel = NSOpenPanel()
+        openPanel.allowedContentTypes = [.json]
+        openPanel.allowsMultipleSelection = false
+        openPanel.title = "Импорт статьи в библиотеку"
+        openPanel.message = "Выберите JSON файл статьи для добавления в библиотеку"
+        
+        if openPanel.runModal() == .OK, let url = openPanel.url {
+            do {
+                let data = try Data(contentsOf: url)
+                let importedDocument = try JSONDecoder().decode(ArticleDocument.self, from: data)
+                
+                // Создаем новое имя файла для избежания конфликтов
+                let fileName = "imported_\(Date().timeIntervalSince1970).json"
+                let libraryURL = libraryDirectory.appendingPathComponent(fileName)
+                
+                // Сохраняем в библиотеку
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+                let newData = try encoder.encode(importedDocument)
+                try newData.write(to: libraryURL)
+                
+                // Обновляем библиотеку
+                refreshLibrary()
+                
+                print("✅ Статья импортирована в библиотеку: \(importedDocument.title)")
+                showImportSuccessAlert(importedDocument.title)
+                
+                return ArticleDocument(
+                    title: importedDocument.title,
+                    sections: importedDocument.sections,
+                    url: libraryURL
+                )
+            } catch {
+                print("❌ Ошибка импорта в библиотеку: \(error)")
+                showImportErrorAlert(error)
+                return nil
+            }
+        }
+        return nil
+    }
+    
+    private func showImportSuccessAlert(_ title: String) {
+        let alert = NSAlert()
+        alert.messageText = "Статья импортирована в библиотеку"
+        alert.informativeText = "\"\(title)\" успешно добавлена"
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+    
+    private func showImportErrorAlert(_ error: Error) {
+        let alert = NSAlert()
+        alert.messageText = "Ошибка импорта"
+        alert.informativeText = "Не удалось импортировать статью: \(error.localizedDescription)"
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func getLibraryDirectory() -> URL {
+        return libraryDirectory
     }
 }

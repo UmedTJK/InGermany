@@ -21,11 +21,19 @@ public struct ArticleLibraryView: View {
             }
             .navigationTitle("Article Library")
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItemGroup(placement: .primaryAction) {
                     Button {
                         createNewArticle()
                     } label: {
                         Label("New Article", systemImage: "plus")
+                    }
+                    
+                    Button {
+                        if let importedDocument = viewModel.importArticle() {
+                            onOpenArticle(importedDocument)
+                        }
+                    } label: {
+                        Label("Import", systemImage: "square.and.arrow.down")
                     }
                 }
                 

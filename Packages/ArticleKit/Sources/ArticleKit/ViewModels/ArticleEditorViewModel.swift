@@ -11,17 +11,17 @@ public class ArticleEditorViewModel: ObservableObject {
     private var document: ArticleDocument
     private var originalBlocks: [ArticleBlock] = []
     private var cancellables = Set<AnyCancellable>()
-    private var autosaveTimer: Timer? // ✅ Добавляем таймер автосохранения
+    private var autosaveTimer: Timer?
     
     public init(document: ArticleDocument) {
         self.document = document
         loadDocument(document)
         setupChangeTracking()
-        setupAutosave() // ✅ Запускаем автосохранение
+        setupAutosave()
     }
     
     deinit {
-        autosaveTimer?.invalidate() // ✅ Очищаем таймер при деините
+        autosaveTimer?.invalidate()
     }
     
     // MARK: - Public Methods
@@ -68,13 +68,11 @@ public class ArticleEditorViewModel: ObservableObject {
         markAsModified()
     }
     
-    // ✅ НОВЫЙ МЕТОД: Удаление по индексам (для свайпа)
     public func deleteBlocks(at offsets: IndexSet) {
         blocks.remove(atOffsets: offsets)
         markAsModified()
     }
     
-    // ✅ НОВЫЙ МЕТОД: Дублирование блока
     public func duplicateBlock(_ block: ArticleBlock) {
         let duplicatedBlock = ArticleBlock(
             type: block.type,
@@ -94,12 +92,11 @@ public class ArticleEditorViewModel: ObservableObject {
         }
     }
     
-    // ✅ ОБНОВЛЕННЫЙ МЕТОД: Перемещение блоков (для Drag & Drop)
-      public func moveBlocks(from source: IndexSet, to destination: Int) {
-          blocks.move(fromOffsets: source, toOffset: destination)
-          markAsModified()
-          print("🔀 Блоки перемещены: с \(source) на позицию \(destination)")
-      }
+    public func moveBlocks(from source: IndexSet, to destination: Int) {
+        blocks.move(fromOffsets: source, toOffset: destination)
+        markAsModified()
+        print("🔀 Блоки перемещены: с \(source) на позицию \(destination)")
+    }
     
     public func togglePreview() {
         showPreview.toggle()
@@ -109,6 +106,96 @@ public class ArticleEditorViewModel: ObservableObject {
         if !hasUnsavedChanges {
             hasUnsavedChanges = true
         }
+    }
+    
+    // MARK: - Экспорт/Импорт
+    
+    public func exportDocument() {
+        let savePanel = NSSavePanel()
+        savePanel.allowedContentTypes = [.json]
+        savePanel.nameFieldStringValue = "\(document.title).json"
+        savePanel.title = "Экспорт статьи"
+        savePanel.message = "Выберите место для сохранения статьи в формате JSON"
+        
+        if savePanel.runModal() == .OK, let url = savePanel.url {
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+                let data = try encoder.encode(document)
+                try data.write(to: url)
+                
+                print("✅ Статья экспортирована: \(url.path)")
+                showExportSuccessAlert()
+            } catch {
+                print("❌ Ошибка экспорта: \(error)")
+                showExportErrorAlert(error)
+            }
+        }
+    }
+    
+    public func importDocument() {
+        let openPanel = NSOpenPanel()
+        openPanel.allowedContentTypes = [.json]
+        openPanel.allowsMultipleSelection = false
+        openPanel.title = "Импорт статьи"
+        openPanel.message = "Выберите JSON файл статьи для импорта"
+        
+        if openPanel.runModal() == .OK, let url = openPanel.url {
+            do {
+                let data = try Data(contentsOf: url)
+                let importedDocument = try JSONDecoder().decode(ArticleDocument.self, from: data)
+                
+                // Загружаем импортированный документ
+                self.document = importedDocument
+                self.blocks = importedDocument.sections.map { ArticleBlock.fromSection($0) }
+                self.originalBlocks = blocks
+                self.hasUnsavedChanges = false
+                
+                print("✅ Статья импортирована: \(importedDocument.title)")
+                showImportSuccessAlert(importedDocument.title)
+            } catch {
+                print("❌ Ошибка импорта: \(error)")
+                showImportErrorAlert(error)
+            }
+        }
+    }
+    
+    // MARK: - Вспомогательные методы
+    
+    private func showExportSuccessAlert() {
+        let alert = NSAlert()
+        alert.messageText = "Статья успешно экспортирована"
+        alert.informativeText = "Файл сохранен в выбранной директории"
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+    
+    private func showExportErrorAlert(_ error: Error) {
+        let alert = NSAlert()
+        alert.messageText = "Ошибка экспорта"
+        alert.informativeText = error.localizedDescription
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+    
+    private func showImportSuccessAlert(_ title: String) {
+        let alert = NSAlert()
+        alert.messageText = "Статья успешно импортирована"
+        alert.informativeText = "\"\(title)\" загружена в редактор"
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+    
+    private func showImportErrorAlert(_ error: Error) {
+        let alert = NSAlert()
+        alert.messageText = "Ошибка импорта"
+        alert.informativeText = "Не удалось загрузить статью: \(error.localizedDescription)"
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
     
     // MARK: - Автосохранение

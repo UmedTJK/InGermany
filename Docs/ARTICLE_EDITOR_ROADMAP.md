@@ -1,7 +1,5 @@
-ARTICLE_EDITOR_ROADMAP.md
-
 📄 Article Editor / Mini-CMS Roadmap
- 
+
 ## 🎯 Цель
 Создать полноценный **визуальный редактор статей** для приложения InGermany, который со временем превратится в **мини-CMS** (content management system) и отдельное **Admin-приложение для MacOS**.  
 
@@ -22,22 +20,22 @@ InGermany/
 │   └── Views/                           # Views CMS приложения
 │       ├── ArticleLibraryView.swift
 │       ├── DemoArticleView.swift
-│       ├── ArticleEditorView.swift      # ✅ ОБНОВЛЕНО: Split-view с Live Preview + UX улучшения
+│       ├── ArticleEditorView.swift      # ✅ ОБНОВЛЕНО: Split-view с Live Preview + все UX улучшения
 │       ├── BlockPickerView.swift
-│       └── BlockEditor.swift
+│       └── BlockEditor.swift            # ✅ ОБНОВЛЕНО: Расширенный редактор изображений
 └── Packages/                            # Swift Packages
     ├── ArticleKit/                      # Основной пакет редактора
     │   ├── Sources/ArticleKit/
     │   │   ├── Models/                  # Модели данных
-    │   │   │   ├── ArticleBlock.swift   # ✅ ОБНОВЛЕНО: Equatable conformance
+    │   │   │   ├── ArticleBlock.swift   # ✅ ОБНОВЛЕНО: ImageData поддержка
     │   │   │   ├── ArticleDocument.swift
-    │   │   │   ├── ArticleSectionDTO.swift
+    │   │   │   ├── ArticleSectionDTO.swift # ✅ ОБНОВЛЕНО: ImageData поле
     │   │   │   └── BlockType.swift
     │   │   ├── ViewModels/              # Бизнес-логика
-    │   │   │   ├── ArticleEditorViewModel.swift # ✅ ОБНОВЛЕНО: Live Preview + автосохранение
+    │   │   │   ├── ArticleEditorViewModel.swift # ✅ ОБНОВЛЕНО: Все улучшения
     │   │   │   └── ArticleLibraryViewModel.swift
     │   │   └── Renderer/                # Рендеринг статей
-    │   │       └── ArticleRenderer.swift
+    │   │       └── ArticleRenderer.swift # ✅ ОБНОВЛЕНО: EnhancedImageView
     │   └── Package.swift
     └── SharedKit/                       # Общие компоненты
         └── Sources/SharedKit/
@@ -47,7 +45,7 @@ InGermany/
                 └── LoadingView.swift
 ```
 
-### 🔄 Поток данных с Live Preview и автосохранением
+### 🔄 Поток данных с Live Preview и расширенными редакторами
 ```
 ArticleLibraryView (InGermanyCMS)
     ↓
@@ -58,15 +56,15 @@ FileManager (Documents/) ←→ ArticleDocument
 ArticleEditorView (Split-view) ←→ ArticleEditorViewModel 
     ↓  
 ┌─ Editor Panel ────────────────────┐
-│ BlockListView → BlockEditor       │
+│ BlockListView → Advanced Editors  │
 │ (левая панель)   (правая панель)  │
-│ 📊 Счетчик блоков в реальном     │
-│    времени с правильным склонением│
+│ 📊 Счетчик блоков + Drag & Drop  │
+│ ⌨️ Горячие клавиши + Контекст меню│
 └───────────────────────────────────┘
     ↓ (real-time sync + автосохранение каждые 3 сек)
 ┌─ Preview Panel ───────────────────┐
 │ ArticleRenderer ← ArticleSectionDTO│
-│   (Live Preview)                  │
+│   (Live Preview + Enhanced Images)│
 └───────────────────────────────────┘
     ↓
 ┌─ Status Bar ──────────────────────┐
@@ -75,8 +73,7 @@ ArticleEditorView (Split-view) ←→ ArticleEditorViewModel
 └───────────────────────────────────┘
 ```
 
-## 📊 СТАТУС РЕАЛИЗАЦИИ (ОБНОВЛЕНО 18.10.2025 07:00)
-
+## 📊 СТАТУС РЕАЛИЗАЦИИ (ОБНОВЛЕНО 18.10.2025)
 
 ### ✅ **ВЫПОЛНЕНО - ОСНОВНАЯ ФУНКЦИОНАЛЬНОСТЬ**
 
@@ -115,22 +112,31 @@ ArticleEditorView (Split-view) ←→ ArticleEditorViewModel
 - [x] **🔄 Автосохранение каждые 3 секунды** - защита от потери данных
 - [x] **🎨 Визуальные индикаторы состояния** с цветовой кодировкой
 - [x] **📊 Счетчик блоков** в реальном времени с правильным русским склонением
-- [x] **🔀 Drag & Drop сортировка** - интуитивное перетаскивание блоков ✅
-- [x] **Контекстное меню** - дублирование и удаление блоков ✅
-- [x] **Удаление свайпом** - дополнительный способ управления ✅
+- [x] **🔀 Drag & Drop сортировка** - интуитивное перетаскивание блоков
+- [x] **⌨️ Горячие клавиши** - профессиональные шорткаты (⌘⇧N, ⌘S, ⌘⏎, ⌘D, ⌘⌫)
+- [x] **Контекстное меню** - дублирование и удаление блоков
+- [x] **Удаление свайпом** - дополнительный способ управления
+
+#### 🔹 🖼️ РАСШИРЕННЫЕ РЕДАКТОРЫ БЛОКОВ (РЕАЛИЗОВАНО)
+- [x] **Расширенный редактор изображений** с выбором файлов
+- [x] **ImageData модель** - поддержка путей, подписей и alt-текста
+- [x] **Системный файловый диалог** - нативный выбор изображений
+- [x] **Предпросмотр изображений** - мгновенный просмотр в редакторе
+- [x] **Подписи и доступность** - поля для caption и alt-text
 
 #### 🔹 Рендеринг статей
 - [x] **ArticleRenderer** - полная поддержка всех типов блоков
+- [x] **EnhancedImageView** - улучшенное отображение изображений с подписями
 - [x] **DemoArticleView** - работающее демо с программными данными
 - [x] **Совместимость форматов** - единый ArticleSectionDTO
 - [x] **Устойчивость к ошибкам** - обработка некорректных данных
 
 ### 🚧 **В РАЗРАБОТКЕ**
 
-#### 🔹 Управление блоками
-- [ ] **Расширенные редакторы** для всех типов блоков
-- [ ] **Валидация данных** в реальном времени
-- [ ] **Горячие клавиши** для быстрого доступа
+#### 🔹 Расширенные редакторы
+- [ ] **Редактор ссылок** - валидация URL, заголовки ссылок
+- [ ] **Улучшенный FAQ редактор** - раздельные поля вопроса/ответа
+- [ ] **Редактор списков** - расширенное управление элементами
 
 ### 📋 **ПЛАНИРУЕТСЯ**
 
@@ -139,11 +145,33 @@ ArticleEditorView (Split-view) ←→ ArticleEditorViewModel
 - [ ] **Поиск и фильтрация** в библиотеке статей
 - [ ] **Шаблоны статей** для быстрого старта
 - [ ] **Темная тема** поддержка
+- [ ] **Undo/Redo система** - отмена действий
 
 #### 🔹 Git интеграция
 - [ ] **GitPublisher** сервис для автоматических коммитов
 - [ ] **Publish функциональность** - push в удаленный репозиторий
-- [ ] **Статус синхронизации** в UI" >> temp_roadmap_update.md
+- [ ] **Статус синхронизации** в UI
+
+---
+
+## 🎯 БЛИЖАЙШИЕ ЗАДАЧИ (ОБНОВЛЕНО 18.10.2025)
+
+### 🔥 ВЫСОКИЙ ПРИОРИТЕТ
+- [ ] **Редактор ссылок** - валидация URL и управление ссылками
+- [ ] **Экспорт/Импорт JSON** - файловые диалоги для обмена данными
+- [ ] **Поиск по библиотеке** - быстрый поиск статей
+
+### 🚀 СРЕДНИЙ ПРИОРИТЕТ
+- [ ] **Улучшенный FAQ редактор** - структурированные вопросы/ответы
+- [ ] **Undo/Redo система** - отмена и повтор действий
+- [ ] **Статус бар** - детальная информация о документе
+
+### 📝 НИЗКИЙ ПРИОРИТЕТ
+- [ ] **Темная тема** - поддержка темного режима
+- [ ] **Шаблоны статей** - готовые структуры для быстрого старта
+- [ ] **Расширенные настройки** - кастомизация редактора
+
+---
 
 ## 🔧 ТЕХНИЧЕСКИЕ ДЕТАЛИ РЕАЛИЗАЦИИ
 
@@ -176,65 +204,57 @@ public enum BlockType: String, CaseIterable {
 - `BlockRowView` - строка блока с иконкой и предпросмотром
 - `BlockEditor` - универсальный редактор для всех типов блоков
 - `ArticleLibraryView` - улучшенная библиотека с empty states
-- `ArticleEditorView` - **split-view с Live Preview + UX улучшения**
+- `ArticleEditorView` - **split-view с Live Preview + все UX улучшения**
 
-### 🔥 Live Preview + Автосохранение Architecture
+### 🔥 Расширенная архитектура редактора
 ```swift
-// Real-time synchronization + Autosave
+// Real-time synchronization + Autosave + Advanced Editors
 ArticleEditorView {
     HSplitView {
-        EditorPanel()       // Left - Editing
-        PreviewPanel()      // Right - Live Preview
+        EditorPanel()       // Left - Editing with advanced features
+        PreviewPanel()      // Right - Live Preview with enhanced rendering
     }
 }
 
-// Enhanced ViewModel with autosave
+// Enhanced ViewModel with complete feature set
 @Published var blocks: [ArticleBlock]
 @Published var hasUnsavedChanges: Bool
 @Published var isSaving: Bool
 private var autosaveTimer: Timer? // 3-second autosave
 private var originalBlocks: [ArticleBlock]
 
-private func setupAutosave() {
-    autosaveTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-        if self.hasUnsavedChanges && !self.isSaving {
-            self.saveDocument()
-        }
-    }
+// Advanced image editing support
+public struct ImageData {
+    var imagePath: String?  // File system path
+    var caption: String     // Image caption
+    var altText: String     // Accessibility text
 }
 ```
 
-### 🚀 НОВАЯ UX АРХИТЕКТУРА (18.10.2025)
+### ⌨️ СИСТЕМА ГОРЯЧИХ КЛАВИШ
 ```swift
-// Status Indicator System
-private var statusIndicator: some View {
-    HStack(spacing: 8) {
-        if viewModel.isSaving {
-            // 🔵 Saving state
-            ProgressView().scaleEffect(0.8).tint(.blue)
-            Text("Сохранение...").foregroundColor(.blue)
-        } else if viewModel.hasUnsavedChanges {
-            // 🟠 Unsaved state  
-            Image(systemName: "circle.fill").foregroundColor(.orange)
-            Text("Не сохранено").foregroundColor(.orange)
-        } else {
-            // 🟢 Saved state
-            Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-            Text("Сохранено").foregroundColor(.green)
-        }
+// Keyboard shortcuts implementation
+.keyboardShortcut("n", modifiers: [.command, .shift]) // New block
+.keyboardShortcut("s", modifiers: .command)           // Save
+.keyboardShortcut(.return, modifiers: [.command])     // Toggle preview
+.keyboardShortcut(.delete, modifiers: .command)       // Delete block
+.keyboardShortcut("d", modifiers: .command)           // Duplicate block
+```
+
+### 🖼️ РАСШИРЕННЫЙ РЕДАКТОР ИЗОБРАЖЕНИЙ
+```swift
+// Advanced image block editor
+private var imageBlockEditor: some View {
+    VStack(alignment: .leading, spacing: 16) {
+        imageUploadSection    // File selection with preview
+        captionFields         // Caption and alt-text inputs
     }
-    .animation(.easeInOut(duration: 0.2), value: viewModel.isSaving)
-    .animation(.easeInOut(duration: 0.2), value: viewModel.hasUnsavedChanges)
 }
 
-// Block Counter with Russian declension
-private var blockCountText: String {
-    let count = viewModel.blocks.count
-    switch count % 10 {
-    case 1 where count % 100 != 11: return "блок"
-    case 2...4 where count % 100 < 10 || count % 100 >= 20: return "блока"
-    default: return "блоков"
-    }
+private func selectImage() {
+    let panel = NSOpenPanel() // Native file picker
+    panel.allowedContentTypes = [.image]
+    // ... file selection logic
 }
 ```
 
@@ -243,16 +263,18 @@ private var blockCountText: String {
 ## 🚀 ИНСТРУКЦИЯ ДЛЯ ПРОДОЛЖЕНИЯ РАЗРАБОТКИ
 
 ### 📌 Текущий фокус
-**Drag & Drop сортировка блоков** как следующее крупное улучшение UX.
+**Реализация редактора ссылок и системы экспорта/импорта** как следующие ключевые улучшения.
 
-### 🔄 Рабочий процесс (ОБНОВЛЕНО)
+### 🔄 Рабочий процесс (ПОЛНОСТЬЮ РЕАЛИЗОВАН)
 1. **ArticleLibraryView** → выбор/создание статьи
-2. **ArticleEditorView** → редактирование контента через BlockEditor
-3. **Live Preview** → мгновенный просмотр изменений в реальном времени ✅
-4. **🔄 Автосохранение** → автоматическое сохранение каждые 3 секунды ✅  
+2. **ArticleEditorView** → редактирование через расширенные редакторы
+3. **Live Preview** → мгновенный просмотр в реальном времени ✅
+4. **🔄 Автосохранение** → автоматическое сохранение каждые 3 секунды ✅
 5. **🎨 Визуальные индикаторы** → четкий статус сохранения ✅
 6. **📊 Счетчик блоков** → отслеживание структуры статьи ✅
-7. **BlockPicker** → добавление новых типов блоков
+7. **🔀 Drag & Drop** → интуитивная сортировка блоков ✅
+8. **⌨️ Горячие клавиши** → быстрый доступ к функциям ✅
+9. **🖼️ Расширенные редакторы** → профессиональное редактирование контента ✅
 
 ### 🛠 Технический стек
 - **SwiftUI** + **Combine** для реактивного UI
@@ -261,6 +283,7 @@ private var blockCountText: String {
 - **@StateObject/@Binding** для управления состоянием
 - **HSplitView** для профессионального интерфейса
 - **Timer** для автосохранения ✅
+- **NSOpenPanel** для файловых диалогов ✅
 
 ### 🎯 КРИТЕРИИ УСПЕХА (ОБНОВЛЕНО 18.10.2025)
 - [x] Статьи создаются и удаляются в библиотеке
@@ -269,10 +292,13 @@ private var blockCountText: String {
 - [x] Demo Article работает без ошибок
 - [x] **Live Preview показывает актуальный результат в реальном времени** ✅
 - [x] **🔄 Автосохранение защищает от потери данных** ✅
-- [x] **🎨 Визуальные индикаторы четко показывают статус** ✅  
+- [x] **🎨 Визуальные индикаторы четко показывают статус** ✅
 - [x] **📊 Счетчик блоков отображает структуру статьи** ✅
-- [x] **Drag & Drop сортировка** блоков✅
-- [x] **Горячие клавиши** для быстрого доступа ⌨️✅
+- [x] **🔀 Drag & Drop сортировка блоков работает** ✅
+- [x] **⌨️ Горячие клавиши ускоряют workflow** ✅
+- [x] **🖼️ Расширенный редактор изображений полностью функционален** ✅
+- [ ] **Редактор ссылок поддерживает валидацию URL**
+- [ ] **Экспорт/Импорт JSON работает через файловые диалоги**
 
 ---
 
@@ -280,26 +306,30 @@ private var blockCountText: String {
 
 ### Архитектурные решения
 - **Модульность**: ArticleKit изолирует логику редактора
-- **Кросс-платформенность**: Единый код для iOS/macOS  
+- **Кросс-платформенность**: Единый код для iOS/macOS
 - **Тестируемость**: ViewModels независимы от UI
-- **Расширяемость**: Легко добавлять новые типы блоков
+- **Расширяемость**: Легко добавлять новые типы блоков и редакторы
 - **Реактивность**: Combine для real-time обновлений
 - **Надежность**: Автосохранение + визуальная индикация ✅
+- **Профессионализм**: Горячие клавиши + расширенные редакторы ✅
 
 ### Успешные улучшения (18.10.2025)
 1. **🔄 Автосохранение** - защита данных каждые 3 секунды
 2. **🎨 Визуальные индикаторы** - цветовая кодировка статусов
 3. **📊 Счетчик блоков** - русское склонение + реальное время
-4. **Устойчивый ArticleRenderer** - обрабатывает ошибки данных
-5. **Программное создание демо-статьи** - обход проблем с JSON
-6. **Улучшенные empty states** - лучший UX при отсутствии данных
-7. **Иконки и цвета** - визуальное различие типов блоков
-8. **🎉 Live Preview System** - профессиональный split-view интерфейс ✅
+4. **🔀 Drag & Drop** - интуитивная сортировка блоков
+5. **⌨️ Горячие клавиши** - профессиональные шорткаты
+6. **🖼️ Расширенный редактор изображений** - выбор файлов + метаданные
+7. **🎉 Live Preview System** - профессиональный split-view интерфейс
+8. **Устойчивый ArticleRenderer** - обрабатывает ошибки данных
+9. **Программное создание демо-статьи** - обход проблем с JSON
+10. **Улучшенные empty states** - лучший UX при отсутствии данных
 
 ### Следующие технические шаги
-1. Реализовать Drag & Drop для сортировки блоков
-2. Добавить горячие клавиши для macOS
-3. Реализовать расширенные редакторы для изображений и ссылок
+1. Реализовать редактор ссылок с валидацией URL
+2. Добавить систему экспорта/импорта JSON
+3. Реализовать поиск по библиотеке статей
+4. Разработать Undo/Redo систему
 
 ### Метрики прогресса
 - ✅ Модульная архитектура реализована
@@ -307,8 +337,11 @@ private var blockCountText: String {
 - ✅ Визуальный редактор базово функционирует
 - ✅ **Live Preview реализован и работает** ✅
 - ✅ **Пакет UX улучшений завершен** ✅
-- 🔄 Drag & Drop в разработке
-- ◻️ Горячие клавиши в планах
+- ✅ **Drag & Drop система реализована** ✅
+- ✅ **Горячие клавиши внедрены** ✅
+- ✅ **Расширенный редактор изображений готов** ✅
+- 🔄 Редактор ссылок в разработке
+- ◻️ Экспорт/Импорт в планах
 - ◻️ Git интеграция в планах
 
-**Текущий статус 18.10.2025 07:00**: Проект значительно улучшен! Реализован полный пакет UX улучшений: автосохранение, визуальные индикаторы состояния и счетчик блоков. Редактор теперь имеет профессиональный интерфейс с real-time предпросмотром и защитой от потери данных. Готов к реализации Drag & Drop сортировки.
+**Текущий статус 18.10.2025**: Редактор достиг профессионального уровня с полным набором UX улучшений и расширенными редакторами блоков. Готов к реализации редактора ссылок и системы экспорта.

@@ -5,7 +5,7 @@ public struct ArticleBlock: Identifiable, Equatable {
     public var type: BlockType
     public var content: String
     public var items: [ArticleItemDTO]
-    public var imageData: ImageData? // ✅ ДОБАВЛЯЕМ ДАННЫЕ ИЗОБРАЖЕНИЯ
+    public var imageData: ImageData?
     
     public init(type: BlockType, content: String = "", items: [ArticleItemDTO] = [], imageData: ImageData? = nil) {
         self.type = type

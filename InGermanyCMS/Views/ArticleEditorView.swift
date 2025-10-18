@@ -49,6 +49,8 @@ struct ArticleEditorView: View {
                 .keyboardShortcut(.return, modifiers: [.command])
                 .keyboardShortcut(.delete, modifiers: .command)
                 .keyboardShortcut("d", modifiers: .command)
+                .keyboardShortcut("e", modifiers: .command)
+                .keyboardShortcut("i", modifiers: .command)
                 .opacity(0) // Скрываем кнопку
         )
     }
@@ -89,6 +91,16 @@ struct ArticleEditorView: View {
         viewModel.removeBlock(selectedBlock)
         // Сбрасываем выбор после удаления
         selectedBlockId = nil
+    }
+    
+    // ✅ ОБРАБОТЧИК: ⌘E - Экспорт документа
+    private func exportDocument() {
+        viewModel.exportDocument()
+    }
+    
+    // ✅ ОБРАБОТЧИК: ⌘I - Импорт документа
+    private func importDocument() {
+        viewModel.importDocument()
     }
     
     // MARK: - Основной контент с Split View
@@ -202,6 +214,23 @@ struct ArticleEditorView: View {
             
             Spacer()
             
+            // Центральная часть - экспорт/импорт
+            HStack {
+                Button(action: exportDocument) {
+                    Label("Экспорт", systemImage: "square.and.arrow.up")
+                }
+                .keyboardShortcut("e", modifiers: .command)
+                .help("Экспортировать статью в JSON (⌘E)")
+                
+                Button(action: importDocument) {
+                    Label("Импорт", systemImage: "square.and.arrow.down")
+                }
+                .keyboardShortcut("i", modifiers: .command)
+                .help("Импортировать статью из JSON (⌘I)")
+            }
+            
+            Spacer()
+            
             // Правая часть - действия
             HStack {
                 statusIndicator
@@ -281,7 +310,7 @@ struct ArticleEditorView: View {
                 
                 // ✅ ДОБАВЛЯЕМ ПОДСКАЗКУ ПРО ГОРЯЧИЕ КЛАВИШИ
                 if viewModel.blocks.count > 0 {
-                    Text("⌘⏎ переключить превью • ⌘⇧N новый блок • ⌘S сохранить")
+                    Text("⌘⏎ превью • ⌘⇧N новый блок • ⌘S сохранить • ⌘E экспорт • ⌘I импорт")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                         .opacity(0.7)

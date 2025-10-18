@@ -3,13 +3,7 @@
 //  InGermany
 //
 //  Created by SUM TJK on 13.10.25.
-//
-//
-//  ArticleLibraryViewModel.swift
-//  InGermany
-//
-//  Created by SUM TJK on 14.10.25.
-//
+
 
 import Foundation
 

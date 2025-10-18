@@ -5,7 +5,7 @@ public struct ArticleSectionDTO: Codable, Identifiable {
     public let type: String
     public let content: String?
     public let items: [ArticleItemDTO]?
-    public let imageData: ImageData? // ✅ ДОБАВЛЯЕМ ДАННЫЕ ИЗОБРАЖЕНИЯ
+    public let imageData: ImageData?
     
     public init(type: String, content: String? = nil, items: [ArticleItemDTO]? = nil, imageData: ImageData? = nil) {
         self.type = type

@@ -2,8 +2,39 @@ import SwiftUI
 import ArticleKit
 internal import UniformTypeIdentifiers
 
+// Модель данных для ссылки
+struct LinkData {
+    var url: String
+    var title: String
+    var isValid: Bool
+    var domain: String?
+    
+    init(url: String = "", title: String = "") {
+        self.url = url
+        self.title = title
+        self.isValid = false
+        self.domain = nil
+        validateURL()
+    }
+    
+    mutating func validateURL() {
+        // Базовая валидация URL
+        let urlPattern = #"^https?://[^\s/$.?#].[^\s]*$"#
+        let isValidFormat = url.range(of: urlPattern, options: .regularExpression) != nil
+        
+        if isValidFormat, let urlComponents = URL(string: url) {
+            self.isValid = true
+            self.domain = urlComponents.host
+        } else {
+            self.isValid = false
+            self.domain = nil
+        }
+    }
+}
+
 struct BlockEditor: View {
     @Binding var block: ArticleBlock
+    @State private var urlText: String = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -23,8 +54,12 @@ struct BlockEditor: View {
             case .links:
                 linksBlockEditor
             case .image:
-                imageBlockEditor // ✅ ОБНОВЛЯЕМ РЕДАКТОР ИЗОБРАЖЕНИЙ
+                imageBlockEditor
             }
+        }
+        .onAppear {
+            // Инициализируем urlText при появлении
+            urlText = block.content
         }
     }
     
@@ -98,8 +133,113 @@ struct BlockEditor: View {
     }
     
     private var linksBlockEditor: some View {
-        Text("Редактор ссылок - в разработке")
-            .foregroundColor(.secondary)
+        VStack(alignment: .leading, spacing: 16) {
+            // Заголовок секции
+            Text("Ссылка")
+                .font(.headline)
+            
+            // Поле URL с валидацией
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("URL")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    Spacer()
+                    
+                    // Индикатор валидности
+                    if !urlText.isEmpty {
+                        Image(systemName: isLinkValid(urlText) ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundColor(isLinkValid(urlText) ? .green : .red)
+                    }
+                }
+                
+                TextField("https://example.com", text: $urlText)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .onChange(of: urlText) { oldValue, newValue in
+                        // Автоматическое добавление протокола если нужно
+                        if !newValue.isEmpty && !newValue.hasPrefix("http") {
+                            DispatchQueue.main.async {
+                                let correctedURL = "https://" + newValue
+                                urlText = correctedURL
+                                block.content = correctedURL
+                            }
+                        } else {
+                            block.content = newValue
+                        }
+                    }
+                
+                // Отображение домена
+                if let domain = extractDomain(from: urlText) {
+                    HStack {
+                        Image(systemName: "globe")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text(domain)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                }
+            }
+            
+            // Поле заголовка ссылки
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Заголовок ссылки")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                TextField("Описание ссылки", text: Binding(
+                    get: {
+                        if block.items.isEmpty {
+                            return ""
+                        } else {
+                            return block.items[0].text
+                        }
+                    },
+                    set: {
+                        if block.items.isEmpty {
+                            block.items.append(ArticleItemDTO(text: $0))
+                        } else {
+                            block.items[0].text = $0
+                        }
+                    }
+                ))
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+            
+            // Кнопка тестирования ссылки
+            if isLinkValid(urlText) {
+                Button(action: {
+                    testLink(urlText)
+                }) {
+                    HStack {
+                        Image(systemName: "safari")
+                        Text("Открыть в браузере")
+                        Spacer()
+                    }
+                }
+                .buttonStyle(.bordered)
+            }
+            
+            // Визуальная подсказка для пользователя
+            if !urlText.isEmpty && !isLinkValid(urlText) {
+                HStack {
+                    Image(systemName: "info.circle")
+                        .foregroundColor(.orange)
+                    Text("Введите корректный URL (начинается с http:// или https://)")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                    Spacer()
+                }
+                .padding(8)
+                .background(Color.orange.opacity(0.1))
+                .cornerRadius(8)
+            }
+        }
+        .padding()
+        .background(Color.gray.opacity(0.05))
+        .cornerRadius(12)
     }
     
     // ✅ ОБНОВЛЕННЫЙ РЕДАКТОР ИЗОБРАЖЕНИЙ
@@ -203,6 +343,23 @@ struct BlockEditor: View {
                 .buttonStyle(PlainButtonStyle())
             }
         }
+    }
+    
+    // MARK: - Вспомогательные функции для редактора ссылок
+    
+    private func isLinkValid(_ urlString: String) -> Bool {
+        guard let url = URL(string: urlString) else { return false }
+        return url.scheme?.hasPrefix("http") == true && url.host != nil
+    }
+    
+    private func extractDomain(from urlString: String) -> String? {
+        guard let url = URL(string: urlString) else { return nil }
+        return url.host
+    }
+    
+    private func testLink(_ urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        NSWorkspace.shared.open(url)
     }
     
     // ✅ ФУНКЦИЯ ВЫБОРА ИЗОБРАЖЕНИЯ
