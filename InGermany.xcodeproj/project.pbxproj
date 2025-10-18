@@ -1402,6 +1402,7 @@
 		AD2E72422EA2C5C400436C9A /* ArticleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E6CD62EA2C5C400436C9A /* ArticleRenderer.swift */; };
 		AD2E72432EA2C5C400436C9A /* ArticleDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E6CD32EA2C5C400436C9A /* ArticleDocument.swift */; };
 		AD2E72442EA2C5C400436C9A /* ArticleSectionDTO.d in Sources */ = {isa = PBXBuildFile; fileRef = AD2E64842EA2C5C400436C9A /* ArticleSectionDTO.d */; };
+		AD2E74932EA344BA00436C9A /* BlockType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E74922EA344B700436C9A /* BlockType.swift */; };
 		AD38F5852E76891600E36EA4 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5842E76890C00E36EA4 /* .gitignore */; };
 		AD38F5872E76899D00E36EA4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AD38F5862E76899600E36EA4 /* README.md */; };
 		AD40EEF02E75C3DC00866648 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C82E75B4C4003D3826 /* categories.json */; };
@@ -2863,6 +2864,7 @@
 		AD2E6CF02EA2C5C400436C9A /* SharedKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKitTests.swift; sourceTree = "<group>"; };
 		AD2E6CF32EA2C5C400436C9A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD2E6CF42EA2C5C400436C9A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		AD2E74922EA344B700436C9A /* BlockType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockType.swift; sourceTree = "<group>"; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManagingProtocol.swift; sourceTree = "<group>"; };
@@ -10843,6 +10845,7 @@
 		AD2E6CD52EA2C5C400436C9A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AD2E74922EA344B700436C9A /* BlockType.swift */,
 				AD2E6CD22EA2C5C400436C9A /* ArticleBlock.swift */,
 				AD2E6CD32EA2C5C400436C9A /* ArticleDocument.swift */,
 				AD2E6CD42EA2C5C400436C9A /* ArticleSectionDTO.swift */,
@@ -12708,6 +12711,7 @@
 				AD2A65672E8FF0D1006A94DD /* Color+Hex.swift in Sources */,
 				AD2A65682E8FF0D1006A94DD /* Animations.swift in Sources */,
 				AD675BA82E93D85E007B0994 /* FavoritesManagingProtocol.swift in Sources */,
+				AD2E74932EA344BA00436C9A /* BlockType.swift in Sources */,
 				AD108D332E9F701B0032F0D9 /* PDFThumbnailGenerator.swift in Sources */,
 				AD2A65692E8FF0D1006A94DD /* CardSize.swift in Sources */,
 				AD2A656A2E8FF0D1006A94DD /* Theme.swift in Sources */,

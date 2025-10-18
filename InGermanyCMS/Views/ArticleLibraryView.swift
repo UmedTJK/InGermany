@@ -1,20 +1,13 @@
-//  ArticleLibraryView.swift
-//  InGermany
-//
-//  Created by SUM TJK on 14.10.25.
-//
-
 import SwiftUI
 import ArticleKit
 
-
 public struct ArticleLibraryView: View {
     @StateObject private var viewModel: ArticleLibraryViewModel
-    let onOpen: (URL) -> Void
+    let onOpenArticle: (ArticleDocument) -> Void
 
-    init(viewModel: ArticleLibraryViewModel, onOpen: @escaping (URL) -> Void) {
+    public init(viewModel: ArticleLibraryViewModel, onOpenArticle: @escaping (ArticleDocument) -> Void) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        self.onOpen = onOpen
+        self.onOpenArticle = onOpenArticle
     }
 
     public var body: some View {
@@ -31,7 +24,9 @@ public struct ArticleLibraryView: View {
                         }
                         Spacer()
                         Button("Open") {
-                            onOpen(article.url)  // ✅ используем url из ArticleMetadata
+                            loadArticleDocument(from: article.url) { document in
+                                onOpenArticle(document)
+                            }
                         }
                         .buttonStyle(.bordered)
                     }
@@ -45,7 +40,38 @@ public struct ArticleLibraryView: View {
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
+                
+                Button {
+                    // Создаем новую статью
+                    if let newArticle = viewModel.createNewArticle() {
+                        let newDocument = ArticleDocument(
+                            title: newArticle.title,
+                            sections: [],
+                            url: newArticle.url
+                        )
+                        onOpenArticle(newDocument)
+                    }
+                } label: {
+                    Label("New Article", systemImage: "plus")
+                }
             }
+        }
+    }
+    
+    private func loadArticleDocument(from url: URL, completion: @escaping (ArticleDocument) -> Void) {
+        do {
+            let data = try Data(contentsOf: url)
+            let document = try JSONDecoder().decode(ArticleDocument.self, from: data)
+            completion(document)
+        } catch {
+            print("⚠️ Failed to load article document: \(error)")
+            // Создаем пустой документ в случае ошибки
+            let emptyDocument = ArticleDocument(
+                title: "Untitled",
+                sections: [],
+                url: url
+            )
+            completion(emptyDocument)
         }
     }
 }

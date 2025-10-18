@@ -1,17 +1,22 @@
-//
-//  ArticleDocument.swift
-//  InGermany
-//
-//  Created by SUM TJK on 17.10.25.
-//
 import Foundation
 
-public struct ArticleDocumentModel: Codable {
-    public let title: String
-    public let sections: [ArticleSectionDTO]
+public struct ArticleDocument: Codable, Identifiable, Hashable {
+    public let id = UUID()
+    public var title: String
+    public var sections: [ArticleSectionDTO]
+    public let url: URL?
     
-    public init(title: String, sections: [ArticleSectionDTO]) {
+    public init(title: String, sections: [ArticleSectionDTO], url: URL? = nil) {
         self.title = title
         self.sections = sections
+        self.url = url
+    }
+    
+    public static func == (lhs: ArticleDocument, rhs: ArticleDocument) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

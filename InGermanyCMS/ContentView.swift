@@ -1,43 +1,48 @@
-//
-//  ContentView.swift
-//  InGermanyCMS
-//
-//  Created by SUM TJK on 17.10.25.
-//
-
 import SwiftUI
 import ArticleKit
 
 struct ContentView: View {
     @StateObject private var libraryVM = ArticleLibraryViewModel()
-    @State private var selectedArticle: ArticleLibraryViewModel.ArticleMetadata?
+    @State private var selectedView: AppView? = .library
+    
+    enum AppView: Hashable {
+        case library, demo, editor(ArticleDocument)
+    }
     
     var body: some View {
         NavigationSplitView {
-            // Боковая панель - библиотека статей
-            ArticleLibraryView(
-                viewModel: libraryVM,
-                onOpen: { url in
-                    selectedArticle = libraryVM.articles.first { $0.url == url }
-                }
-            )
+            sidebar
         } detail: {
-            // Детальная панель
-            if let article = selectedArticle {
-                VStack {
-                    Text(article.title)
-                        .font(.title)
-                    Text("URL: \(article.url.path)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                }
-                .padding()
-                .navigationTitle("Редактор")
-            } else {
-                DemoArticleView()
-                    .navigationTitle("Демо статья")
+            detailView
+        }
+    }
+    
+    private var sidebar: some View {
+        List(selection: $selectedView) {
+            Section("Articles") {
+                Text("Article Library")
+                    .tag(AppView.library)
+                Text("Demo Article")
+                    .tag(AppView.demo)
             }
+        }
+        .listStyle(SidebarListStyle())
+        .navigationTitle("InGermany CMS")
+    }
+    
+    @ViewBuilder
+    private var detailView: some View {
+        switch selectedView {
+        case .library:
+            ArticleLibraryView(viewModel: libraryVM) { document in
+                selectedView = .editor(document)
+            }
+        case .demo:
+            DemoArticleView()
+        case .editor(let document):
+            ArticleEditorView(document: document)
+        case nil:
+            Text("Select a view from the sidebar")
         }
     }
 }

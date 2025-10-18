@@ -89,6 +89,8 @@
 │   ├── ContentView.swift
 │   ├── InGermanyCMSApp.swift
 │   ├── Item.swift
+│   ├── Resources
+│   │   └── burgeramt_registration.json
 │   └── Views
 │       ├── ArticleComponents
 │       ├── ArticleEditorView.swift
@@ -350,4 +352,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-95 directories, 256 files
+96 directories, 257 files

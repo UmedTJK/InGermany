@@ -35,8 +35,8 @@ public final class ArticleLibraryViewModel: ObservableObject {
             for url in files where url.pathExtension == "json" {
                 do {
                     let data = try Data(contentsOf: url)
-                    // ✅ ИСПРАВЛЕНО: ArticleDocumentModel вместо ArticleDocument
-                    let doc = try JSONDecoder().decode(ArticleDocumentModel.self, from: data)
+                    // ✅ ИСПРАВЛЕНО: Используем ArticleDocument вместо ArticleDocumentModel
+                    let doc = try JSONDecoder().decode(ArticleDocument.self, from: data)
                     let attrs = try url.resourceValues(forKeys: [.contentModificationDateKey])
                     let modified = attrs.contentModificationDate ?? Date()
                     let meta = ArticleMetadata(url: url, title: doc.title, modified: modified)
@@ -65,8 +65,8 @@ public final class ArticleLibraryViewModel: ObservableObject {
         }
         
         let newArticleURL = docsURL.appendingPathComponent("new-article-\(UUID().uuidString).json")
-        // ✅ ИСПРАВЛЕНО: ArticleDocumentModel вместо ArticleDocument
-        let newDocument = ArticleDocumentModel(
+        // ✅ ИСПРАВЛЕНО: Используем ArticleDocument вместо ArticleDocumentModel
+        let newDocument = ArticleDocument(
             title: "Новая статья",
             sections: [
                 ArticleSectionDTO(
