@@ -1,11 +1,11 @@
 import SwiftUI
 import ArticleKit
-import Combine  // ✅ Добавляем импорт Combine
+import Combine
 
 struct ArticleEditorView: View {
     @StateObject private var viewModel: ArticleEditorViewModel
     @State private var selectedBlockId: UUID?
-    @State private var showPreview = true // По умолчанию показываем превью
+    @State private var showPreview = true
     
     let document: ArticleDocument
     
@@ -16,10 +16,7 @@ struct ArticleEditorView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Панель инструментов
             editorToolbar
-            
-            // Основной контент - Split View
             mainContentView
         }
         .navigationTitle(document.title)
@@ -50,18 +47,13 @@ struct ArticleEditorView: View {
     private var mainContentView: some View {
         Group {
             if showPreview {
-                // Split View с редактором и превью
                 HSplitView {
-                    // Левая панель - редактор
                     editorPanel
                         .frame(minWidth: 300, maxWidth: .infinity)
-                    
-                    // Правая панель - превью
                     previewPanel
                         .frame(minWidth: 300, maxWidth: .infinity)
                 }
             } else {
-                // Полноэкранный редактор
                 editorPanel
             }
         }
@@ -72,13 +64,11 @@ struct ArticleEditorView: View {
     
     private var editorPanel: some View {
         HStack(spacing: 0) {
-            // Список блоков
             blocksListView
                 .frame(width: 280)
             
             Divider()
             
-            // Редактор выбранного блока
             blockEditorView
                 .frame(maxWidth: .infinity)
         }
@@ -88,10 +78,7 @@ struct ArticleEditorView: View {
     
     private var previewPanel: some View {
         VStack(spacing: 0) {
-            // Заголовок превью
             previewHeader
-            
-            // Контент превью
             previewContent
         }
         .background(Color(NSColor.controlBackgroundColor))
@@ -105,9 +92,7 @@ struct ArticleEditorView: View {
             
             Spacer()
             
-            // Кнопка обновления превью
             Button(action: {
-                // Принудительное обновление превью
                 viewModel.objectWillChange.send()
             }) {
                 Image(systemName: "arrow.clockwise")
@@ -124,14 +109,12 @@ struct ArticleEditorView: View {
     private var previewContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                // Заголовок статьи
                 Text(document.title)
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.bottom, 8)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                // Рендерер статьи
                 ArticleRenderer(sections: viewModel.blocks.map { $0.toSectionDTO() })
             }
             .padding()
@@ -143,7 +126,6 @@ struct ArticleEditorView: View {
     
     private var editorToolbar: some View {
         HStack {
-            // Левая часть - управление блоками
             HStack {
                 Button(action: {
                     viewModel.showBlockPicker = true
@@ -151,7 +133,6 @@ struct ArticleEditorView: View {
                     Label("Добавить блок", systemImage: "plus")
                 }
                 
-                // Кнопка переключения превью
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         showPreview.toggle()
@@ -166,24 +147,8 @@ struct ArticleEditorView: View {
             
             Spacer()
             
-            // Правая часть - действия
             HStack {
-                // Индикатор состояния
-                if viewModel.isSaving {
-                    ProgressView()
-                        .scaleEffect(0.8)
-                    Text("Сохранение...")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                } else {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                        .opacity(viewModel.hasUnsavedChanges ? 0.3 : 1.0)
-                    Text("Сохранено")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .opacity(viewModel.hasUnsavedChanges ? 0.3 : 1.0)
-                }
+                statusIndicator
                 
                 Button("Сохранить") {
                     viewModel.saveDocument()
@@ -200,12 +165,51 @@ struct ArticleEditorView: View {
             alignment: .bottom
         )
     }
-    
+
+    // Индикатор состояния
+    private var statusIndicator: some View {
+        HStack(spacing: 8) {
+            if viewModel.isSaving {
+                ProgressView()
+                    .scaleEffect(0.8)
+                    .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                Text("Сохранение...")
+                    .font(.caption)
+                    .foregroundColor(.blue)
+            } else if viewModel.hasUnsavedChanges {
+                Image(systemName: "circle.fill")
+                    .font(.system(size: 8))
+                    .foregroundColor(.orange)
+                Text("Не сохранено")
+                    .font(.caption)
+                    .foregroundColor(.orange)
+            } else {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.green)
+                Text("Сохранено")
+                    .font(.caption)
+                    .foregroundColor(.green)
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: viewModel.isSaving)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.hasUnsavedChanges)
+    }
+
+    // Список блоков
     private var blocksListView: some View {
         VStack {
-            Text("Блоки статьи")
-                .font(.headline)
-                .padding()
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Блоки статьи")
+                    .font(.headline)
+                
+                Text("\(viewModel.blocks.count) \(blockCountText)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+            .padding(.top, 16)
+            .padding(.bottom, 8)
             
             if viewModel.blocks.isEmpty {
                 emptyBlocksView
@@ -229,7 +233,23 @@ struct ArticleEditorView: View {
         }
         .background(Color(NSColor.controlBackgroundColor))
     }
+
+    // Счетчик блоков
+    private var blockCountText: String {
+        let count = viewModel.blocks.count
+        let remainder = count % 10
+        
+        switch remainder {
+        case 1 where count % 100 != 11:
+            return "блок"
+        case 2...4 where count % 100 < 10 || count % 100 >= 20:
+            return "блока"
+        default:
+            return "блоков"
+        }
+    }
     
+    // Пустое состояние списка блоков
     private var emptyBlocksView: some View {
         VStack(spacing: 12) {
             Image(systemName: "doc.text")
@@ -245,7 +265,8 @@ struct ArticleEditorView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
+    // Редактор блока
     private var blockEditorView: some View {
         VStack {
             if let selectedId = selectedBlockId,
@@ -267,7 +288,8 @@ struct ArticleEditorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(NSColor.textBackgroundColor))
     }
-    
+
+    // Пустое состояние редактора
     private var emptyEditorView: some View {
         VStack(spacing: 20) {
             Image(systemName: "cursorarrow.rays")
@@ -287,7 +309,7 @@ struct ArticleEditorView: View {
     }
 }
 
-// MARK: - Восстанавливаем BlockRowView
+// MARK: - BlockRowView как отдельная структура
 
 struct BlockRowView: View {
     let block: ArticleBlock

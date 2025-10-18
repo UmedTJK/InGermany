@@ -11,11 +11,17 @@ public class ArticleEditorViewModel: ObservableObject {
     private var document: ArticleDocument
     private var originalBlocks: [ArticleBlock] = []
     private var cancellables = Set<AnyCancellable>()
+    private var autosaveTimer: Timer? // ✅ Добавляем таймер автосохранения
     
     public init(document: ArticleDocument) {
         self.document = document
         loadDocument(document)
         setupChangeTracking()
+        setupAutosave() // ✅ Запускаем автосохранение
+    }
+    
+    deinit {
+        autosaveTimer?.invalidate() // ✅ Очищаем таймер при деините
     }
     
     // MARK: - Public Methods
@@ -23,7 +29,7 @@ public class ArticleEditorViewModel: ObservableObject {
     public func loadDocument(_ document: ArticleDocument) {
         self.document = document
         self.blocks = document.sections.map { ArticleBlock.fromSection($0) }
-        self.originalBlocks = blocks // Сохраняем оригинальное состояние
+        self.originalBlocks = blocks
         self.hasUnsavedChanges = false
     }
     
@@ -41,7 +47,6 @@ public class ArticleEditorViewModel: ObservableObject {
                 url: self.document.url
             )
             
-            // Сохранение через FileManager
             self.saveToFileSystem(updatedDocument)
             
             self.originalBlocks = self.blocks
@@ -82,6 +87,21 @@ public class ArticleEditorViewModel: ObservableObject {
     public func markAsModified() {
         if !hasUnsavedChanges {
             hasUnsavedChanges = true
+        }
+    }
+    
+    // MARK: - Автосохранение
+    
+    private func setupAutosave() {
+        // Таймер с интервалом 3 секунды
+        autosaveTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            
+            // Сохраняем только если есть несохраненные изменения
+            if self.hasUnsavedChanges && !self.isSaving {
+                print("🔄 Автосохранение...")
+                self.saveDocument()
+            }
         }
     }
     
