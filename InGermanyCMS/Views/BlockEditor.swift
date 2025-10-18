@@ -1,5 +1,6 @@
 import SwiftUI
 import ArticleKit
+internal import UniformTypeIdentifiers
 
 struct BlockEditor: View {
     @Binding var block: ArticleBlock
@@ -22,7 +23,7 @@ struct BlockEditor: View {
             case .links:
                 linksBlockEditor
             case .image:
-                imageBlockEditor
+                imageBlockEditor // ✅ ОБНОВЛЯЕМ РЕДАКТОР ИЗОБРАЖЕНИЙ
             }
         }
     }
@@ -101,8 +102,129 @@ struct BlockEditor: View {
             .foregroundColor(.secondary)
     }
     
+    // ✅ ОБНОВЛЕННЫЙ РЕДАКТОР ИЗОБРАЖЕНИЙ
     private var imageBlockEditor: some View {
-        Text("Редактор изображений - в разработке")
-            .foregroundColor(.secondary)
+        VStack(alignment: .leading, spacing: 16) {
+            // Заголовок секции
+            Text("Изображение")
+                .font(.headline)
+            
+            // Область загрузки изображения
+            imageUploadSection
+            
+            // Поля для подписи и альтернативного текста
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Подпись к изображению")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                TextField("Введите подпись...", text: Binding(
+                    get: { block.imageData?.caption ?? "" },
+                    set: {
+                        if block.imageData == nil {
+                            block.imageData = ImageData(caption: $0)
+                        } else {
+                            block.imageData?.caption = $0
+                        }
+                    }
+                ))
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                Text("Альтернативный текст (для доступности)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                TextField("Описание изображения для скринридеров...", text: Binding(
+                    get: { block.imageData?.altText ?? "" },
+                    set: {
+                        if block.imageData == nil {
+                            block.imageData = ImageData(altText: $0)
+                        } else {
+                            block.imageData?.altText = $0
+                        }
+                    }
+                ))
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            }
+        }
+    }
+    
+    // ✅ СЕКЦИЯ ЗАГРУЗКИ ИЗОБРАЖЕНИЯ
+    private var imageUploadSection: some View {
+        VStack(spacing: 12) {
+            if let imagePath = block.imageData?.imagePath,
+               let image = loadImage(from: imagePath) {
+                // Превью выбранного изображения
+                VStack {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 200)
+                        .cornerRadius(8)
+                    
+                    HStack {
+                        Text("Выбрано: \((imagePath as NSString).lastPathComponent)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                        
+                        Button("Удалить") {
+                            block.imageData?.imagePath = nil
+                        }
+                        .foregroundColor(.red)
+                        .font(.caption)
+                    }
+                }
+            } else {
+                // Кнопка выбора изображения
+                Button(action: selectImage) {
+                    VStack(spacing: 8) {
+                        Image(systemName: "photo.on.rectangle.angled")
+                            .font(.system(size: 40))
+                            .foregroundColor(.secondary)
+                        
+                        Text("Выберите изображение")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        Text("Нажмите чтобы выбрать файл")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 120)
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    )
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
+    }
+    
+    // ✅ ФУНКЦИЯ ВЫБОРА ИЗОБРАЖЕНИЯ
+    private func selectImage() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.image]
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        
+        if panel.runModal() == .OK, let url = panel.url {
+            // Сохраняем путь к файлу
+            if block.imageData == nil {
+                block.imageData = ImageData(imagePath: url.path)
+            } else {
+                block.imageData?.imagePath = url.path
+            }
+        }
+    }
+    
+    // ✅ ФУНКЦИЯ ЗАГРУЗКИ ИЗОБРАЖЕНИЯ ДЛЯ ПРЕВЬЮ
+    private func loadImage(from path: String) -> Image? {
+        guard let nsImage = NSImage(contentsOfFile: path) else { return nil }
+        return Image(nsImage: nsImage)
     }
 }

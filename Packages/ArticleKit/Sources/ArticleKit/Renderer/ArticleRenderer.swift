@@ -42,10 +42,86 @@ private struct SectionView: View {
         case "links":
             LinksView(items: section.items ?? [])
         case "image":
-            ImageView(content: section.content ?? "")
+            // ✅ ОБНОВЛЯЕМ ДЛЯ ПОДДЕРЖКИ РАСШИРЕННЫХ ИЗОБРАЖЕНИЙ
+            EnhancedImageView(section: section)
         default:
             UnknownView(section: section)
         }
+    }
+}
+
+// MARK: - Enhanced Image Section
+
+private struct EnhancedImageView: View {
+    let section: ArticleSectionDTO
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Отображаем изображение если есть путь
+            if let imagePath = section.imageData?.imagePath,
+               let image = loadImage(from: imagePath) {
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(8)
+                    .frame(maxWidth: .infinity)
+            } else if let content = section.content, !content.isEmpty {
+                // Fallback: старая логика с URL
+                if let url = URL(string: content) {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(8)
+                    } placeholder: {
+                        ProgressView()
+                    }
+                } else {
+                    // Fallback: заглушка
+                    placeholderImage
+                }
+            } else {
+                // Пустой блок изображения
+                placeholderImage
+            }
+            
+            // Отображаем подпись если есть
+            if let caption = section.imageData?.caption, !caption.isEmpty {
+                Text(caption)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .italic()
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+        }
+        .frame(maxWidth: .infinity)
+    }
+    
+    private var placeholderImage: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .fill(Color.gray.opacity(0.2))
+            .frame(height: 150)
+            .overlay(
+                VStack {
+                    Image(systemName: "photo")
+                        .font(.system(size: 40))
+                        .foregroundColor(.secondary)
+                    Text("Изображение")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            )
+    }
+    
+    // ✅ ФУНКЦИЯ ЗАГРУЗКИ ИЗОБРАЖЕНИЯ ИЗ ФАЙЛА
+    private func loadImage(from path: String) -> Image? {
+        #if os(macOS)
+        guard let nsImage = NSImage(contentsOfFile: path) else { return nil }
+        return Image(nsImage: nsImage)
+        #else
+        // Для iOS можно добавить UIImage логику
+        return nil
+        #endif
     }
 }
 
@@ -116,6 +192,7 @@ private struct QuoteView: View {
     let content: String
     
     var body: some View {
+        // ✅ ИСПРАВЛЕННЫЕ КАВЫЧКИ
         Text("“\(content)”")
             .font(.body.italic())
             .foregroundColor(.secondary)
@@ -224,35 +301,6 @@ private struct FAQView: View {
     }
 }
 
-// MARK: - Image Section
-
-private struct ImageView: View {
-    let content: String
-    
-    var body: some View {
-        VStack {
-            if let url = URL(string: content) {
-                AsyncImage(url: url) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(8)
-                } placeholder: {
-                    ProgressView()
-                }
-            } else {
-                Image(systemName: "photo")
-                    .font(.largeTitle)
-                    .foregroundColor(.gray)
-                Text("Image: \(content)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
 // MARK: - Unknown Section Fallback
 
 private struct UnknownView: View {
@@ -302,7 +350,16 @@ private struct UnknownView: View {
             ]),
             ArticleSectionDTO(type: "faq", content: "Часто задаваемый вопрос?", items: [
                 ArticleItemDTO(text: "Ответ на часто задаваемый вопрос.")
-            ])
+            ]),
+            // ✅ ДОБАВЛЯЕМ ПРИМЕР ИЗОБРАЖЕНИЯ С ДАННЫМИ
+            ArticleSectionDTO(
+                type: "image",
+                content: "Пример изображения",
+                imageData: ImageData(
+                    caption: "Это тестовая подпись к изображению",
+                    altText: "Описание изображения для доступности"
+                )
+            )
         ])
         .padding()
     }
