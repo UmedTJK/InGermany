@@ -40,6 +40,55 @@ struct ArticleEditorView: View {
             }
             .frame(width: 400, height: 500)
         }
+        // ✅ ДОБАВЛЯЕМ ГОРЯЧИЕ КЛАВИШИ (ИСПРАВЛЕННАЯ ВЕРСИЯ)
+        .background(
+            // Невидимая кнопка для обработки горячих клавиш
+            Button("", action: handleKeyboardShortcuts)
+                .keyboardShortcut("n", modifiers: [.command, .shift])
+                .keyboardShortcut("s", modifiers: .command)
+                .keyboardShortcut(.return, modifiers: [.command])
+                .keyboardShortcut(.delete, modifiers: .command)
+                .keyboardShortcut("d", modifiers: .command)
+                .opacity(0) // Скрываем кнопку
+        )
+    }
+    
+    // ✅ ОБРАБОТЧИК ВСЕХ ГОРЯЧИХ КЛАВИШ
+    private func handleKeyboardShortcuts() {
+        // Этот метод будет вызываться для любой горячей клавиши
+        // Реальная обработка происходит через .keyboardShortcut модификаторы выше
+    }
+    
+    // MARK: - Обработчики горячих клавиш
+    
+    // ✅ ОБРАБОТЧИК: ⌘⇧N - Показать BlockPicker
+    private func showBlockPicker() {
+        viewModel.showBlockPicker = true
+    }
+    
+    // ✅ ОБРАБОТЧИК: ⌘S - Сохранить документ
+    private func saveDocument() {
+        viewModel.saveDocument()
+    }
+    
+    // ✅ ОБРАБОТЧИК: ⌘D - Дублировать выбранный блок
+    private func duplicateSelectedBlock() {
+        guard let selectedId = selectedBlockId,
+              let selectedBlock = viewModel.blocks.first(where: { $0.id == selectedId }) else {
+            return
+        }
+        viewModel.duplicateBlock(selectedBlock)
+    }
+    
+    // ✅ ОБРАБОТЧИК: ⌘⌫ - Удалить выбранный блок
+    private func deleteSelectedBlock() {
+        guard let selectedId = selectedBlockId,
+              let selectedBlock = viewModel.blocks.first(where: { $0.id == selectedId }) else {
+            return
+        }
+        viewModel.removeBlock(selectedBlock)
+        // Сбрасываем выбор после удаления
+        selectedBlockId = nil
     }
     
     // MARK: - Основной контент с Split View
@@ -126,13 +175,17 @@ struct ArticleEditorView: View {
     
     private var editorToolbar: some View {
         HStack {
+            // Левая часть - управление блоками
             HStack {
                 Button(action: {
                     viewModel.showBlockPicker = true
                 }) {
                     Label("Добавить блок", systemImage: "plus")
                 }
+                .keyboardShortcut("n", modifiers: [.command, .shift])
+                .help("Добавить новый блок (⌘⇧N)")
                 
+                // Кнопка переключения превью
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         showPreview.toggle()
@@ -143,10 +196,13 @@ struct ArticleEditorView: View {
                         systemImage: showPreview ? "eye.slash" : "eye"
                     )
                 }
+                .keyboardShortcut(.return, modifiers: [.command])
+                .help("Переключить предпросмотр (⌘⏎)")
             }
             
             Spacer()
             
+            // Правая часть - действия
             HStack {
                 statusIndicator
                 
@@ -154,6 +210,23 @@ struct ArticleEditorView: View {
                     viewModel.saveDocument()
                 }
                 .disabled(!viewModel.hasUnsavedChanges)
+                .keyboardShortcut("s", modifiers: .command)
+                .help("Сохранить документ (⌘S)")
+                
+                // ✅ ДОБАВЛЯЕМ КНОПКИ ДЛЯ УПРАВЛЕНИЯ БЛОКАМИ
+                if selectedBlockId != nil {
+                    Button(action: duplicateSelectedBlock) {
+                        Label("Дублировать", systemImage: "doc.on.doc")
+                    }
+                    .keyboardShortcut("d", modifiers: .command)
+                    .help("Дублировать блок (⌘D)")
+                    
+                    Button(action: deleteSelectedBlock) {
+                        Label("Удалить", systemImage: "trash")
+                    }
+                    .keyboardShortcut(.delete, modifiers: .command)
+                    .help("Удалить блок (⌘⌫)")
+                }
             }
         }
         .padding()
@@ -206,9 +279,9 @@ struct ArticleEditorView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                 
-                // ✅ ДОБАВЛЯЕМ ПОДСКАЗКУ ДЛЯ ПОЛЬЗОВАТЕЛЯ
-                if viewModel.blocks.count > 1 {
-                    Text("Перетащите для изменения порядка")
+                // ✅ ДОБАВЛЯЕМ ПОДСКАЗКУ ПРО ГОРЯЧИЕ КЛАВИШИ
+                if viewModel.blocks.count > 0 {
+                    Text("⌘⏎ переключить превью • ⌘⇧N новый блок • ⌘S сохранить")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                         .opacity(0.7)
@@ -224,15 +297,18 @@ struct ArticleEditorView: View {
             } else {
                 List(selection: $selectedBlockId) {
                     ForEach(viewModel.blocks) { block in
-                        BlockRowView(block: block)
+                        BlockRowView(block: block, isSelected: selectedBlockId == block.id)
                             .tag(block.id)
                             .contextMenu {
                                 Button("Дублировать") {
                                     viewModel.duplicateBlock(block)
                                 }
+                                .keyboardShortcut("d", modifiers: .command)
+                                
                                 Button("Удалить", role: .destructive) {
                                     viewModel.removeBlock(block)
                                 }
+                                .keyboardShortcut(.delete, modifiers: .command)
                             }
                     }
                     .onMove(perform: viewModel.moveBlocks)
@@ -323,6 +399,7 @@ struct ArticleEditorView: View {
 
 struct BlockRowView: View {
     let block: ArticleBlock
+    var isSelected: Bool = false
     
     var body: some View {
         HStack {
@@ -340,7 +417,6 @@ struct BlockRowView: View {
             }
             Spacer()
             
-            // ✅ ДОБАВЛЯЕМ ИКОНКУ ПЕРЕТАСКИВАНИЯ
             Image(systemName: "line.3.horizontal")
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
@@ -348,6 +424,9 @@ struct BlockRowView: View {
         }
         .padding(.vertical, 8)
         .contentShape(Rectangle())
+        .background(isSelected ? Color.blue.opacity(0.1) : Color.clear)
+        .cornerRadius(4)
+        .help("Выберите и используйте ⌘D для дублирования или ⌘⌫ для удаления")
     }
     
     private var blockTypeIcon: String {
