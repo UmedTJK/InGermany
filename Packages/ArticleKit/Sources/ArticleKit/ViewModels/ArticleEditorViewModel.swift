@@ -68,6 +68,25 @@ public class ArticleEditorViewModel: ObservableObject {
         markAsModified()
     }
     
+    // ✅ НОВЫЙ МЕТОД: Удаление по индексам (для свайпа)
+    public func deleteBlocks(at offsets: IndexSet) {
+        blocks.remove(atOffsets: offsets)
+        markAsModified()
+    }
+    
+    // ✅ НОВЫЙ МЕТОД: Дублирование блока
+    public func duplicateBlock(_ block: ArticleBlock) {
+        let duplicatedBlock = ArticleBlock(
+            type: block.type,
+            content: block.content,
+            items: block.items.map { ArticleItemDTO(text: $0.text, isCompleted: $0.isCompleted) }
+        )
+        if let index = blocks.firstIndex(where: { $0.id == block.id }) {
+            blocks.insert(duplicatedBlock, at: index + 1)
+            markAsModified()
+        }
+    }
+    
     public func updateBlock(_ updatedBlock: ArticleBlock) {
         if let index = blocks.firstIndex(where: { $0.id == updatedBlock.id }) {
             blocks[index] = updatedBlock
@@ -75,10 +94,12 @@ public class ArticleEditorViewModel: ObservableObject {
         }
     }
     
-    public func moveBlocks(from source: IndexSet, to destination: Int) {
-        blocks.move(fromOffsets: source, toOffset: destination)
-        markAsModified()
-    }
+    // ✅ ОБНОВЛЕННЫЙ МЕТОД: Перемещение блоков (для Drag & Drop)
+      public func moveBlocks(from source: IndexSet, to destination: Int) {
+          blocks.move(fromOffsets: source, toOffset: destination)
+          markAsModified()
+          print("🔀 Блоки перемещены: с \(source) на позицию \(destination)")
+      }
     
     public func togglePreview() {
         showPreview.toggle()

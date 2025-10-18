@@ -205,6 +205,14 @@ struct ArticleEditorView: View {
                 Text("\(viewModel.blocks.count) \(blockCountText)")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                
+                // ✅ ДОБАВЛЯЕМ ПОДСКАЗКУ ДЛЯ ПОЛЬЗОВАТЕЛЯ
+                if viewModel.blocks.count > 1 {
+                    Text("Перетащите для изменения порядка")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .opacity(0.7)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
@@ -219,14 +227,16 @@ struct ArticleEditorView: View {
                         BlockRowView(block: block)
                             .tag(block.id)
                             .contextMenu {
+                                Button("Дублировать") {
+                                    viewModel.duplicateBlock(block)
+                                }
                                 Button("Удалить", role: .destructive) {
                                     viewModel.removeBlock(block)
                                 }
                             }
                     }
-                    .onMove { indices, newOffset in
-                        viewModel.moveBlocks(from: indices, to: newOffset)
-                    }
+                    .onMove(perform: viewModel.moveBlocks)
+                    .onDelete(perform: viewModel.deleteBlocks)
                 }
                 .listStyle(SidebarListStyle())
             }
@@ -329,6 +339,12 @@ struct BlockRowView: View {
                 }
             }
             Spacer()
+            
+            // ✅ ДОБАВЛЯЕМ ИКОНКУ ПЕРЕТАСКИВАНИЯ
+            Image(systemName: "line.3.horizontal")
+                .font(.system(size: 12))
+                .foregroundColor(.secondary)
+                .opacity(0.6)
         }
         .padding(.vertical, 8)
         .contentShape(Rectangle())
