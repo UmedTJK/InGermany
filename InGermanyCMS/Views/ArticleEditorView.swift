@@ -9,21 +9,18 @@ struct ArticleEditorView: View {
     @State private var isEditingTitle = false
     @State private var editedTitle: String = ""
     
-    let document: ArticleDocument
-    
     init(document: ArticleDocument) {
-        self.document = document
         _viewModel = StateObject(wrappedValue: ArticleEditorViewModel(document: document))
         _editedTitle = State(initialValue: document.title)
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            titleHeader // ✅ ДОБАВЛЯЕМ ЗАГОЛОВОК С РЕДАКТИРОВАНИЕМ
+            titleHeader
             editorToolbar
             mainContentView
         }
-        .navigationTitle(document.title)
+        .navigationTitle(viewModel.document.title) // ✅ ИСПОЛЬЗУЕМ viewModel.document
         .onAppear {
             print("🔄 ArticleEditorView загружен с \(viewModel.blocks.count) блоками")
         }
@@ -44,9 +41,7 @@ struct ArticleEditorView: View {
             }
             .frame(width: 400, height: 500)
         }
-        // ✅ ДОБАВЛЯЕМ ГОРЯЧИЕ КЛАВИШИ (ИСПРАВЛЕННАЯ ВЕРСИЯ)
         .background(
-            // Невидимая кнопка для обработки горячих клавиш
             Button("", action: handleKeyboardShortcuts)
                 .keyboardShortcut("n", modifiers: [.command, .shift])
                 .keyboardShortcut("s", modifiers: .command)
@@ -55,7 +50,7 @@ struct ArticleEditorView: View {
                 .keyboardShortcut("d", modifiers: .command)
                 .keyboardShortcut("e", modifiers: .command)
                 .keyboardShortcut("i", modifiers: .command)
-                .opacity(0) // Скрываем кнопку
+                .opacity(0)
         )
     }
     
@@ -88,7 +83,7 @@ struct ArticleEditorView: View {
                 .padding(.vertical, 12)
             } else {
                 HStack {
-                    Text(document.title.isEmpty ? "Без названия" : document.title)
+                    Text(viewModel.document.title.isEmpty ? "Без названия" : viewModel.document.title) // ✅ ИСПОЛЬЗУЕМ viewModel.document
                         .font(.title2)
                         .fontWeight(.semibold)
                         .lineLimit(1)
@@ -101,7 +96,7 @@ struct ArticleEditorView: View {
                             .foregroundColor(.secondary)
                     }
                     .buttonStyle(.plain)
-                    .help("Редактировать название (⌘T)")
+                    .help("Редактировать название")
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -118,7 +113,7 @@ struct ArticleEditorView: View {
     
     // ✅ МЕТОДЫ ДЛЯ РЕДАКТИРОВАНИЯ ЗАГОЛОВКА
     private func startTitleEditing() {
-        editedTitle = document.title
+        editedTitle = viewModel.document.title // ✅ ИСПОЛЬЗУЕМ viewModel.document
         isEditingTitle = true
     }
     
@@ -128,12 +123,12 @@ struct ArticleEditorView: View {
         // Обновляем документ с новым названием
         let updatedDocument = ArticleDocument(
             title: editedTitle,
-            sections: document.sections,
-            url: document.url
+            sections: viewModel.document.sections, // ✅ ИСПОЛЬЗУЕМ viewModel.document
+            url: viewModel.document.url // ✅ ИСПОЛЬЗУЕМ viewModel.document
         )
         
         // Перезагружаем ViewModel с обновленным документом
-        viewModel.loadDocument(updatedDocument)
+        viewModel.updateDocument(updatedDocument) // ✅ ИСПОЛЬЗУЕМ НОВЫЙ МЕТОД
         
         // Сохраняем изменения
         viewModel.saveDocument()
@@ -142,7 +137,7 @@ struct ArticleEditorView: View {
     }
     
     private func cancelTitleEditing() {
-        editedTitle = document.title
+        editedTitle = viewModel.document.title // ✅ ИСПОЛЬЗУЕМ viewModel.document
         isEditingTitle = false
     }
     
@@ -191,7 +186,7 @@ struct ArticleEditorView: View {
     
     // ✅ ОБРАБОТЧИК: ⌘I - Импорт документа
     private func importDocument() {
-        viewModel.importDocument()
+        viewModel.importDocument()  // ← ПРАВИЛЬНО!
     }
     
     // MARK: - Основной контент с Split View
@@ -261,7 +256,7 @@ struct ArticleEditorView: View {
     private var previewContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                Text(document.title)
+                Text(viewModel.document.title) // ✅ ИСПОЛЬЗУЕМ viewModel.document
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.bottom, 8)
