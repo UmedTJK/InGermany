@@ -1,5 +1,16 @@
 # 📖 CHANGELOG
 
+## [v1.16.1-20251022] – 2025-10-22
+### Added
+- Confirmed iOS build runs on iPhone 17 Pro Max simulator 🎉
+
+### Changed
+- Removed CMS-only dependencies from `SettingsView`
+- Unified project references for iOS/macOS targets
+
+### Verified
+- ✅ iOS build & launch in Simulator
+- ✅ macOS CMS JSON export continues to work
 
 ## [1.16.0] - 2025-10-22
 ### Added
