@@ -1,6 +1,7 @@
 import SwiftUI
 import ArticleKit
-internal import UniformTypeIdentifiers
+import UniformTypeIdentifiers
+
 
 // Модель данных для ссылки
 struct LinkData {

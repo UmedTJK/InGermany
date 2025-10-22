@@ -1,6 +1,10 @@
 import SwiftUI
 import Foundation
 
+#if canImport(AppKit)
+import AppKit
+#endif
+
 public class ArticleLibraryViewModel: ObservableObject {
     @Published public var articles: [ArticleMetadata] = []
     
@@ -50,7 +54,6 @@ public class ArticleLibraryViewModel: ObservableObject {
                     return nil
                 }
                 
-                // Читаем заголовок из файла
                 let data = try Data(contentsOf: url)
                 let document = try JSONDecoder().decode(ArticleDocument.self, from: data)
                 
@@ -59,7 +62,7 @@ public class ArticleLibraryViewModel: ObservableObject {
                     url: url,
                     modified: modifiedDate
                 )
-            }.sorted { $0.modified > $1.modified } // Сортируем по дате изменения
+            }.sorted { $0.modified > $1.modified }
             
         } catch {
             print("❌ Ошибка загрузки библиотеки: \(error)")
@@ -112,8 +115,9 @@ public class ArticleLibraryViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Импорт статьи
+    // MARK: - macOS Only Import
     
+    #if canImport(AppKit)
     public func importArticle() -> ArticleDocument? {
         let openPanel = NSOpenPanel()
         openPanel.allowedContentTypes = [.json]
@@ -126,17 +130,14 @@ public class ArticleLibraryViewModel: ObservableObject {
                 let data = try Data(contentsOf: url)
                 let importedDocument = try JSONDecoder().decode(ArticleDocument.self, from: data)
                 
-                // Создаем новое имя файла для избежания конфликтов
                 let fileName = "imported_\(Date().timeIntervalSince1970).json"
                 let libraryURL = libraryDirectory.appendingPathComponent(fileName)
                 
-                // Сохраняем в библиотеку
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
                 let newData = try encoder.encode(importedDocument)
                 try newData.write(to: libraryURL)
                 
-                // Обновляем библиотеку
                 refreshLibrary()
                 
                 print("✅ Статья импортирована в библиотеку: \(importedDocument.title)")
@@ -173,6 +174,7 @@ public class ArticleLibraryViewModel: ObservableObject {
         alert.addButton(withTitle: "OK")
         alert.runModal()
     }
+    #endif
     
     // MARK: - Private Methods
     
