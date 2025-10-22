@@ -3,9 +3,8 @@
 //  InGermany
 //
 //  Created by SUM TJK on 20.10.25.
-//
+/*
 import SwiftUI
-import AppKit
 
 extension View {
     /// Позволяет получить NSWindow, в котором отображается SwiftUI View
@@ -28,3 +27,4 @@ private struct WindowAccessor: NSViewRepresentable {
     func updateNSView(_ nsView: NSView, context: Context) {}
 }
 
+*/

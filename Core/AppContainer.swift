@@ -177,9 +177,10 @@ final class AppContainer: ObservableObject {
     }
 
     
-    func makeDemoArticleView() -> DemoArticleView {
+ /*   func makeDemoArticleView() -> DemoArticleView {
         DemoArticleView(localizationManager: localizationManager)
     }
+  */
 
     // MARK: - Editor
 
@@ -188,9 +189,12 @@ final class AppContainer: ObservableObject {
         ArticleEditorViewModel(title: "", blocks: [])
     }
 
+    /*
     func makeArticleEditorView() -> ArticleEditorView {
         ArticleEditorView(viewModel: makeArticleEditorViewModel())
     }
+    
+     */
     
     func makeShareService() -> ShareServiceProtocol {
         return shareService
