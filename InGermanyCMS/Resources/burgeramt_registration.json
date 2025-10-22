@@ -1,0 +1,56 @@
+[
+  {
+    "type": "paragraph",
+    "content": "Каждый новый житель Германии сталкивается с необходимостью зарегистрироваться по месту жительства. Это делается в Bürgeramt — ведомстве, которое занимается учётом населения."
+  },
+  {
+    "type": "info",
+    "content": "Bürgeramt — это «служба для граждан». Там регистрируют место жительства, выдают справки, принимают заявления."
+  },
+  {
+    "type": "warning",
+    "content": "Без нужных документов вы рискуете получить отказ и придётся приходить снова."
+  },
+  {
+    "type": "list",
+    "items": [
+      { "text": "Паспорт (загран и/или внутренний)" },
+      { "text": "Mietvertrag (договор аренды)" },
+      { "text": "Wohnungsgeberbestätigung (подтверждение от арендодателя)" }
+    ]
+  },
+  {
+    "type": "tip",
+    "content": "Лучше записаться онлайн, чтобы не сидеть в очередях."
+  },
+  {
+    "type": "checklist",
+    "items": [
+      { "text": "Паспорт", "isDone": false },
+      { "text": "Mietvertrag", "isDone": false },
+      { "text": "Wohnungsgeberbestätigung", "isDone": false },
+      { "text": "Запись онлайн", "isDone": false }
+    ]
+  },
+  {
+    "type": "faq",
+    "question": "Можно ли прийти без записи?",
+    "answer": "В некоторых городах — да, но лучше записаться онлайн."
+  },
+  {
+    "type": "quote",
+    "content": "«Знание языка открывает двери»"
+  },
+  {
+    "type": "image",
+    "url": "https://picsum.photos/600/300",
+    "caption": "Пример изображения: здание Bürgeramt"
+  },
+  {
+    "type": "links",
+    "items": [
+      { "title": "Как снять жильё в Германии", "articleId": "article_housing" },
+      { "title": "Регистрация в Jobcenter", "articleId": "article_jobcenter" }
+    ]
+  }
+]

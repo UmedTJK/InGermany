@@ -1,0 +1,21 @@
+diff --git a/InGermany.xcodeproj/project.pbxproj b/InGermany.xcodeproj/project.pbxproj
+index e69de29..1234567 100644
+--- a/InGermany.xcodeproj/project.pbxproj
++++ b/InGermany.xcodeproj/project.pbxproj
+@@ -186,7 +186,6 @@
+ 		AD2E60F02EA1733100436C9A /* ReadingProgressHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E60ED2EA1733100436C9A /* ReadingProgressHelper.swift */; };
+ 		AD2E60F22EA1738C00436C9A /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E60F12EA1738C00436C9A /* ReadingHistoryManager.swift */; };
+ 		AD2E60F42EA173C900436C9A /* ArticleRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E60F32EA173C900436C9A /* ArticleRowViewModel.swift */; };
+-		ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
+ 		AD2E60F62EA1740800436C9A /* ArticleCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E60F52EA1740800436C9A /* ArticleCardViewModel.swift */; };
+ 
+ /* End PBXBuildFile section */
+@@ -591,7 +590,6 @@
+ 				AD2E60ED2EA1733100436C9A /* ReadingProgressHelper.swift */,
+ 				AD2E60F12EA1738C00436C9A /* ReadingHistoryManager.swift */,
+ 				AD2E60F32EA173C900436C9A /* ArticleRowViewModel.swift */,
+-				ADF3387A2E863DDE00AE4CBF /* Localizable.xcstrings */,
+ 				AD2E60F52EA1740800436C9A /* ArticleCardViewModel.swift */,
+ 				AD2E60F72EA1741B00436C9A /* ArticleRowView.swift */,
+ 				AD2E60F92EA1742F00436C9A /* ArticleCardView.swift */,
+

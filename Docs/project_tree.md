@@ -45,16 +45,42 @@
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
-│   └── Preview Content
-│       └── Preview Assets.xcassets
+│   ├── Preview Content
+│   │   └── Preview Assets.xcassets
+│   └── Views
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
 │   │   ├── xcshareddata
 │   │   └── xcuserdata
+│   ├── remove-xcstrings.patch
+│   ├── xcshareddata
+│   │   └── xcschemes
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
+├── InGermanyCMS
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   ├── AppIcon.appiconset
+│   │   └── Contents.json
+│   ├── ContentView.swift
+│   ├── InGermanyCMSApp.swift
+│   ├── Item.swift
+│   ├── Resources
+│   │   └── burgeramt_registration.json
+│   └── Views
+│       ├── ArticleComponents
+│       ├── ArticleEditorView.swift
+│       ├── ArticleLibraryView.swift
+│       ├── BlockEditor.swift
+│       ├── BlockPickerView.swift
+│       └── DemoArticleView.swift
+├── InGermanyCMSTests
+│   └── InGermanyCMSTests.swift
+├── InGermanyCMSUITests
+│   ├── InGermanyCMSUITests.swift
+│   └── InGermanyCMSUITestsLaunchTests.swift
 ├── InGermanyTests
 │   ├── Editor
 │   │   ├── ArticleEditorImportExportTests.swift
@@ -93,6 +119,15 @@
 │   ├── ReadingHistoryEntry.swift
 │   ├── ReadingSession.swift
 │   └── ReadingStats.swift
+├── Packages
+│   ├── ArticleKit
+│   │   ├── Package.swift
+│   │   ├── Sources
+│   │   └── Tests
+│   └── SharedKit
+│       ├── Package.swift
+│       ├── Sources
+│       └── Tests
 ├── Protocols
 │   ├── ArticleFormatterProtocol.swift
 │   ├── ArticlesRepositoryProtocol.swift
@@ -129,7 +164,6 @@
 │   │   ├── ru.lproj
 │   │   ├── tg-TJ.lproj
 │   │   └── uk.lproj
-│   ├── Localizable.xcstrings
 │   ├── Test_Document.pdf
 │   ├── articles
 │   ├── articles.json
@@ -144,21 +178,22 @@
 │   ├── test2.pdf
 │   └── test3.pdf
 ├── Services
-│   ├── ArticleRenderer.swift
 │   ├── AuthService.swift
 │   ├── CacheService.swift
 │   ├── DataService.swift
 │   ├── DefaultsStore.swift
 │   ├── ExportToPDF.swift
-│   ├── LocalizationManager.swift
 │   ├── NetworkService.swift
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
-├── Shared
-│   └── Editor
-│       ├── Models
-│       ├── ViewModels
-│       └── Views
+├── Sources
+│   ├── ArticleKit
+│   │   ├── ArticleKit.swift
+│   │   ├── Components
+│   │   ├── Models
+│   │   ├── Renderer
+│   │   └── ViewModels
+│   └── ViewModels
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
 │   ├── Animations.swift
@@ -168,7 +203,7 @@
 │   ├── Color+Hex.swift
 │   ├── CustomTabBarView.swift
 │   ├── Environment+ScreenSize.swift
-│   ├── LoadingView.swift
+│   ├── NSWindow+SwiftUI.swift
 │   ├── PDFThumbnailGenerator.swift
 │   ├── ProgressBar.swift
 │   ├── ReadingProgressHelper.swift
@@ -212,7 +247,6 @@
 │   │   ├── TagFilterView.swift
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
-│   ├── DemoArticleView.swift
 │   ├── FavoritesView.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
@@ -244,4 +278,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-60 directories, 185 files
+81 directories, 198 files

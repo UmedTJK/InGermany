@@ -1414,3 +1414,9 @@
 - `Views/Editor/BlockPickerView.swift`  
 - `Services/ArticleRenderer.swift`  
 
+### Milestone v1.16.0 (2025-10-22)
+- ✅ macOS build (`InGermanyCMS`) fully working
+- ✅ JSON export implemented and tested
+- 🛠 Cleaned up Xcode project (removed duplicate resources, Package.swift conflicts)
+- 🔄 Unified block system with `BlockType`
+- 📦 Next step: import workflow polish, unit tests for `ArticleEditorViewModel`
