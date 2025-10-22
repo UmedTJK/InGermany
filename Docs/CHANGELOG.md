@@ -1,6 +1,20 @@
 # 📖 CHANGELOG
 
 
+## [1.16.0] - 2025-10-22
+### Added
+- macOS target (InGermanyCMS) now successfully builds and runs
+- JSON export functionality with `NSSavePanel` and alerts
+
+### Fixed
+- Removed duplicate `Localizable.xcstrings` and `Package.swift` references causing build conflicts
+- Replaced missing `ArticleBlockType` with unified `BlockType`
+- Corrected conditional imports for AppKit / Combine (macOS-only)
+
+### Notes
+🎉 First successful macOS build milestone. JSON articles can now be exported directly from the CMS.
+
+
 ## [v1.16.1-20251015] – 2025-10-15
 ### Added
 - PDF Library UI улучшен:
