@@ -9,6 +9,8 @@ struct ArticleEditorView: View {
     @State private var isEditingTitle = false
     @State private var editedTitle: String = ""
     @State private var hostingWindow: NSWindow?
+    @State private var previewScale: CGFloat = 0.6
+    @State private var fitMode: Bool = false
     
     init(document: ArticleDocument) {
         _viewModel = StateObject(wrappedValue: ArticleEditorViewModel(document: document))
@@ -197,11 +199,42 @@ struct ArticleEditorView: View {
     }
     
     private var previewHeader: some View {
-        HStack {
+        HStack(spacing: 12) {
             Text("Предпросмотр")
                 .font(.headline)
                 .foregroundColor(.secondary)
+            
+            // 👇 Кнопки масштаба
+            HStack(spacing: 4) {
+                ForEach([0.5, 0.6, 0.75, 1.0], id: \.self) { value in
+                    Button("\(Int(value * 100))%") {
+                        fitMode = false
+                        previewScale = value
+                    }
+                    .buttonStyle(.borderless)
+                    .font(.caption)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(!fitMode && previewScale == value ? Color.accentColor.opacity(0.2) : Color.clear)
+                    .cornerRadius(4)
+                }
+                
+                Button(action: {
+                    fitMode = true
+                }) {
+                    Image(systemName: "arrow.up.left.and.down.right.magnifyingglass")
+                }
+                .buttonStyle(.borderless)
+                .font(.caption)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(fitMode ? Color.accentColor.opacity(0.2) : Color.clear)
+                .cornerRadius(4)
+                .help("Подогнать под окно")
+            }
+            
             Spacer()
+            
             Button(action: { viewModel.objectWillChange.send() }) {
                 Image(systemName: "arrow.clockwise")
                     .foregroundColor(.secondary)
@@ -210,12 +243,12 @@ struct ArticleEditorView: View {
             .help("Обновить предпросмотр")
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
         .background(Color(NSColor.windowBackgroundColor))
     }
     
     private var previewContent: some View {
-        DeviceFrameView {
+        DeviceFrameView(scale: $previewScale, fitMode: fitMode) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(viewModel.document.title)
@@ -230,7 +263,6 @@ struct ArticleEditorView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
     
     // MARK: - Toolbar
     private var editorToolbar: some View {
