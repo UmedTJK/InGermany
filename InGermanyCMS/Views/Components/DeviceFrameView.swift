@@ -1,56 +1,80 @@
 import SwiftUI
 
-/// Обертка для показа контента в рамке iPhone.
-/// Поддерживает масштабирование (scale) и режим Fit-to-Window.
 struct DeviceFrameView<Content: View>: View {
     private let content: Content
-    private let deviceSize = CGSize(width: 430, height: 932) // базовый iPhone
+    let device: PreviewDevice
     @Binding var scale: CGFloat
     let fitMode: Bool
+    let isLandscape: Bool
+    let backgroundStyle: PreviewBackgroundStyle
     
-    init(scale: Binding<CGFloat>, fitMode: Bool = false, @ViewBuilder content: () -> Content) {
+    init(
+        device: PreviewDevice,
+        scale: Binding<CGFloat>,
+        fitMode: Bool = false,
+        isLandscape: Bool = false,
+        backgroundStyle: PreviewBackgroundStyle = .auto,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.device = device
         self._scale = scale
         self.fitMode = fitMode
+        self.isLandscape = isLandscape
+        self.backgroundStyle = backgroundStyle
         self.content = content()
     }
     
     var body: some View {
         GeometryReader { geo in
-            // вычисления лучше оформить в переменные
-            let availableHeight = geo.size.height
-            let availableWidth = geo.size.width
+            let s = device.size
+            let baseSize = isLandscape ? CGSize(width: s.height, height: s.width) : s
             
             let effectiveScale: CGFloat = {
                 if fitMode {
-                    let scaleH = availableHeight / deviceSize.height
-                    let scaleW = availableWidth / deviceSize.width
+                    let scaleH = geo.size.height / baseSize.height
+                    let scaleW = geo.size.width / baseSize.width
                     return min(scaleH, scaleW) * 0.9
                 } else {
                     return scale
                 }
             }()
             
-            let targetHeight = deviceSize.height * effectiveScale
-            let targetWidth = deviceSize.width * effectiveScale
+            let targetHeight = baseSize.height * effectiveScale
+            let targetWidth  = baseSize.width  * effectiveScale
             
             ZStack {
-                Color(NSColor.windowBackgroundColor)
+                // внешний фон редактора (НЕ зависит от темы предпросмотра)
+                Color(NSColor.controlBackgroundColor)
                     .edgesIgnoringSafeArea(.all)
                 
+                // рамка iPhone
                 RoundedRectangle(cornerRadius: 50 * effectiveScale, style: .continuous)
                     .fill(Color.black)
                     .frame(width: targetWidth + 40 * effectiveScale,
                            height: targetHeight + 80 * effectiveScale)
                     .shadow(radius: 8 * effectiveScale)
                 
+                // экран iPhone
                 RoundedRectangle(cornerRadius: 38 * effectiveScale, style: .continuous)
-                    .fill(Color.white)
+                    .fill(backgroundStyle == .dark ? .black : .white)
                     .frame(width: targetWidth, height: targetHeight)
-                    .overlay(
-                        content
+                    .overlay {
+                        let screen = content
                             .frame(width: targetWidth, height: targetHeight)
                             .clipped()
-                    )
+                        
+                        // применяем тему ТОЛЬКО к экрану
+                        Group {
+                            switch backgroundStyle {
+                            case .light:
+                                screen.environment(\.colorScheme, .light)
+                            case .dark:
+                                screen.environment(\.colorScheme, .dark)
+                            case .auto:
+                                screen
+                            }
+                        }
+                    }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
