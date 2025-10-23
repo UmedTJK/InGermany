@@ -3,8 +3,11 @@
 //  InGermany
 //
 //  Created by SUM TJK on 20.10.25.
-/*
+//
+
+#if os(macOS)
 import SwiftUI
+import AppKit   // доступен только на macOS
 
 extension View {
     /// Позволяет получить NSWindow, в котором отображается SwiftUI View
@@ -26,5 +29,4 @@ private struct WindowAccessor: NSViewRepresentable {
 
     func updateNSView(_ nsView: NSView, context: Context) {}
 }
-
-*/
+#endif

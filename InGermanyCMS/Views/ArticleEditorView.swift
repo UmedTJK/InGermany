@@ -215,19 +215,22 @@ struct ArticleEditorView: View {
     }
     
     private var previewContent: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                Text(viewModel.document.title)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                ArticleRenderer(sections: viewModel.blocks.map { $0.toSectionDTO() })
+        DeviceFrameView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(viewModel.document.title)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    ArticleRenderer(sections: viewModel.blocks.map { $0.toSectionDTO() })
+                }
+                .padding()
             }
-            .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+
     
     // MARK: - Toolbar
     private var editorToolbar: some View {
