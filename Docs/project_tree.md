@@ -39,60 +39,36 @@
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
-│   │   │   └── Contents.json
 │   │   ├── AppIcon.appiconset
-│   │   │   ├── Contents.json
-│   │   │   ├── Logo 1.png
-│   │   │   └── Logo.png
 │   │   ├── Contents.json
 │   │   └── Logo.imageset
-│   │       ├── Contents.json
-│   │       └── Logo.png
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
 │   ├── Preview Content
 │   │   └── Preview Assets.xcassets
-│   │       ├── Contents.json
-│   │       ├── LogoDark.imageset
-│   │       │   ├── Contents.json
-│   │       │   └── LogoDark.png
-│   │       └── LogoLight.imageset
-│   │           ├── Contents.json
-│   │           └── LogoLight.png
 │   └── Views
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
 │   │   ├── xcshareddata
-│   │   │   ├── WorkspaceSettings.xcsettings
-│   │   │   └── swiftpm
-│   │   │       └── configuration
 │   │   └── xcuserdata
-│   │       └── sumtjk.xcuserdatad
-│   │           ├── UserInterfaceState.xcuserstate
-│   │           └── WorkspaceSettings.xcsettings
 │   ├── remove-xcstrings.patch
 │   ├── xcshareddata
 │   │   └── xcschemes
-│   │       └── InGermany.xcscheme
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
-│           ├── xcdebugger
-│           │   └── Breakpoints_v2.xcbkptlist
-│           └── xcschemes
-│               └── xcschememanagement.plist
 ├── InGermanyCMS
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
-│   │   │   └── Contents.json
 │   │   ├── AppIcon.appiconset
-│   │   │   └── Contents.json
 │   │   └── Contents.json
 │   ├── ContentView.swift
 │   ├── InGermanyCMSApp.swift
 │   ├── Item.swift
+│   ├── Model
+│   │   └── PreviewDevice.swift
 │   ├── Resources
 │   │   └── burgeramt_registration.json
 │   └── Views
@@ -101,7 +77,9 @@
 │       ├── ArticleLibraryView.swift
 │       ├── BlockEditor.swift
 │       ├── BlockPickerView.swift
-│       └── DemoArticleView.swift
+│       ├── Components
+│       ├── DemoArticleView.swift
+│       └── PreviewBackgroundStyle.swift
 ├── InGermanyCMSTests
 │   └── InGermanyCMSTests.swift
 ├── InGermanyCMSUITests
@@ -127,27 +105,10 @@
 │   │   └── AppUITests.swift
 │   └── Unit
 │       ├── Helpers
-│       │   └── ReadingTimeCalculatorTests.swift
 │       ├── Managers
-│       │   ├── FavoritesManagerTests.swift
-│       │   ├── RatingManagerTests.swift
-│       │   └── ReadingHistoryManagerTests.swift
 │       ├── Models
-│       │   └── ArticlesCategoriesConsistencyTests.swift
 │       ├── Services
-│       │   ├── ArticlesRepositoryImplTests.swift
-│       │   ├── DataServiceTests.swift
-│       │   ├── LocalizationKeysTests.swift
-│       │   └── NetworkServiceTests.swift
 │       └── ViewModels
-│           ├── AboutViewModelTests.swift
-│           ├── ArticleDetailViewModelTests.swift
-│           ├── ArticleRowViewModelTests.swift
-│           ├── CategoriesViewModelTests.swift
-│           ├── FavoritesViewModelTests.swift
-│           ├── HomeViewModelTests.swift
-│           ├── SearchViewModelTests.swift
-│           └── SettingsViewModelTests.swift
 ├── Managers
 │   ├── FavoritesManager.swift
 │   ├── RatingManager.swift
@@ -166,25 +127,11 @@
 │   ├── ArticleKit
 │   │   ├── Package.swift
 │   │   ├── Sources
-│   │   │   └── ArticleKit
-│   │   │       ├── ArticleKit.swift
-│   │   │       ├── Components
-│   │   │       ├── Models
-│   │   │       ├── Renderer
-│   │   │       └── ViewModels
 │   │   └── Tests
-│   │       └── ArticleKitTests
-│   │           └── ArticleKitTests.swift
 │   └── SharedKit
 │       ├── Package.swift
 │       ├── Sources
-│       │   └── SharedKit
-│       │       ├── Services
-│       │       ├── SharedKit.swift
-│       │       └── UI
 │       └── Tests
-│           └── SharedKitTests
-│               └── SharedKitTests.swift
 ├── Protocols
 │   ├── ArticleFormatterProtocol.swift
 │   ├── ArticlesRepositoryProtocol.swift
@@ -203,22 +150,10 @@
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── ar.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── de.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── en.lproj
-│   │   │   ├── bank_account.jpg
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── fa.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── germany10.jpg
 │   │   ├── germany11.jpg
 │   │   ├── germany12.jpg
@@ -231,14 +166,8 @@
 │   │   ├── germany8.jpg
 │   │   ├── germany9.jpg
 │   │   ├── ru.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   ├── tg-TJ.lproj
-│   │   │   ├── germany1.jpg
-│   │   │   └── germany3.jpg
 │   │   └── uk.lproj
-│   │       ├── germany1.jpg
-│   │       └── germany3.jpg
 │   ├── Test_Document.pdf
 │   ├── articles
 │   ├── articles.json
@@ -266,8 +195,6 @@
 │   │   ├── ArticleKit.swift
 │   │   ├── Components
 │   │   ├── Models
-│   │   │   ├── ArticleBlock.swift
-│   │   │   └── ArticleSectionDTO.swift
 │   │   ├── Renderer
 │   │   └── ViewModels
 │   └── ViewModels
@@ -355,4 +282,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-98 directories, 258 files
+83 directories, 200 files
