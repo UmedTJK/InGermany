@@ -1,11 +1,13 @@
 {
   "images" : [
     {
+      "filename" : "InGermanyCMS (16-16).png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
+      "filename" : "InGermanyCMS (32).png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
@@ -46,6 +48,7 @@
       "size" : "512x512"
     },
     {
+      "filename" : "InGermanyCMS.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
