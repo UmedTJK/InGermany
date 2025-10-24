@@ -8,9 +8,72 @@ import AppKit
 import UniformTypeIdentifiers
 #endif
 
+// MARK: - UndoRedo Service
 @MainActor
-final class ArticleEditorViewModel: ObservableObject, Identifiable {
-    nonisolated let id = UUID()
+public class UndoRedoService<T: Equatable>: ObservableObject {
+    @Published public private(set) var canUndo: Bool = false
+    @Published public private(set) var canRedo: Bool = false
+    
+    private var undoStack: [T] = []
+    private var redoStack: [T] = []
+    private var currentState: T
+    private let maxHistorySize: Int
+    
+    public init(initialState: T, maxHistorySize: Int = 50) {
+        self.currentState = initialState
+        self.maxHistorySize = maxHistorySize
+        self.undoStack.reserveCapacity(maxHistorySize)
+    }
+    
+    public func registerChange(_ newState: T) {
+        guard newState != currentState else { return }
+        undoStack.append(currentState)
+        
+        if undoStack.count > maxHistorySize {
+            undoStack.removeFirst()
+        }
+        
+        redoStack.removeAll()
+        currentState = newState
+        updateButtonStates()
+    }
+    
+    public func undo() -> T? {
+        guard !undoStack.isEmpty else { return nil }
+        redoStack.append(currentState)
+        currentState = undoStack.removeLast()
+        updateButtonStates()
+        return currentState
+    }
+    
+    public func redo() -> T? {
+        guard !redoStack.isEmpty else { return nil }
+        undoStack.append(currentState)
+        currentState = redoStack.removeLast()
+        updateButtonStates()
+        return currentState
+    }
+    
+    public func clearHistory() {
+        undoStack.removeAll()
+        redoStack.removeAll()
+        updateButtonStates()
+    }
+    
+    private func updateButtonStates() {
+        canUndo = !undoStack.isEmpty
+        canRedo = !redoStack.isEmpty
+    }
+    
+    public func getCurrentState() -> T {
+        return currentState
+    }
+}
+
+// MARK: - ArticleEditorViewModel
+@MainActor
+public final class ArticleEditorViewModel: ObservableObject, Identifiable {
+    public nonisolated let id = UUID()
     
     @Published public var document: ArticleDocument
     @Published public var blocks: [ArticleBlock]
@@ -20,22 +83,84 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
     @Published public var hasUnsavedChanges = false
     @Published public var lastError: String? = nil
     
+    // Undo/Redo система
+    @Published public private(set) var canUndo: Bool = false
+    @Published public private(set) var canRedo: Bool = false
+    
+    private var undoRedoService: UndoRedoService<[ArticleBlock]>
+    private var cancellables: Set<AnyCancellable>
+    
     // MARK: - Initialization
     public init(document: ArticleDocument) {
+        // создаем initialBlocks локально
+        let initialBlocks = document.sections.map { ArticleBlock.fromSection($0) }
+        
         self.document = document
-        self.blocks = document.sections.map { ArticleBlock.fromSection($0) }
+        self.blocks = initialBlocks
+        self.undoRedoService = UndoRedoService(initialState: initialBlocks)
+        self.cancellables = []
+        
+        self.setupUndoRedoBindings()
     }
     
     public init(title: String = "", blocks: [ArticleBlock] = []) {
-        self.document = ArticleDocument(title: title, sections: [])
+        let initialDocument = ArticleDocument(title: title, sections: [])
+        
+        self.document = initialDocument
         self.blocks = blocks
+        self.undoRedoService = UndoRedoService(initialState: blocks)
+        self.cancellables = []
+        
+        self.setupUndoRedoBindings()
+    }
+    
+    private func setupUndoRedoBindings() {
+        undoRedoService.$canUndo
+            .assign(to: \.canUndo, on: self)
+            .store(in: &cancellables)
+        
+        undoRedoService.$canRedo
+            .assign(to: \.canRedo, on: self)
+            .store(in: &cancellables)
+        
+        $blocks
+            .dropFirst()
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .sink { [weak self] newBlocks in
+                self?.undoRedoService.registerChange(newBlocks)
+            }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - Undo/Redo Methods
+    public func undo() {
+        if let previousState = undoRedoService.undo() {
+            self.blocks = previousState
+            self.hasUnsavedChanges = true
+            print("↩️ Undo выполнен, блоков: \(blocks.count)")
+        }
+    }
+    
+    public func redo() {
+        if let nextState = undoRedoService.redo() {
+            self.blocks = nextState
+            self.hasUnsavedChanges = true
+            print("↪️ Redo выполнен, блоков: \(blocks.count)")
+        }
+    }
+    
+    public func clearHistory() {
+        undoRedoService.clearHistory()
+        print("🧹 История Undo/Redo очищена")
     }
     
     // MARK: - Document Management
     public func updateDocument(_ newDocument: ArticleDocument) {
+        let newBlocks = newDocument.sections.map { ArticleBlock.fromSection($0) }
         self.document = newDocument
-        self.blocks = newDocument.sections.map { ArticleBlock.fromSection($0) }
+        self.blocks = newBlocks
         self.hasUnsavedChanges = true
+        undoRedoService.registerChange(newBlocks)
     }
     
     public func saveDocument() {
@@ -68,28 +193,32 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
         let newBlock = ArticleBlock(type: type)
         blocks.append(newBlock)
         hasUnsavedChanges = true
+        print("➕ Добавлен блок типа: \(type.rawValue)")
     }
-
     
     public func duplicateBlock(_ block: ArticleBlock) {
         let newBlock = ArticleBlock(type: block.type, content: block.content)
         blocks.append(newBlock)
         markAsModified()
+        print("📋 Дублирован блок типа: \(block.type.rawValue)")
     }
     
     public func removeBlock(_ block: ArticleBlock) {
         blocks.removeAll { $0.id == block.id }
         markAsModified()
+        print("🗑️ Удален блок типа: \(block.type.rawValue)")
     }
     
     public func moveBlocks(from source: IndexSet, to destination: Int) {
         blocks.move(fromOffsets: source, toOffset: destination)
         markAsModified()
+        print("↕️ Перемещены блоки: \(source.count) → позиция \(destination)")
     }
     
     public func deleteBlocks(at offsets: IndexSet) {
         blocks.remove(atOffsets: offsets)
         markAsModified()
+        print("🗑️ Удалены блоки по индексам: \(offsets)")
     }
     
     public func markAsModified() {
@@ -99,25 +228,8 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
     // MARK: - Export/Import (macOS only)
     #if os(macOS)
     public func exportDocument(using window: NSWindow?) {
-        print("=== 🔵 [EXPORT DIAGNOSTICS] ===")
-        print("🔵 [1/6] Function started")
-        print("🔵 [2/6] Thread: \(Thread.current)")
-        print("🔵 [3/6] Main thread: \(Thread.isMainThread)")
-        print("🔵 [4/6] Window: \(window != nil ? "PRESENT" : "NIL")")
-        print("🔵 [5/6] Document: '\(document.title)'")
-        print("🔵 [6/6] Blocks: \(blocks.count)")
-        
         guard let window = window else {
-            print("🔴 [ERROR] No window available")
             self.lastError = "No active window for export"
-            return
-        }
-        
-        guard Thread.isMainThread else {
-            print("🔴 [ERROR] Not on main thread")
-            DispatchQueue.main.async { [weak self] in
-                self?.exportDocument(using: window)
-            }
             return
         }
         
@@ -131,7 +243,6 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
             let testData = try encoder.encode(testDocument)
-            print("✅ Serialization successful: \(testData.count) bytes")
             
             let savePanel = NSSavePanel()
             savePanel.allowedContentTypes = [.json]
@@ -142,18 +253,12 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
             let response = savePanel.runModal()
             if response == .OK, let url = savePanel.url {
                 try testData.write(to: url, options: .atomic)
-                print("✅ File saved successfully!")
                 showExportSuccessAlert(window: window)
-            } else {
-                print("🔵 Export cancelled")
             }
             
         } catch {
-            print("🔴 Export error: \(error)")
             showExportErrorAlert(error, window: window)
         }
-        
-        print("=== 🟢 [EXPORT COMPLETE] ===")
     }
     
     public func importDocument(using window: NSWindow?) {
@@ -170,9 +275,8 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
                 self.document = imported
                 self.blocks = imported.sections.map { ArticleBlock.fromSection($0) }
                 self.hasUnsavedChanges = true
-                print("✅ Документ импортирован: \(imported.title)")
+                undoRedoService.registerChange(blocks)
             } catch {
-                print("❌ Ошибка импорта: \(error)")
                 self.lastError = error.localizedDescription
             }
         }
@@ -206,11 +310,11 @@ final class ArticleEditorViewModel: ObservableObject, Identifiable {
 }
 
 extension ArticleEditorViewModel: Hashable {
-    nonisolated static func == (lhs: ArticleEditorViewModel, rhs: ArticleEditorViewModel) -> Bool {
+    nonisolated public static func == (lhs: ArticleEditorViewModel, rhs: ArticleEditorViewModel) -> Bool {
         lhs.id == rhs.id
     }
     
-    nonisolated func hash(into hasher: inout Hasher) {
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }

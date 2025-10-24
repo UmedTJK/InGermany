@@ -45,6 +45,7 @@
 		AD2E74952EA3BD4200436C9A /* ArticleModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E74942EA3BD4100436C9A /* ArticleModels.swift */; };
 		AD2E74982EA3BE4100436C9A /* ArticleBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E74962EA3BE4100436C9A /* ArticleBlock.swift */; };
 		AD2E749A2EA3C20100436C9A /* ArticleEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2E6CD82EA2C5C400436C9A /* ArticleEditorViewModel.swift */; };
+		AD3FE8A02EABA400001777D1 /* ArticleTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FE89F2EABA3FF001777D1 /* ArticleTemplates.swift */; };
 		AD40EEF02E75C3DC00866648 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C82E75B4C4003D3826 /* categories.json */; };
 		AD40EEF12E75C3DC00866648 /* articles.json in Resources */ = {isa = PBXBuildFile; fileRef = AD8552C72E75B4AF003D3826 /* articles.json */; };
 		AD459A5C2E97925900F540F3 /* ReadingStatsManagingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */; };
@@ -153,6 +154,7 @@
 		AD2E74962EA3BE4100436C9A /* ArticleBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBlock.swift; sourceTree = "<group>"; };
 		AD38F5842E76890C00E36EA4 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		AD38F5862E76899600E36EA4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		AD3FE89F2EABA3FF001777D1 /* ArticleTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTemplates.swift; sourceTree = "<group>"; };
 		AD459A5B2E97925700F540F3 /* ReadingStatsManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManagingProtocol.swift; sourceTree = "<group>"; };
 		AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingStatsManager.swift; sourceTree = "<group>"; };
 		AD459C1A2E98B7E700F540F3 /* FontProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontProviding.swift; sourceTree = "<group>"; };
@@ -251,6 +253,11 @@
 		AD2E64002EA2223900436C9A /* InGermanyCMSUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = InGermanyCMSUITests;
+			sourceTree = "<group>";
+		};
+		AD3FE8A12EABA465001777D1 /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
 			sourceTree = "<group>";
 		};
 		AD52FCF22E84765A00CC9F61 /* Images */ = {
@@ -411,6 +418,7 @@
 		AD2E6CD52EA2C5C400436C9A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AD3FE89F2EABA3FF001777D1 /* ArticleTemplates.swift */,
 				AD2E74962EA3BE4100436C9A /* ArticleBlock.swift */,
 				AD2E74942EA3BD4100436C9A /* ArticleModels.swift */,
 			);
@@ -437,6 +445,7 @@
 		AD2E6CDC2EA2C5C400436C9A /* ArticleKit */ = {
 			isa = PBXGroup;
 			children = (
+				AD3FE8A12EABA465001777D1 /* Services */,
 				AD2E6CD12EA2C5C400436C9A /* Components */,
 				AD2E6CD52EA2C5C400436C9A /* Models */,
 				AD2E6CD72EA2C5C400436C9A /* Renderer */,
@@ -808,6 +817,7 @@
 				AD1626022E9ADDD900E6E14B /* screenshots */,
 				AD2A63B12E8C1AE4006A94DD /* ViewModels */,
 				AD2E60DE2EA1703100436C9A /* Repositories */,
+				AD3FE8A12EABA465001777D1 /* Services */,
 				AD52FCF22E84765A00CC9F61 /* Images */,
 				AD8552942E75ABEC003D3826 /* InGermany */,
 				AD8552A72E75AEBF003D3826 /* Core */,
@@ -1015,6 +1025,7 @@
 				AD2E60EB2EA172C900436C9A /* DateFormattingService.swift in Sources */,
 				AD2E60EC2EA172C900436C9A /* ArticleFormatter.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
+				AD3FE8A02EABA400001777D1 /* ArticleTemplates.swift in Sources */,
 				AD1624432E9ADA9900E6E14B /* Accessibility+Extensions.swift in Sources */,
 				AD459D022E99692C00F540F3 /* CardStyle.swift in Sources */,
 				AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */,
