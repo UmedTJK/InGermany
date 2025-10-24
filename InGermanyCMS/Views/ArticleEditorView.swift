@@ -9,6 +9,15 @@ struct ArticleEditorView: View {
     @State private var isEditingTitle = false
     @State private var editedTitle: String = ""
     @State private var hostingWindow: NSWindow?
+    @State private var previewScale: CGFloat = 0.6
+    @State private var fitMode: Bool = false
+    @State private var previewWidth: CGFloat? = 300
+    @State private var selectedDevice: PreviewDevice = .iPhone17ProMax   // ✅ только один девайс
+    @State private var isLandscape: Bool = false
+    @State private var backgroundStyle: PreviewBackgroundStyle = .auto
+    @State private var showMultiPreview = false
+
+
     
     init(document: ArticleDocument) {
         _viewModel = StateObject(wrappedValue: ArticleEditorViewModel(document: document))
@@ -168,7 +177,7 @@ struct ArticleEditorView: View {
         Group {
             if showPreview {
                 HSplitView {
-                    editorPanel.frame(minWidth: 300, maxWidth: .infinity)
+                    editorPanel.frame(minWidth: 500, maxWidth: .infinity)
                     previewPanel.frame(minWidth: 300, maxWidth: .infinity)
                 }
             } else {
@@ -191,30 +200,62 @@ struct ArticleEditorView: View {
     private var previewPanel: some View {
         VStack(spacing: 0) {
             previewHeader
-            previewContent
+
+            if showMultiPreview {
+                // --- MULTI PREVIEW: сетка устройств ---
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 32) {
+                        ForEach([PreviewDevice.iPhoneSE,
+                                 PreviewDevice.iPhone14,
+                                 PreviewDevice.iPhone15,
+                                 PreviewDevice.iPhone16,
+                                 PreviewDevice.iPhone17ProMax,
+                                 PreviewDevice.iPadMini], id: \.self) { device in
+                            DeviceFrameView(device: device,
+                                            scale: $previewScale,
+                                            fitMode: fitMode,
+                                            isLandscape: isLandscape,
+                                            backgroundStyle: backgroundStyle) {
+                                previewBody
+                            }
+                            .frame(
+                                idealWidth: device.size.width * previewScale + 80,
+                                maxWidth: device.size.width * previewScale + 120
+                            )
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 16)
+                }
+            } else {
+                // --- SINGLE PREVIEW ---
+                HStack {
+                    Spacer(minLength: 40)
+
+                    DeviceFrameView(device: selectedDevice,
+                                    scale: $previewScale,
+                                    fitMode: fitMode,
+                                    isLandscape: isLandscape,
+                                    backgroundStyle: backgroundStyle) {
+                        previewBody
+                    }
+                    .frame(
+                        idealWidth: selectedDevice.size.width * previewScale + 80,
+                        maxWidth: selectedDevice.size.width * previewScale + 120
+                    )
+
+                    Spacer(minLength: 40)
+                }
+                .padding(.vertical, 16)
+            }
         }
         .background(Color(NSColor.controlBackgroundColor))
     }
-    
-    private var previewHeader: some View {
-        HStack {
-            Text("Предпросмотр")
-                .font(.headline)
-                .foregroundColor(.secondary)
-            Spacer()
-            Button(action: { viewModel.objectWillChange.send() }) {
-                Image(systemName: "arrow.clockwise")
-                    .foregroundColor(.secondary)
-            }
-            .buttonStyle(.plain)
-            .help("Обновить предпросмотр")
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(Color(NSColor.windowBackgroundColor))
-    }
-    
-    private var previewContent: some View {
+
+
+
+
+    private var previewBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 Text(viewModel.document.title)
@@ -226,8 +267,99 @@ struct ArticleEditorView: View {
             }
             .padding()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+
+
+
+
+    
+    // MARK: - Preview Header
+    // MARK: - Preview Header
+    private var previewHeader: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Предпросмотр")
+                .font(.headline)
+                .foregroundColor(.secondary)
+            
+            // --- Устройство + Масштаб ---
+            HStack(spacing: 8) {
+                // --- Устройство (с иконками)
+                Picker("Device", selection: $selectedDevice) {
+                    ForEach(PreviewDevice.allCases) { device in
+                        Label(device.rawValue, systemImage: device.icon)
+                            .tag(device)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .frame(width: 220)
+                
+                // --- Масштаб ---
+                HStack(spacing: 4) {
+                    ForEach([0.5, 0.6, 0.75, 1.0], id: \.self) { value in
+                        Button("\(Int(value * 100))%") {
+                            fitMode = false
+                            previewScale = value
+                        }
+                        .buttonStyle(.borderless)
+                        .font(.caption)
+                        .padding(4)
+                        .background(!fitMode && previewScale == value ? Color.accentColor.opacity(0.2) : Color.clear)
+                        .cornerRadius(4)
+                    }
+                    
+                    Button(action: { fitMode = true }) {
+                        Image(systemName: "arrow.up.left.and.down.right.magnifyingglass")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Fit to Window")
+                }
+            }
+            
+            // --- Тема + Доп. кнопки ---
+            HStack(spacing: 8) {
+                Text("Theme")
+                Button("Light") { backgroundStyle = .light }
+                    .buttonStyle(.bordered)
+                    .tint(backgroundStyle == .light ? .accentColor : .gray.opacity(0.2))
+                Button("Dark") { backgroundStyle = .dark }
+                    .buttonStyle(.bordered)
+                    .tint(backgroundStyle == .dark ? .accentColor : .gray.opacity(0.2))
+                Button("Auto") { backgroundStyle = .auto }
+                    .buttonStyle(.bordered)
+                    .tint(backgroundStyle == .auto ? .accentColor : .gray.opacity(0.2))
+                
+                Spacer()
+                
+                // --- Доп. кнопки ---
+                HStack(spacing: 12) {
+                    Toggle(isOn: $showMultiPreview) {
+                        Image(systemName: "square.split.2x1")
+                    }
+                    .toggleStyle(.button)
+                    .help("Показать несколько устройств")
+                    
+                    Button {
+                        // TODO: сделать скриншот
+                    } label: {
+                        Image(systemName: "camera")
+                    }
+                    .buttonStyle(.plain)
+                    .help("Сохранить скриншот")
+                    
+                    Button(action: { viewModel.objectWillChange.send() }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .buttonStyle(.plain)
+                    .help("Обновить")
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(Color(NSColor.windowBackgroundColor))
+        .cornerRadius(8)
+    }
+
     
     // MARK: - Toolbar
     private var editorToolbar: some View {

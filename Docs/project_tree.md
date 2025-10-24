@@ -67,6 +67,8 @@
 │   ├── ContentView.swift
 │   ├── InGermanyCMSApp.swift
 │   ├── Item.swift
+│   ├── Model
+│   │   └── PreviewDevice.swift
 │   ├── Resources
 │   │   └── burgeramt_registration.json
 │   └── Views
@@ -75,7 +77,9 @@
 │       ├── ArticleLibraryView.swift
 │       ├── BlockEditor.swift
 │       ├── BlockPickerView.swift
-│       └── DemoArticleView.swift
+│       ├── Components
+│       ├── DemoArticleView.swift
+│       └── PreviewBackgroundStyle.swift
 ├── InGermanyCMSTests
 │   └── InGermanyCMSTests.swift
 ├── InGermanyCMSUITests
@@ -278,4 +282,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-81 directories, 198 files
+83 directories, 200 files
