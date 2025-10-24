@@ -284,12 +284,45 @@ struct ArticleEditorView: View {
             HStack(spacing: 8) {
                 // --- Устройство
                 Picker("Device", selection: $selectedDevice) {
-                    ForEach(PreviewDevice.allCases) { device in
-                        Text(device.rawValue).tag(device)
+                    // --- iPhone SE
+                    Group {
+                        Text("iPhone SE (2/3 gen)").tag(PreviewDevice.iPhoneSE)
+                    }
+                    
+                    // --- iPhone 14 Series
+                    Group {
+                        Text("iPhone 14").tag(PreviewDevice.iPhone14)
+                        Text("iPhone 14 Pro Max").tag(PreviewDevice.iPhone14ProMax)
+                    }
+                    
+                    // --- iPhone 15 Series
+                    Group {
+                        Text("iPhone 15").tag(PreviewDevice.iPhone15)
+                        Text("iPhone 15 Pro").tag(PreviewDevice.iPhone15Pro)
+                    }
+                    
+                    // --- iPhone 16 Series
+                    Group {
+                        Text("iPhone 16").tag(PreviewDevice.iPhone16)
+                        Text("iPhone 16 Pro").tag(PreviewDevice.iPhone16Pro)
+                        Text("iPhone 16 Pro Max").tag(PreviewDevice.iPhone16ProMax)
+                    }
+                    
+                    // --- iPhone 17 Series
+                    Group {
+                        Text("iPhone 17").tag(PreviewDevice.iPhone17)
+                        Text("iPhone 17 Pro").tag(PreviewDevice.iPhone17Pro)
+                        Text("iPhone 17 Pro Max").tag(PreviewDevice.iPhone17ProMax)
+                    }
+                    
+                    // --- iPad
+                    Group {
+                        Text("iPad Mini (6 gen)").tag(PreviewDevice.iPadMini)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
-                .frame(width: 150)
+                .frame(width: 200)
+
                 
                 // --- Масштаб ---
                 HStack(spacing: 4) {
