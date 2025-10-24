@@ -12,10 +12,11 @@ struct ArticleEditorView: View {
     @State private var previewScale: CGFloat = 0.6
     @State private var fitMode: Bool = false
     @State private var previewWidth: CGFloat? = 300
-    @State private var selectedDevice: PreviewDevice = .iPhone14ProMax
+    @State private var selectedDevice: PreviewDevice = .iPhone17ProMax   // ✅ только один девайс
     @State private var isLandscape: Bool = false
     @State private var backgroundStyle: PreviewBackgroundStyle = .auto
     @State private var showMultiPreview = false
+
 
     
     init(document: ArticleDocument) {
@@ -176,7 +177,7 @@ struct ArticleEditorView: View {
         Group {
             if showPreview {
                 HSplitView {
-                    editorPanel.frame(minWidth: 300, maxWidth: .infinity)
+                    editorPanel.frame(minWidth: 500, maxWidth: .infinity)
                     previewPanel.frame(minWidth: 300, maxWidth: .infinity)
                 }
             } else {
@@ -199,45 +200,60 @@ struct ArticleEditorView: View {
     private var previewPanel: some View {
         VStack(spacing: 0) {
             previewHeader
+
             if showMultiPreview {
-                HStack {
-                    DeviceFrameView(device: .iPhoneSE,
-                                    scale: $previewScale,
-                                    fitMode: fitMode,
-                                    isLandscape: isLandscape,
-                                    backgroundStyle: backgroundStyle) {
-                        previewBody
+                // --- MULTI PREVIEW: сетка устройств ---
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 32) {
+                        ForEach([PreviewDevice.iPhoneSE,
+                                 PreviewDevice.iPhone14,
+                                 PreviewDevice.iPhone15,
+                                 PreviewDevice.iPhone16,
+                                 PreviewDevice.iPhone17ProMax,
+                                 PreviewDevice.iPadMini], id: \.self) { device in
+                            DeviceFrameView(device: device,
+                                            scale: $previewScale,
+                                            fitMode: fitMode,
+                                            isLandscape: isLandscape,
+                                            backgroundStyle: backgroundStyle) {
+                                previewBody
+                            }
+                            .frame(
+                                idealWidth: device.size.width * previewScale + 80,
+                                maxWidth: device.size.width * previewScale + 120
+                            )
+                        }
                     }
-                    DeviceFrameView(device: .iPhone14,
-                                    scale: $previewScale,
-                                    fitMode: fitMode,
-                                    isLandscape: isLandscape,
-                                    backgroundStyle: backgroundStyle) {
-                        previewBody
-                    }
-                    DeviceFrameView(device: .iPadMini,
-                                    scale: $previewScale,
-                                    fitMode: fitMode,
-                                    isLandscape: isLandscape,
-                                    backgroundStyle: backgroundStyle) {
-                        previewBody
-                    }
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 16)
                 }
             } else {
-                DeviceFrameView(device: selectedDevice,
-                                scale: $previewScale,
-                                fitMode: fitMode,
-                                isLandscape: isLandscape,
-                                backgroundStyle: backgroundStyle) {
-                    previewBody
+                // --- SINGLE PREVIEW ---
+                HStack {
+                    Spacer(minLength: 40)
+
+                    DeviceFrameView(device: selectedDevice,
+                                    scale: $previewScale,
+                                    fitMode: fitMode,
+                                    isLandscape: isLandscape,
+                                    backgroundStyle: backgroundStyle) {
+                        previewBody
+                    }
+                    .frame(
+                        idealWidth: selectedDevice.size.width * previewScale + 80,
+                        maxWidth: selectedDevice.size.width * previewScale + 120
+                    )
+
+                    Spacer(minLength: 40)
                 }
-                .frame(maxWidth: previewWidth ?? 600)
-                .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
             }
         }
         .background(Color(NSColor.controlBackgroundColor))
     }
+
+
+
 
     private var previewBody: some View {
         ScrollView {
@@ -258,91 +274,91 @@ struct ArticleEditorView: View {
 
     
     // MARK: - Preview Header
-    // MARK: - Preview Header
     private var previewHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Предпросмотр")
                 .font(.headline)
                 .foregroundColor(.secondary)
-
-            // Масштаб
+            
+            // --- Устройство + Масштаб---
             HStack(spacing: 8) {
-                ForEach([0.5, 0.6, 0.75, 1.0], id: \.self) { value in
-                    Button("\(Int(value * 100))%") {
-                        fitMode = false
-                        previewScale = value
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                    .tint(previewScale == value && !fitMode ? .accentColor : .gray.opacity(0.2))
-                }
-
-                Button {
-                    fitMode = true
-                } label: {
-                    Image(systemName: "arrow.up.left.and.down.right.magnifyingglass")
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-                .help("Fit to Window")
-            }
-
-            // Width + Device
-            HStack(spacing: 12) {
-                Picker("Width", selection: $previewWidth) {
-                    Text("Auto").tag(nil as CGFloat?)
-                    Text("Compact").tag(CGFloat(400) as CGFloat?)
-                    Text("Medium").tag(CGFloat(500) as CGFloat?)
-                    Text("Wide").tag(CGFloat(650) as CGFloat?)
-                }
-                .frame(width: 120)
-
+                // --- Устройство
                 Picker("Device", selection: $selectedDevice) {
                     ForEach(PreviewDevice.allCases) { device in
                         Text(device.rawValue).tag(device)
                     }
                 }
+                .pickerStyle(MenuPickerStyle())
                 .frame(width: 150)
+                
+                // --- Масштаб ---
+                HStack(spacing: 4) {
+                    ForEach([0.5, 0.6, 0.75, 1.0], id: \.self) { value in
+                        Button("\(Int(value * 100))%") {
+                            fitMode = false
+                            previewScale = value
+                        }
+                        .buttonStyle(.borderless)
+                        .font(.caption)
+                        .padding(4)
+                        .background(!fitMode && previewScale == value ? Color.accentColor.opacity(0.2) : Color.clear)
+                        .cornerRadius(4)
+                    }
+                    
+                    Button(action: { fitMode = true }) {
+                        Image(systemName: "arrow.up.left.and.down.right.magnifyingglass")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Fit to Window")
+                }
+                
             }
-
-            // Theme
-            Picker("Theme", selection: $backgroundStyle) {
-                ForEach(PreviewBackgroundStyle.allCases, id: \.self) { style in
-                    Text(style.rawValue.capitalized).tag(style)
+            
+            // --- Тема + Доп. кнопки  ---
+            HStack(spacing: 8) {
+                Text("Theme")
+                Button("Light") { backgroundStyle = .light }
+                    .buttonStyle(.bordered)
+                    .tint(backgroundStyle == .light ? .accentColor : .gray.opacity(0.2))
+                Button("Dark") { backgroundStyle = .dark }
+                    .buttonStyle(.bordered)
+                    .tint(backgroundStyle == .dark ? .accentColor : .gray.opacity(0.2))
+                Button("Auto") { backgroundStyle = .auto }
+                    .buttonStyle(.bordered)
+                    .tint(backgroundStyle == .auto ? .accentColor : .gray.opacity(0.2))
+                
+                // --- Доп. кнопки ---
+                HStack(spacing: 12) {
+                    Toggle(isOn: $showMultiPreview) {
+                        Image(systemName: "square.split.2x1")
+                    }
+                    .toggleStyle(.button)
+                    .help("Показать несколько устройств")
+                    
+                    Button {
+                        // TODO: сделать скриншот
+                    } label: {
+                        Image(systemName: "camera")
+                    }
+                    .buttonStyle(.plain)
+                    .help("Сохранить скриншот")
+                    
+                    Button(action: { viewModel.objectWillChange.send() }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .buttonStyle(.plain)
+                    .help("Обновить")
                 }
             }
-            .pickerStyle(.segmented)
-            .frame(width: 220)
+            
 
-            // Управляющие кнопки
-            HStack(spacing: 12) {
-                Toggle(isOn: $showMultiPreview) {
-                    Image(systemName: "square.split.2x1")
-                }
-                .toggleStyle(.button)
-                .help("Показать несколько устройств")
-
-                Button {
-                    // TODO: сделать скриншот
-                } label: {
-                    Image(systemName: "camera")
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-                .help("Сохранить скриншот")
-
-                Button(action: { viewModel.objectWillChange.send() }) {
-                    Image(systemName: "arrow.clockwise")
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-                .help("Обновить")
-            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
         .background(Color(NSColor.windowBackgroundColor))
+        .cornerRadius(8)
     }
+
 
     
     // MARK: - Toolbar
