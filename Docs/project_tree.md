@@ -79,7 +79,8 @@
 │       ├── BlockPickerView.swift
 │       ├── Components
 │       ├── DemoArticleView.swift
-│       └── PreviewBackgroundStyle.swift
+│       ├── PreviewBackgroundStyle.swift
+│       └── TemplatePickerView.swift
 ├── InGermanyCMSTests
 │   └── InGermanyCMSTests.swift
 ├── InGermanyCMSUITests
@@ -282,4 +283,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-83 directories, 200 files
+83 directories, 201 files
