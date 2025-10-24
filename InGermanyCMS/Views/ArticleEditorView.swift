@@ -274,55 +274,24 @@ struct ArticleEditorView: View {
 
     
     // MARK: - Preview Header
+    // MARK: - Preview Header
     private var previewHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Предпросмотр")
                 .font(.headline)
                 .foregroundColor(.secondary)
             
-            // --- Устройство + Масштаб---
+            // --- Устройство + Масштаб ---
             HStack(spacing: 8) {
-                // --- Устройство
+                // --- Устройство (с иконками)
                 Picker("Device", selection: $selectedDevice) {
-                    // --- iPhone SE
-                    Group {
-                        Text("iPhone SE (2/3 gen)").tag(PreviewDevice.iPhoneSE)
-                    }
-                    
-                    // --- iPhone 14 Series
-                    Group {
-                        Text("iPhone 14").tag(PreviewDevice.iPhone14)
-                        Text("iPhone 14 Pro Max").tag(PreviewDevice.iPhone14ProMax)
-                    }
-                    
-                    // --- iPhone 15 Series
-                    Group {
-                        Text("iPhone 15").tag(PreviewDevice.iPhone15)
-                        Text("iPhone 15 Pro").tag(PreviewDevice.iPhone15Pro)
-                    }
-                    
-                    // --- iPhone 16 Series
-                    Group {
-                        Text("iPhone 16").tag(PreviewDevice.iPhone16)
-                        Text("iPhone 16 Pro").tag(PreviewDevice.iPhone16Pro)
-                        Text("iPhone 16 Pro Max").tag(PreviewDevice.iPhone16ProMax)
-                    }
-                    
-                    // --- iPhone 17 Series
-                    Group {
-                        Text("iPhone 17").tag(PreviewDevice.iPhone17)
-                        Text("iPhone 17 Pro").tag(PreviewDevice.iPhone17Pro)
-                        Text("iPhone 17 Pro Max").tag(PreviewDevice.iPhone17ProMax)
-                    }
-                    
-                    // --- iPad
-                    Group {
-                        Text("iPad Mini (6 gen)").tag(PreviewDevice.iPadMini)
+                    ForEach(PreviewDevice.allCases) { device in
+                        Label(device.rawValue, systemImage: device.icon)
+                            .tag(device)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
-                .frame(width: 200)
-
+                .frame(width: 220)
                 
                 // --- Масштаб ---
                 HStack(spacing: 4) {
@@ -344,10 +313,9 @@ struct ArticleEditorView: View {
                     .buttonStyle(.borderless)
                     .help("Fit to Window")
                 }
-                
             }
             
-            // --- Тема + Доп. кнопки  ---
+            // --- Тема + Доп. кнопки ---
             HStack(spacing: 8) {
                 Text("Theme")
                 Button("Light") { backgroundStyle = .light }
@@ -359,6 +327,8 @@ struct ArticleEditorView: View {
                 Button("Auto") { backgroundStyle = .auto }
                     .buttonStyle(.bordered)
                     .tint(backgroundStyle == .auto ? .accentColor : .gray.opacity(0.2))
+                
+                Spacer()
                 
                 // --- Доп. кнопки ---
                 HStack(spacing: 12) {
@@ -383,15 +353,12 @@ struct ArticleEditorView: View {
                     .help("Обновить")
                 }
             }
-            
-
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
         .background(Color(NSColor.windowBackgroundColor))
         .cornerRadius(8)
     }
-
 
     
     // MARK: - Toolbar
