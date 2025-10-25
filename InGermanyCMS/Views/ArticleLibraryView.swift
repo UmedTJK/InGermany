@@ -5,6 +5,9 @@ public struct ArticleLibraryView: View {
     @StateObject private var viewModel: ArticleLibraryViewModel
     @State private var showingTemplatePicker = false
     
+    // Theme support
+    @Environment(\.themeManager) private var themeManager
+    
     let onOpenArticle: (ArticleDocument) -> Void
 
     public init(viewModel: ArticleLibraryViewModel, onOpenArticle: @escaping (ArticleDocument) -> Void) {
@@ -27,21 +30,23 @@ public struct ArticleLibraryView: View {
                     // Search Field
                     HStack {
                         Image(systemName: "magnifyingglass")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(themeManager.colors.secondaryText)
                         
                         TextField("Поиск статей...", text: $viewModel.searchText)
                             .textFieldStyle(PlainTextFieldStyle())
                             .frame(width: 200)
+                            .themeForeground()
                         
                         if viewModel.searchIsActive {
                             Button("Отмена") {
                                 viewModel.clearSearch()
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .foregroundColor(themeManager.colors.secondaryText)
                         }
                     }
                     .padding(.horizontal, 8)
-                    .background(Color(NSColor.controlBackgroundColor))
+                    .background(themeManager.colors.secondaryBackground)
                     .cornerRadius(8)
                     
                     // New Article Menu
@@ -70,6 +75,8 @@ public struct ArticleLibraryView: View {
                         }
                     } label: {
                         Label("Новая статья", systemImage: "plus")
+                            //.foregroundColor(themeManager.colors.primaryText)
+                            .foregroundColor(.primary)
                     }
                     
                     // Import Button
@@ -79,7 +86,12 @@ public struct ArticleLibraryView: View {
                         }
                     } label: {
                         Label("Импорт", systemImage: "square.and.arrow.down")
+                            //.foregroundColor(themeManager.colors.primaryText)
+                            .foregroundColor(.primary)
                     }
+                    
+                    // Theme Toggle Button
+                    ThemeToggleButton()
                 }
                 
                 ToolbarItem(placement: .automatic) {
@@ -87,6 +99,8 @@ public struct ArticleLibraryView: View {
                         viewModel.refreshLibrary()
                     } label: {
                         Label("Обновить", systemImage: "arrow.clockwise")
+                            //.foregroundColor(themeManager.colors.primaryText)
+                            .foregroundColor(.primary)
                     }
                 }
             }
@@ -98,7 +112,9 @@ public struct ArticleLibraryView: View {
             TemplatePickerView { document in
                 onOpenArticle(document)
             }
+            .withThemeManager() // Поддержка темы в модальном окне
         }
+        .withThemeManager() // Основная поддержка темы
     }
     
     private var emptyStateView: some View {
@@ -106,33 +122,34 @@ public struct ArticleLibraryView: View {
             if viewModel.searchIsActive {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 60))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(themeManager.colors.secondaryText)
                 
                 Text("Статьи не найдены")
                     .font(.title2)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(themeManager.colors.secondaryText)
                 
                 Text("Попробуйте изменить поисковый запрос")
                     .font(.body)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(themeManager.colors.secondaryText)
                     .multilineTextAlignment(.center)
                 
                 Button("Очистить поиск") {
                     viewModel.clearSearch()
                 }
                 .buttonStyle(.bordered)
+                .foregroundColor(themeManager.colors.accent)
             } else {
                 Image(systemName: "doc.text")
                     .font(.system(size: 60))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(themeManager.colors.secondaryText)
                 
                 Text("Пока нет статей")
                     .font(.title2)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(themeManager.colors.secondaryText)
                 
                 Text("Создайте первую статью чтобы начать работу")
                     .font(.body)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(themeManager.colors.secondaryText)
                     .multilineTextAlignment(.center)
                 
                 // Enhanced empty state with template options
@@ -146,11 +163,13 @@ public struct ArticleLibraryView: View {
                         showingTemplatePicker = true
                     }
                     .buttonStyle(.bordered)
+                    .foregroundColor(themeManager.colors.accent)
                 }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
+        .themeBackground()
     }
     
     private var articlesListView: some View {
@@ -160,7 +179,7 @@ public struct ArticleLibraryView: View {
                 HStack {
                     Text(viewModel.getArticleCountText())
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(themeManager.colors.secondaryText)
                     
                     Spacer()
                     
@@ -169,10 +188,11 @@ public struct ArticleLibraryView: View {
                     }
                     .font(.caption)
                     .buttonStyle(.plain)
+                    .foregroundColor(themeManager.colors.accent)
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
-                .background(Color(NSColor.controlBackgroundColor))
+                .background(themeManager.colors.secondaryBackground)
             }
             
             // Articles List
@@ -194,10 +214,15 @@ public struct ArticleLibraryView: View {
                                 viewModel.deleteArticle(article)
                             }
                         }
+                        .listRowBackground(themeManager.colors.background)
                 }
                 .onDelete(perform: viewModel.deleteArticle)
             }
+            .listStyle(PlainListStyle())
+            .scrollContentBackground(.hidden)
+            .background(themeManager.colors.background)
         }
+        .themeBackground()
     }
     
     private func articleRowView(_ article: ArticleLibraryViewModel.ArticleMetadata) -> some View {
@@ -206,26 +231,28 @@ public struct ArticleLibraryView: View {
                 Text(article.title.isEmpty ? "Без названия" : article.title)
                     .font(.headline)
                     .lineLimit(1)
+                    //.foregroundColor(themeManager.colors.primaryText)
+                    .foregroundColor(.primary)
                 
                 if !article.contentPreview.isEmpty {
                     Text(article.contentPreview)
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(themeManager.colors.secondaryText)
                         .lineLimit(2)
                 }
                 
                 HStack {
                     Text(article.modified, style: .relative)
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(themeManager.colors.tertiaryText)
                     
                     Text("•")
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(themeManager.colors.tertiaryText)
                     
                     Text("изменено")
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(themeManager.colors.tertiaryText)
                 }
             }
             
@@ -235,12 +262,14 @@ public struct ArticleLibraryView: View {
                 loadAndOpenArticle(article)
             }
             .buttonStyle(.bordered)
+            .foregroundColor(themeManager.colors.accent)
         }
         .padding(.vertical, 8)
         .contentShape(Rectangle())
         .onTapGesture {
             loadAndOpenArticle(article)
         }
+        .background(themeManager.colors.background)
     }
     
     private func createNewArticle() {
@@ -337,4 +366,21 @@ public struct ArticleLibraryView: View {
     ArticleLibraryView(viewModel: ArticleLibraryViewModel()) { document in
         print("Opening article: \(document.title)")
     }
+    .withThemeManager()
+}
+
+#Preview("Light Theme") {
+    ArticleLibraryView(viewModel: ArticleLibraryViewModel()) { document in
+        print("Opening article: \(document.title)")
+    }
+    .withThemeManager()
+    .preferredColorScheme(.light)
+}
+
+#Preview("Dark Theme") {
+    ArticleLibraryView(viewModel: ArticleLibraryViewModel()) { document in
+        print("Opening article: \(document.title)")
+    }
+    .withThemeManager()
+    .preferredColorScheme(.dark)
 }
