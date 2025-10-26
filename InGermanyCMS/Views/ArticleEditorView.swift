@@ -1,9 +1,10 @@
 import SwiftUI
 import ArticleKit
-import Combine   // нужно для objectWillChange
+import Combine
 
 struct ArticleEditorView: View {
     @StateObject private var viewModel: ArticleEditorViewModel
+    
     @State private var selectedBlockId: UUID?
     @State private var showPreview = true
     @State private var isEditingTitle = false
@@ -11,13 +12,9 @@ struct ArticleEditorView: View {
     @State private var hostingWindow: NSWindow?
     @State private var previewScale: CGFloat = 0.6
     @State private var fitMode: Bool = false
-    @State private var previewWidth: CGFloat? = 300
-    @State private var selectedDevice: PreviewDevice = .iPhone17ProMax   // ✅ только один девайс
-    @State private var isLandscape: Bool = false
-    @State private var backgroundStyle: PreviewBackgroundStyle = .auto
     @State private var showMultiPreview = false
-
-
+    @State private var selectedDevice: PreviewDevice = .iPhone17ProMax
+    @State private var isLandscape: Bool = false
     
     init(document: ArticleDocument) {
         _viewModel = StateObject(wrappedValue: ArticleEditorViewModel(document: document))
@@ -46,9 +43,7 @@ struct ArticleEditorView: View {
                 .navigationTitle("Выберите тип блока")
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Отмена") {
-                            viewModel.showBlockPicker = false
-                        }
+                        Button("Отмена") { viewModel.showBlockPicker = false }
                     }
                 }
             }
@@ -60,116 +55,32 @@ struct ArticleEditorView: View {
     private var titleHeader: some View {
         HStack {
             if isEditingTitle {
-                HStack {
-                    TextField("Название статьи", text: $editedTitle)
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .onSubmit {
-                            saveTitle()
-                        }
-                    
-                    Button("Сохранить") {
-                        saveTitle()
-                    }
+                TextField("Название статьи", text: $editedTitle)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .font(.title2.weight(.semibold))
+                    .onSubmit { saveTitle() }
+                
+                Button("Сохранить") { saveTitle() }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.small)
-                    
-                    Button("Отмена") {
-                        cancelTitleEditing()
-                    }
+                
+                Button("Отмена") { cancelTitleEditing() }
                     .buttonStyle(.bordered)
                     .controlSize(.small)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
             } else {
-                HStack {
-                    Text(viewModel.document.title.isEmpty ? "Без названия" : viewModel.document.title)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .lineLimit(1)
-                    
-                    Button(action: {
-                        startTitleEditing()
-                    }) {
-                        Image(systemName: "pencil")
-                            .font(.system(size: 14))
-                            .foregroundColor(.secondary)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Редактировать название")
+                Text(viewModel.document.title.isEmpty ? "Без названия" : viewModel.document.title)
+                    .font(.title2.weight(.semibold))
+                    .lineLimit(1)
+                
+                Button(action: { startTitleEditing() }) {
+                    Image(systemName: "pencil").font(.system(size: 14))
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+                .buttonStyle(.plain)
+                .help("Редактировать название")
             }
         }
-        .background(Color(NSColor.controlBackgroundColor))
-        .overlay(
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(Color(NSColor.separatorColor)),
-            alignment: .bottom
-        )
-    }
-    
-    // MARK: - Методы редактирования заголовка
-    private func startTitleEditing() {
-        editedTitle = viewModel.document.title
-        isEditingTitle = true
-    }
-    
-    private func saveTitle() {
-        guard !editedTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        let updatedDocument = ArticleDocument(
-            title: editedTitle,
-            sections: viewModel.document.sections,
-            url: viewModel.document.url
-        )
-        viewModel.updateDocument(updatedDocument)
-        viewModel.saveDocument()
-        isEditingTitle = false
-    }
-    
-    private func cancelTitleEditing() {
-        editedTitle = viewModel.document.title
-        isEditingTitle = false
-    }
-    
-    // MARK: - Горячие клавиши
-    private func handleKeyboardShortcuts() {
-        // Обработка горячих клавиш будет здесь
-    }
-    
-    private func showBlockPicker() {
-        viewModel.showBlockPicker = true
-    }
-    
-    private func saveDocument() {
-        viewModel.saveDocument()
-    }
-    
-    private func duplicateSelectedBlock() {
-        guard let selectedId = selectedBlockId,
-              let selectedBlock = viewModel.blocks.first(where: { $0.id == selectedId }) else { return }
-        viewModel.duplicateBlock(selectedBlock)
-    }
-    
-    private func deleteSelectedBlock() {
-        guard let selectedId = selectedBlockId,
-              let selectedBlock = viewModel.blocks.first(where: { $0.id == selectedId }) else { return }
-        viewModel.removeBlock(selectedBlock)
-        selectedBlockId = nil
-    }
-    
-    private func exportDocument() {
-        print("🟡 [UI] Export button tapped")
-        print("🟡 [UI] Hosting window: \(String(describing: hostingWindow))")
-        viewModel.exportDocument(using: hostingWindow)
-    }
-    
-    private func importDocument() {
-        viewModel.importDocument(using: hostingWindow)
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(Color.secondary.opacity(0.05))
     }
     
     // MARK: - Основной контент
@@ -187,7 +98,6 @@ struct ArticleEditorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    // MARK: - Панель редактора
     private var editorPanel: some View {
         HStack(spacing: 0) {
             blocksListView.frame(width: 280)
@@ -196,334 +106,199 @@ struct ArticleEditorView: View {
         }
     }
     
-    // MARK: - Панель превью
     private var previewPanel: some View {
         VStack(spacing: 0) {
             previewHeader
-
             if showMultiPreview {
-                // --- MULTI PREVIEW: сетка устройств ---
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 32) {
-                        ForEach([PreviewDevice.iPhoneSE,
-                                 PreviewDevice.iPhone14,
-                                 PreviewDevice.iPhone15,
-                                 PreviewDevice.iPhone16,
-                                 PreviewDevice.iPhone17ProMax,
-                                 PreviewDevice.iPadMini], id: \.self) { device in
+                        ForEach(PreviewDevice.allCases, id: \.self) { device in
                             DeviceFrameView(device: device,
                                             scale: $previewScale,
                                             fitMode: fitMode,
-                                            isLandscape: isLandscape,
-                                            backgroundStyle: backgroundStyle) {
+                                            isLandscape: isLandscape) {
                                 previewBody
                             }
-                            .frame(
-                                idealWidth: device.size.width * previewScale + 80,
-                                maxWidth: device.size.width * previewScale + 120
-                            )
                         }
                     }
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 16)
+                    .padding(.horizontal, 40).padding(.vertical, 16)
                 }
             } else {
-                // --- SINGLE PREVIEW ---
                 HStack {
                     Spacer(minLength: 40)
-
                     DeviceFrameView(device: selectedDevice,
                                     scale: $previewScale,
                                     fitMode: fitMode,
-                                    isLandscape: isLandscape,
-                                    backgroundStyle: backgroundStyle) {
+                                    isLandscape: isLandscape) {
                         previewBody
                     }
-                    .frame(
-                        idealWidth: selectedDevice.size.width * previewScale + 80,
-                        maxWidth: selectedDevice.size.width * previewScale + 120
-                    )
-
                     Spacer(minLength: 40)
                 }
                 .padding(.vertical, 16)
             }
         }
-        .background(Color(NSColor.controlBackgroundColor))
+        .background(Color.secondary.opacity(0.05))
     }
-
-
-
 
     private var previewBody: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 Text(viewModel.document.title)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.largeTitle.bold())
                     .padding(.bottom, 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 ArticleRenderer(sections: viewModel.blocks.map { $0.toSectionDTO() })
             }
             .padding()
         }
     }
-
-
-
-
     
-    // MARK: - Preview Header
     // MARK: - Preview Header
     private var previewHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Предпросмотр")
-                .font(.headline)
-                .foregroundColor(.secondary)
+            Text("Предпросмотр").font(.headline)
             
-            // --- Устройство + Масштаб ---
+            // --- выбор устройства и масштаба ---
             HStack(spacing: 8) {
-                // --- Устройство (с иконками)
                 Picker("Device", selection: $selectedDevice) {
                     ForEach(PreviewDevice.allCases) { device in
-                        Label(device.rawValue, systemImage: device.icon)
-                            .tag(device)
+                        Label(device.rawValue, systemImage: device.icon).tag(device)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
                 .frame(width: 220)
                 
-                // --- Масштаб ---
                 HStack(spacing: 4) {
                     ForEach([0.5, 0.6, 0.75, 1.0], id: \.self) { value in
                         Button("\(Int(value * 100))%") {
                             fitMode = false
                             previewScale = value
                         }
-                        .buttonStyle(.borderless)
-                        .font(.caption)
-                        .padding(4)
-                        .background(!fitMode && previewScale == value ? Color.accentColor.opacity(0.2) : Color.clear)
-                        .cornerRadius(4)
+                        .buttonStyle(.borderless).font(.caption)
                     }
-                    
                     Button(action: { fitMode = true }) {
                         Image(systemName: "arrow.up.left.and.down.right.magnifyingglass")
                     }
                     .buttonStyle(.borderless)
-                    .help("Fit to Window")
                 }
             }
             
-            // --- Тема + Доп. кнопки ---
+            // --- УДАЛЕН переключатель темы предпросмотра ---
             HStack(spacing: 8) {
-                Text("Theme")
-                Button("Light") { backgroundStyle = .light }
-                    .buttonStyle(.bordered)
-                    .tint(backgroundStyle == .light ? .accentColor : .gray.opacity(0.2))
-                Button("Dark") { backgroundStyle = .dark }
-                    .buttonStyle(.bordered)
-                    .tint(backgroundStyle == .dark ? .accentColor : .gray.opacity(0.2))
-                Button("Auto") { backgroundStyle = .auto }
-                    .buttonStyle(.bordered)
-                    .tint(backgroundStyle == .auto ? .accentColor : .gray.opacity(0.2))
-                
                 Spacer()
-                
-                // --- Доп. кнопки ---
-                HStack(spacing: 12) {
-                    Toggle(isOn: $showMultiPreview) {
-                        Image(systemName: "square.split.2x1")
-                    }
-                    .toggleStyle(.button)
-                    .help("Показать несколько устройств")
-                    
-                    Button {
-                        // TODO: сделать скриншот
-                    } label: {
-                        Image(systemName: "camera")
-                    }
-                    .buttonStyle(.plain)
-                    .help("Сохранить скриншот")
-                    
-                    Button(action: { viewModel.objectWillChange.send() }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .buttonStyle(.plain)
-                    .help("Обновить")
+                Toggle(isOn: $showMultiPreview) {
+                    Image(systemName: "square.split.2x1")
                 }
+                .toggleStyle(.button)
+                .help("Показать несколько устройств")
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(Color(NSColor.windowBackgroundColor))
-        .cornerRadius(8)
+        .padding(.horizontal, 16).padding(.vertical, 8)
     }
-
     
-    // MARK: - Toolbar
+    // MARK: - Toolbar (глобальный)
     private var editorToolbar: some View {
         HStack {
-            HStack {
-                Button(action: { viewModel.showBlockPicker = true }) {
-                    Label("Добавить блок", systemImage: "plus")
-                }
-                .keyboardShortcut("n", modifiers: [.command, .shift])
-                .help("Добавить новый блок (⌘⇧N)")
-                
-                Button(action: { withAnimation { showPreview.toggle() } }) {
-                    Label(showPreview ? "Скрыть превью" : "Показать превью",
-                          systemImage: showPreview ? "eye.slash" : "eye")
-                }
-                .keyboardShortcut(.return, modifiers: .command)
+            Button(action: { viewModel.showBlockPicker = true }) {
+                Label("Добавить блок", systemImage: "plus")
             }
+            .keyboardShortcut("n", modifiers: [.command, .shift])
+            
+            Button(action: { withAnimation { showPreview.toggle() } }) {
+                Label(showPreview ? "Скрыть превью" : "Показать превью",
+                      systemImage: showPreview ? "eye.slash" : "eye")
+            }
+            .keyboardShortcut(.return, modifiers: .command)
             
             Spacer()
             
-            HStack {
-                Button(action: exportDocument) {
-                    Label("Экспорт", systemImage: "square.and.arrow.up")
-                }
-                .keyboardShortcut("e", modifiers: .command)
-                
-                Button(action: importDocument) {
-                    Label("Импорт", systemImage: "square.and.arrow.down")
-                }
-                .keyboardShortcut("i", modifiers: .command)
+            Button(action: exportDocument) {
+                Label("Экспорт", systemImage: "square.and.arrow.up")
             }
+            .keyboardShortcut("e", modifiers: .command)
+            
+            Button(action: importDocument) {
+                Label("Импорт", systemImage: "square.and.arrow.down")
+            }
+            .keyboardShortcut("i", modifiers: .command)
             
             Spacer()
             
-            HStack {
-                statusIndicator
-                Button("Сохранить") {
-                    viewModel.saveDocument()
-                }
+            statusIndicator
+            Button("Сохранить") { viewModel.saveDocument() }
                 .disabled(!viewModel.hasUnsavedChanges)
                 .keyboardShortcut("s", modifiers: .command)
-                
-                if selectedBlockId != nil {
-                    Button(action: duplicateSelectedBlock) {
-                        Label("Дублировать", systemImage: "doc.on.doc")
-                    }
-                    .keyboardShortcut("d", modifiers: .command)
-                    
-                    Button(action: deleteSelectedBlock) {
-                        Label("Удалить", systemImage: "trash")
-                    }
-                    .keyboardShortcut(.delete, modifiers: .command)
-                }
-            }
+            
+            // ТОЛЬКО глобальный тоггл темы приложения
+            ThemeToggle(scope: .app)
         }
         .padding()
-        .background(Color(NSColor.controlBackgroundColor))
-        .overlay(
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(Color(NSColor.separatorColor)),
-            alignment: .bottom
-        )
     }
     
     private var statusIndicator: some View {
         HStack(spacing: 8) {
             if viewModel.isSaving {
                 ProgressView().scaleEffect(0.8)
-                Text("Сохранение...").font(.caption).foregroundColor(.blue)
+                Text("Сохранение...").font(.caption)
             } else if viewModel.hasUnsavedChanges {
-                Image(systemName: "circle.fill").font(.system(size: 8)).foregroundColor(.orange)
-                Text("Не сохранено").font(.caption).foregroundColor(.orange)
+                Image(systemName: "circle.fill").font(.system(size: 8))
+                Text("Не сохранено").font(.caption)
             } else {
-                Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                Text("Сохранено").font(.caption).foregroundColor(.green)
+                Image(systemName: "checkmark.circle.fill")
+                Text("Сохранено").font(.caption)
             }
         }
     }
     
-    // MARK: - Список блоков
+    // MARK: - Blocks list
     private var blocksListView: some View {
         VStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Блоки статьи").font(.headline)
-                Text("\(viewModel.blocks.count) \(blockCountText)")
-                    .font(.caption).foregroundColor(.secondary)
-                if viewModel.blocks.count > 0 {
-                    Text("⌘⏎ превью • ⌘⇧N новый блок • ⌘S сохранить • ⌘E экспорт • ⌘I импорт")
-                        .font(.caption2).foregroundColor(.secondary).opacity(0.7)
-                }
-            }
-            .padding(.horizontal).padding(.top, 16).padding(.bottom, 8)
-            
+            Text("Блоки статьи").font(.headline)
             if viewModel.blocks.isEmpty {
-                emptyBlocksView
+                Text("Нет блоков")
             } else {
                 List(selection: $selectedBlockId) {
                     ForEach(viewModel.blocks) { block in
                         BlockRowView(block: block, isSelected: selectedBlockId == block.id)
                             .tag(block.id)
-                            .contextMenu {
-                                Button("Дублировать") { viewModel.duplicateBlock(block) }
-                                Button("Удалить", role: .destructive) { viewModel.removeBlock(block) }
-                            }
                     }
-                    .onMove(perform: viewModel.moveBlocks)
-                    .onDelete(perform: viewModel.deleteBlocks)
                 }
             }
         }
-        .background(Color(NSColor.controlBackgroundColor))
-    }
-    
-    private var blockCountText: String {
-        let count = viewModel.blocks.count
-        let remainder = count % 10
-        switch remainder {
-        case 1 where count % 100 != 11: return "блок"
-        case 2...4 where count % 100 < 10 || count % 100 >= 20: return "блока"
-        default: return "блоков"
-        }
-    }
-    
-    private var emptyBlocksView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "doc.text").font(.system(size: 40)).foregroundColor(.secondary)
-            Text("Нет блоков").font(.headline).foregroundColor(.secondary)
-            Text("Добавьте первый блок чтобы начать").font(.caption).foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var blockEditorView: some View {
         VStack {
             if let selectedId = selectedBlockId,
-               let selectedBlockIndex = viewModel.blocks.firstIndex(where: { $0.id == selectedId }) {
+               let idx = viewModel.blocks.firstIndex(where: { $0.id == selectedId }) {
                 BlockEditor(
                     block: Binding(
-                        get: { viewModel.blocks[selectedBlockIndex] },
+                        get: { viewModel.blocks[idx] },
                         set: {
-                            viewModel.blocks[selectedBlockIndex] = $0
+                            viewModel.blocks[idx] = $0
                             viewModel.markAsModified()
                         }
                     )
                 )
-                .padding()
             } else {
-                emptyEditorView
+                Text("Выберите блок для редактирования").foregroundColor(.secondary)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(NSColor.textBackgroundColor))
     }
     
-    private var emptyEditorView: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "cursorarrow.rays").font(.system(size: 50)).foregroundColor(.secondary)
-            Text("Выберите блок для редактирования").font(.title2).foregroundColor(.secondary)
-            Text("Выберите блок из списка слева чтобы начать редактирование")
-                .font(.body).foregroundColor(.secondary).multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    // MARK: - Methods
+    private func startTitleEditing() { editedTitle = viewModel.document.title; isEditingTitle = true }
+    private func saveTitle() {
+        guard !editedTitle.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        let updated = ArticleDocument(title: editedTitle,
+                                      sections: viewModel.document.sections,
+                                      url: viewModel.document.url)
+        viewModel.updateDocument(updated)
+        viewModel.saveDocument()
+        isEditingTitle = false
     }
+    private func cancelTitleEditing() { editedTitle = viewModel.document.title; isEditingTitle = false }
+    private func exportDocument() { viewModel.exportDocument(using: hostingWindow) }
+    private func importDocument() { viewModel.importDocument(using: hostingWindow) }
 }
 
 // MARK: - BlockRowView
@@ -533,48 +308,15 @@ struct BlockRowView: View {
     
     var body: some View {
         HStack {
-            Image(systemName: blockTypeIcon)
-                .foregroundColor(blockTypeColor)
-                .frame(width: 20)
-            VStack(alignment: .leading) {
-                Text(block.type.rawValue.capitalized).font(.headline)
-                if !block.content.isEmpty {
-                    Text(block.content.prefix(30) + (block.content.count > 30 ? "..." : ""))
-                        .font(.caption).foregroundColor(.secondary)
-                }
+            Text(block.type.rawValue.capitalized)
+            if !block.content.isEmpty {
+                Text(block.content.prefix(30) + (block.content.count > 30 ? "..." : ""))
+                    .font(.caption).foregroundColor(.secondary)
             }
             Spacer()
-            Image(systemName: "line.3.horizontal")
-                .font(.system(size: 12)).foregroundColor(.secondary).opacity(0.6)
         }
-        .padding(.vertical, 8)
-        .contentShape(Rectangle())
-        .background(isSelected ? Color.blue.opacity(0.1) : Color.clear)
+        .padding(.vertical, 6)
+        .background(isSelected ? Color.accentColor.opacity(0.1) : Color.clear)
         .cornerRadius(4)
-    }
-    
-    private var blockTypeIcon: String {
-        switch block.type {
-        case .paragraph: return "text.alignleft"
-        case .info: return "info.circle"
-        case .warning: return "exclamationmark.triangle"
-        case .tip: return "lightbulb"
-        case .quote: return "quote.opening"
-        case .checklist: return "checklist"
-        case .faq: return "questionmark.circle"
-        case .list: return "list.bullet"
-        case .links: return "link"
-        case .image: return "photo"
-        }
-    }
-    
-    private var blockTypeColor: Color {
-        switch block.type {
-        case .info: return .blue
-        case .warning: return .orange
-        case .tip: return .green
-        case .quote: return .purple
-        default: return .primary
-        }
     }
 }

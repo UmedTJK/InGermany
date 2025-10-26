@@ -5,6 +5,9 @@ public struct ArticleLibraryView: View {
     @StateObject private var viewModel: ArticleLibraryViewModel
     @State private var showingTemplatePicker = false
     
+    // Глобальная тема теперь через EnvironmentObject
+    @EnvironmentObject private var appTheme: AppThemeManager
+    
     let onOpenArticle: (ArticleDocument) -> Void
 
     public init(viewModel: ArticleLibraryViewModel, onOpenArticle: @escaping (ArticleDocument) -> Void) {
@@ -24,7 +27,8 @@ public struct ArticleLibraryView: View {
             .navigationTitle("Библиотека статей")
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
-                    // Search Field
+                    
+                    // Поиск
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.secondary)
@@ -38,18 +42,19 @@ public struct ArticleLibraryView: View {
                                 viewModel.clearSearch()
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .foregroundColor(.secondary)
                         }
                     }
                     .padding(.horizontal, 8)
-                    .background(Color(NSColor.controlBackgroundColor))
+                    .background(Color.secondary.opacity(0.1))
                     .cornerRadius(8)
                     
-                    // New Article Menu
+                    // Меню создания
                     Menu {
                         Button {
                             createNewArticle()
                         } label: {
-                            Label("Пустая статья", systemImage: "doc")
+                            Label("Пустая статья 22", systemImage: "doc")
                         }
                         
                         Button {
@@ -58,7 +63,6 @@ public struct ArticleLibraryView: View {
                             Label("Из шаблона", systemImage: "square.grid.2x2")
                         }
                         
-                        // Quick templates
                         Divider()
                         
                         ForEach([ArticleTemplate].defaultTemplates.prefix(3), id: \.id) { template in
@@ -72,7 +76,7 @@ public struct ArticleLibraryView: View {
                         Label("Новая статья", systemImage: "plus")
                     }
                     
-                    // Import Button
+                    // Импорт
                     Button {
                         if let importedDocument = viewModel.importArticle() {
                             onOpenArticle(importedDocument)
@@ -80,6 +84,9 @@ public struct ArticleLibraryView: View {
                     } label: {
                         Label("Импорт", systemImage: "square.and.arrow.down")
                     }
+                    
+                    // Новый глобальный тоггл темы
+                    ThemeToggle(scope: .app)
                 }
                 
                 ToolbarItem(placement: .automatic) {
@@ -121,6 +128,7 @@ public struct ArticleLibraryView: View {
                     viewModel.clearSearch()
                 }
                 .buttonStyle(.bordered)
+                .tint(.accentColor)
             } else {
                 Image(systemName: "doc.text")
                     .font(.system(size: 60))
@@ -135,7 +143,6 @@ public struct ArticleLibraryView: View {
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                 
-                // Enhanced empty state with template options
                 VStack(spacing: 12) {
                     Button("Создать пустую статью") {
                         createNewArticle()
@@ -146,6 +153,7 @@ public struct ArticleLibraryView: View {
                         showingTemplatePicker = true
                     }
                     .buttonStyle(.bordered)
+                    .tint(.accentColor)
                 }
             }
         }
@@ -155,7 +163,6 @@ public struct ArticleLibraryView: View {
     
     private var articlesListView: some View {
         VStack(spacing: 0) {
-            // Search Results Info
             if viewModel.searchIsActive {
                 HStack {
                     Text(viewModel.getArticleCountText())
@@ -169,13 +176,13 @@ public struct ArticleLibraryView: View {
                     }
                     .font(.caption)
                     .buttonStyle(.plain)
+                    .tint(.accentColor)
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
-                .background(Color(NSColor.controlBackgroundColor))
+                .background(Color.secondary.opacity(0.1))
             }
             
-            // Articles List
             List {
                 ForEach(viewModel.getArticlesForDisplay()) { article in
                     articleRowView(article)
@@ -197,6 +204,7 @@ public struct ArticleLibraryView: View {
                 }
                 .onDelete(perform: viewModel.deleteArticle)
             }
+            .listStyle(PlainListStyle())
         }
     }
     
@@ -235,6 +243,7 @@ public struct ArticleLibraryView: View {
                 loadAndOpenArticle(article)
             }
             .buttonStyle(.bordered)
+            .tint(.accentColor)
         }
         .padding(.vertical, 8)
         .contentShape(Rectangle())
@@ -242,6 +251,8 @@ public struct ArticleLibraryView: View {
             loadAndOpenArticle(article)
         }
     }
+    
+    // MARK: - Actions
     
     private func createNewArticle() {
         if let newArticle = viewModel.createNewArticle() {
@@ -267,7 +278,6 @@ public struct ArticleLibraryView: View {
                 url: newArticle.url
             )
             
-            // Сохраняем документ с контентом из шаблона
             do {
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = .prettyPrinted
@@ -277,12 +287,7 @@ public struct ArticleLibraryView: View {
                 onOpenArticle(templateDocument)
             } catch {
                 print("❌ Ошибка создания статьи из шаблона: \(error)")
-                // Fallback - открываем пустой документ
-                onOpenArticle(ArticleDocument(
-                    title: template.name,
-                    sections: template.blocks.map { $0.toSectionDTO() },
-                    url: newArticle.url
-                ))
+                onOpenArticle(templateDocument)
             }
         }
     }
@@ -321,7 +326,6 @@ public struct ArticleLibraryView: View {
             onOpenArticle(document)
         } catch {
             print("⚠️ Не удалось загрузить статью: \(error)")
-            // Создаем новый документ если не удалось загрузить
             let newDocument = ArticleDocument(
                 title: article.title,
                 sections: [],
@@ -337,4 +341,6 @@ public struct ArticleLibraryView: View {
     ArticleLibraryView(viewModel: ArticleLibraryViewModel()) { document in
         print("Opening article: \(document.title)")
     }
+    .environmentObject(AppThemeManager()) // для превью
+    .appTheme()
 }

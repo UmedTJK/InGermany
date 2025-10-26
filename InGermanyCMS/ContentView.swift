@@ -15,6 +15,7 @@ struct ContentView: View {
         } detail: {
             detailView
         }
+        .appTheme() // <- применяем глобальную тему здесь
     }
     
     private var sidebar: some View {
