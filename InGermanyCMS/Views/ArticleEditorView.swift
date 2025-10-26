@@ -4,7 +4,6 @@ import Combine
 
 struct ArticleEditorView: View {
     @StateObject private var viewModel: ArticleEditorViewModel
-    @StateObject private var previewTheme = PreviewThemeManager()
     
     @State private var selectedBlockId: UUID?
     @State private var showPreview = true
@@ -25,8 +24,8 @@ struct ArticleEditorView: View {
     var body: some View {
         VStack(spacing: 0) {
             titleHeader
-            editorToolbar   // глобальные кнопки
-            mainContentView // редактор + предпросмотр
+            editorToolbar
+            mainContentView
         }
         .getHostingWindow { window in
             self.hostingWindow = window
@@ -109,7 +108,7 @@ struct ArticleEditorView: View {
     
     private var previewPanel: some View {
         VStack(spacing: 0) {
-            previewHeader   // локальные кнопки для предпросмотра
+            previewHeader
             if showMultiPreview {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 32) {
@@ -120,7 +119,6 @@ struct ArticleEditorView: View {
                                             isLandscape: isLandscape) {
                                 previewBody
                             }
-                            .previewAppearance(previewTheme.appearance)
                         }
                     }
                     .padding(.horizontal, 40).padding(.vertical, 16)
@@ -134,7 +132,6 @@ struct ArticleEditorView: View {
                                     isLandscape: isLandscape) {
                         previewBody
                     }
-                    .previewAppearance(previewTheme.appearance)
                     Spacer(minLength: 40)
                 }
                 .padding(.vertical, 16)
@@ -153,7 +150,6 @@ struct ArticleEditorView: View {
             }
             .padding()
         }
-        .preferredColorScheme(previewTheme.appearance.colorScheme) // ✅ фикс: локальная тема
     }
     
     // MARK: - Preview Header
@@ -186,12 +182,9 @@ struct ArticleEditorView: View {
                 }
             }
             
-            // --- локальная тема только для превью ---
+            // --- УДАЛЕН переключатель темы предпросмотра ---
             HStack(spacing: 8) {
-                Text("Theme")
-                ThemeToggle(scope: .preview($previewTheme.appearance))   // ✅ только предпросмотр
                 Spacer()
-                
                 Toggle(isOn: $showMultiPreview) {
                     Image(systemName: "square.split.2x1")
                 }
@@ -235,8 +228,8 @@ struct ArticleEditorView: View {
                 .disabled(!viewModel.hasUnsavedChanges)
                 .keyboardShortcut("s", modifiers: .command)
             
-            // Глобальный тоггл темы приложения
-            ThemeToggle(scope: .app)   // ✅ влияет только на всё приложение
+            // ТОЛЬКО глобальный тоггл темы приложения
+            ThemeToggle(scope: .app)
         }
         .padding()
     }
