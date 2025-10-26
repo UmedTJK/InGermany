@@ -95,7 +95,7 @@ public enum TemplateCategory: String, CaseIterable, Codable {
 extension ArticleTemplate {
     public static var empty: ArticleTemplate {
         ArticleTemplate(
-            name: "Пустая статья",
+            name: "Пустая статья 1",
             description: "Начните с чистого листа",
             iconName: "doc",
             blocks: [],

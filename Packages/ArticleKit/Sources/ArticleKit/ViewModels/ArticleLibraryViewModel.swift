@@ -127,7 +127,7 @@ public class ArticleLibraryViewModel: ObservableObject {
         let fileURL = libraryDirectory.appendingPathComponent(fileName)
         
         let newDocument = ArticleDocument(
-            title: "Новая статья",
+            title: "Новая статья Тест",
             sections: [],
             url: fileURL
         )

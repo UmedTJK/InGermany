@@ -5,13 +5,10 @@
 //  Created by SUM TJK on 23.10.25.
 //
 
-import SwiftUI
+import Foundation
 
-/// Опции для выбора фона в предпросмотре устройства
-enum PreviewBackgroundStyle: String, CaseIterable, Identifiable {
-    case light
-    case dark
-    case auto
-    
-    var id: String { rawValue }
+public enum PreviewBackgroundStyle: String, CaseIterable, Codable {
+    case plain
+    case grid
+    case paper
 }
