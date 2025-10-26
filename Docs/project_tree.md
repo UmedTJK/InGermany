@@ -63,7 +63,8 @@
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
 │   │   ├── AppIcon.appiconset
-│   │   └── Contents.json
+│   │   ├── Contents.json
+│   │   └── germany6.imageset
 │   ├── ContentView.swift
 │   ├── InGermanyCMSApp.swift
 │   ├── Item.swift
@@ -73,7 +74,8 @@
 │   │   ├── PreviewAppearance.swift
 │   │   └── PreviewDevice.swift
 │   ├── Resources
-│   │   └── burgeramt_registration.json
+│   │   ├── burgeramt_registration.json
+│   │   └── image
 │   ├── Services
 │   │   └── PreviewEnvironmentService.swift
 │   └── Views
@@ -288,4 +290,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-85 directories, 204 files
+87 directories, 204 files
