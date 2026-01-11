@@ -71,6 +71,7 @@
 		ADB930362F1354D600A961D7 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = ADB930332F1354D500A961D7 /* .gitignore */; };
 		ADB9303D2F1354D600A961D7 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = ADB930332F1354D500A961D7 /* .gitignore */; };
 		ADB930462F135DC400A961D7 /* SharedCore in Frameworks */ = {isa = PBXBuildFile; productRef = ADB930452F135DC400A961D7 /* SharedCore */; };
+		ADB930542F1370D400A961D7 /* SharedCore in Frameworks */ = {isa = PBXBuildFile; productRef = ADB930532F1370D400A961D7 /* SharedCore */; };
 		ADDF80FD2EA6C8B8000885DE /* NSWindow+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */; };
 		ADDF80FE2EA6C9C2000885DE /* NSWindow+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */; };
 		ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */ = {isa = PBXBuildFile; fileRef = ADE23B732E9BEED400BD152B /* burgeramt_registration.json */; };
@@ -323,6 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD2E64672EA29DED00436C9A /* SharedKit in Frameworks */,
+				ADB930542F1370D400A961D7 /* SharedCore in Frameworks */,
 				AD2E64172EA225BA00436C9A /* ArticleKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -838,6 +840,7 @@
 			packageProductDependencies = (
 				AD2E64162EA225BA00436C9A /* ArticleKit */,
 				AD2E64662EA29DED00436C9A /* SharedKit */,
+				ADB930532F1370D400A961D7 /* SharedCore */,
 			);
 			productName = InGermanyCMS;
 			productReference = AD2E63E52EA2223700436C9A /* InGermanyCMS.app */;
@@ -1679,6 +1682,11 @@
 		};
 		ADB930452F135DC400A961D7 /* SharedCore */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = SharedCore;
+		};
+		ADB930532F1370D400A961D7 /* SharedCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ADB930442F135DC400A961D7 /* XCLocalSwiftPackageReference "SharedCore" */;
 			productName = SharedCore;
 		};
 /* End XCSwiftPackageProductDependency section */
