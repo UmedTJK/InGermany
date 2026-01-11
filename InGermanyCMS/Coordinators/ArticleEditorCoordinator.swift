@@ -9,31 +9,33 @@ import ArticleKit
 import SharedCore
 import Combine
 
-
 @MainActor
 final class ArticleEditorCoordinator: ObservableObject {
 
     @Published var editorViewModel: ArticleEditorViewModel
-
     private let writer: ArticlesWriting
 
-    init(
-        document: ArticleDocument,
-        writer: ArticlesWriting
-    ) {
+    init(document: ArticleDocument) {
         self.editorViewModel = ArticleEditorViewModel(document: document)
-        self.writer = writer
+
+        let articlesDir = FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)
+            .first!
+            .appendingPathComponent("Articles", isDirectory: true)
+
+        self.writer = FileArticlesWriter(directoryURL: articlesDir)
     }
 
     func save() async throws {
-        // 1️⃣ Сохраняем локально (как и раньше)
+        // 1️⃣ локальное сохранение (Editor)
         editorViewModel.saveDocument()
 
-        // 2️⃣ Пишем в домен через SharedCore
+        // 2️⃣ доменное сохранение (SharedCore)
         let article = mapToSharedCore(editorViewModel.document)
         try await writer.updateArticle(article)
     }
 }
+
 // MARK: - Mapping to SharedCore
 private extension ArticleEditorCoordinator {
 
