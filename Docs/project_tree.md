@@ -1,4 +1,7 @@
 .
+├── Adapters
+│   └── SharedCore
+│       └── ArticlesProviderAdapter.swift
 ├── Core
 │   ├── AppContainer.swift
 │   ├── ContentView.swift
@@ -39,60 +42,39 @@
 ├── InGermany
 │   ├── Assets.xcassets
 │   │   ├── AccentColor.colorset
+│   │   │   └── Contents.json
 │   │   ├── AppIcon.appiconset
+│   │   │   ├── Contents.json
+│   │   │   ├── Logo 1.png
+│   │   │   └── Logo.png
 │   │   ├── Contents.json
 │   │   └── Logo.imageset
+│   │       ├── Contents.json
+│   │       └── Logo.png
 │   ├── Contents.json
 │   ├── LogoDark.png
 │   ├── LogoLight.png
-│   ├── Preview Content
-│   │   └── Preview Assets.xcassets
-│   └── Views
+│   └── Preview Content
+│       └── Preview Assets.xcassets
+│           ├── Contents.json
+│           ├── LogoDark.imageset
+│           └── LogoLight.imageset
 ├── InGermany.xcodeproj
 │   ├── project.pbxproj
 │   ├── project.xcworkspace
 │   │   ├── contents.xcworkspacedata
 │   │   ├── xcshareddata
+│   │   │   └── WorkspaceSettings.xcsettings
 │   │   └── xcuserdata
+│   │       └── sumtjk.xcuserdatad
 │   ├── remove-xcstrings.patch
 │   ├── xcshareddata
 │   │   └── xcschemes
+│   │       └── InGermany.xcscheme
 │   └── xcuserdata
 │       └── sumtjk.xcuserdatad
-├── InGermanyCMS
-│   ├── Assets.xcassets
-│   │   ├── AccentColor.colorset
-│   │   ├── AppIcon.appiconset
-│   │   ├── Contents.json
-│   │   └── germany6.imageset
-│   ├── ContentView.swift
-│   ├── InGermanyCMSApp.swift
-│   ├── Item.swift
-│   ├── Managers
-│   │   └── PreviewThemeManager.swift
-│   ├── Model
-│   │   ├── PreviewAppearance.swift
-│   │   └── PreviewDevice.swift
-│   ├── Resources
-│   │   ├── burgeramt_registration.json
-│   │   └── image
-│   ├── Services
-│   │   └── PreviewEnvironmentService.swift
-│   └── Views
-│       ├── ArticleComponents
-│       ├── ArticleEditorView.swift
-│       ├── ArticleLibraryView.swift
-│       ├── BlockEditor.swift
-│       ├── BlockPickerView.swift
-│       ├── Components
-│       ├── DemoArticleView.swift
-│       ├── PreviewBackgroundStyle.swift
-│       └── TemplatePickerView.swift
-├── InGermanyCMSTests
-│   └── InGermanyCMSTests.swift
-├── InGermanyCMSUITests
-│   ├── InGermanyCMSUITests.swift
-│   └── InGermanyCMSUITestsLaunchTests.swift
+│           ├── xcdebugger
+│           └── xcschemes
 ├── InGermanyTests
 │   ├── Editor
 │   │   ├── ArticleEditorImportExportTests.swift
@@ -113,15 +95,33 @@
 │   │   └── AppUITests.swift
 │   └── Unit
 │       ├── Helpers
+│       │   └── ReadingTimeCalculatorTests.swift
 │       ├── Managers
+│       │   ├── FavoritesManagerTests.swift
+│       │   ├── RatingManagerTests.swift
+│       │   └── ReadingHistoryManagerTests.swift
 │       ├── Models
+│       │   └── ArticlesCategoriesConsistencyTests.swift
 │       ├── Services
+│       │   ├── ArticlesRepositoryImplTests.swift
+│       │   ├── DataServiceTests.swift
+│       │   ├── LocalizationKeysTests.swift
+│       │   └── NetworkServiceTests.swift
 │       └── ViewModels
+│           ├── AboutViewModelTests.swift
+│           ├── ArticleDetailViewModelTests.swift
+│           ├── ArticleRowViewModelTests.swift
+│           ├── CategoriesViewModelTests.swift
+│           ├── FavoritesViewModelTests.swift
+│           ├── HomeViewModelTests.swift
+│           ├── SearchViewModelTests.swift
+│           └── SettingsViewModelTests.swift
 ├── Managers
 │   ├── FavoritesManager.swift
 │   ├── RatingManager.swift
 │   ├── ReadingHistoryManager.swift
 │   ├── ReadingStatsManager.swift
+│   ├── SettingsManager.swift
 │   └── TextSizeManager.swift
 ├── Models
 │   ├── Article.swift
@@ -135,11 +135,15 @@
 │   ├── ArticleKit
 │   │   ├── Package.swift
 │   │   ├── Sources
+│   │   │   └── ArticleKit
 │   │   └── Tests
+│   │       └── ArticleKitTests
 │   └── SharedKit
 │       ├── Package.swift
 │       ├── Sources
+│       │   └── SharedKit
 │       └── Tests
+│           └── SharedKitTests
 ├── Protocols
 │   ├── ArticleFormatterProtocol.swift
 │   ├── ArticlesRepositoryProtocol.swift
@@ -150,6 +154,7 @@
 │   ├── RatingManagerProtocol.swift
 │   ├── ReadingProgressTrackerProtocol.swift
 │   ├── ReadingStatsManagingProtocol.swift
+│   ├── SettingsManagingProtocol.swift
 │   └── ShareServiceProtocol.swift
 ├── README.md
 ├── Repositories
@@ -158,10 +163,22 @@
 ├── Resources
 │   ├── Images
 │   │   ├── Base.lproj
+│   │   │   ├── bank_account.jpg
+│   │   │   ├── germany1.jpg
+│   │   │   └── germany3.jpg
 │   │   ├── ar.lproj
+│   │   │   ├── germany1.jpg
+│   │   │   └── germany3.jpg
 │   │   ├── de.lproj
+│   │   │   ├── germany1.jpg
+│   │   │   └── germany3.jpg
 │   │   ├── en.lproj
+│   │   │   ├── bank_account.jpg
+│   │   │   ├── germany1.jpg
+│   │   │   └── germany3.jpg
 │   │   ├── fa.lproj
+│   │   │   ├── germany1.jpg
+│   │   │   └── germany3.jpg
 │   │   ├── germany10.jpg
 │   │   ├── germany11.jpg
 │   │   ├── germany12.jpg
@@ -174,10 +191,15 @@
 │   │   ├── germany8.jpg
 │   │   ├── germany9.jpg
 │   │   ├── ru.lproj
+│   │   │   ├── germany1.jpg
+│   │   │   └── germany3.jpg
 │   │   ├── tg-TJ.lproj
+│   │   │   ├── germany1.jpg
+│   │   │   └── germany3.jpg
 │   │   └── uk.lproj
+│   │       ├── germany1.jpg
+│   │       └── germany3.jpg
 │   ├── Test_Document.pdf
-│   ├── articles
 │   ├── articles.json
 │   ├── burgeramt_registration.json
 │   ├── burgeramt_registration_base64.json
@@ -198,13 +220,20 @@
 │   ├── NetworkService.swift
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
+├── SharedCore
+│   ├── Package.swift
+│   └── Sources
+│       └── SharedCore
+│           ├── Contracts
+│           ├── Domain
+│           ├── Models
+│           └── Support
 ├── Sources
 │   ├── ArticleKit
 │   │   ├── ArticleKit.swift
-│   │   ├── Components
-│   │   ├── Models
-│   │   ├── Renderer
-│   │   └── ViewModels
+│   │   └── Models
+│   │       ├── ArticleBlock.swift
+│   │       └── ArticleSectionDTO.swift
 │   └── ViewModels
 ├── UIUtils
 │   ├── Accessibility+Extensions.swift
@@ -290,4 +319,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-87 directories, 204 files
+85 directories, 235 files
