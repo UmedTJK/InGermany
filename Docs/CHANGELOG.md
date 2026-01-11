@@ -1,50 +1,70 @@
 # 📖 CHANGELOG
 
-## [v1.16.0] – 2025-10-23
+Все заметные изменения в этом проекте документируются здесь.
+Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/).
+
+---
+
+## [Unreleased]
+### Changed
+- Refactored settings architecture: introduced SettingsManager as single source of truth
+- Removed AppStorage usage from SettingsViewModel and ContentView
+- Bound app color scheme to SettingsManager
+- Cleaned up ContentView dependencies
+
+---
+
+
+
+## [v1.17.0] – 2025-10-23
 
 ### Added
-- Поддержка мульти-просмотра устройств в ArticleEditorView  
-  (iPhone SE, 14, 15, 16, 17 Pro Max, iPad Mini).
-- По умолчанию выбран **iPhone 17 Pro Max** для предпросмотра.
-- Новый компонент `DeviceFrameView` адаптирован под разные размеры устройств.
+- Поддержка мульти-просмотра устройств в ArticleEditorView (iPhone SE, 14, 15, 16, 17 Pro Max, iPad Mini)
+- Новый компонент `DeviceFrameView` адаптирован под разные размеры устройств
+- По умолчанию выбран **iPhone 17 Pro Max** для предпросмотра
 
 ### Changed
-- Панель предпросмотра (Preview Toolbar) разделена на 4 секции:  
-  масштаб, выбор устройства/ширины, тема, action-кнопки.  
-  Это улучшает читаемость и удобство управления предпросмотром.
+- Панель предпросмотра (Preview Toolbar) разделена на 4 секции: масштаб, выбор устройства/ширины, тема, action-кнопки
+- Переключение темы (Light/Dark/Auto) теперь влияет **только на экран iPhone**
 
 ### Fixed
-- Переключение темы (Light/Dark/Auto) теперь влияет **только на экран iPhone**.  
-  Внешний интерфейс macOS-приложения остаётся в системной теме.
+- Внешний интерфейс macOS-приложения остаётся в системной теме при переключении темы превью
 
+---
 
 ## [v1.16.1-20251022] – 2025-10-22
+
 ### Added
-- Confirmed iOS build runs on iPhone 17 Pro Max simulator 🎉
+- Подтверждена работа iOS build на iPhone 17 Pro Max simulator 🎉
 
 ### Changed
-- Removed CMS-only dependencies from `SettingsView`
-- Unified project references for iOS/macOS targets
+- Удалены CMS-специфичные зависимости из `SettingsView`
+- Унифицированы project references для iOS/macOS таргетов
 
 ### Verified
-- ✅ iOS build & launch in Simulator
-- ✅ macOS CMS JSON export continues to work
+- ✅ iOS build & launch в Simulator
+- ✅ macOS CMS JSON export продолжает работать
 
-## [1.16.0] - 2025-10-22
+---
+
+## [v1.16.0] – 2025-10-22
+
 ### Added
-- macOS target (InGermanyCMS) now successfully builds and runs
-- JSON export functionality with `NSSavePanel` and alerts
+- macOS таргет (InGermanyCMS) успешно собирается и запускается
+- JSON export функциональность с `NSSavePanel` и алертами
 
 ### Fixed
-- Removed duplicate `Localizable.xcstrings` and `Package.swift` references causing build conflicts
-- Replaced missing `ArticleBlockType` with unified `BlockType`
-- Corrected conditional imports for AppKit / Combine (macOS-only)
+- Удалены дублирующиеся `Localizable.xcstrings` и `Package.swift` references вызывающие конфликты сборки
+- Заменён отсутствующий `ArticleBlockType` на унифицированный `BlockType`
+- Исправлены условные импорты для AppKit / Combine (macOS-only)
 
 ### Notes
-🎉 First successful macOS build milestone. JSON articles can now be exported directly from the CMS.
+🎉 Первая успешная сборка macOS. JSON статьи теперь могут экспортироваться напрямую из CMS.
 
+---
 
-## [v1.16.1-20251015] – 2025-10-15
+## [v1.15.2-20251015] – 2025-10-15
+
 ### Added
 - PDF Library UI улучшен:
   - Добавлены превью (thumbnails) для PDF-документов
@@ -61,139 +81,104 @@
 - Проект переведён на value-based animation (без `withAnimation` предупреждений)
 - Обновлён `InGermany.xcodeproj` для поддержки новых файлов
 
+---
 
-## [v1.16.1] - 2025-10-15
+## [v1.15.1] – 2025-10-15
+
 ### Changed
 - 🎨 **PDF Library UI**:
-  - Переписан экран `PDFLibraryView` с использованием карточек (`card layout`) вместо стандартного списка.
-  - Добавлены иконки `doc.richtext` для каждого документа.
-  - Улучшены отступы, фон и тени для более современного внешнего вида.
+  - Переписан экран `PDFLibraryView` с использованием карточек (`card layout`) вместо стандартного списка
+  - Добавлены иконки `doc.richtext` для каждого документа
+  - Улучшены отступы, фон и тени для более современного внешнего вида
 
+---
 
+## [v1.15.0] – 2025-10-14
 
-
-## [v1.16.0] - 2025-10-14
 ### Added
 - 📄 **PDF Library** — новый раздел для работы с PDF-документами:
-  - `PDFLibraryView` — экран со списком документов.
-  - `PDFLibraryViewModel` — управление документами и локализация названий/описаний.
-  - `PDFViewerViewModel` — восстановлен и унифицирован для отображения PDF.
-  - Тестовые документы `test1.pdf`, `test2.pdf`, `test3.pdf` добавлены в `Resources/`.
+  - `PDFLibraryView` — экран со списком документов
+  - `PDFLibraryViewModel` — управление документами и локализация названий/описаний
+  - `PDFViewerViewModel` — восстановлен и унифицирован для отображения PDF
+  - Тестовые документы `test1.pdf`, `test2.pdf`, `test3.pdf` добавлены в `Resources/`
 
 ### Changed
-- 🔗 В `UsefulToolsSection` ссылка на одиночный PDF заменена на переход в библиотеку PDF.
-- 🧩 `AppContainer` расширен фабрикой `makePDFLibraryViewModel()` для DI.
+- 🔗 В `UsefulToolsSection` ссылка на одиночный PDF заменена на переход в библиотеку PDF
+- 🧩 `AppContainer` расширен фабрикой `makePDFLibraryViewModel()` для DI
 
 ### Localization
-- 🌍 Добавлены ключи для PDF-документов (`pdf_title_*`, `pdf_desc_*`) во все 7 языков (ru, en, de, tj, fa, ar, uk).
+- 🌍 Добавлены ключи для PDF-документов (`pdf_title_*`, `pdf_desc_*`) во все 7 языков (ru, en, de, tj, fa, ar, uk)
 
 ---
 
+## [v1.14.0] – 2025-10-13
 
-## [v1.15.0] - 2025-10-13
-### ✨ Added
-- Adopted **system Liquid Glass TabBar** on iOS 18+ (matches Apple Music/Safari look & feel)
-- Automatic switching: iOS 18+ → Liquid Glass, iOS 17 → blur fallback
+### Added
+- Принят **system Liquid Glass TabBar** на iOS 18+ (соответствует Apple Music/Safari look & feel)
+- Автоматическое переключение: iOS 18+ → Liquid Glass, iOS 17 → blur fallback
 
-### 🔧 Changed
-- Removed unsupported manual modifiers (`.tabBarStyle`, `.tabBarMinimizeBehavior`)
-- Simplified `ContentView` to rely on native `TabView` behavior
-
-### 🛠 Internal
-- Verified compatibility on iPhone 16 Pro Max (iOS 26.1)
-- Ensured fallback blur styling for older devices (iOS 17)
-
-
-## [v1.14.0-20251012] - 2025-10-12
 ### Changed
-- Moved **DemoArticleView** from a separate TabBar tab into **Settings → Debug section**
-- TabBar now limited to 5 tabs (Home, Categories, Search, Favorites, Settings)
-- Demo content isolated for debug builds only
+- Удалены неподдерживаемые ручные модификаторы (`.tabBarStyle`, `.tabBarMinimizeBehavior`)
+- Упрощён `ContentView` для использования нативного `TabView` поведения
 
-
-## [Unreleased]
-
-### 🚀 Performance
-- **perf(startup):** Переписан `DataService` → убраны блокирующие вызовы `Data(contentsOf:)`, добавлены `AsyncStream` для подписки на данные и быстрые `getCached…()` методы для мгновенного UI.
-- **perf(startup):** Обновлён `AppContainer.bootstrap()` → теперь запускает preload данных в фоне через `Task.detached` (UI не блокируется).
-- **perf(startup):** В `InGermanyApp` убран `await` при вызове `bootstrap()`, вместо этого preload вызывается неблокирующе в `.onAppear`.
-- **perf(startup):** В `ContentView` добавлен вызов `appContainer.bootstrap()` в `.onAppear` как запасной запуск; все вкладки обёрнуты в `LazyView` для ленивой инициализации.
-- **perf(startup):** В `LocalizationManager` добавлен метод `preload()` для подготовки словарей; вызов интегрирован в `AppContainer.bootstrap()` → убран лаг на первом `t(_:)`.
+### Internal
+- Проверена совместимость на iPhone 16 Pro Max (iOS 26.1)
+- Обеспечен fallback blur styling для старых устройств (iOS 17)
 
 ---
 
-## [1.3.1] – 2025-10-10
-- fix(navigation): migrate Categories & ArticlesByCategory to NavigationStack
-- docs(tree): обновлён Docs/project_tree.md
+## [v1.13.5] – 2025-10-12
 
-## [1.4.0] - 2025-10-11
-### 🚀 Perf / i18n Optimization
-- ⚡️ Optimized app startup: moved JSON/repository bootstrap to async tasks → UI now loads instantly
-- 🧩 Introduced `LazyView` for TabView (Views are created only on first access)
-- 🗂 Removed `AppContainer.shared`, full migration to `EnvironmentObject`-based DI
-- 🌐 Internationalization:
-  - Removed hardcoded UI strings in `MapView`, `AboutView`, `FavoritesView`, `SettingsView`
-  - Added missing localization keys:
-    - `map_title`, `map_my_location`, `map_refresh`, `map_loading`
-    - `app_name`, `about_build_label`
-    - `settings_card_style_title`, `settings_card_style_picker`, `settings_language_picker`
-- 🔧 Updated all Previews to use `AppContainer.previewMock()`
+### Changed
+- **DemoArticleView** перемещён из отдельной вкладки TabBar в **Settings → Debug section**
+- TabBar теперь ограничен 5 вкладками (Home, Categories, Search, Favorites, Settings)
+- Demo content изолирован только для debug сборок
 
-### ✅ Notes
-- Verified with Instruments: startup time reduced from ~10s ⏩ ~1s
-- Verified localization for RU / EN / DE  
-- No compiler warnings on Xcode 15 / Swift 5.9
+---
 
+## [v1.13.4] – 2025-10-11
 
-### v1.13.1 – 2025-10-10
+### Performance
+- **perf(startup):** Переписан `DataService` → убраны блокирующие вызовы `Data(contentsOf:)`, добавлены `AsyncStream` для подписки на данные и быстрые `getCached…()` методы для мгновенного UI
+- **perf(startup):** Обновлён `AppContainer.bootstrap()` → теперь запускает preload данных в фоне через `Task.detached` (UI не блокируется)
+- **perf(startup):** В `InGermanyApp` убран `await` при вызове `bootstrap()`, вместо этого preload вызывается неблокирующе в `.onAppear`
+- **perf(startup):** В `ContentView` добавлен вызов `appContainer.bootstrap()` в `.onAppear` как запасной запуск; все вкладки обёрнуты в `LazyView` для ленивой инициализации
+- **perf(startup):** В `LocalizationManager` добавлен метод `preload()` для подготовки словарей; вызов интегрирован в `AppContainer.bootstrap()` → убран лаг на первом `t(_:)`
 
-- fix: navigation flow in Categories → Articles → Detail
+---
+
+## [v1.13.3] – 2025-10-10
 
 ### Fixed
-- 🛠 Navigation in Categories flow:
-  - Migrated `CategoriesView` to `NavigationStack`
-  - Updated `ArticlesByCategoryView` to modern navigation API
-  - Ensured `Article` and `Category` conform to `Hashable` for stable navigation
-  - Fixed bug where articles were not clickable or closed immediately after opening
+- Навигация в Categories flow:
+  - Мигрирован `CategoriesView` на `NavigationStack`
+  - Обновлён `ArticlesByCategoryView` на modern navigation API
+  - Обеспечено соответствие `Article` и `Category` протоколу `Hashable` для стабильной навигации
+  - Исправлен баг, когда статьи не были кликабельны или закрывались сразу после открытия
 
-### v1.15.1 – 2025-10-10
+### Changed
+- Добавлен глобальный переключатель тёмной темы через @AppStorage
+- Добавлена реализация `Article.wordCount(for:)`
+- Использован optional languageCode identifier с default в SettingsViewModel и SearchViewModel
+- Удалён устаревший CardStyle enum
 
-- ✨ enable global dark mode toggle via @AppStorage
-- ✨ enable global dark mode toggle via @AppStorage
-- ✨ add Article.wordCount(for:) implementation
-- 🛠 use optional languageCode identifier with default in SettingsViewModel and SearchViewModel
-- 📝 обновлён Docs/project_tree.md (depth=3)
-- 📝 обновлён Docs/project_tree.md (depth=3)
-- 🔧 remove obsolete CardStyle enum
+---
 
+## [v1.13.2] – 2025-10-09
 
-echo "- COMPLETE ARCHITECTURE REFACTORING: All core issues resolved" >> Docs/CHANGELOG.md
-echo "- DI Perfection: Zero AppContainer.shared in ViewModels" >> Docs/CHANGELOG.md
-echo "- Offline-First: Multi-level caching system implemented" >> Docs/CHANGELOG.md
-git add Docs/CHANGELOG.md
-git commit -m "docs: update changelog with architecture milestone"
-
-## [v1.14.1] - 2025-10-09
-
-### 🛠 Изменения
+### Changed
 - **ContentView**: убран лишний `forced cast` для `ReadingStatsManager`
 - **AppContainer / InGermanyApp**: частичный рефакторинг DI (упрощение и устранение избыточных зависимостей)
 - **ArticleDetailViewModel / ArticleDetailView**: приведены ближе к SOLID, подготовка к выносу UI-логики и шаринга
-- **ARCHITECTURE_ISSUES.md**: актуализирован список проблем и прогресса (остался один `AppContainer.shared`)
 
-### ✅ Результат
-- Код чище и без предупреждений компилятора (Swift 6)
-- Архитектурная документация синхронизирована с текущим состоянием проекта
-- Подготовлена база для следующих шагов (вынос UI-логики и ShareService)
-
----
-
-## [v1.14.1] - 2025-10-09
 ### Fixed
 - Удалён ненужный `as! ReadingStatsManager` в ContentView
 - Устранено предупреждение компилятора (Swift 6)
 
-## [1.14.0] - 2025-10-09
+---
+
+## [v1.13.1] – 2025-10-09
+
 ### Added
 - Новый `ReadingStatsManager` и протокол `ReadingStatsManaging`
 - Поддержка расчёта прогресса чтения, сессий и статистики
@@ -206,144 +191,53 @@ git commit -m "docs: update changelog with architecture milestone"
 ### Removed
 - Удалён `ReadingHistoryManager` как устаревший компонент
 
-### v1.13.5 – 2025-10-06
+---
 
-#### 🧪 Tests
-- test(article-detail-vm): убраны предупреждения об unused vars в `ArticleDetailViewModelTests`
+## [v1.13.0] – 2025-10-07
 
-### v1.13.4 – 2025-10-06
-
-- 📝 обновлён Docs/project_tree.md (depth=3)
-
-### v1.13.3 – 2025-10-06
-
-#### 📝 Docs
-- docs(tree): обновлён Docs/project_tree.md (depth=3)
-
-### v1.13.2 – 2025-10-06
-
-#### 🧹 Chores
-- chore: добавлены скрипты релиза и обновлён AI_CONTEXT.md
-
-
-### v1.13.1 – 2025-10-06
-
-- Обновил документацию
-
-### v1.13.1 – 2025-10-06
-
-- Исправил документацию
-
-### v1.13.1 – 2025-10-06
-
-- Docs update
-
-### v1.13.1 – 2025-10-06
-
-- Обновил документацию
-
-## [v1.13.5] – 2025-10-07 10:03 или в текущую версию:
-### Исправления
+### Fixed
 - Исправлена ошибка инициализации `SettingsViewModel` через `AppContainer`
 - Устранены ошибки подписки на `@AppStorage` с Combine (`dropFirst().sink`)
 - Обновлён `LanguagePickerView`: добавлена поддержка внешнего `Binding<String>`
 
-[Unreleased] - 2025-10-06 18:42
-🔧 Architecture & DI Refactoring
-Fixed DI violations in ContentView: Removed direct FavoritesManager.shared creation, now uses AppContainer
+---
 
-Fixed InGermanyApp DI: Now uses AppContainer instead of direct DefaultCategoriesRepository.shared
+## [v1.12.5] – 2025-10-06
 
-Updated View initialization: All main Views (HomeView, CategoriesView, SearchView, FavoritesView, SettingsView) now accept AppContainer parameter
+### Architecture & DI Refactoring
+- **DI Foundation**: Созданы repository protocols (`ArticlesRepositoryProtocol`, `CategoriesRepositoryProtocol`, `FavoritesManagingProtocol`)
+- **AppContainer**: Рефакторинг для использования protocol-based dependencies вместо конкретных реализаций
+- **ViewModel Layer**: Обновлены все ViewModels для совместимости с правильным DI
+- **Service Layer**: `ArticlesRepositoryImpl` теперь требует явной инъекции DataService
+- **Testing**: Обновлён test suite для работы с новой DI архитектурой
 
-Fixed navigation dependencies: Corrected appContainer passing in SettingsView and CategoriesView navigation
+### Fixed
+- **Convenience Initializers**: Исправлены convenience инициализаторы ViewModel для правильной инъекции зависимостей
+- **Swift 6 Concurrency**: Решены проблемы MainActor изоляции в AppContainer
+- **Protocol Adoption**: Обеспечено использование протоколов вместо прямых зависимостей
 
-Created new branch: fix/ui-di-violations for ongoing UI components refactoring
+---
 
-🐛 Fixes
-Fixed compilation errors: Added missing selectedLanguage in ArticleDetailView
+## [v1.12.4] – 2025-10-05
 
-Removed duplicate initializers: Cleaned up ArticleDetailView initialization
+### Tests - COMPLETE UNIT TESTING COVERAGE 🎉
+- ALL COMPONENTS TESTED: 21/21 components с 300+ unit тестами
+- **Models**: Article (26), Category (24), Location (22) - 72 tests total
+- **Helpers**: ReadingTimeCalculator (60+), ReadingTimeTracker (30+), ReadingProgressTracker (25) - 115+ tests total
+- **ViewModels**: 8 ViewModels с полным покрытием
+- **Managers**: 4 managers с комплексным тестированием
+- **Services**: 3 services с integration testing
 
-Fixed parameter names: Corrected historyManager parameter in ArticleDetailViewModel calls
+### Architecture
+- Swift 6 Ready: Полная MainActor изоляция и concurrency безопасность
+- Performance Optimized: Performance тесты для всех критических операций
+- Multilingual Support: Тестирование для всех 7 поддерживаемых языков
+- Real Data Integration: Тесты используют актуальные JSON данные из project resources
 
-📚 Documentation
-Updated AI_CONTEXT.md: Reflected current architecture progress
+---
 
-Maintained project structure: Updated documentation with current state
+## [v1.12.3] – 2025-10-05
 
-🔄 Next Steps
-Continue UI components refactoring: ArticleCompactCard, ArticleMetaView, ArticleCardView
-
-Eliminate direct manager dependencies in all UI components
-
-Unify localization approach across all Views
-
-## [Unreleased] - 2025-10-05
-- docs(tree): обновлён Docs/project_tree.md (depth=3)
-//
-//  CHANGELOG.md
-//  InGermany
-//
-//  Created by SUM TJK on 20.09.25.
-//
-
-
-# Changelog
-
-## [Unreleased] - 2025-10-06
-
-### 🔧 Architecture & Refactoring
-- **DI Foundation**: Created repository protocols (`ArticlesRepositoryProtocol`, `CategoriesRepositoryProtocol`, `FavoritesManagingProtocol`)
-- **AppContainer**: Refactored to use protocol-based dependencies instead of concrete implementations
-- **ViewModel Layer**: Updated all ViewModels (`HomeViewModel`, `SearchViewModel`, `CategoriesViewModel`, `FavoritesViewModel`) for proper DI compatibility
-- **Service Layer**: 
-  - `ArticlesRepositoryImpl` now requires explicit DataService injection
-  - Started NetworkService refactoring for unified offline-first strategy
-- **Testing**: Updated test suite to work with new DI architecture
-
-### 🐛 Fixes
-- **Convenience Initializers**: Fixed ViewModel convenience initializers to properly inject dependencies
-- **Swift 6 Concurrency**: Resolved MainActor isolation issues in AppContainer
-- **Protocol Adoption**: Ensured all components use protocols instead of direct dependencies
-
-### 📚 Documentation
-- Updated AI_CONTEXT.md with current architecture state
-- Maintained project structure documentation
-- Added comprehensive commit history tracking
-
-[1.17.0] — 2025-10-05
-Tests - COMPLETE UNIT TESTING COVERAGE 🎉
-ALL COMPONENTS TESTED: 21/21 components with 300+ unit tests
-
-Models: Article (26), Category (24), Location (22) - 72 tests total
-
-Helpers: ReadingTimeCalculator (60+), ReadingTimeTracker (30+), ReadingProgressTracker (25) - 115+ tests total
-
-ViewModels: 8 ViewModels with full coverage
-
-Managers: 4 managers with comprehensive testing
-
-Services: 3 services with integration testing
-
-Architecture
-Swift 6 Ready: Full MainActor isolation and concurrency safety
-
-Performance Optimized: Performance tests for all critical operations
-
-Multilingual Support: Testing for all 7 supported languages
-
-Real Data Integration: Tests use actual JSON data from project resources
-
-Quality
-100% Public API Coverage for all components
-
-Edge Case Handling for all possible scenarios
-
-Integration Ready for next testing phase
-EOF
-
-## [1.15.0] — 2025-10-04
 ### Fixed
 - Исправлены ошибки компиляции в ArticleDetailViewModelTests:
   - Убран несуществующий параметр readingTime из markAsRead()
@@ -359,196 +253,123 @@ EOF
 
 ### Changed
 - Улучшена изоляция тестов с clearForTesting()
-- Стандартизированы паттерны тестирования" >> Docs/CHANGELOG.md
+- Стандартизированы паттерны тестирования
 
-git add Docs/CHANGELOG.md
-git commit -m "docs: обновить CHANGELOG с информацией о фиксах тестов"
+---
 
-## [Unreleased]
+## [v1.12.2] – 2025-10-04
+
 ### Added
-- Unit-тесты для CategoryManager (загрузка, поиск по id и имени).
-- Edge-тесты для DataService (articles.json, categories.json).
+- Unit-тесты для CategoryManager (загрузка, поиск по id и имени)
+- Edge-тесты для DataService (articles.json, categories.json)
 
-## [1.13.0] — 2025-10-04
+---
+
+## [v1.12.1] – 2025-10-04
+
 ### Added
 - Полное покрытие проекта `///` doc-комментариями для всех уровней:
-  Core, Models, Managers, Services, UIUtils, ViewModels, Views (Components, Cards, Sections, Screens).
-- Обновлён `AI_CONTEXT.md` и добавлен `Docs/locations_README.md`.
+  Core, Models, Managers, Services, UIUtils, ViewModels, Views (Components, Cards, Sections, Screens)
 
 ### Changed
-- Код соответствует принципам Clean Code и SOLID.
-- Улучшена документация для автогенерации Xcode DocC.
+- Код соответствует принципам Clean Code и SOLID
+- Улучшена документация для автогенерации Xcode DocC
 
-## [1.12.2] - 2025-10-03
+---
 
-### Fixed
-- Исправлено отображение миниатюр статей, загружаемых из Bundle.
-- Добавлена обработка расширений файлов (.avif → .jpg).
-- Добавлен fallback для изображений без расширения.
-- Улучшена надёжность загрузки миниатюр.
-
-## [Unreleased]
-
-
-### 📖 Documentation
-- Добавлены `///` doc-комментарии к основным моделям, менеджерам, сервисам, утилитам и view model:
-  - `Article`
-  - `DataService`
-  - `FavoritesManager`
-  - `CategoryManager`
-  - `LocalizationManager`
-  - `RatingManager`
-  - `ReadingHistoryManager`
-  - `ReadingTimeCalculator`
-  - `ReadingTimeTracker`
-  - `DefaultsStore`
-  - `Theme`
-  - `Animations`
-  - `ArticleRowViewModel`
-- Добавлены /// doc-комментарии для секций: AllArticlesSection, FavoritesSection, RecentlyReadSection, CategorySection, UsefulToolsSection.
-- Обновлён `CLEAN_CODE_CHECKLIST.md` с пунктом о документировании публичных классов и методов.
-
-### Technical
-- В файлах `Article.swift`, `DataService.swift`, `FavoritesManager.swift`, `CategoryManager.swift` и `LocalizationManager.swift` были добавлены doc-комментарии (`///`) для улучшения API-документации.
-
-## [1.12.1] - 2025-10-03
+## [v1.12.0] – 2025-10-03
 
 ### Fixed
-- Восстановлено отображение миниатюр статей в `SearchView` и `FavoritesView` (загрузка изображений из Bundle вместо Asset Catalog).
-- Исправлено вычисление `imageName` в `Article.swift` (автоматическая подстановка `.jpg`, замена `.avif`).
-- Перенесён блок рейтинга (`StarRatingView`) под дату публикации в `ArticleRow`.
-- Добавлены локализованные изображения `.jpg` в `Resources/Images`, удалены устаревшие `.avif`.
-- Добавлена отладка загрузки статей в `DataService` и проверки ресурсов в `InGermanyApp`.
+- Исправлено отображение миниатюр статей, загружаемых из Bundle
+- Добавлена обработка расширений файлов (.avif → .jpg)
+- Добавлен fallback для изображений без расширения
+- Улучшена надёжность загрузки миниатюр
+
+### Added
+- Добавлены `///` doc-комментарии к основным моделям, менеджерам, сервисам, утилитам и view model
+- Обновлён `CLEAN_CODE_CHECKLIST.md` с пунктом о документировании публичных классов и методов
+
+---
+
+## [v1.11.0] – 2025-10-03
+
+### Fixed
+- Восстановлено отображение миниатюр статей в `SearchView` и `FavoritesView` (загрузка изображений из Bundle вместо Asset Catalog)
+- Исправлено вычисление `imageName` в `Article.swift` (автоматическая подстановка `.jpg`, замена `.avif`)
+- Перенесён блок рейтинга (`StarRatingView`) под дату публикации в `ArticleRow`
+- Добавлены локализованные изображения `.jpg` в `Resources/Images`, удалены устаревшие `.avif`
+- Добавлена отладка загрузки статей в `DataService` и проверки ресурсов в `InGermanyApp`
 
 ### Changed
-- Визуальное выравнивание блока рейтинга (`StarRatingView`) — теперь он отображается под датой публикации.
-- Небольшие улучшения верстки `ArticleRow` для более аккуратного отображения миниатюры и текста.
+- Визуальное выравнивание блока рейтинга (`StarRatingView`) — теперь он отображается под датой публикации
+- Небольшие улучшения верстки `ArticleRow` для более аккуратного отображения миниатюры и текста
 
-## [Unreleased]
+---
 
-### Technical
-- chore(article-detail): технический коммит — рефакторинг ArticleDetailView и интеграция ArticleRowViewModel.  
-  ⚠️ Временные отклонения будут исправлены в следующих коммитах.
+## [v1.10.0] – 2025-10-03
 
-### Fixed
-- Восстановлен полный код `ArticleCompactCard` из стабильной версии (03.10.2025):
-  - Поддержка отображения заголовка, категории, анонса.
-  - Интеграция с `StarRatingView` и `RatingManager` для управления рейтингом.
-  - Интеграция с `ReadingProgressTracker` для отображения прогресса чтения.
-  - Поддержка изменения размера текста через `TextSizeManager`.
-  - Отображение стиля карточки через `CardImageStyle`.
-- Обновлён проектный файл `InGermany.xcodeproj` для корректной сборки.
-- Исправлен `ArticleDetailView` для согласованности с новой логикой прогресса чтения.
-
-## [1.12.0] - 2025-10-03
 ### Changed
 - Проектная структура оптимизирована под SOLID и MVVM:
-  - Удалена папка `Utils/`.
+  - Удалена папка `Utils/`
   - Файлы перемещены в новые пакеты:
-    - `Protocols/` — для интерфейсов (ArticlesRepository, CategoriesRepository, KeyValueStore).
-    - `Services/` — для реализаций (ArticlesRepositoryImpl, DataService, NetworkService, ShareService, AuthService, DefaultsStore, ExportToPDF, LocalizationManager).
-    - `Managers/` — для state-менеджеров (FavoritesManager, RatingManager, ReadingHistoryManager, ReadingTimeTracker, TextSizeManager, ReadingProgressHelper, ReadingProgressTracker, ReadingTimeCalculator).
-    - `UIUtils/` — для утилит UI (CardImageStyle, CardSize, Color+Hex, Theme, Animations, ProgressBar).
-    - `Formatters/` — для сервисов форматирования (ArticleMetaFormatter и др.).
+    - `Protocols/` — для интерфейсов (ArticlesRepository, CategoriesRepository, KeyValueStore)
+    - `Services/` — для реализаций (ArticlesRepositoryImpl, DataService, NetworkService, ShareService, AuthService, DefaultsStore, ExportToPDF, LocalizationManager)
+    - `Managers/` — для state-менеджеров (FavoritesManager, RatingManager, ReadingHistoryManager, ReadingTimeTracker, TextSizeManager, ReadingProgressHelper, ReadingProgressTracker, ReadingTimeCalculator)
+    - `UIUtils/` — для утилит UI (CardImageStyle, CardSize, Color+Hex, Theme, Animations, ProgressBar)
+    - `Formatters/` — для сервисов форматирования (ArticleMetaFormatter и др.)
 
+---
 
+## [v1.9.0] – 2025-10-03
 
-## [1.11.6] - 2025-10-03
 ### Added
-- Отображение и редактирование рейтинга статей в `ArticleCardView` через `StarRatingView`.
-- Интеграция `StarRatingView` в `ArticleCompactCard` и `ArticleMetaView` с использованием `RatingManager`.
+- Отображение и редактирование рейтинга статей в `ArticleCardView` через `StarRatingView`
+- Интеграция `StarRatingView` в `ArticleCompactCard` и `ArticleMetaView` с использованием `RatingManager`
 
 ### Fixed
-- Устранена ошибка вызова несуществующего свойства `rating` в `ArticleMetaView` и `ArticleCompactCard`, заменено на корректный метод `getRating(for:)`.
+- Устранена ошибка вызова несуществующего свойства `rating` в `ArticleMetaView` и `ArticleCompactCard`, заменено на корректный метод `getRating(for:)`
 
-## [1.11.5] - 2025-10-03
-### Changed
-- `CategoriesView` переведён на MVVM через `CategoriesViewModel`.
-- Все зависимости теперь предоставляются через `AppContainer`.
-- `FavoritesView` полностью переведён на MVVM через `FavoritesViewModel`, убран прямой доступ к `FavoritesManager.shared`.
+---
 
-## [1.11.4] - 2025-10-03
-### Added
-- Новый `AboutViewModel` для экрана «О приложении».
-- Фабрика `makeAboutViewModel()` добавлена в `AppContainer`.
+## [v1.8.0] – 2025-10-03
 
 ### Changed
-- `AboutView` переведён на MVVM и теперь получает данные (версия, билд, репозиторий) из ViewModel.
+- `CategoriesView` переведён на MVVM через `CategoriesViewModel`
+- Все зависимости теперь предоставляются через `AppContainer`
+- `FavoritesView` полностью переведён на MVVM через `FavoritesViewModel`, убран прямой доступ к `FavoritesManager.shared`
+- `AboutView` переведён на MVVM через `AboutViewModel`
+- `ArticleDetailView` переведён на MVVM через `ArticleDetailViewModel`
+- `SettingsView` переведён на MVVM через `SettingsViewModel`
 
-## [1.11.3] - 2025-10-03
-### Added
-- Новый `ArticleDetailViewModel` для управления экраном статьи.
-- Фабрика `makeArticleDetailViewModel()` добавлена в `AppContainer`.
+---
 
-### Changed
-- `ArticleDetailView` переведён на MVVM через `ArticleDetailViewModel`.
-- Убрана передача `FavoritesManager` во все вызовы `ArticleDetailView`.
-- Все секции и экраны, открывающие статьи, обновлены под новый DI.
-
-## [1.11.2] - 2025-10-03
-### Added
-- Новый `SettingsViewModel` для управления настройками и историей чтения.
-
-### Changed
-- `SettingsView` переведён на MVVM через `SettingsViewModel`.
-- Зависимости теперь предоставляются через `AppContainer`.
-
-## [1.11.1] - 2025-10-03
-### Changed
-- `CategoriesView` переведён на MVVM через `CategoriesViewModel`.
-- Добавлена фабрика `makeCategoriesViewModel()` в `AppContainer`.
-- `ContentView` упрощён: вызов `CategoriesView()` теперь без параметров.
-
-## [1.11.0] - 2025-10-03
-### Added
-- `AppContainer` как Composition Root для DI.
-- Фабрики: `makeHomeViewModel`, `makeFavoritesViewModel`, `makeSearchViewModel`.
-- Новые ViewModels: `FavoritesViewModel`, `SearchViewModel`.
-
-### Changed
-- `HomeView`, `FavoritesView`, `SearchView` переведены на MVVM через DI.
-- Убраны прямые вызовы `FavoritesManager.shared` и `DataService` из Views.
-- `ContentView` обновлён: `SearchView` теперь без параметров.
-
-## [1.10.1] - 2025-10-03
-### Changed
-- `FavoritesView` переведён на MVVM с использованием `FavoritesViewModel`.
-- Добавлена фабрика `makeFavoritesViewModel()` в `AppContainer`.
-- Удалена прямая зависимость от `FavoritesManager.shared` во View.
-
-## [1.10.0] - 2025-10-03
-### Added
-- Введён `AppContainer` как Composition Root для управления зависимостями (с `@MainActor`).
-
-### Changed
-- `HomeViewModel` переведён на работу через DI (ArticlesRepository и менеджеры).
-- Добавлен `convenience init()` для обратной совместимости.
-- `HomeView` больше не создаёт VM напрямую — теперь получает её из `AppContainer`.
-- Устранены предупреждения Swift 6 о `MainActor`-изоляции (`shared` у менеджеров).
-
-
-## [Unreleased]
+## [v1.7.0] – 2025-10-03
 
 ### Added
-- Ползунок для изменения размера текста с диапазоном от 80% до 150% и отображением текущего значения в процентах.  
-- Визуальные маркеры (маленькая и большая буква «A») для более наглядного выбора.
+- `AppContainer` как Composition Root для DI
+- Фабрики: `makeHomeViewModel`, `makeFavoritesViewModel`, `makeSearchViewModel`
+- Новые ViewModels: `FavoritesViewModel`, `SearchViewModel`
 
 ### Changed
-- Фиксированные варианты размера текста (Мелкий/Средний/Крупный) заменены на гибкий ползунок.  
-- Сброс возвращает размер текста к стандартному значению (100%, Medium).
+- `HomeView`, `FavoritesView`, `SearchView` переведены на MVVM через DI
+- Убраны прямые вызовы `FavoritesManager.shared` и `DataService` из Views
+- `ContentView` обновлён для поддержки новой архитектуры
 
+---
 
-## [v1.8.9] - 2025-09-28
+## [v1.6.0] – 2025-09-28
 
 ### Added
-- Статистика чтения теперь учитывает секунды и отображается в формате ЧЧ:ММ:СС.
+- Статистика чтения теперь учитывает секунды и отображается в формате ЧЧ:ММ:СС
+- Ползунок для изменения размера текста с диапазоном от 80% до 150%
 
 ### Fixed
-- Очистка истории чтения теперь синхронизируется с трекером времени (`ReadingTimeTracker`).
-- Добавлены вызовы `startSession` и `endSession` в ArticleDetailView для корректного трекинга времени.
+- Очистка истории чтения теперь синхронизируется с трекером времени (`ReadingTimeTracker`)
+- Добавлены вызовы `startSession` и `endSession` в ArticleDetailView для корректного трекинга времени
 
+---
 
-## [v1.8.8] - 2025-09-27
+## [v1.5.0] – 2025-09-27
 
 ### Fixed
 - **Массовое исправление после рефакторинга менеджеров:**
@@ -556,8 +377,6 @@ git commit -m "docs: обновить CHANGELOG с информацией о ф�
   - Исправлены API вызовы менеджеров (`FavoritesManager`, `RatingManager`, `TextSizeManager`)
   - Удалён `ReadingTracker` и устаревшие методы
   - Обновлены Preview с использованием `.shared` инстансов
-  - Исправлен `TextSizeSettingsPanel` для работы с новым `TextSizeManager` API
-  - Добавлены недостающие методы в менеджеры для совместимости
 
 ### Refactored
 - **Архитектура менеджеров:**
@@ -566,86 +385,10 @@ git commit -m "docs: обновить CHANGELOG с информацией о ф�
   - Введён `CategoriesRepository`, объединивший `CategoryManager` и `CategoriesStore`
   - Создана папка `Managers/` для централизованного хранения менеджеров
 
-### Updated
-- **Совместимость с iOS 17+:**
-  - Исправлен deprecated `onChange` в `TextSizeSettingsPanel`
-  - Код соответствует современным стандартам Apple
-  - Обновлены модели данных для корректного `Codable`
+---
 
-### Technical
+## [v1.4.0] – 2025-09-26
 
-## [Unreleased]
-### Changed
-- refactor(home): вынесены секции HomeView в отдельные компоненты (`Views/Sections/*`)
-
-- **Структура проекта:**
-  - Обновлена документация `AI_CONTEXT.md`
-  - Актуализировано дерево проекта в `Docs/project_tree.md`
-  - Очищены ссылки на удалённые файлы в Xcode project
-  
-## [Unreleased]
-
-### Refactored
-- Все менеджеры (FavoritesManager, RatingManager, ReadingHistoryManager, TextSizeManager) переведены на использование общего `DefaultsStorage`.
-- Приведен единый стиль синглтонов (`static let shared`, приватные ключи).
-- Введён новый `CategoriesRepository`, объединивший функционал `CategoryManager` и `CategoriesStore`.
-
-
-## [v1.8.5] - 2025-09-27
-
-### Fixed
-- Экран **Настройки**:
-  - убран лишний заголовок «Язык» из секции выбора языка
-  - добавлена локализация для вариантов отображения карточек (card styles)
-  - локализованы единицы времени в статистике чтения
-  - исправлены и дополнены ключи переводов в `LocalizationManager`
-
-### Changed
-- Обновлён `Localizable.xcstrings` новыми ключами (`card_style_*`, `settings_minutes`, статистика)
-- Актуализирован `LanguagePickerView` — теперь работает без жёстко заданного заголовка
-
-
-
-### Added
-- Новый параметр в настройках: выбор стиля карточек (все углы / снизу / во всю ширину).
-
-### Changed
-- Карточки статей (`ArticleCompactCard`):
-  - фото теперь подгружаются из поля `image` в `articles.json` (ресурсы в `Resources/Images`),
-  - добавлен fallback на `Logo`, если изображение не найдено,
-  - внешний вид фото подстраивается под выбранный стиль.
-
-
-### Changed
-- Переработаны карточки статей (`ArticleCompactCard`):
-  - изображения теперь подгружаются из `Resources`,
-  - добавлен вывод категории с иконкой и цветом,
-  - показаны теги (до 3 шт.),
-  - отображается рейтинг и время чтения,
-  - интегрирован прогресс чтения через `ReadingProgressTracker`.
-
-
-## [Unreleased] - 2025-09-26
-### Added
-- 📸 Фото статьи в `ArticleView`
-- ⭐ Рейтинг статей (звёзды)
-- ⏱ Отображение времени чтения
-- 📅 Даты публикации и обновления
-- 🏷 Бейджи тегов
-- 📂 Категория с иконкой
-- 📊 Прогресс-бар чтения
-- ⏱ Трекинг времени чтения
-- 📐 Панель настройки текста
-- ❤️ Кнопка «Избранное»
-- 📤 Кнопка «Поделиться»
-- 📌 Блок «Рекомендуемые статьи»
-
-### Changed
-- Обновлены `ArticleView` и `ArticleDetailView` для поддержки нового функционала
-- Актуализированы вспомогательные компоненты (`ArticleMetaView`, `FavoritesView`, `HomeView`, `SearchView`)
-
-
-## [Unreleased] - 2025-09-26
 ### Added
 - 🌍 Поддержка трёх новых языков: **фарси (fa)**, **арабский (ar)**, **украинский (uk)**
 - 🏷 Локализация тегов и категорий через `LocalizationManager`
@@ -659,130 +402,38 @@ git commit -m "docs: обновить CHANGELOG с информацией о ф�
   - добавлен рейтинг,
   - добавлено время чтения,
   - рекомендации «Вам может понравиться»,
-  - кнопки поделиться и изменения размера текста.
-- `ArticlesByTagView`: исправлен переход в `ArticleDetailView`, добавлена работа с локализованными тегами.
-- Улучшена структура кода: вынесены компоненты в `Views/Components`
+  - кнопки поделиться и изменения размера текста
 
-### Removed
-- Дублированные реализации `StarRatingView` в Article-вью.
+---
 
-
-- Добавлены переводы всех 13 статей на новые языки: **fa (فارسی)**, **ar (العربية)**, **uk (Українська)**.
-
-
-### Changed
-- Улучшен интерфейс выбора языка в настройках: теперь список отображает флаги и названия языков с галочкой для текущего выбора.
-
-### Changed
-- Переработаны карточки статей (`ArticleCompactCard`):
-  - теперь текст (заголовок и анонс) выравнивается по левому краю,
-  - добавлен короткий анонс из начала статьи (2 строки),
-  - добавлен рейтинг статьи (⭐ из `RatingManager`),
-  - добавлено отображение времени чтения статьи.
-
-## [1.6.1] - 2025-09-25
-### Fixed
-- Исправлен баг с переключателем тёмной темы: теперь параметр `isDarkMode` из `@AppStorage` применяется глобально через `.preferredColorScheme` в `InGermanyApp`.
-- Удалены дублирующиеся ссылки на документы в Xcode project.
-
-
-### Fixed
-- Исправлен баг с переключателем тёмной темы: параметр `isDarkMode` из `@AppStorage` теперь применяется глобально через `.preferredColorScheme` в `InGermanyApp`.
-
-
-### Изменения
-- Секции «Недавно прочитанное» и «Избранное» приведены к единому стилю карточек (`ArticleCompactCard`), аналогично категориям и разделу «Все статьи».
-
-
-### Changed
-- Временный фикс: секции **Недавно прочитанные** и **Избранное** подключены и отображаются.
-- Визуально пока отличаются от секций категорий (Финансы, Учёба, Жизнь, Все статьи).  
-  ⚠️ Требуется доработка: унифицировать карточки и отступы.
-
-
-## [Unreleased]
-
-### Changed
-- HomeView: добавлены изображения статей, временный фикс отображения карточек.  
-  ⚠️ Требуется последующая переработка карточек категорий и секции «Все статьи».
-
+## [v1.3.0] – 2025-09-25
 
 ### Added
-- Поддержка изображений для статей (`ArticleView`, `ArticleRow`, `ArticleCardView`, `FavoriteCard`, `RecentArticleCard`)
-- Новые локальные ресурсы: `bank_account.jpg`, `germany2.jpg` … `germany13.jpg`
+- Новый компонент `ArticleMetaView` для отображения категорий, дат публикации и бейджей `NEW/UPDATED`
+- Поддержка относительных дат («2 дня назад», «вчера»)
+- Переключатель «Относительные даты» в настройках (`SettingsView`)
+- Цветные иконки категорий в `CategoriesView`
 
 ### Changed
-- `articles.json`: добавлены ссылки на изображения для каждой статьи
+- Обновлён дизайн статей:
+  - `ArticleRow`, `ArticleView`, `ArticleDetailView` теперь используют `ArticleMetaView`
+  - Улучшен вывод метаданных и анонсов
 
+---
 
-## [v1.8.5] - 2025-09-24
-### Added
-- Подключён **SwiftLint** для проверки качества кода.
-- Добавлен файл `.swiftlint.yml` с базовыми правилами для проекта.
-
-### Fixed
-- Исправлен путь `xcode-select`, чтобы SwiftLint корректно работал с Xcode.
-
-
-
-## [v1.8.4] - 2025-09-24
-### Fixed
-- Исправлена ошибка в `ContentView`: заменён неверный вызов `dataService` на `DataService.shared`.
+## [v1.2.0] – 2025-09-24
 
 ### Added
-- Локализация названий вкладок (`Главная`, `Категории`, `Поиск`, `Избранное`, `Настройки`) через `LocalizationManager`.
-- Теперь нижняя панель навигации (TabView) автоматически меняет язык в зависимости от выбранных настроек.
+- Подключён **SwiftLint** для проверки качества кода
+- Добавлен файл `.swiftlint.yml` с базовыми правилами для проекта
 
-
-## [v1.8.3] - 2025-09-24
-### Changed
-- Разделы «Категории» и «Все статьи» на главной странице приведены к единому стилю с горизонтальными карточками (как в «Избранное»).
-- Улучшена визуальная консистентность главной вкладки: карточки теперь выглядят современно и согласованно.
-
-### Release
-- Tag: `v1.8.3`
-- Branch: `main`
-
-## [v1.8.2] - 2025-09-24
 ### Fixed
-- Убраны двойные стрелки в `SearchView` и `FavoritesView` (ArticleRow больше не содержит вложенный NavigationLink).
+- Исправлен путь `xcode-select`, чтобы SwiftLint корректно работал с Xcode
 
+---
 
-## [v1.8.1] - 2025-09-22
-### Fixed
-- RandomArticle открывается через современный navigationDestination
-- Кнопка PDF на HomeView снова работает
-- ArticleRow больше не содержит вложенный NavigationLink → исчезли двойные стрелки
-- SearchView: восстановлен navigationTitle, убраны дубли и лишние отступы, фон непрозрачный
-- ArticlesByCategoryView: убрана лишняя chevron-стрелка
+## [v1.1.0] – 2025-09-22
 
-
-## [v1.6.5] - 2025-09-21
-### Added
-- Новый утилитный модуль `CardSize` для адаптивного расчёта ширины и высоты карточек.
-
-### Changed
-- Обновлён дизайн карточек (`FavoriteCard`, `RecentArticleCard`, `HomeView`):
-  - теперь карточки занимают 70–75% ширины и 35–45% высоты экрана (адаптивно под iPhone/iPad);
-  - верхний баннер занимает ~60% высоты карточки;
-  - улучшен внешний вид секции «Недавно прочитанное».
-- Обновлён `Theme.swift`: стили теней и фон карточек.
-
-### Technical
-- История разделена на чистые коммиты:
-  - `feat(utils): добавлен CardSize для адаптивных размеров карточек`
-  - `feat(ui): обновлены карточки и стили для поддержки адаптивных размеров`
-- Изменения слиты в `main` через Pull Request #2.
-
-### Release
-- Tag: `v1.6.5`
-- Branch: `main`
-
-
-Все заметные изменения в этом проекте будут документированы здесь.
-Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/).
-
-## [v1.6.2] - 2025-09-22
 ### Added
 - 8 новых полноформатных статей:
   - Жильё (аренда квартиры: документы, депозиты, подводные камни)
@@ -793,177 +444,21 @@ git commit -m "docs: обновить CHANGELOG с информацией о ф�
   - Probezeit (испытательный срок)
   - Kündigungsfrist (сроки увольнения)
   - Krankenversicherung (медицинская страховка)
-- Обновлён `Resources/articles.json` (итого 12 статей)
 
 ### Changed
-- Улучшено наполнение контента: статьи теперь длинные, структурированные и похожи на блоги.
-
-### Release
-- Tag: `v1.6.2`
-- Branch: `main`
-
-
-
-
-
-
-
-
-## [1.6.0] - 2025-09-20
-### Added
-- Новый компонент `ArticleMetaView` для отображения категорий, дат публикации и бейджей `NEW/UPDATED`.
-- Поддержка относительных дат («2 дня назад», «вчера»).
-- Переключатель «Относительные даты» в настройках (`SettingsView`).
-- Цветные иконки категорий в `CategoriesView`.
-
-### Changed
-- Обновлён дизайн статей:
-  - `ArticleRow`, `ArticleView`, `ArticleDetailView` теперь используют `ArticleMetaView`.
-  - Улучшен вывод метаданных и анонсов.
-- Переработка кода: вынесены общие элементы UI в отдельный компонент.
-
-### Removed
-- Устаревшие версии контекстных файлов (`AI_CONTEXT2.md`, `AI_CONTEXT3.md`).
+- Улучшено наполнение контента: статьи теперь длинные, структурированные и похожи на блоги
 
 ---
 
-## [1.5.1] - 2025-09-20
+## [v1.0.0] – 2025-09-20
+
 ### Added
-- Первичная настройка Firebase SDK.
-
----
-
-## [1.5.0] - 2025-09-20
-### Added
-- Кнопка «Случайная статья» на HomeView.
-- Поддержка офлайн/сети/кэша для загрузки JSON (через GitHub Pages).
-- Рефакторинг `ArticleDetailView`, `ArticleRow`, `ArticleCardView`: теперь язык подтягивается через `@AppStorage`.
-
-### Changed
-- Упрощена навигация и структура вью.
-- Убран лишний параметр `selectedLanguage` из вызовов.
-
----
-
-## [1.4.4] - 2025-09-16
-### Added
-- Фильтр в избранном (`FavoritesView`).
-- Поиск по тегам.
-- Горизонтальный скролл категорий на HomeView.
-
-### Changed
-- Переработан UI главной страницы.
-- Улучшен дизайн карточек статей.
-- Добавлены анимации и Haptic feedback.
-
----
-
-## [1.4.3] - 2025-09-15
-### Docs
-- Добавлен `AI_CONTEXT.md` с описанием архитектуры и структуры проекта.
-
----
-
-## [1.4.2] - 2025-09-15
-### Added
-- Кнопка «Поделиться» в статьях.
-
----
-
-## [1.4.1] - 2025-09-15
-### Added
-- Поддержка share-ссылок для статей.
-
----
-
-## [1.4.0] - 2025-09-14
-### Added
-- Рейтинг статей (звёздочки).
-
----
-
-## [1.3.2] - 2025-09-13
-### Changed
-- Стабильная версия перед добавлением рейтинга.
-
----
-
-## [1.3.1] - 2025-09-13
-### Added
-- Экран карты (MapView) с JSON-локациями.
-- Поддержка кнопки «Моё местоположение» (iOS 17).
-- Улучшения в UI карты.
-
----
-
-## [1.3.0] - 2025-09-12
-### Added
-- Первое добавление MapView и ссылка на него в HomeView.
-
----
-
-## [1.2.0] - 2025-09-12
-### Added
-- Поддержка PDF-документов в статьях.
-
----
-
-## [1.1.0] - 2025-09-11
-### Added
-- Фильтрация статей по тегам.
-- Поиск по тегам в SearchView.
-
----
-
-## [1.0.0] - 2025-09-10
-### Added
-- Базовый каркас приложения InGermany (SwiftUI, iOS 17+).
-- Статьи из локальных JSON.
-- Категории и теги.
-- Мультиязычность (RU/EN/TJ).
-- Избранное.
-- Тёмная тема.
-
-## [1.14.0] — 2025-10-04
-### Added
-- Unit-тесты для `CategoryManager`:
-  - Проверка загрузки категорий.
-  - Поиск по ID и имени.
-  - Обновление списка категорий через refresh.
-- Edge-тесты для `DataService`:
-  - Загрузка пустых JSON.
-  - Обработка битых данных.
-  - Smoke-тест на успешную загрузку `articles.json` и `categories.json`.
-
-### Changed
-- Структура тестов вынесена в отдельные модули `Unit/Managers` и `Unit/Services`.
-
-
-## [1.15.0] — 2025-10-04
-### Tests
-- ✅ **ArticleDetailViewModelTests** - полное покрытие управления избранным, историей чтения, логики связанных статей
-- ✅ **HomeViewModelTests** - проверка загрузки данных, обновления, выбора случайной статьи
-- Добавлены заготовки для ArticleRowViewModelTests и CategoriesViewModelTests
-
-### Fixed
-- Исправлены ошибки компиляции в ArticleDetailViewModelTests
-- Устранены проблемы с MainActor изоляцией
-
-### Changed
-- Обновлена документация проекта
-- Стандартизированы паттерны тестирования
-
-## [Unreleased] - 2025-10-06
-
-### 🔧 Architecture & Refactoring
-- **DI Foundation**: Created repository protocols (ArticlesRepositoryProtocol, CategoriesRepositoryProtocol, FavoritesManagingProtocol)
-- **AppContainer**: Refactored to use protocol-based dependencies instead of concrete implementations  
-- **ViewModel Layer**: Updated all ViewModels for proper DI compatibility
-- **Service Layer**: ArticlesRepositoryImpl now requires explicit DataService injection
-- **Testing**: Updated test suite to work with new DI architecture
-
-### 🐛 Fixes
-- **Convenience Initializers**: Fixed ViewModel convenience initializers to properly inject dependencies
-- **Swift 6 Concurrency**: Resolved MainActor isolation issues in AppContainer
-- **Protocol Adoption**: Ensured all components use protocols instead of direct dependencies
-
+- Базовый каркас приложения InGermany (SwiftUI, iOS 17+)
+- Статьи из локальных JSON
+- Категории и теги
+- Мультиязычность (RU/EN/TJ)
+- Избранное
+- Тёмная тема
+- Карта с локациями
+- Поддержка PDF-документов
+- Фильтрация статей по тегам

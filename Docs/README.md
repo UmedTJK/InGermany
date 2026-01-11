@@ -1,215 +1,220 @@
+1. НОВЫЙ README.md
+# 🇩🇪 InGermany - iOS Справочник для экспатов
 
-# 📖 AI_CONTEXT.md — InGermany (обновлено 11.10.2025)
+<div align="center">
 
-> ⚠️ ВНИМАНИЕ: это обновлённая версия. Старый файл (`Docs/AI_CONTEXT.md`) оставлен для истории.  
+![Swift](https://img.shields.io/badge/Swift-5.9-F05138.svg)
+![Platform](https://img.shields.io/badge/iOS-17+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Version](https://img.shields.io/badge/version-1.17.0-orange.svg)
 
-> Здесь зафиксированы последние архитектурные изменения, включая переход на AppContainer и объединение менеджеров в ReadingStatsManager.
+**Мультиязычное iOS-приложение для жизни в Германии**
 
-Этот файл — главный справочник для ИИ-агента по проекту **InGermany**.
-Задача: дать полное понимание текущего состояния, архитектуры, функций и планов развития проекта.
+[Скриншоты](#скриншоты) • [Функции](#функции) • [Установка](#установка) • [Разработка](#разработка)
 
----
-
-## 👨‍💻 1. Разработчик и контакты
-
-* Автор: **Umed Sabzaev**
-* GitHub: [UmedTJK](https://github.com/UmedTJK/InGermany)
-* LinkedIn: [Umed Sabzaev](https://www.linkedin.com/in/umed-sabzaev)
-* Email: [umedsbz@gmail.com](mailto:umedsbz@gmail.com)
+</div>
 
 ---
 
-## 🏗️ 2. Структура проекта
+## 📱 О приложении
 
-### 📂 Основные директории
+InGermany — это всесторонний справочник для экспатов, помогающий адаптироваться в Германии. Приложение предлагает статьи, справочники, карты, полезные инструменты и персонализированные функции.
 
-* **Core/** → DI-контейнер и точка входа (`AppContainer`, `InGermanyApp`, `ContentView`)
-* **Managers/** → управление состоянием и аналитикой (Favorites, Ratings, TextSize, ReadingStats, Categories, Cache и др.)
-* **Services/** → инфраструктурные сервисы (Localization, DataService, NetworkService, PDF, DefaultsStore, ShareService и др.)
-* **Repositories/** → абстракции и реализации для работы с данными (`ArticlesRepository`, `CategoriesRepository`, протоколы)
-* **Models/** → основные модели (`Article`, `Category`, `Location`, `ReadingSession`)
-* **ViewModels/** → бизнес-логика экранов (Home, Search, ArticleDetail, Settings и др.)
-* **Views/** → UI на SwiftUI (HomeView, ArticleDetailView, SettingsView и др.)
-* **UIUtils/** → стили и эффекты (Theme, Animations, CardStyle, CardImageStyle, ProgressBar и др.)
-* **Docs/** → документация (README, CHANGELOG, AI_CONTEXT, ARCHITECTURE_ISSUES и др.)
-* **InGermanyTests/** → тесты (Unit, UI, Mocks, Resources)
+**Основные цели:**
+- Помощь в адаптации через структурированный контент
+- Поддержка 7 языков (RU, EN, DE, TJ, FA, AR, UK)
+- Офлайн-доступ ко всей информации
+- Персонализированный опыт (избранное, история, прогресс)
 
 ---
 
-### 🔑 Архитектурные паттерны
+## ✨ Функции
 
-* **MVVM** (View ↔ ViewModel ↔ Repository ↔ Service/Manager)
-* **Dependency Injection** через `AppContainer`
-* **SOLID** принципы (разделение ответственности, протоколы для тестирования)
-* **Unit-тесты** с Mock-реализациями репозиториев и менеджеров
-* **CI/CD** пока вручную (shell-скрипты: release, update, check_di_violations)
+### 📖 Контент
+- 13+ подробных статей по категориям (Финансы, Учёба, Жизнь)
+- Структурированный контент с изображениями и PDF
+- Регулярные обновления и новые материалы
 
----
+### 🌍 Мультиязычность
+- Поддержка 7 языков с полной локализацией
+- Автоматическое определение языка устройства
+- Ручной выбор языка в настройках
 
-### 🧩 Core
+### 🎯 Персонализация
+- **Избранное** — сохраняйте важные статьи
+- **История чтения** — отслеживайте прогресс
+- **Рейтинг статей** — оценивайте полезность
+- **Статистика** — анализируйте время чтения
 
-* **InGermanyApp.swift** — точка входа, создаёт `AppContainer` и прокидывает зависимости.
-* **ContentView.swift** — корневой экран, `TabView` с ленивыми вкладками (`LazyView`), создаёт ViewModels через контейнер.
-* **AppContainer.swift** — DI-контейнер:
+### 🗺️ Инструменты
+- **Карта** — полезные локации в Германии
+- **PDF библиотека** — важные документы
+- **Случайная статья** — открывайте новое
 
-  * синглтоны (`FavoritesManager`, `TextSizeManager`, `LocalizationManager`, `RatingManager`, `ReadingStatsManager`)
-  * фабрики для ViewModels (`makeHomeViewModel`, `makeSearchViewModel`, `makeArticleDetailViewModel` и др.)
-  * метод `bootstrap()` для preload локализаций и данных
-
----
-
-### 🧩 Managers
-
-* **FavoritesManager** — избранные статьи (`DefaultsStore`).
-* **RatingManager** — рейтинги статей (`UserDefaults`, JSON).
-* **TextSizeManager** — хранение размера текста, реализует `FontProviding`.
-* **ReadingStatsManager** — единый менеджер чтения:
-
-  * история и прогресс,
-  * управление сессиями,
-  * оценка времени и статистики,
-  * агрегированная модель `ReadingStats`.
-
-🔄 Ранее существовали `ReadingHistoryManager`, `ReadingTimeTracker`, `ReadingProgressTracker`.
-Их функционал объединён в **ReadingStatsManager**, устаревшие файлы и тесты удалены.
-
-* **ReadingProgressHelper** — утилита для UI-индикации прогресса (цвета, статусы, подписи).
-* **ReadingTimeCalculator** — оценка времени чтения (WPM для разных языков).
-* **CategoryManager** — управление категориями, реализует `CategoriesRepositoryProtocol`, работает через `DataService`.
-* **CacheManager** — актор для кеша в памяти с TTL.
+### ⚙️ Настройки
+- Тёмная/светлая тема
+- Размер текста (80%-150%)
+- Стиль карточек
+- Относительные даты
+- Сброс статистики
 
 ---
 
-### 🧩 Services
+## 📸 Скриншоты
 
-* **LocalizationManager** — управление мультиязычностью (RU, EN, DE, TJ, FA, AR, UK).
-* **DataService** — загрузка JSON (articles, categories), работает через **NetworkService**.
-* **NetworkService** — offline-first: `Bundle` → `File Cache` → `Network`.
-* **DefaultsStore** — сохранение Codable-объектов в `UserDefaults`.
-* **ExportToPDF** — экспорт статьи в PDF (метаданные, Documents-папка).
-* **ShareService** — системное окно шаринга статей, plain text + форматированный.
-* **ArticleFormatter** — форматирование дат, слов, времени чтения (через DateFormattingService, TextAnalysisService).
-* **DateFormattingService** — форматирование дат и relative time (RU, EN, DE, TJ).
-* **TextAnalysisService** — word count + reading time (языки EN, DE, RU, TJ).
-* **AuthService** — заготовка для авторизации (TODO).
+| Главная | Статьи | Поиск | Карта |
+|---------|--------|-------|-------|
+| ![Home](Docs/screenshots/home.png) | ![Categories](Docs/screenshots/categoriesView.png) | ![Search](Docs/screenshots/SearchView.png) | ![Map](Docs/screenshots/map.png) |
+
+| Настройки | PDF | Детали | Избранное |
+|-----------|-----|--------|-----------|
+| ![Settings](Docs/screenshots/settings.png) | ![PDF](Docs/screenshots/detail.png) | ![Detail](Docs/screenshots/articlesByCategoryView.png) | ![Favorites](Docs/screenshots/FavoritesView.png) |
 
 ---
 
-### 🧩 Repositories & Protocols
+## 🛠️ Технологии
 
-* **ArticlesRepositoryProtocol** — контракт: `loadArticles()`, `refreshArticles()`, `getLastSource()`.
-* **ArticlesRepositoryImpl** — реализация, использует **DataService** и `CacheManager`.
-* **CategoriesRepositoryProtocol** — контракт: `bootstrap()`, `refresh()`, `category(by:)`, `allCategories()`.
-* **DefaultCategoriesRepository** — реализация, хранит список и словарь ID → Category, загружает из **DataService**.
-* **ArticleFormatterProtocol** — контракт для форматтера статей (даты, слова, чтение).
-* **ArticleFormatter** — реализация, fallback для базовых строк.
-
----
-
-### 🧩 Models
-
-* **Article** — основная модель статьи, локализация, теги, даты, картинка, word count, свойства `isNew`, `isUpdatedRecently`.
-* **Category** — категория статьи (локализованные имена, иконка, цвет).
-* **Location** — геолокация для Apple Maps (`coordinate`).
-* **ReadingSession** — сессия чтения (`startTime`, `endTime?`, `duration`).
+- **Язык:** Swift 5.9+
+- **Платформа:** iOS 17.0+
+- **Архитектура:** MVVM + Repository Pattern + Dependency Injection
+- **DI:** AppContainer (Single Source of Truth)
+- **Состояние настроек:** SettingsManager (ObservableObject)
+- **Хранение:** UserDefaults (@AppStorage), File System, Bundle
+- **Тестирование:** XCTest (unit tests, in progress)
+- **Локализация:** Xcode String Catalogs
 
 ---
 
-### 🧩 ViewModels
+## 🚀 Установка
 
-* **HomeViewModel** — управление состоянием главного экрана: статьи, категории, случайная статья, загрузка данных.
-* **SearchViewModel** — поиск и фильтрация статей по тексту и тегам, управление состоянием поиска.
-* **ArticleDetailViewModel** — детали статьи: прогресс чтения, рейтинг, избранное, связанные статьи, шаринг.
-* **SettingsViewModel** — настройки приложения: язык, тема, стили карточек, статистика чтения, сброс данных.
-* **ArticleRowViewModel** — представление статьи в списках: данные для отображения, управление избранным и рейтингом.
-* **ArticleCompactCardViewModel** — компактные карточки статей: зависимости и вычисляемые данные для UI.
-* **CategoriesViewModel** — управление категориями и статьями для экрана категорий.
-* **FavoritesViewModel** — список избранных статей с загрузкой и управлением.
-* **AboutViewModel** — информация о приложении: версия, сборка, репозиторий.
-* **LocationsViewModel** — геолокации для карты с загрузкой данных.
-* **PDFViewerViewModel** — просмотр PDF с локализацией.
-* **ViewModels.swift** — вспомогательный файл-пространство имён для ViewModels.
+### Для пользователей
+1. Скачайте из App Store (скоро)
+2. Или соберите из исходного кода
 
----
+### Для разработчиков
+```bash
+# 1. Клонируйте репозиторий
+git clone https://github.com/UmedTJK/InGermany.git
 
-### 🧩 Views
+# 2. Откройте проект
+open InGermany.xcodeproj
 
-#### Основные экраны:
-* **HomeView** — главный экран с секциями: полезные инструменты, недавно прочитанные, избранные, категории, все статьи.
-* **ArticleDetailView** — детальный просмотр статьи с прогресс-баром, рейтингом, связанными статьями, панелью размера текста.
-* **SearchView** — поиск по статьям с фильтрацией по тегам и навигацией к детальному просмотру.
-* **SettingsView** — настройки: язык, внешний вид, стили карточек, статистика, сброс данных.
-* **FavoritesView** — список избранных статей с поиском и индикатором источника данных.
-* **CategoriesView** — список категорий с навигацией к статьям по категориям.
-* **MapView** — карта с локациями, отслеживанием пользователя и управлением регионом.
-* **AboutView** — информация о приложении и версии.
-* **ArticlesByCategoryView** — статьи по конкретной категории.
-* **ArticlesByTagView** — статьи по конкретному тегу.
+# 3. Выберите схему 'InGermany'
+# 4. Запустите на симуляторе или устройстве
+Требования:
 
-#### Компоненты и секции:
-* **ArticleCompactCard** — компактная карточка статьи с изображением, категорией, рейтингом, тегами.
-* **CategorySection** — горизонтальная секция статей по категории.
-* **FavoritesSection** — секция избранных статей на главном экране.
-* **RecentlyReadSection** — секция недавно прочитанных статей.
-* **AllArticlesSection** — секция всех статей.
-* **UsefulToolsSection** — секция полезных инструментов: карта, PDF, случайная статья.
+Xcode 15.0+
 
----
+iOS 17.0+
 
-## 🚧 Разделы, требующие дополнения (файлы не предоставлены):
+macOS 14.0+ (для разработки)
 
-### 🧩 UIUtils
-- `Theme.swift`
-- `Animations.swift` 
-- `CardStyle.swift`
-- `CardImageStyle.swift`
-- `CardSize.swift`
-- `ProgressBar.swift`
-- `ScaleOnTap.swift`
-- `ShakeEffect.swift`
-- `ShimmerEffect.swift`
-- `RoundedCorner.swift`
-- `Color+Hex.swift`
-- `Environment+ScreenSize.swift`
-- `LoadingView.swift`
-- `Accessibility+Extensions.swift`
+🏗️ Архитектура
+Приложение построено на современных архитектурных принципах:
 
-### 🧩 Views/Components
-- `ArticleCardView.swift`
-- `ArticleMetaView.swift`
-- `FavoriteCard.swift`
-- `LanguagePickerView.swift`
-- `PDFViewer.swift`
-- `ReadingProgressBar.swift`
-- `StarRatingView.swift`
-- `TagFilterView.swift`
-- `TagsView.swift`
-- `TextSizeSettingsPanel.swift`
+text
+📁 Core/           # Точка входа и DI-контейнер (AppContainer)
+📁 Managers/       # Observable state (Settings, Favorites, Rating, Stats)
+📁 Models/         # Модели данных (Article, Category, Location)
+📁 ViewModels/     # Бизнес-логика экранов
+📁 Views/          # SwiftUI экраны и компоненты
+📁 Services/       # Сервисы (Localization, Network, Cache)
+📁 Managers/       # Observable state (Settings, Favorites, Rating, Stats)
+📁 Protocols/      # Интерфейсы для DI и тестирования
+📁 UIUtils/        # Утилиты UI (стили, анимации)
+📁 Docs/           # Документация
 
-### 🧩 Tests
-- `InGermanyTests.swift`
-- Моки: `MockArticlesRepository.swift`, `MockCategoriesRepository.swift`, `MockDataService.swift`
-- Тесты моделей: `ArticleTests.swift`, `CategoryTests.swift`, `LocationTests.swift`
-- UI тесты: `AppUITests.swift`
-- Ресурсы: `sample_articles.json`, `sample_categories.json`
 
-### 📝 Документация для Roadmap
-- `CHANGELOG.md`
-- `README.md` 
-- `next_steps.md`
-- `ARCHITECTURE_ISSUES.md`
-- `di_refactoring_progress.md`
+Ключевые принципы:
 
----
+AppContainer отвечает только за DI и фабрики, а не за хранение состояния UI.
 
-## 🏷️ 5. Версии и ветки разработки
+SOLID и Clean Architecture
 
-* Текущая версия: **v1.x.x**
-* Основная ветка: `main`
-* Рабочие ветки: `feature/*`, `fix/*`, `perf/*`, `docs/*`
-* CI/CD: ручные скрипты (`release.sh`, `update_project_tree.sh`, `check_di_violations.sh`)
+Dependency Injection через AppContainer
 
----
+Offline-first стратегия
 
-> 📝 **Примечание**: Этот файл содержит только информацию из предоставленных исходных файлов. Разделы, отмеченные как "требующие дополнения", будут заполнены после получения соответствующих файлов в следующей сессии.
-```
+Полное покрытие тестами
+
+
+### ⚙️ Настройки
+Все пользовательские настройки управляются через SettingsManager
+(единый источник истины для темы, языка и отображения).
+
+
+📚 Документация
+Для разработчиков:
+Техническая документация (AI_CONTEXT.md) — актуальное описание архитектуры и DI
+
+
+CHANGELOG - история изменений
+
+Roadmap редактора - план развития CMS
+
+Архитектурные решения - анализ архитектуры
+
+Для пользователей:
+Руководство пользователя (в разработке)
+
+FAQ (в разработке)
+
+🎯 Roadmap
+В разработке:
+Улучшение Article Editor / Mini-CMS
+
+Расширение библиотеки статей
+
+Интеграция с бэкендом
+
+Планируется:
+Push-уведомления о новых статьях
+
+Социальные функции (комментарии, обсуждения)
+
+Расширенная аналитика
+
+Веб-версия приложения
+
+🤝 Участие в разработке
+Мы приветствуем contributions!
+
+Форкните репозиторий
+
+Создайте ветку для вашей фичи (feature/amazing-feature)
+
+Сделайте коммиты с Conventional Commits
+
+Откройте Pull Request
+
+Стиль кода: Следуем SwiftLint правилам
+
+📄 Лицензия
+Этот проект лицензирован под MIT License - смотрите файл LICENSE.
+
+👨‍💻 Автор
+Umed Sabzaev
+
+GitHub: @UmedTJK
+
+LinkedIn: Umed Sabzaev
+
+Email: umedsbz@gmail.com
+
+🌟 Поддержка проекта
+Если проект вам полезен:
+
+⭐ Поставьте звезду на GitHub
+
+🐛 Сообщайте о багах через Issues
+
+💡 Предлагайте фичи через Discussions
+
+📢 Расскажите друзьям о приложении
+
+<div align="center">
+Сделано с ❤️ для экспатов в Германии
+
+Последнее обновление: октябрь 2025
+
+</div> ```
