@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-final class SettingsManager: SettingsManagingProtocol {
+final class SettingsManager: ObservableObject, SettingsManagingProtocol {
 
     @AppStorage("selectedLanguage") var selectedLanguage: String = "ru"
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
