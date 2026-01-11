@@ -128,7 +128,8 @@ final class AppContainer: ObservableObject {
             readingStatsManager: readingStatsService,
             articleFormatter: articleFormatter,
             categoriesRepository: categoriesRepo,
-            shareService: shareService
+            shareService: shareService,
+            articlesProvider: ArticlesProviderAdapter(repo: articlesRepo)
         )
     }
     
