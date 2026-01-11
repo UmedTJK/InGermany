@@ -4,6 +4,8 @@
 //
 
 import SwiftUI
+import SharedCore
+
 
 @MainActor
 final class ArticleDetailViewModel: ObservableObject {
@@ -28,6 +30,8 @@ final class ArticleDetailViewModel: ObservableObject {
 
     // Репозиторий категорий — для разрешения categoryId → Category
     private let categoriesRepository: CategoriesRepositoryProtocol
+    
+    private let articlesProvider: ArticlesProviding
 
     // Сервис шаринга
     private let shareService: ShareServiceProtocol
@@ -42,7 +46,8 @@ final class ArticleDetailViewModel: ObservableObject {
         readingStatsManager: ReadingStatsManagingProtocol,
         articleFormatter: ArticleFormatter,
         categoriesRepository: CategoriesRepositoryProtocol,
-        shareService: ShareServiceProtocol
+        shareService: ShareServiceProtocol,
+        articlesProvider: ArticlesProviding
     ) {
         self.article = article
         self.allArticles = allArticles
@@ -54,10 +59,11 @@ final class ArticleDetailViewModel: ObservableObject {
         self.articleFormatter = articleFormatter
         self.categoriesRepository = categoriesRepository
         self.shareService = shareService
-
+        self.articlesProvider = articlesProvider
         self.rating = ratingManager.getRating(for: article.id)
         self.isFavorite = favoritesManager.isFavorite(article.id)
     }
+
 
     // MARK: - Progress
 
@@ -156,7 +162,8 @@ final class ArticleDetailViewModel: ObservableObject {
             readingStatsManager: readingStatsManager,
             articleFormatter: articleFormatter,
             categoriesRepository: categoriesRepository,
-            shareService: shareService
+            shareService: shareService,
+            articlesProvider: articlesProvider
         )
     }
 
