@@ -66,6 +66,8 @@
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		ADA942092E78950F008D1364 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = ADA942082E78950B008D1364 /* locations.json */; };
+		ADB930262F13418B00A961D7 /* SettingsManagingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB930252F13418700A961D7 /* SettingsManagingProtocol.swift */; };
+		ADB930282F1342C000A961D7 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB930272F1342BB00A961D7 /* SettingsManager.swift */; };
 		ADDF80FD2EA6C8B8000885DE /* NSWindow+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */; };
 		ADDF80FE2EA6C9C2000885DE /* NSWindow+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */; };
 		ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */ = {isa = PBXBuildFile; fileRef = ADE23B732E9BEED400BD152B /* burgeramt_registration.json */; };
@@ -182,6 +184,8 @@
 		AD8552C82E75B4C4003D3826 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = categories.json; path = Resources/categories.json; sourceTree = SOURCE_ROOT; };
 		ADA942002E78930B008D1364 /* Test_Document.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = Test_Document.pdf; sourceTree = "<group>"; };
 		ADA942082E78950B008D1364 /* locations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
+		ADB930252F13418700A961D7 /* SettingsManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManagingProtocol.swift; sourceTree = "<group>"; };
+		ADB930272F1342BB00A961D7 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+SwiftUI.swift"; sourceTree = "<group>"; };
 		ADE23B732E9BEED400BD152B /* burgeramt_registration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration.json; sourceTree = "<group>"; };
 		ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
@@ -343,6 +347,7 @@
 		AD2A65562E8FEBF2006A94DD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				ADB930252F13418700A961D7 /* SettingsManagingProtocol.swift */,
 				AD459C202E98BF5B00F540F3 /* ArticleFormatterProtocol.swift */,
 				AD459C1C2E98BB2500F540F3 /* ShareServiceProtocol.swift */,
 				AD459C1A2E98B7E700F540F3 /* FontProviding.swift */,
@@ -696,6 +701,7 @@
 		ADF339482E8850FA00AE4CBF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				ADB930272F1342BB00A961D7 /* SettingsManager.swift */,
 				AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */,
 				AD459A5D2E97927400F540F3 /* ReadingStatsManager.swift */,
 				ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */,
@@ -840,7 +846,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					AD2A67CB2E910028006A94DD = {
 						CreatedOnToolsVersion = 16.2;
@@ -981,6 +987,7 @@
 				AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */,
 				AD160DB22E95292F009B49F2 /* Protocols/LocalizationManagerProtocol.swift in Sources */,
 				AD160DB62E955F92009B49F2 /* Environment+ScreenSize.swift in Sources */,
+				ADB930282F1342C000A961D7 /* SettingsManager.swift in Sources */,
 				AD160DB42E955DF1009B49F2 /* RoundedCorner.swift in Sources */,
 				AD160DB02E95291E009B49F2 /* RatingManagerProtocol.swift in Sources */,
 				AD459C212E98BF5E00F540F3 /* ArticleFormatterProtocol.swift in Sources */,
@@ -1017,6 +1024,7 @@
 				ADF3394A2E8850FA00AE4CBF /* RatingManager.swift in Sources */,
 				AD16243B2E9AD9D700E6E14B /* ShimmerEffect.swift in Sources */,
 				ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */,
+				ADB930262F13418B00A961D7 /* SettingsManagingProtocol.swift in Sources */,
 				AD5D36C92E96D4BD00DB63EF /* CacheService.swift in Sources */,
 				AD459C1D2E98BB2800F540F3 /* ShareServiceProtocol.swift in Sources */,
 				AD16243F2E9ADA4600E6E14B /* ScaleOnTap.swift in Sources */,
@@ -1097,6 +1105,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y8NF943WMY;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
@@ -1155,6 +1164,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y8NF943WMY;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
@@ -1209,6 +1219,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y8NF943WMY;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
@@ -1231,6 +1242,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y8NF943WMY;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
@@ -1252,6 +1264,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y8NF943WMY;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
@@ -1273,6 +1286,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y8NF943WMY;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
