@@ -18,6 +18,8 @@ final class AppContainer: ObservableObject {
     let ratingManager: RatingManager
     let textSizeManager: TextSizeManager
     let localizationManager: LocalizationManager
+    let settingsManager = SettingsManager()
+
     
     /// Конкретный экземпляр для SwiftUI
     let readingStatsManager: ReadingStatsManager
@@ -109,6 +111,7 @@ final class AppContainer: ObservableObject {
     
     func makeSettingsViewModel() -> SettingsViewModel {
         SettingsViewModel(
+            settings: settingsManager,
             localizationManager: localizationManager,
             statsManager: readingStatsService
         )
