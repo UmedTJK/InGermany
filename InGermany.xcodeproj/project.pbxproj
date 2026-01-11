@@ -68,6 +68,9 @@
 		ADA942092E78950F008D1364 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = ADA942082E78950B008D1364 /* locations.json */; };
 		ADB930262F13418B00A961D7 /* SettingsManagingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB930252F13418700A961D7 /* SettingsManagingProtocol.swift */; };
 		ADB930282F1342C000A961D7 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB930272F1342BB00A961D7 /* SettingsManager.swift */; };
+		ADB930362F1354D600A961D7 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = ADB930332F1354D500A961D7 /* .gitignore */; };
+		ADB9303D2F1354D600A961D7 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = ADB930332F1354D500A961D7 /* .gitignore */; };
+		ADB930462F135DC400A961D7 /* SharedCore in Frameworks */ = {isa = PBXBuildFile; productRef = ADB930452F135DC400A961D7 /* SharedCore */; };
 		ADDF80FD2EA6C8B8000885DE /* NSWindow+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */; };
 		ADDF80FE2EA6C9C2000885DE /* NSWindow+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */; };
 		ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */ = {isa = PBXBuildFile; fileRef = ADE23B732E9BEED400BD152B /* burgeramt_registration.json */; };
@@ -186,6 +189,14 @@
 		ADA942082E78950B008D1364 /* locations.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locations.json; sourceTree = "<group>"; };
 		ADB930252F13418700A961D7 /* SettingsManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManagingProtocol.swift; sourceTree = "<group>"; };
 		ADB930272F1342BB00A961D7 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		ADB9302B2F1354D500A961D7 /* IDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDs.swift; sourceTree = "<group>"; };
+		ADB930332F1354D500A961D7 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		ADB930342F1354D500A961D7 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		ADB9303E2F13583D00A961D7 /* LocalizedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedText.swift; sourceTree = "<group>"; };
+		ADB9303F2F135A2F00A961D7 /* ContentBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentBlock.swift; sourceTree = "<group>"; };
+		ADB930402F135A9100A961D7 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		ADB930422F135C5400A961D7 /* ArticlesProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesProviding.swift; sourceTree = "<group>"; };
+		ADB930432F135CDC00A961D7 /* ArticlesWriting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesWriting.swift; sourceTree = "<group>"; };
 		ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+SwiftUI.swift"; sourceTree = "<group>"; };
 		ADE23B732E9BEED400BD152B /* burgeramt_registration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration.json; sourceTree = "<group>"; };
 		ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
@@ -292,6 +303,11 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		ADB930472F135E6200A961D7 /* Adapters */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Adapters;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,6 +345,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADB930462F135DC400A961D7 /* SharedCore in Frameworks */,
 				AD0D0C152EA9520B005F664A /* ArticleKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -618,6 +635,7 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				ADB930472F135E6200A961D7 /* Adapters */,
 				AD0826D32E85A50A009C30CC /* .swiftlint.yml */,
 				AD38F5862E76899600E36EA4 /* README.md */,
 				AD38F5842E76890C00E36EA4 /* .gitignore */,
@@ -631,6 +649,7 @@
 				AD8552BC2E75B417003D3826 /* Models */,
 				ADF339482E8850FA00AE4CBF /* Managers */,
 				AD8552C32E75B452003D3826 /* Services */,
+				ADB930352F1354D500A961D7 /* SharedCore */,
 				AD8552C62E75B48D003D3826 /* Resources */,
 				AD8552932E75ABEC003D3826 /* Products */,
 				AD8552942E75ABEC003D3826 /* InGermany */,
@@ -688,6 +707,69 @@
 				ADE23B732E9BEED400BD152B /* burgeramt_registration.json */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		ADB930292F1354D500A961D7 /* Contracts */ = {
+			isa = PBXGroup;
+			children = (
+				ADB930432F135CDC00A961D7 /* ArticlesWriting.swift */,
+				ADB930422F135C5400A961D7 /* ArticlesProviding.swift */,
+			);
+			path = Contracts;
+			sourceTree = "<group>";
+		};
+		ADB9302A2F1354D500A961D7 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		ADB9302C2F1354D500A961D7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ADB930402F135A9100A961D7 /* Article.swift */,
+				ADB9303F2F135A2F00A961D7 /* ContentBlock.swift */,
+				ADB9303E2F13583D00A961D7 /* LocalizedText.swift */,
+				ADB9302B2F1354D500A961D7 /* IDs.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		ADB9302D2F1354D500A961D7 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		ADB9302E2F1354D500A961D7 /* SharedCore */ = {
+			isa = PBXGroup;
+			children = (
+				ADB930292F1354D500A961D7 /* Contracts */,
+				ADB9302A2F1354D500A961D7 /* Domain */,
+				ADB9302C2F1354D500A961D7 /* Models */,
+				ADB9302D2F1354D500A961D7 /* Support */,
+			);
+			path = SharedCore;
+			sourceTree = "<group>";
+		};
+		ADB9302F2F1354D500A961D7 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				ADB9302E2F1354D500A961D7 /* SharedCore */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		ADB930352F1354D500A961D7 /* SharedCore */ = {
+			isa = PBXGroup;
+			children = (
+				ADB9302F2F1354D500A961D7 /* Sources */,
+				ADB930332F1354D500A961D7 /* .gitignore */,
+				ADB930342F1354D500A961D7 /* Package.swift */,
+			);
+			path = SharedCore;
 			sourceTree = "<group>";
 		};
 		ADE23B7D2E9BF11300BD152B /* articles */ = {
@@ -829,10 +911,12 @@
 				AD8552A72E75AEBF003D3826 /* Core */,
 				AD8552B62E75B300003D3826 /* Views */,
 				AD8552BC2E75B417003D3826 /* Models */,
+				ADB930472F135E6200A961D7 /* Adapters */,
 			);
 			name = InGermany;
 			packageProductDependencies = (
 				AD0D0C142EA9520B005F664A /* ArticleKit */,
+				ADB930452F135DC400A961D7 /* SharedCore */,
 			);
 			productName = InGermany;
 			productReference = AD8552922E75ABEC003D3826 /* InGermany.app */;
@@ -886,6 +970,7 @@
 			packageReferences = (
 				AD2E64142EA224F500436C9A /* XCLocalSwiftPackageReference "Packages/ArticleKit" */,
 				AD2E64652EA29DD500436C9A /* XCLocalSwiftPackageReference "Packages/SharedKit" */,
+				ADB930442F135DC400A961D7 /* XCLocalSwiftPackageReference "SharedCore" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD8552932E75ABEC003D3826 /* Products */;
@@ -913,6 +998,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADB930362F1354D600A961D7 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -936,6 +1022,7 @@
 			files = (
 				ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */,
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
+				ADB9303D2F1354D600A961D7 /* .gitignore in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
 				AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
@@ -1568,6 +1655,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/SharedKit;
 		};
+		ADB930442F135DC400A961D7 /* XCLocalSwiftPackageReference "SharedCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = SharedCore;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1585,6 +1676,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD2E64652EA29DD500436C9A /* XCLocalSwiftPackageReference "Packages/SharedKit" */;
 			productName = SharedKit;
+		};
+		ADB930452F135DC400A961D7 /* SharedCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
