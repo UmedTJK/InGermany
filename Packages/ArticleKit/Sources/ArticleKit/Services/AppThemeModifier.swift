@@ -9,18 +9,30 @@ import SwiftUI
 
 /// Модификатор, который применяет глобальную тему приложения
 public struct AppThemeModifier: ViewModifier {
-    // используем EnvironmentObject, но с защитой от отсутствия
-    @EnvironmentObject private var appTheme: AppThemeManager
-
+    // Используем Optional без @EnvironmentObject
+    @Environment(\.appThemeManager) private var appTheme
+    
     public init() {}
-
+    
     public func body(content: Content) -> some View {
-        // безопасный доступ
-        if let scheme = appTheme.current.colorScheme {
+        // Безопасный доступ через optional binding
+        if let theme = appTheme, let scheme = theme.current.colorScheme {
             content.preferredColorScheme(scheme)
         } else {
             content
         }
+    }
+}
+
+// Создаем EnvironmentKey для безопасного доступа
+private struct AppThemeManagerKey: EnvironmentKey {
+    static let defaultValue: AppThemeManager? = nil
+}
+
+extension EnvironmentValues {
+    var appThemeManager: AppThemeManager? {
+        get { self[AppThemeManagerKey.self] }
+        set { self[AppThemeManagerKey.self] = newValue }
     }
 }
 
@@ -29,5 +41,10 @@ public extension View {
     @inlinable
     func appTheme() -> some View {
         modifier(AppThemeModifier())
+    }
+    
+    /// Устанавливает менеджер темы в окружение (альтернатива .environmentObject)
+    func appThemeManager(_ manager: AppThemeManager) -> some View {
+        environment(\.appThemeManager, manager)
     }
 }
