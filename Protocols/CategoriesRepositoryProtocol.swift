@@ -28,15 +28,23 @@ protocol CategoriesRepositoryProtocol {
 
 @MainActor
 final class DefaultCategoriesRepository: ObservableObject, CategoriesRepositoryProtocol {
-    static let shared = DefaultCategoriesRepository()
+    static let shared = DefaultCategoriesRepository(
+        dataService: DataService(
+            networkService: NetworkService(),
+            cacheManager: CacheService()
+        )
+    )
 
     @Published private(set) var categories: [Category] = []
     private var byId: [String: Category] = [:]
+    private let dataService: DataServiceProtocol
 
-    private init() {}
+    init(dataService: DataServiceProtocol) {
+        self.dataService = dataService
+    }
 
     func bootstrap() async {
-        let list = await DataService.shared.loadCategories()
+        let list = await dataService.loadCategories()
         categories = list
         byId = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
     }
