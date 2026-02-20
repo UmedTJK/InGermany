@@ -9,14 +9,13 @@ import Combine
 @MainActor  // ✅ Добавляем MainActor для гарантии работы на главном потоке
 final class RatingManager: ObservableObject {
     
-    static let shared = RatingManager()
     
     @Published private var ratings: [String: Int] = [:]
     
     private let userDefaultsKey = "articleRatings"
     private let userDefaults: UserDefaults
     
-    private init(userDefaults: UserDefaults = .standard) {
+    init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
         loadRatings()
     }

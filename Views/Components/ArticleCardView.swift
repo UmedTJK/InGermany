@@ -68,5 +68,5 @@ struct ArticleCardView: View {
 // MARK: - Preview
 #Preview {
     ArticleCardView(article: Article.sampleArticle)
-        .environmentObject(RatingManager.shared) // ✅ передаем конкретный менеджер
+        .environmentObject(RatingManager())
 }

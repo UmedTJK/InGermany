@@ -68,7 +68,7 @@ final class AppContainer: ObservableObject {
         
         // ✅ Managers
         self.favoritesManagerConcrete = favoritesManager ?? FavoritesManager()
-        self.ratingManager = ratingManager ?? RatingManager.shared
+        self.ratingManager = ratingManager ?? RatingManager()
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
         self.localizationManager = localizationManager ?? LocalizationManager.shared
         self.readingStatsManager = readingStatsManager ?? ReadingStatsManager.shared
