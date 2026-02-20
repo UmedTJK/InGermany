@@ -12,7 +12,7 @@ actor DataService: DataServiceProtocol {
     // MARK: - Temporary singleton bridge (keep during DI migration)
     static let shared = DataService(
         networkService: NetworkService.shared,
-        cacheManager: CacheService.shared
+        cacheManager: CacheService()
     )
 
     // MARK: - Dependencies (DI)
