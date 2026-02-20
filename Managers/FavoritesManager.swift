@@ -11,16 +11,13 @@ import Combine
 /// Использует `DefaultsStore` для сохранения и загрузки списка избранных.
 @MainActor
 final class FavoritesManager: ObservableObject {
-    /// Глобально доступный экземпляр менеджера.
-    static let shared = FavoritesManager()
-
     /// Текущий набор избранных статей (по их `id`).
     @Published private(set) var favorites: Set<String> = []
 
     private let key = "favorites"
 
     /// Инициализация с загрузкой сохранённых данных из `DefaultsStore`.
-    private init() {
+    init() {
         if let saved: [String] = DefaultsStore.load(key, as: [String].self) {
             favorites = Set(saved)
         }
