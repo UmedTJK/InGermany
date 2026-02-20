@@ -10,26 +10,29 @@ import XCTest
 final class FavoritesViewModelTests: XCTestCase {
     var sut: FavoritesViewModel!
     var mockArticlesRepo: MockArticlesRepository!
+    var favoritesManager: FavoritesManager!
 
     override func setUp() async throws {
         try await super.setUp()
         
         // Clean up favorites before each test
-        FavoritesManager.shared.clearForTesting()
+        favoritesManager = FavoritesManager()
+        favoritesManager.clearForTesting()
         
         // Create mock repository
         mockArticlesRepo = MockArticlesRepository()
         
         // Initialize ViewModel with real FavoritesManager and mock repository
         sut = FavoritesViewModel(
-            favoritesManager: FavoritesManager.shared,
+            favoritesManager: favoritesManager,
             articlesRepo: mockArticlesRepo
         )
     }
 
     override func tearDown() async throws {
         // Clean up after each test
-        FavoritesManager.shared.clearForTesting()
+        favoritesManager.clearForTesting()
+        favoritesManager = nil
         sut = nil
         mockArticlesRepo = nil
         try await super.tearDown()
@@ -60,7 +63,7 @@ final class FavoritesViewModelTests: XCTestCase {
         // Then - should contain the article
         XCTAssertEqual(sut.favoriteArticles.count, initialCount + 1, "After toggling, favorites count should increase by 1")
         XCTAssertEqual(sut.favoriteArticles.first?.id, "a1", "Favorite article should have id 'a1'")
-        XCTAssertTrue(FavoritesManager.shared.isFavorite("a1"), "FavoritesManager should reflect the favorite status")
+        XCTAssertTrue(favoritesManager.isFavorite("a1"), "FavoritesManager should reflect the favorite status")
     }
 
     func testRemoveFromFavorites() async throws {
@@ -74,7 +77,7 @@ final class FavoritesViewModelTests: XCTestCase {
         
         // Then - should be empty again
         XCTAssertEqual(sut.favoriteArticles.count, countAfterAdd - 1, "Toggling twice should remove the article from favorites")
-        XCTAssertFalse(FavoritesManager.shared.isFavorite("a1"), "FavoritesManager should reflect the removal")
+        XCTAssertFalse(favoritesManager.isFavorite("a1"), "FavoritesManager should reflect the removal")
     }
     
     func testLoadingState() async throws {
