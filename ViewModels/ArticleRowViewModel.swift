@@ -12,7 +12,7 @@ final class ArticleRowViewModel: ObservableObject, Identifiable {
     let article: Article
     
     private let localizationManager: LocalizationManager
-    private let favoritesManager: FavoritesManager
+    private let favoritesManager: any FavoritesManagingProtocol
     private let ratingManager: RatingManager
     private let categoriesRepo: CategoriesRepositoryProtocol
     private let readingStatsManager: ReadingStatsManagingProtocol
@@ -26,7 +26,7 @@ final class ArticleRowViewModel: ObservableObject, Identifiable {
     init(
         article: Article,
         localizationManager: LocalizationManager,
-        favoritesManager: FavoritesManager,
+        favoritesManager: any FavoritesManagingProtocol,
         ratingManager: RatingManager,
         categoriesRepo: CategoriesRepositoryProtocol,
         readingStatsManager: ReadingStatsManagingProtocol,
