@@ -12,9 +12,9 @@ final class CategoriesRepositoryImpl: ObservableObject, CategoriesRepositoryProt
     @Published private(set) var categories: [Category] = []
     private var byId: [String: Category] = [:]
 
-    private let dataService: DataService
+    private let dataService: DataServiceProtocol
 
-    init(dataService: DataService) {
+    init(dataService: DataServiceProtocol) {
         self.dataService = dataService
     }
 
