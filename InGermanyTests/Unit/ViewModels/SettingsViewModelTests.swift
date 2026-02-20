@@ -14,6 +14,7 @@ final class SettingsViewModelTests: XCTestCase {
     var sut: SettingsViewModel!
     var mockLocalizationManager: LocalizationManager!
     var mockStatsManager: MockReadingStatsManager!
+    var mockSettings: SettingsManager!
     
     // MARK: - Setup & Teardown
     override func setUp() async throws {
@@ -22,11 +23,13 @@ final class SettingsViewModelTests: XCTestCase {
         UserDefaults.standard.removeObject(forKey: "selectedLanguage")
         
         // Create mock dependencies
-        mockLocalizationManager = LocalizationManager.shared
+        mockLocalizationManager = LocalizationManager()
         mockStatsManager = MockReadingStatsManager()
+        mockSettings = SettingsManager()
         
         // Initialize ViewModel with correct dependencies
         sut = SettingsViewModel(
+            settings: mockSettings,
             localizationManager: mockLocalizationManager,
             statsManager: mockStatsManager
         )
@@ -38,6 +41,7 @@ final class SettingsViewModelTests: XCTestCase {
         sut = nil
         mockLocalizationManager = nil
         mockStatsManager = nil
+        mockSettings = nil
         try await super.tearDown()
     }
     
@@ -114,6 +118,7 @@ final class SettingsViewModelTests: XCTestCase {
         XCTAssertTrue(sut.isHistoryCleared)
         
         let newViewModel = SettingsViewModel(
+            settings: mockSettings,
             localizationManager: mockLocalizationManager,
             statsManager: mockStatsManager
         )
@@ -204,7 +209,7 @@ final class SettingsViewModelTests: XCTestCase {
 // MARK: - Mock ReadingStatsManager
 
 @MainActor
-class MockReadingStatsManager: ReadingStatsManaging {
+class MockReadingStatsManager: ReadingStatsManagingProtocol {
     var mockHistory: [ReadingHistoryEntry] = []
     var mockProgress: [String: CGFloat] = [:]
     var mockActiveSessions: [String: ReadingSession] = [:]
