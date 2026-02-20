@@ -74,7 +74,10 @@ final class AppContainer: ObservableObject {
         self.readingStatsManager = readingStatsManager ?? ReadingStatsManager()
         
         // ✅ Formatters & Services
-        self.articleFormatter = ArticleFormatter()
+        self.articleFormatter = ArticleFormatter(
+            dateFormattingService: dateFormattingService,
+            textAnalysisService: textAnalysisService
+        )
         
         // ✅ ShareService
         self.shareService = ShareService(
