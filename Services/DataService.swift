@@ -7,18 +7,27 @@
 
 import Foundation
 
-actor DataService {
-    static let shared = DataService()
+actor DataService: DataServiceProtocol {
 
-    private let networkService = NetworkService.shared
-    private let cacheManager = CacheService.shared
+    // MARK: - Temporary singleton bridge (keep during DI migration)
+    static let shared = DataService(
+        networkService: NetworkService.shared,
+        cacheManager: CacheService.shared
+    )
 
+    // MARK: - Dependencies (DI)
+    private let networkService: NetworkServiceProtocol
+    private let cacheManager: CacheServiceProtocol
+
+    // MARK: - Memory caches
     private var articlesCache: [Article]?
     private var categoriesCache: [Category]?
     private var locationsCache: [Location]?
 
+    // MARK: - Metadata
     private var lastDataSource: [String: String] = [:]
 
+    // MARK: - Streams
     private var articleContinuations: [AsyncStream<[Article]>.Continuation] = []
     private var categoryContinuations: [AsyncStream<[Category]>.Continuation] = []
     private var locationContinuations: [AsyncStream<[Location]>.Continuation] = []
@@ -29,7 +38,14 @@ actor DataService {
         static let locations = "locations"
     }
 
-    private init() {}
+    // MARK: - Init
+    init(
+        networkService: NetworkServiceProtocol,
+        cacheManager: CacheServiceProtocol
+    ) {
+        self.networkService = networkService
+        self.cacheManager = cacheManager
+    }
 
     // MARK: - Fast cache access
     func getCachedArticles() -> [Article] { articlesCache ?? [] }
@@ -43,12 +59,14 @@ actor DataService {
             continuation.yield(articlesCache ?? [])
         }
     }
+
     func categoriesStream() -> AsyncStream<[Category]> {
         AsyncStream { continuation in
             categoryContinuations.append(continuation)
             continuation.yield(categoriesCache ?? [])
         }
     }
+
     func locationsStream() -> AsyncStream<[Location]> {
         AsyncStream { continuation in
             locationContinuations.append(continuation)
@@ -69,39 +87,40 @@ actor DataService {
     }
 
     // MARK: - Unified loaders
+
     func loadArticles() async -> [Article] {
         let start = Date()
         print("⏱ [DataService] loadArticles started at \(start)")
 
-        // ✅ КЭШ ПАМЯТИ - самый быстрый доступ
+        // ✅ MEMORY cache
         if let cached = articlesCache {
             lastDataSource["articles"] = "memory_cache"
             print("⏱ [DataService] loadArticles returned from MEMORY in \(Date().timeIntervalSince(start)) sec")
-            
-            // 🔄 Фоновое обновление НЕ блокирует основной поток
+
+            // background refresh without blocking UI
             Task.detached { [weak self] in
                 await self?.refreshArticlesIfNeeded()
             }
             return cached
         }
 
-        // ✅ ДИСКОВЫЙ КЭШ - быстрее чем бандл
-        if let cached: [Article] = await cacheManager.get(CacheKeys.articles) {
+        // ✅ TTL cache (CacheService)
+        if let cached: [Article] = await cacheManager.get(CacheKeys.articles, lifetime: nil) {
             articlesCache = cached
             lastDataSource["articles"] = "memory_cache"
             yieldArticles(cached)
-            print("⏱ [DataService] loadArticles returned from DISK in \(Date().timeIntervalSince(start)) sec")
-            
+            print("⏱ [DataService] loadArticles returned from DISK/TTL cache in \(Date().timeIntervalSince(start)) sec")
+
             Task.detached { [weak self] in
                 await self?.refreshArticlesIfNeeded()
             }
             return cached
         }
 
-        // ⚡ ПАРАЛЛЕЛЬНАЯ загрузка из бандла + подготовка сетевого запроса
+        // ⚡ parallel: bundle load + network prep
         async let localTask = loadLocalArticles()
         async let networkPrepTask: Void = prepareNetworkRefresh()
-        
+
         let local = await localTask
         await networkPrepTask
 
@@ -114,21 +133,17 @@ actor DataService {
             return local
         }
 
-        // Сеть - только если локальные данные недоступны
+        // Network only if local not available
         return await loadArticlesFromNetwork()
     }
 
-    // Подготовка сетевого обновления без блокировки
-    private func prepareNetworkRefresh() async {
-        // Предварительная настройка, но не блокируем основной поток
-    }
+    // no-op now; keep hook for future
+    private func prepareNetworkRefresh() async {}
 
     private func loadArticlesFromNetwork() async -> [Article] {
         do {
-            let _ = Date()
-            let (articles, source): ([Article], NetworkService.DataSource) =
-                try await networkService.loadJSONWithSource(from: "articles.json")
-            
+            let (articles, source): ([Article], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "articles.json")
+
             await cacheManager.set(CacheKeys.articles, value: articles)
             articlesCache = articles
             lastDataSource["articles"] = source.rawValue
@@ -139,9 +154,6 @@ actor DataService {
             return []
         }
     }
-    
-    
-    
 
     func loadArticlesWithSource() async -> ([Article], String) {
         let articles = await loadArticles()
@@ -153,11 +165,11 @@ actor DataService {
         let start = Date()
         print("⏱ [DataService] loadCategories started at \(start)")
 
-        if let cached: [Category] = await cacheManager.get(CacheKeys.categories) {
+        if let cached: [Category] = await cacheManager.get(CacheKeys.categories, lifetime: nil) {
             lastDataSource["categories"] = "memory_cache"
             categoriesCache = cached
             yieldCategories(cached)
-            print("⏱ [DataService] loadCategories returned from memory in \(Date().timeIntervalSince(start)) sec")
+            print("⏱ [DataService] loadCategories returned from TTL cache in \(Date().timeIntervalSince(start)) sec")
 
             Task.detached { [weak self] in
                 guard let self else { return }
@@ -187,8 +199,7 @@ actor DataService {
 
         do {
             let networkStart = Date()
-            let (categories, source): ([Category], NetworkService.DataSource) =
-                try await networkService.loadJSONWithSource(from: "categories.json")
+            let (categories, source): ([Category], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "categories.json")
             print("⏱ [DataService] loadCategories network finished in \(Date().timeIntervalSince(networkStart)) sec")
 
             await cacheManager.set(CacheKeys.categories, value: categories)
@@ -206,11 +217,11 @@ actor DataService {
         let start = Date()
         print("⏱ [DataService] loadLocations started at \(start)")
 
-        if let cached: [Location] = await cacheManager.get(CacheKeys.locations) {
+        if let cached: [Location] = await cacheManager.get(CacheKeys.locations, lifetime: nil) {
             lastDataSource["locations"] = "memory_cache"
             locationsCache = cached
             yieldLocations(cached)
-            print("⏱ [DataService] loadLocations returned from memory in \(Date().timeIntervalSince(start)) sec")
+            print("⏱ [DataService] loadLocations returned from TTL cache in \(Date().timeIntervalSince(start)) sec")
 
             Task.detached { [weak self] in
                 guard let self else { return }
@@ -240,8 +251,7 @@ actor DataService {
 
         do {
             let networkStart = Date()
-            let (locations, source): ([Location], NetworkService.DataSource) =
-                try await networkService.loadJSONWithSource(from: "locations.json")
+            let (locations, source): ([Location], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "locations.json")
             print("⏱ [DataService] loadLocations network finished in \(Date().timeIntervalSince(networkStart)) sec")
 
             await cacheManager.set(CacheKeys.locations, value: locations)
@@ -255,11 +265,10 @@ actor DataService {
         }
     }
 
-    // MARK: - Refresh helpers
+    // MARK: - Refresh helpers (background)
     private func refreshArticlesIfNeeded() async {
         do {
-            let (articles, source): ([Article], NetworkService.DataSource) =
-                try await networkService.loadJSONWithSource(from: "articles.json")
+            let (articles, source): ([Article], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "articles.json")
             if source == .network {
                 await cacheManager.set(CacheKeys.articles, value: articles)
                 articlesCache = articles
@@ -268,6 +277,7 @@ actor DataService {
             }
         } catch {}
     }
+
     private func refreshCategoriesIfNeeded() async {
         do {
             let categories: [Category] = try await networkService.loadJSON(from: "categories.json")
@@ -277,6 +287,7 @@ actor DataService {
             yieldCategories(categories)
         } catch {}
     }
+
     private func refreshLocationsIfNeeded() async {
         do {
             let locations: [Location] = try await networkService.loadJSON(from: "locations.json")
@@ -303,7 +314,9 @@ actor DataService {
                     let data = try Data(contentsOf: file)
                     let decoded = try JSONDecoder().decode([T].self, from: data)
                     continuation.resume(returning: decoded)
-                } catch { continuation.resume(returning: []) }
+                } catch {
+                    continuation.resume(returning: [])
+                }
             }
         }
     }
@@ -313,31 +326,52 @@ actor DataService {
     private func yieldCategories(_ value: [Category]) { for c in categoryContinuations { c.yield(value) } }
     private func yieldLocations(_ value: [Location]) { for c in locationContinuations { c.yield(value) } }
 
-    // MARK: - Cache control
-    func clearCache() {
-        Task { await cacheManager.clear() }
-        articlesCache = nil; categoriesCache = nil; locationsCache = nil
-        networkService.clearCache(); lastDataSource.removeAll()
-        yieldArticles([]); yieldCategories([]); yieldLocations([])
+    // MARK: - Cache control (Protocol API)
+
+    func clearCache() async {
+        await cacheManager.clear(nil)
+        articlesCache = nil
+        categoriesCache = nil
+        locationsCache = nil
+
+        networkService.clearCache()
+        lastDataSource.removeAll()
+
+        yieldArticles([])
+        yieldCategories([])
+        yieldLocations([])
     }
+
     func clearArticlesCache() async {
         await cacheManager.clear(CacheKeys.articles)
-        articlesCache = nil; lastDataSource["articles"] = nil; yieldArticles([])
+        articlesCache = nil
+        lastDataSource["articles"] = nil
+        yieldArticles([])
     }
+
+    // Additional helpers (not in protocol, but useful)
     func clearCategoriesCache() async {
         await cacheManager.clear(CacheKeys.categories)
-        categoriesCache = nil; lastDataSource["categories"] = nil; yieldCategories([])
+        categoriesCache = nil
+        lastDataSource["categories"] = nil
+        yieldCategories([])
     }
+
     func clearLocationsCache() async {
         await cacheManager.clear(CacheKeys.locations)
-        locationsCache = nil; lastDataSource["locations"] = nil; yieldLocations([])
+        locationsCache = nil
+        lastDataSource["locations"] = nil
+        yieldLocations([])
     }
+
     func refreshData() async {
-        clearCache()
+        await clearCache()
         _ = await loadArticles()
         _ = await loadCategories()
         _ = await loadLocations()
     }
 
-    func getLastDataSource() async -> [String: String] { lastDataSource }
+    func getLastDataSource() async -> [String: String] {
+        lastDataSource
+    }
 }

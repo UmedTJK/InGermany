@@ -7,46 +7,47 @@
 
 import Foundation
 
-/// Unified CacheService for memory caching with TTL support
-actor CacheService {
-    /// Shared singleton instance
+/// Unified in-memory cache with TTL.
+/// Note: This is an in-memory TTL cache only.
+actor CacheService: CacheServiceProtocol {
+
+    // MARK: - Singleton (temporary; keep while migrating DI)
     static let shared = CacheService()
-    
+
+    // MARK: - Storage
     private var memoryCache: [String: Any] = [:]
-    private let defaultCacheLifetime: TimeInterval = 15 * 60 // 15 минут
-    
+    private let defaultCacheLifetime: TimeInterval = 15 * 60 // 15 minutes
+
     private init() {}
-    
-    /// Retrieves cached value for key with TTL check
-    func get<T>(_ key: String, lifetime: TimeInterval? = nil) -> T? {
+
+    // MARK: - CacheServiceProtocol
+
+    func get<T>(_ key: String, lifetime: TimeInterval? = nil) async -> T? {
         guard let cached = memoryCache[key] as? CacheEntry<T> else { return nil }
-        
+
         let cacheLifetime = lifetime ?? defaultCacheLifetime
         if Date().timeIntervalSince(cached.timestamp) > cacheLifetime {
             memoryCache.removeValue(forKey: key)
             return nil
         }
-        
+
         return cached.value
     }
-    
-    /// Stores value in cache with current timestamp
-    func set<T>(_ key: String, value: T) {
+
+    func set<T>(_ key: String, value: T) async {
         memoryCache[key] = CacheEntry(value: value, timestamp: Date())
     }
-    
-    /// Clears specific cache entry or all cache
-    func clear(_ key: String? = nil) {
+
+    func clear(_ key: String? = nil) async {
         if let key = key {
             memoryCache.removeValue(forKey: key)
         } else {
             memoryCache.removeAll()
         }
     }
-    
-    /// Checks if cache entry exists and is valid
-    func hasValidCache(_ key: String, lifetime: TimeInterval? = nil) -> Bool {
-        return get(key, lifetime: lifetime) != nil
+
+    func hasValidCache(_ key: String, lifetime: TimeInterval? = nil) async -> Bool {
+        return await get(key, lifetime: lifetime) as Any? != nil
     }
 }
 

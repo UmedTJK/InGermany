@@ -1,0 +1,1458 @@
+===== Core/AppContainer.swift =====
+//
+//  AppContainer.swift
+//  InGermany
+//
+
+import SwiftUI
+import Foundation
+
+/// The main dependency injection container for the app.
+@MainActor
+final class AppContainer: ObservableObject {
+    // MARK: - Core Repositories
+    let articlesRepo: ArticlesRepositoryProtocol
+    let categoriesRepo: CategoriesRepositoryProtocol
+    
+    // MARK: - Managers
+    let favoritesManager: FavoritesManager
+    let ratingManager: RatingManager
+    let textSizeManager: TextSizeManager
+    let localizationManager: LocalizationManager
+    let settingsManager = SettingsManager()
+
+    
+    /// Конкретный экземпляр для SwiftUI
+    let readingStatsManager: ReadingStatsManager
+    /// Доступ через протокол (для ViewModel)
+    var readingStatsService: ReadingStatsManagingProtocol { readingStatsManager }
+
+    
+    private let dateFormattingService = DateFormattingService.shared
+    private let textAnalysisService = TextAnalysisService.shared
+    
+    // MARK: - Services
+    let dataService: DataService
+    private let articleFormatter: ArticleFormatter
+    
+    // ✅ ShareService
+    private let shareService: ShareService
+    
+    func makeArticleFormatter() -> ArticleFormatter {
+        return articleFormatter
+    }
+    
+    init(
+        articlesRepo: ArticlesRepositoryProtocol? = nil,
+        categoriesRepo: CategoriesRepositoryProtocol? = nil,
+        favoritesManager: FavoritesManager? = nil,
+        ratingManager: RatingManager? = nil,
+        textSizeManager: TextSizeManager? = nil,
+        localizationManager: LocalizationManager? = nil,
+        dataService: DataService? = nil,
+        readingStatsManager: ReadingStatsManager? = nil
+    ) {
+        // ✅ Services & Repos
+        let dataServiceInstance = dataService ?? DataService.shared
+        self.dataService = dataServiceInstance
+        
+        self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: dataServiceInstance)
+        self.categoriesRepo = categoriesRepo ?? CategoriesRepositoryImpl.shared
+        
+        // ✅ Managers
+        self.favoritesManager = favoritesManager ?? FavoritesManager.shared
+        self.ratingManager = ratingManager ?? RatingManager.shared
+        self.textSizeManager = textSizeManager ?? TextSizeManager.shared
+        self.localizationManager = localizationManager ?? LocalizationManager.shared
+        self.readingStatsManager = readingStatsManager ?? ReadingStatsManager.shared
+        
+        // ✅ Formatters & Services
+        self.articleFormatter = ArticleFormatter()
+        
+        // ✅ ShareService
+        self.shareService = ShareService(
+            articleFormatter: articleFormatter,
+            localizationManager: self.localizationManager
+        )
+    }
+    
+    // MARK: - ViewModel Factory Methods
+    
+    func makeHomeViewModel() -> HomeViewModel {
+        HomeViewModel(
+            favoritesManager: favoritesManager,
+            readingStatsManager: readingStatsManager,
+            categoriesRepository: categoriesRepo,
+            articlesRepo: articlesRepo
+        )
+    }
+    
+    func makeSearchViewModel() -> SearchViewModel {
+        SearchViewModel(
+            favoritesManager: favoritesManager,
+            categoriesRepo: categoriesRepo,
+            articlesRepo: articlesRepo
+        )
+    }
+    
+    func makeCategoriesViewModel() -> CategoriesViewModel {
+        CategoriesViewModel(
+            categoriesRepo: categoriesRepo,
+            articlesRepo: articlesRepo,
+            favoritesManager: favoritesManager
+        )
+    }
+    
+    func makeFavoritesViewModel() -> FavoritesViewModel {
+        FavoritesViewModel(
+            favoritesManager: favoritesManager,
+            articlesRepo: articlesRepo
+        )
+    }
+    
+    func makeSettingsViewModel() -> SettingsViewModel {
+        SettingsViewModel(
+            settings: settingsManager,
+            localizationManager: localizationManager,
+            statsManager: readingStatsService
+        )
+    }
+    
+    func makeArticleDetailViewModel(article: Article, allArticles: [Article]) -> ArticleDetailViewModel {
+        ArticleDetailViewModel(
+            article: article,
+            allArticles: allArticles,
+            localizationManager: localizationManager,
+            textSizeManager: textSizeManager,
+            favoritesManager: favoritesManager,
+            ratingManager: ratingManager,
+            readingStatsManager: readingStatsService,
+            articleFormatter: articleFormatter,
+            categoriesRepository: categoriesRepo,
+            shareService: shareService,
+            articlesProvider: ArticlesProviderAdapter(repo: articlesRepo)
+        )
+    }
+    
+    func makeAboutViewModel() -> AboutViewModel {
+        AboutViewModel()
+    }
+    
+    func makeArticleRowViewModel(article: Article) -> ArticleRowViewModel {
+        ArticleRowViewModel(
+            article: article,
+            localizationManager: localizationManager,
+            favoritesManager: favoritesManager,
+            ratingManager: ratingManager,
+            categoriesRepo: categoriesRepo,
+            readingStatsManager: readingStatsService,
+            articleFormatter: articleFormatter
+        )
+    }
+    
+    func makeArticleCompactCardViewModel(article: Article) -> ArticleRowViewModel {
+        makeArticleRowViewModel(article: article)
+    }
+    
+    func makeArticleCardViewModel(article: Article) -> ArticleRowViewModel {
+        makeArticleRowViewModel(article: article)
+    }
+    
+    func makeLocationsViewModel() -> LocationsViewModel {
+        LocationsViewModel(dataService: dataService)
+    }
+    
+    func makePDFViewerViewModel() -> PDFViewerViewModel {
+        PDFViewerViewModel(localizationManager: localizationManager)
+    }
+    
+    // MARK: - PDF Library
+
+    func makePDFLibraryViewModel() -> PDFLibraryViewModel {
+        let seedItems: [PDFItem] = [
+            PDFItem(titleKey: "pdf_title_test1", descriptionKey: "pdf_desc_test1", fileName: "test1"),
+            PDFItem(titleKey: "pdf_title_test2", descriptionKey: "pdf_desc_test2", fileName: "test2"),
+            PDFItem(titleKey: "pdf_title_test3", descriptionKey: "pdf_desc_test3", fileName: "test3")
+        ]
+        
+        return PDFLibraryViewModel(
+            localizationManager: localizationManager,
+            items: seedItems
+        )
+    }
+
+    
+ /*   func makeDemoArticleView() -> DemoArticleView {
+        DemoArticleView(localizationManager: localizationManager)
+    }
+  */
+
+    // MARK: - Editor
+
+    func makeArticleEditorViewModel() -> ArticleEditorViewModel {
+        // здесь не тянем ничего из .shared — чистый DI
+        ArticleEditorViewModel(title: "", blocks: [])
+    }
+
+    /*
+    func makeArticleEditorView() -> ArticleEditorView {
+        ArticleEditorView(viewModel: makeArticleEditorViewModel())
+    }
+    
+     */
+    
+    func makeShareService() -> ShareServiceProtocol {
+        return shareService
+    }
+    
+    func makeArticleLibraryViewModel() -> ArticleLibraryViewModel {
+        ArticleLibraryViewModel()
+    }
+    
+    func makeArticleDetailView(article: Article, allArticles: [Article]) -> ArticleDetailView {
+        ArticleDetailView(
+            viewModel: makeArticleDetailViewModel(article: article, allArticles: allArticles),
+            localizationManager: localizationManager,
+            articleRowFactory: { article in
+                self.makeArticleRowViewModel(article: article)
+            }
+        )
+    }
+    
+===== Core/InGermanyApp.swift =====
+@main
+struct InGermanyApp: App {
+
+    @StateObject private var appContainer = AppContainer()
+    @StateObject private var settingsManager = SettingsManager()
+
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environmentObject(appContainer)
+                .environmentObject(settingsManager)
+
+                // остальные менеджеры — если реально нужны
+                .environmentObject(appContainer.localizationManager)
+                .environmentObject(appContainer.favoritesManager)
+                .environmentObject(appContainer.ratingManager)
+                .environmentObject(appContainer.readingStatsManager)
+
+                // 🌙 ЕДИНСТВЕННЫЙ источник темы
+                .preferredColorScheme(
+                    settingsManager.isDarkMode ? .dark : .light
+                )
+
+                .environment(\.screenSize, UIScreen.main.bounds.size)
+                .onAppear {
+                    appContainer.bootstrap()
+                }
+        }
+    }
+}
+===== Core/ContentView.swift =====
+//
+//  ContentView.swift
+//  InGermany
+//
+
+import SwiftUI
+
+/// Обёртка для ленивой инициализации во вкладках
+struct LazyView<Content: View>: View {
+    private let build: () -> Content
+    init(_ build: @escaping () -> Content) {
+        self.build = build
+    }
+    var body: some View {
+        build()
+    }
+}
+
+struct ContentView: View {
+
+    @EnvironmentObject var appContainer: AppContainer
+    @EnvironmentObject var localizationManager: LocalizationManager
+
+    // ✅ Источник темы — SettingsManager
+    @EnvironmentObject var settingsManager: SettingsManager
+
+    @State private var selectedTab: Int = 0
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+
+            LazyView {
+                HomeView(appContainer: appContainer)
+            }
+            .tabItem {
+                Label(
+                    localizationManager.t("tab_home"),
+                    systemImage: "house.fill"
+                )
+            }
+            .tag(0)
+
+            LazyView {
+                CategoriesView(appContainer: appContainer)
+            }
+            .tabItem {
+                Label(
+                    localizationManager.t("tab_categories"),
+                    systemImage: "square.grid.2x2"
+                )
+            }
+            .tag(1)
+
+            LazyView {
+                SearchView(
+                    viewModel: appContainer.makeSearchViewModel()
+                )
+            }
+            .tabItem {
+                Label(
+                    localizationManager.t("tab_search"),
+                    systemImage: "magnifyingglass"
+                )
+            }
+            .tag(2)
+
+            LazyView {
+                FavoritesView(
+                    viewModel: appContainer.makeFavoritesViewModel()
+                )
+            }
+            .tabItem {
+                Label(
+                    localizationManager.t("tab_favorites"),
+                    systemImage: "heart.fill"
+                )
+            }
+            .tag(3)
+
+            LazyView {
+                SettingsView(
+                    viewModel: appContainer.makeSettingsViewModel()
+                )
+            }
+            .tabItem {
+                Label(
+                    localizationManager.t("tab_settings"),
+                    systemImage: "gearshape.fill"
+                )
+            }
+            .tag(4)
+        }
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(.ultraThinMaterial, for: .tabBar)
+
+        // 🌙 Реактивная тема — корректно
+        .environment(
+            \.colorScheme,
+            settingsManager.isDarkMode ? .dark : .light
+        )
+    }
+}
+
+#Preview {
+    ContentView()
+        .environmentObject(AppContainer.previewMock())
+        .environmentObject(LocalizationManager.shared)
+        .environmentObject(SettingsManager())
+}
+===== Models/Article.swift =====
+//
+//  Article.swift (ИСПРАВЛЕННАЯ ВЕРСИЯ)
+//  InGermany
+//
+
+import Foundation
+
+/// Чистая модель данных статьи без бизнес-логики
+struct Article: Identifiable, Codable, Hashable {
+    /// Unique identifier for the article.
+    let id: String
+    /// Localized titles keyed by language code.
+    let title: [String: String]
+    /// Localized content keyed by language code.
+    let content: [String: String]
+    /// Identifier of the category this article belongs to.
+    let categoryId: String
+    /// Tags associated with the article for categorization and search.
+    let tags: [String]
+    /// Optional filename of an associated PDF document.
+    let pdfFileName: String?
+    /// Optional creation date of the article.
+    let createdAt: Date?
+    /// Optional last updated date of the article.
+    let updatedAt: Date?
+    /// Optional image filename associated with the article.
+    let image: String?
+    
+    // MARK: - Initializers
+    
+    init(
+        id: String,
+        title: [String: String],
+        content: [String: String],
+        categoryId: String,
+        tags: [String] = [],
+        pdfFileName: String? = nil,
+        createdAt: Date? = nil,
+        updatedAt: Date? = nil,
+        image: String? = nil
+    ) {
+        self.id = id
+        self.title = title
+        self.content = content
+        self.categoryId = categoryId
+        self.tags = tags
+        self.pdfFileName = pdfFileName
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.image = image
+    }
+    
+    // MARK: - Coding Keys
+    
+    enum CodingKeys: String, CodingKey {
+        case id, title, content, categoryId, tags, pdfFileName, createdAt, updatedAt, image
+    }
+    
+    // MARK: - Custom Decoding (УПРОЩЕННЫЙ И ИСПРАВЛЕННЫЙ)
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode([String: String].self, forKey: .title)
+        content = try container.decode([String: String].self, forKey: .content)
+        categoryId = try container.decode(String.self, forKey: .categoryId)
+        tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
+        pdfFileName = try container.decodeIfPresent(String.self, forKey: .pdfFileName)
+        image = try container.decodeIfPresent(String.self, forKey: .image)
+        
+        // 🔧 ИСПРАВЛЕНО: Упрощенное декодирование дат
+        let dateFormatter = ISO8601DateFormatter()
+        
+        if let createdAtString = try? container.decode(String.self, forKey: .createdAt) {
+            createdAt = dateFormatter.date(from: createdAtString)
+        } else {
+            createdAt = nil
+        }
+        
+        if let updatedAtString = try? container.decode(String.self, forKey: .updatedAt) {
+            updatedAt = dateFormatter.date(from: updatedAtString)
+        } else {
+            updatedAt = nil
+        }
+    }
+    
+    // MARK: - Custom Encoding
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(content, forKey: .content)
+        try container.encode(categoryId, forKey: .categoryId)
+        try container.encode(tags, forKey: .tags)
+        try container.encodeIfPresent(pdfFileName, forKey: .pdfFileName)
+        try container.encodeIfPresent(image, forKey: .image)
+        
+        let dateFormatter = ISO8601DateFormatter()
+        
+        if let createdAt = createdAt {
+            try container.encode(dateFormatter.string(from: createdAt), forKey: .createdAt)
+        }
+        
+        if let updatedAt = updatedAt {
+            try container.encode(dateFormatter.string(from: updatedAt), forKey: .updatedAt)
+        }
+    }
+    
+    // MARK: - Hashable
+    
+    static func == (lhs: Article, rhs: Article) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    // MARK: - Localization Methods (оставляем только чистые геттеры)
+    
+    /// Returns the localized title for the given language
+    func localizedTitle(for language: String) -> String {
+        title[language] ?? title["en"] ?? title.values.first ?? "No title"
+    }
+    
+    /// Returns the localized content for the given language
+    func localizedContent(for language: String) -> String {
+        content[language] ?? content["en"] ?? content.values.first ?? "No content"
+    }
+    
+    // MARK: - Image fallback (оставляем как чистую логику преобразования)
+    
+    /// Provides the normalized image filename with fallback logic
+    var imageName: String {
+        guard var img = image else { return "Logo" }
+        
+        // AVIF → JPG
+        if img.hasSuffix(".avif") {
+            img = img.replacingOccurrences(of: ".avif", with: ".jpg")
+        }
+        
+        // Если без расширения — добавляем .jpg
+        if !img.contains(".") {
+            img += ".jpg"
+        }
+        
+        return img
+    }
+    
+    // MARK: - Computed Properties (только чистые вычисления без внешних зависимостей)
+    
+    /// Indicates whether the article is considered new (created within the last 7 days).
+    var isNew: Bool {
+        guard let createdAt = createdAt else { return false }
+        return Date().timeIntervalSince(createdAt) < 7 * 24 * 60 * 60
+    }
+    
+    /// Indicates whether the article was updated recently (within the last 3 days).
+    var isUpdatedRecently: Bool {
+        guard let updatedAt = updatedAt else { return false }
+        return Date().timeIntervalSince(updatedAt) < 3 * 24 * 60 * 60
+    }
+}
+
+extension Article {
+    /// Подсчитывает количество слов в контенте для данного языка.
+    func wordCount(for language: String) -> Int {
+        let text = localizedContent(for: language)
+        // Разбиваем по непробельным разделителям (пунктуация плюс пробелы)
+        let tokens = text
+            .components(separatedBy: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters))
+            .filter { !$0.isEmpty }
+        return tokens.count
+    }
+}
+
+// MARK: - Sample Data для Preview (без изменений)
+
+extension Article {
+    static let sampleArticle: Article = Article(
+        id: "11111111-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+        title: [
+            "ru": "Финансы в Германии",
+            "en": "Finance in Germany",
+            "de": "Finanzen in Deutschland"
+        ],
+        content: [
+            "ru": "Все о финансах и банковской системе в Германии. Как открыть счет, получить кредит и управлять своими финансами.",
+            "en": "All about finance and the banking system in Germany. How to open an account, get credit and manage your finances.",
+            "de": "Alles über Finanzen und das Bankensystem in Deutschland. Wie Sie ein Konto eröffnen, einen Kredit erhalten und Ihre Finanzen verwalten."
+        ],
+        categoryId: "11111111-1111-1111-1111-aaaaaaaaaaaa",
+        tags: ["финансы", "банк", "кредит"],
+        pdfFileName: "Test_Document",
+        createdAt: Calendar.current.date(byAdding: .day, value: -5, to: Date()),
+        updatedAt: Calendar.current.date(byAdding: .day, value: -2, to: Date()),
+        image: "bank_account.jpg"
+    )
+    
+    static let sampleArticles: [Article] = [
+        sampleArticle,
+        Article(
+            id: "22222222-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+            title: [
+                "ru": "Поиск работы в Германии",
+                "en": "Job search in Germany",
+                "de": "Jobsuche in Deutschland"
+            ],
+            content: [
+                "ru": "Подробное руководство по поиску работы в Германии. Составление резюме, собеседования и трудовые права.",
+                "en": "Complete guide to finding work in Germany. CV writing, interviews and labor rights.",
+                "de": "Vollständiger Leitfaden zur Arbeitssuche in Deutschland. Lebenslauf schreiben, Interviews und Arbeitsrechte."
+            ],
+            categoryId: "22222222-2222-2222-2222-bbbbbbbbbbbb",
+            tags: ["работа", "резюме", "собеседование"],
+            createdAt: Calendar.current.date(byAdding: .day, value: -10, to: Date()),
+            image: "job_search.jpg"
+        )
+    ]
+}
+===== Models/Category.swift =====
+//
+//  Category.swift
+//  InGermany
+//
+
+import Foundation
+
+/// Represents an article category with localized names, icon, and color.
+struct Category: Identifiable, Codable, Hashable {
+    /// Unique identifier of the category.
+    let id: String
+    /// Localized names of the category by language code.
+    let name: [String: String]
+    /// SF Symbol name representing the category.
+    let icon: String
+    /// Hexadecimal color string associated with the category.
+    let colorHex: String
+    
+    /// Returns the localized name for the given language, with fallback to English or first available value.
+    func localizedName(for language: String) -> String {
+        name[language] ?? name["en"] ?? name.values.first ?? "No name"
+    }
+}
+
+// MARK: - Sample Data for Preview
+
+extension Category {
+    static let sampleCategories: [Category] = [
+        Category(
+            id: "11111111-1111-1111-1111-aaaaaaaaaaaa",
+            name: ["ru": "Финансы", "en": "Finance"],
+            icon: "banknote",
+            colorHex: "#4A90E2"
+        ),
+        Category(
+            id: "22222222-2222-2222-2222-bbbbbbbbbbbb",
+            name: ["ru": "Работа", "en": "Work"],
+            icon: "briefcase",
+            colorHex: "#27AE60"
+        )
+    ]
+}
+===== Models/Location.swift =====
+//
+//  Location.swift
+//  InGermany
+//
+//  Created by SUM TJK on 15.09.25.
+//
+
+import Foundation
+import CoreLocation
+
+
+/// Represents a geographic location with coordinates and name.
+struct Location: Identifiable, Codable {
+    /// Unique identifier of the location.
+    let id: String
+    /// Display name of the location.
+    let name: String
+    /// Latitude coordinate of the location.
+    let latitude: Double
+    /// Longitude coordinate of the location.
+    let longitude: Double
+    /// Computed CoreLocation coordinate (latitude and longitude) for use in MapKit.
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+}
+===== Repositories/ArticlesRepositoryImpl.swift =====
+//
+//  ArticlesRepositoryImpl.swift
+//  InGermany
+//
+
+//
+//  ArticlesRepositoryImpl.swift
+//  InGermany
+//
+
+import Foundation
+
+final class ArticlesRepositoryImpl: ArticlesRepositoryProtocol {
+    private let dataService: DataService
+
+    init(dataService: DataService = .shared) {
+        self.dataService = dataService
+    }
+
+    func loadArticles() async -> [Article] {
+        await dataService.loadArticles()
+    }
+
+    func refreshArticles() async -> [Article] {
+        await dataService.clearArticlesCache()
+        return await dataService.loadArticles()
+    }
+
+    func getLastSource() async -> String {
+        let sources = await dataService.getLastDataSource()
+        return sources["articles"] ?? "unknown"
+    }
+}
+===== Repositories/CategoriesRepositoryImpl.swift =====
+//  CategoryManager.swift
+//  InGermany
+//
+//  Created by SUM TJK on 10.10.25.
+//
+
+import Foundation
+
+@MainActor
+final class CategoriesRepositoryImpl: ObservableObject, CategoriesRepositoryProtocol {
+    static let shared = CategoriesRepositoryImpl()
+
+    @Published private(set) var categories: [Category] = []
+    private var byId: [String: Category] = [:]
+
+    private init() {}
+
+    func bootstrap() async {
+        let list = await DataService.shared.loadCategories()
+        categories = list
+        byId = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
+    }
+
+    func refresh() async {
+        await bootstrap()
+    }
+
+    func category(by id: String) -> Category? {
+        byId[id]
+    }
+
+    func allCategories() -> [Category] {
+        categories
+    }
+}
+===== Services/DataService.swift =====
+//
+//  DataService.swift
+//  InGermany
+//
+//  Created by SUM TJK on 13.09.25.
+//
+
+import Foundation
+
+actor DataService {
+    static let shared = DataService()
+
+    private let networkService = NetworkService.shared
+    private let cacheManager = CacheService.shared
+
+    private var articlesCache: [Article]?
+    private var categoriesCache: [Category]?
+    private var locationsCache: [Location]?
+
+    private var lastDataSource: [String: String] = [:]
+
+    private var articleContinuations: [AsyncStream<[Article]>.Continuation] = []
+    private var categoryContinuations: [AsyncStream<[Category]>.Continuation] = []
+    private var locationContinuations: [AsyncStream<[Location]>.Continuation] = []
+
+    private enum CacheKeys {
+        static let articles = "articles"
+        static let categories = "categories"
+        static let locations = "locations"
+    }
+
+    private init() {}
+
+    // MARK: - Fast cache access
+    func getCachedArticles() -> [Article] { articlesCache ?? [] }
+    func getCachedCategories() -> [Category] { categoriesCache ?? [] }
+    func getCachedLocations() -> [Location] { locationsCache ?? [] }
+
+    // MARK: - Streams
+    func articlesStream() -> AsyncStream<[Article]> {
+        AsyncStream { continuation in
+            articleContinuations.append(continuation)
+            continuation.yield(articlesCache ?? [])
+        }
+    }
+    func categoriesStream() -> AsyncStream<[Category]> {
+        AsyncStream { continuation in
+            categoryContinuations.append(continuation)
+            continuation.yield(categoriesCache ?? [])
+        }
+    }
+    func locationsStream() -> AsyncStream<[Location]> {
+        AsyncStream { continuation in
+            locationContinuations.append(continuation)
+            continuation.yield(locationsCache ?? [])
+        }
+    }
+
+    // MARK: - Fire-and-forget preload
+    func preloadAll() {
+        Task.detached { [weak self] in
+            guard let self else { return }
+            let start = Date()
+            await self.refreshArticlesIfNeeded()
+            await self.refreshCategoriesIfNeeded()
+            await self.refreshLocationsIfNeeded()
+            print("⏱ [DataService] preloadAll refresh finished in \(Date().timeIntervalSince(start)) sec")
+        }
+    }
+
+    // MARK: - Unified loaders
+    func loadArticles() async -> [Article] {
+        let start = Date()
+        print("⏱ [DataService] loadArticles started at \(start)")
+
+        // ✅ КЭШ ПАМЯТИ - самый быстрый доступ
+        if let cached = articlesCache {
+            lastDataSource["articles"] = "memory_cache"
+            print("⏱ [DataService] loadArticles returned from MEMORY in \(Date().timeIntervalSince(start)) sec")
+            
+            // 🔄 Фоновое обновление НЕ блокирует основной поток
+            Task.detached { [weak self] in
+                await self?.refreshArticlesIfNeeded()
+            }
+            return cached
+        }
+
+        // ✅ ДИСКОВЫЙ КЭШ - быстрее чем бандл
+        if let cached: [Article] = await cacheManager.get(CacheKeys.articles) {
+            articlesCache = cached
+            lastDataSource["articles"] = "memory_cache"
+            yieldArticles(cached)
+            print("⏱ [DataService] loadArticles returned from DISK in \(Date().timeIntervalSince(start)) sec")
+            
+            Task.detached { [weak self] in
+                await self?.refreshArticlesIfNeeded()
+            }
+            return cached
+        }
+
+        // ⚡ ПАРАЛЛЕЛЬНАЯ загрузка из бандла + подготовка сетевого запроса
+        async let localTask = loadLocalArticles()
+        async let networkPrepTask: Void = prepareNetworkRefresh()
+        
+        let local = await localTask
+        await networkPrepTask
+
+        if !local.isEmpty {
+            await cacheManager.set(CacheKeys.articles, value: local)
+            articlesCache = local
+            lastDataSource["articles"] = "local_bundle"
+            yieldArticles(local)
+            print("⏱ [DataService] loadArticles returned from BUNDLE in \(Date().timeIntervalSince(start)) sec")
+            return local
+        }
+
+        // Сеть - только если локальные данные недоступны
+        return await loadArticlesFromNetwork()
+    }
+
+    // Подготовка сетевого обновления без блокировки
+    private func prepareNetworkRefresh() async {
+        // Предварительная настройка, но не блокируем основной поток
+    }
+
+    private func loadArticlesFromNetwork() async -> [Article] {
+        do {
+            let _ = Date()
+            let (articles, source): ([Article], NetworkService.DataSource) =
+                try await networkService.loadJSONWithSource(from: "articles.json")
+            
+            await cacheManager.set(CacheKeys.articles, value: articles)
+            articlesCache = articles
+            lastDataSource["articles"] = source.rawValue
+            yieldArticles(articles)
+            return articles
+        } catch {
+            print("⚠️ [DataService] loadArticles network failed: \(error)")
+            return []
+        }
+    }
+    
+    
+    
+
+    func loadArticlesWithSource() async -> ([Article], String) {
+        let articles = await loadArticles()
+        let source = lastDataSource["articles"] ?? "unknown"
+        return (articles, source)
+    }
+
+    func loadCategories() async -> [Category] {
+        let start = Date()
+        print("⏱ [DataService] loadCategories started at \(start)")
+
+        if let cached: [Category] = await cacheManager.get(CacheKeys.categories) {
+            lastDataSource["categories"] = "memory_cache"
+            categoriesCache = cached
+            yieldCategories(cached)
+            print("⏱ [DataService] loadCategories returned from memory in \(Date().timeIntervalSince(start)) sec")
+
+            Task.detached { [weak self] in
+                guard let self else { return }
+                let networkStart = Date()
+                await self.refreshCategoriesIfNeeded()
+                print("⏱ [DataService] refreshCategoriesIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
+            }
+            return cached
+        }
+
+        let local = await loadLocalCategories()
+        if !local.isEmpty {
+            await cacheManager.set(CacheKeys.categories, value: local)
+            categoriesCache = local
+            lastDataSource["categories"] = "local_bundle"
+            yieldCategories(local)
+            print("⏱ [DataService] loadCategories returned from bundle in \(Date().timeIntervalSince(start)) sec")
+
+            Task.detached { [weak self] in
+                guard let self else { return }
+                let networkStart = Date()
+                await self.refreshCategoriesIfNeeded()
+                print("⏱ [DataService] refreshCategoriesIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
+            }
+            return local
+        }
+
+        do {
+            let networkStart = Date()
+            let (categories, source): ([Category], NetworkService.DataSource) =
+                try await networkService.loadJSONWithSource(from: "categories.json")
+            print("⏱ [DataService] loadCategories network finished in \(Date().timeIntervalSince(networkStart)) sec")
+
+            await cacheManager.set(CacheKeys.categories, value: categories)
+            categoriesCache = categories
+            lastDataSource["categories"] = source.rawValue
+            yieldCategories(categories)
+            return categories
+        } catch {
+            print("⚠️ [DataService] loadCategories network failed after \(Date().timeIntervalSince(start)) sec: \(error)")
+            return []
+        }
+    }
+
+    func loadLocations() async -> [Location] {
+        let start = Date()
+        print("⏱ [DataService] loadLocations started at \(start)")
+
+        if let cached: [Location] = await cacheManager.get(CacheKeys.locations) {
+            lastDataSource["locations"] = "memory_cache"
+            locationsCache = cached
+            yieldLocations(cached)
+            print("⏱ [DataService] loadLocations returned from memory in \(Date().timeIntervalSince(start)) sec")
+
+            Task.detached { [weak self] in
+                guard let self else { return }
+                let networkStart = Date()
+                await self.refreshLocationsIfNeeded()
+                print("⏱ [DataService] refreshLocationsIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
+            }
+            return cached
+        }
+
+        let local = await loadLocalLocations()
+        if !local.isEmpty {
+            await cacheManager.set(CacheKeys.locations, value: local)
+            locationsCache = local
+            lastDataSource["locations"] = "local_bundle"
+            yieldLocations(local)
+            print("⏱ [DataService] loadLocations returned from bundle in \(Date().timeIntervalSince(start)) sec")
+
+            Task.detached { [weak self] in
+                guard let self else { return }
+                let networkStart = Date()
+                await self.refreshLocationsIfNeeded()
+                print("⏱ [DataService] refreshLocationsIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
+            }
+            return local
+        }
+
+        do {
+            let networkStart = Date()
+            let (locations, source): ([Location], NetworkService.DataSource) =
+                try await networkService.loadJSONWithSource(from: "locations.json")
+            print("⏱ [DataService] loadLocations network finished in \(Date().timeIntervalSince(networkStart)) sec")
+
+            await cacheManager.set(CacheKeys.locations, value: locations)
+            locationsCache = locations
+            lastDataSource["locations"] = source.rawValue
+            yieldLocations(locations)
+            return locations
+        } catch {
+            print("⚠️ [DataService] loadLocations network failed after \(Date().timeIntervalSince(start)) sec: \(error)")
+            return []
+        }
+    }
+
+    // MARK: - Refresh helpers
+    private func refreshArticlesIfNeeded() async {
+        do {
+            let (articles, source): ([Article], NetworkService.DataSource) =
+                try await networkService.loadJSONWithSource(from: "articles.json")
+            if source == .network {
+                await cacheManager.set(CacheKeys.articles, value: articles)
+                articlesCache = articles
+                lastDataSource["articles"] = source.rawValue
+                yieldArticles(articles)
+            }
+        } catch {}
+    }
+    private func refreshCategoriesIfNeeded() async {
+        do {
+            let categories: [Category] = try await networkService.loadJSON(from: "categories.json")
+            await cacheManager.set(CacheKeys.categories, value: categories)
+            categoriesCache = categories
+            lastDataSource["categories"] = "network"
+            yieldCategories(categories)
+        } catch {}
+    }
+    private func refreshLocationsIfNeeded() async {
+        do {
+            let locations: [Location] = try await networkService.loadJSON(from: "locations.json")
+            await cacheManager.set(CacheKeys.locations, value: locations)
+            locationsCache = locations
+            lastDataSource["locations"] = "network"
+            yieldLocations(locations)
+        } catch {}
+    }
+
+    // MARK: - Local fallbacks
+    private func loadLocalArticles() async -> [Article] { await loadLocal("articles.json") }
+    private func loadLocalCategories() async -> [Category] { await loadLocal("categories.json") }
+    private func loadLocalLocations() async -> [Location] { await loadLocal("locations.json") }
+
+    private func loadLocal<T: Decodable>(_ filename: String) async -> [T] {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.global().async {
+                let name = filename.replacingOccurrences(of: ".json", with: "")
+                guard let file = Bundle.main.url(forResource: name, withExtension: "json") else {
+                    continuation.resume(returning: []); return
+                }
+                do {
+                    let data = try Data(contentsOf: file)
+                    let decoded = try JSONDecoder().decode([T].self, from: data)
+                    continuation.resume(returning: decoded)
+                } catch { continuation.resume(returning: []) }
+            }
+        }
+    }
+
+    // MARK: - Broadcasting helpers
+    private func yieldArticles(_ value: [Article]) { for c in articleContinuations { c.yield(value) } }
+    private func yieldCategories(_ value: [Category]) { for c in categoryContinuations { c.yield(value) } }
+    private func yieldLocations(_ value: [Location]) { for c in locationContinuations { c.yield(value) } }
+
+    // MARK: - Cache control
+    func clearCache() {
+        Task { await cacheManager.clear() }
+        articlesCache = nil; categoriesCache = nil; locationsCache = nil
+        networkService.clearCache(); lastDataSource.removeAll()
+===== Services/NetworkService.swift =====
+//
+//  NetworkService.swift
+//  InGermany
+//
+//  Created by SUM TJK on 20.09.25.
+//
+
+import Foundation
+
+/// A singleton service responsible for loading JSON data with OFFLINE-FIRST strategy.
+/// Uses: Bundle → File Cache → Network (async update)
+class NetworkService {
+    /// Shared singleton instance of `NetworkService`.
+    static let shared = NetworkService()
+    
+    /// Base URL pointing to the GitHub raw resources used for fetching JSON files.
+    private let baseURL = "https://raw.githubusercontent.com/UmedTJK/InGermany/main/Resources/"
+    /// In-memory and disk cache used for URLSession requests.
+    private let cache = URLCache(memoryCapacity: 10 * 1024 * 1024,
+                                 diskCapacity: 50 * 1024 * 1024,
+                                 diskPath: "github_cache")
+    /// FileManager instance for file system operations.
+    private let fileManager = FileManager.default
+    /// Directory where cached JSON files are stored.
+    private let cacheDirectory: URL
+
+    /// Custom URLSession with reduced timeouts
+    // В NetworkService.swift
+    private lazy var session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 2.0    // ⬇️ Уменьшаем с 3 до 2 секунд
+        config.timeoutIntervalForResource = 2.0   // ⬇️ Уменьшаем с 3 до 2 секунд
+        config.waitsForConnectivity = false       // ❌ Не ждем подключения
+        config.requestCachePolicy = .returnCacheDataElseLoad
+        return URLSession(configuration: config)
+    }()
+    
+    /// Private initializer. Sets up the cache directory on first use.
+    private init() {
+        // Создаем директорию для кэша
+        let directories = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
+        cacheDirectory = directories[0].appendingPathComponent("InGermanyCache")
+        
+        do {
+            try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+        } catch {
+            print("⚠️ Не удалось создать директорию кэша: \(error)")
+        }
+    }
+    
+    // MARK: - Основной API
+    
+    /// Loads and decodes a JSON file into a specified Decodable type with OFFLINE-FIRST strategy.
+    /// Strategy: Bundle → File Cache → Network (with async refresh)
+    func loadJSON<T: Decodable>(from file: String) async throws -> T {
+        // Шаг 1: Bundle
+        if let bundleData = loadFromBundle(file: file) {
+            print("📦 [NetworkService] Загружено из Bundle: \(file)")
+            Task { await refreshFromNetwork(file: file) }
+            return try decodeData(bundleData)
+        }
+        
+        // Шаг 2: File Cache
+        if let cachedData = loadFromCache(for: file) {
+            print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
+            Task { await refreshFromNetwork(file: file) }
+            return try decodeData(cachedData)
+        }
+        
+        // Шаг 3: Network
+        print("🌐 [NetworkService] Загружаем из сети: \(file)")
+        return try await loadFromNetwork(file: file)
+    }
+    
+    /// Loads JSON with detailed source information for tracking
+    func loadJSONWithSource<T: Decodable>(from file: String) async throws -> (T, DataSource) {
+        // Шаг 1: Bundle
+        if let bundleData = loadFromBundle(file: file) {
+            print("📦 [NetworkService] Загружено из Bundle: \(file)")
+            Task { await refreshFromNetwork(file: file) }
+            let decoded: T = try decodeData(bundleData)
+            return (decoded, .bundle)
+        }
+        
+        // Шаг 2: File Cache
+        if let cachedData = loadFromCache(for: file) {
+            print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
+            Task { await refreshFromNetwork(file: file) }
+            let decoded: T = try decodeData(cachedData)
+            return (decoded, .fileCache)
+        }
+        
+        // Шаг 3: Network
+        print("🌐 [NetworkService] Загружаем из сети: \(file)")
+        let decoded: T = try await loadFromNetwork(file: file)
+        return (decoded, .network)
+    }
+    
+    // MARK: - Приватные методы загрузки
+    
+    private func loadFromBundle(file: String) -> Data? {
+        guard let bundleURL = Bundle.main.url(forResource: file, withExtension: nil) else {
+            return nil
+        }
+        return try? Data(contentsOf: bundleURL)
+    }
+    
+    private func loadFromCache(for file: String) -> Data? {
+        let cacheFile = cacheDirectory.appendingPathComponent(file)
+        return try? Data(contentsOf: cacheFile)
+    }
+    
+    private func loadFromNetwork<T: Decodable>(file: String) async throws -> T {
+        let url = URL(string: baseURL + file)!
+        var request = URLRequest(url: url)
+        request.cachePolicy = .returnCacheDataElseLoad
+        
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw NetworkError.invalidResponse
+        }
+        
+        saveToCache(data: data, for: file)
+        return try decodeData(data)
+    }
+    
+    private func refreshFromNetwork(file: String) async {
+        let url = URL(string: baseURL + file)!
+        
+        do {
+            var request = URLRequest(url: url)
+            request.cachePolicy = .reloadIgnoringLocalCacheData
+            request.timeoutInterval = 3.0
+            
+            let (data, response) = try await session.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                return
+            }
+            
+            saveToCache(data: data, for: file)
+            print("🔄 [NetworkService] Данные обновлены из сети: \(file)")
+        } catch {
+            print("⚠️ [NetworkService] Не удалось обновить данные из сети: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - Вспомогательные методы
+    
+    private func saveToCache(data: Data, for file: String) {
+        let cacheFile = cacheDirectory.appendingPathComponent(file)
+        let directory = cacheFile.deletingLastPathComponent()
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        
+        do {
+            try data.write(to: cacheFile)
+        } catch {
+            print("⚠️ [NetworkService] Ошибка сохранения в файловый кэш: \(error)")
+        }
+    }
+    
+    private func decodeData<T: Decodable>(_ data: Data) throws -> T {
+        let decoder = JSONDecoder()
+        return try decoder.decode(T.self, from: data)
+    }
+    
+    // MARK: - Legacy API
+    
+    func loadJSONSync<T: Decodable>(from file: String, completion: @escaping (Result<T, Error>) -> Void) {
+        Task {
+            do {
+                let result: T = try await loadJSON(from: file)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func clearCache() {
+        do {
+            let files = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)
+            for file in files {
+                try fileManager.removeItem(at: file)
+            }
+            print("🗑️ [NetworkService] Файловый кэш очищен")
+        } catch {
+            print("⚠️ [NetworkService] Не удалось очистить кэш: \(error)")
+        }
+    }
+}
+
+// MARK: - Вспомогательные типы
+
+extension NetworkService {
+    enum DataSource: String {
+        case bundle = "bundle"
+        case fileCache = "file_cache"
+        case network = "network"
+    }
+    
+    enum NetworkError: Error {
+        case invalidResponse
+        case networkUnavailable
+    }
+}
+===== Services/CacheService.swift =====
+//
+//  CacheService.swift
+//  InGermany
+//
+//  Created by SUM TJK on 08.10.25.
+//
+
+import Foundation
+
+/// Unified CacheService for memory caching with TTL support
+actor CacheService {
+    /// Shared singleton instance
+    static let shared = CacheService()
+    
+    private var memoryCache: [String: Any] = [:]
+    private let defaultCacheLifetime: TimeInterval = 15 * 60 // 15 минут
+    
+    private init() {}
+    
+    /// Retrieves cached value for key with TTL check
+    func get<T>(_ key: String, lifetime: TimeInterval? = nil) -> T? {
+        guard let cached = memoryCache[key] as? CacheEntry<T> else { return nil }
+        
+        let cacheLifetime = lifetime ?? defaultCacheLifetime
+        if Date().timeIntervalSince(cached.timestamp) > cacheLifetime {
+            memoryCache.removeValue(forKey: key)
+            return nil
+        }
+        
+        return cached.value
+    }
+    
+    /// Stores value in cache with current timestamp
+    func set<T>(_ key: String, value: T) {
+        memoryCache[key] = CacheEntry(value: value, timestamp: Date())
+    }
+    
+    /// Clears specific cache entry or all cache
+    func clear(_ key: String? = nil) {
+        if let key = key {
+            memoryCache.removeValue(forKey: key)
+        } else {
+            memoryCache.removeAll()
+        }
+    }
+    
+    /// Checks if cache entry exists and is valid
+    func hasValidCache(_ key: String, lifetime: TimeInterval? = nil) -> Bool {
+        return get(key, lifetime: lifetime) != nil
+    }
+}
+
+private struct CacheEntry<T> {
+    let value: T
+    let timestamp: Date
+}
+===== Managers/SettingsManager.swift =====
+//
+//  SettingsManager.swift
+//  InGermany
+//
+//  Created by SUM TJK on 11.01.26.
+//
+
+import SwiftUI
+
+final class SettingsManager: ObservableObject, SettingsManagingProtocol {
+
+    @AppStorage("selectedLanguage") var selectedLanguage: String = "ru"
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
+    @AppStorage("relativeDates") var relativeDates: Bool = true
+    @AppStorage("selectedCardStyleIndex") var selectedCardStyleIndex: Int = 0
+
+    func resetToDefaults() {
+        selectedLanguage = "ru"
+        isDarkMode = false
+        relativeDates = true
+        selectedCardStyleIndex = 0
+    }
+}
+===== Services/DefaultsStore.swift =====
+//
+//  DefaultsStorage.swift
+//  InGermany
+//
+//  Created by SUM TJK on 27.09.25.
+//
+
+//
+//  DefaultsStorage.swift
+//  InGermany
+//
+
+import Foundation
+
+/// Provides helper methods for saving and loading Codable data to UserDefaults.
+enum DefaultsStore {
+    /// Loads a Codable object from UserDefaults for the given key.
+    static func load<T: Codable>(_ key: String, as type: T.Type) -> T? {
+        guard let data = UserDefaults.standard.data(forKey: key) else { return nil }
+        return try? JSONDecoder().decode(T.self, from: data)
+    }
+
+    /// Saves a Codable object to UserDefaults for the given key.
+    static func save<T: Codable>(_ value: T, for key: String) {
+        if let data = try? JSONEncoder().encode(value) {
+            UserDefaults.standard.set(data, forKey: key)
+        }
+    }
+    
+    /// 🔧 ДОБАВИТЬ ЭТОТ МЕТОД:
+    /// Removes data from UserDefaults for the given key.
+    static func remove(_ key: String) {
+        UserDefaults.standard.removeObject(forKey: key)
+    }
+}
+===== SharedCore/Package.swift =====
+// swift-tools-version: 6.2
+// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: "SharedCore",
+    platforms: [
+        .iOS(.v16),
+        .macOS(.v13)
+    ],
+    products: [
+        .library(
+            name: "SharedCore",
+            targets: ["SharedCore"]
+        )
+    ],
+    targets: [
+        .target(
+            name: "SharedCore",
+            dependencies: []
+        )
+    ]
+)
+
+===== Packages/ArticleKit/Package.swift =====
+// swift-tools-version: 5.10
+import PackageDescription
+
+let package = Package(
+    name: "ArticleKit",
+    platforms: [
+        .iOS(.v17),
+        .macOS(.v14)
+    ],
+    products: [
+        .library(
+            name: "ArticleKit",
+            targets: ["ArticleKit"]
+        )
+    ],
+    targets: [
+        .target(
+            name: "ArticleKit",
+            path: "Sources"
+        ),
+        .testTarget(
+            name: "ArticleKitTests",
+            dependencies: ["ArticleKit"],
+            path: "Tests"
+        )
+    ]
+)
+===== Packages/SharedKit/Package.swift =====
+// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: "SharedKit",
+    platforms: [
+        .iOS(.v17),
+        .macOS(.v14)
+    ],
+    products: [
+        .library(
+            name: "SharedKit",
+            targets: ["SharedKit"]
+        )
+    ],
+    targets: [
+        .target(
+            name: "SharedKit",
+            dependencies: [],
+            path: "Sources/SharedKit"
+        ),
+        .testTarget(
+            name: "SharedKitTests",
+            dependencies: ["SharedKit"],
+            path: "Tests/SharedKitTests"
+        )
+    ]
+)

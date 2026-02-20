@@ -207,3 +207,5 @@ extension NetworkService {
         case networkUnavailable
     }
 }
+
+extension NetworkService: NetworkServiceProtocol {}

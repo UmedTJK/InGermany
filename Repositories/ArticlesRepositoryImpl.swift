@@ -11,9 +11,10 @@
 import Foundation
 
 final class ArticlesRepositoryImpl: ArticlesRepositoryProtocol {
-    private let dataService: DataService
 
-    init(dataService: DataService = .shared) {
+    private let dataService: DataServiceProtocol
+
+    init(dataService: DataServiceProtocol) {
         self.dataService = dataService
     }
 

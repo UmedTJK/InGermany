@@ -60,6 +60,9 @@
 		AD70954F2E9D8ECD00E79E19 /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */; };
 		AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */ = {isa = PBXBuildFile; fileRef = AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */; };
 		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
+		AD7906922F48D5540047F511 /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7906912F48D5520047F511 /* NetworkServiceProtocol.swift */; };
+		AD7906942F48D5700047F511 /* CacheServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7906932F48D56D0047F511 /* CacheServiceProtocol.swift */; };
+		AD7906962F48D5850047F511 /* DataServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7906952F48D5830047F511 /* DataServiceProtocol.swift */; };
 		AD8552CF2E75BB02003D3826 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C42E75B463003D3826 /* DataService.swift */; };
 		AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8552C52E75B471003D3826 /* AuthService.swift */; };
 		ADA942092E78950F008D1364 /* locations.json in Resources */ = {isa = PBXBuildFile; fileRef = ADA942082E78950B008D1364 /* locations.json */; };
@@ -158,6 +161,10 @@
 		AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHistoryManager.swift; sourceTree = "<group>"; };
 		AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration_base64.json; sourceTree = "<group>"; };
 		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		AD7906902F48C5C10047F511 /* DI_GRAPH.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DI_GRAPH.md; sourceTree = "<group>"; };
+		AD7906912F48D5520047F511 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
+		AD7906932F48D56D0047F511 /* CacheServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheServiceProtocol.swift; sourceTree = "<group>"; };
+		AD7906952F48D5830047F511 /* DataServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataServiceProtocol.swift; sourceTree = "<group>"; };
 		AD8552922E75ABEC003D3826 /* InGermany.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InGermany.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD8552C42E75B463003D3826 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataService.swift; path = Services/DataService.swift; sourceTree = SOURCE_ROOT; };
 		AD8552C52E75B471003D3826 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -304,6 +311,9 @@
 		AD2A65562E8FEBF2006A94DD /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				AD7906952F48D5830047F511 /* DataServiceProtocol.swift */,
+				AD7906932F48D56D0047F511 /* CacheServiceProtocol.swift */,
+				AD7906912F48D5520047F511 /* NetworkServiceProtocol.swift */,
 				ADB930252F13418700A961D7 /* SettingsManagingProtocol.swift */,
 				AD459C202E98BF5B00F540F3 /* ArticleFormatterProtocol.swift */,
 				AD459C1C2E98BB2500F540F3 /* ShareServiceProtocol.swift */,
@@ -546,6 +556,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD7906902F48C5C10047F511 /* DI_GRAPH.md */,
 				AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */,
 				AD1626002E9ADD3400E6E14B /* README.md */,
 				AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */,
@@ -867,6 +878,7 @@
 				AD2A65662E8FF0D1006A94DD /* ProgressBar.swift in Sources */,
 				AD70954F2E9D8ECD00E79E19 /* ReadingHistoryManager.swift in Sources */,
 				AD459C1B2E98B7EF00F540F3 /* FontProviding.swift in Sources */,
+				AD7906962F48D5850047F511 /* DataServiceProtocol.swift in Sources */,
 				AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */,
 				AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */,
 				AD160DB22E95292F009B49F2 /* LocalizationManagerProtocol.swift in Sources */,
@@ -886,6 +898,7 @@
 				ADDF80FD2EA6C8B8000885DE /* NSWindow+SwiftUI.swift in Sources */,
 				AD2E72312EA2C5C400436C9A /* ArticleKit.swift in Sources */,
 				AD2E74952EA3BD4200436C9A /* ArticleModels.swift in Sources */,
+				AD7906922F48D5540047F511 /* NetworkServiceProtocol.swift in Sources */,
 				AD2E74982EA3BE4100436C9A /* ArticleBlock.swift in Sources */,
 				AD2E72332EA2C5C400436C9A /* SharedKit.swift in Sources */,
 				AD2E72362EA2C5C400436C9A /* ArticleEditorViewModel.swift in Sources */,
@@ -893,6 +906,7 @@
 				AD2E72382EA2C5C400436C9A /* LoadingView.swift in Sources */,
 				AD2E72392EA2C5C400436C9A /* SharedKitTests.swift in Sources */,
 				AD2E723E2EA2C5C400436C9A /* ArticleKitTests.swift in Sources */,
+				AD7906942F48D5700047F511 /* CacheServiceProtocol.swift in Sources */,
 				AD2E72422EA2C5C400436C9A /* ArticleRenderer.swift in Sources */,
 				AD2A656B2E8FF0D1006A94DD /* CardImageStyle.swift in Sources */,
 				AD459A5E2E97927500F540F3 /* ReadingStatsManager.swift in Sources */,
