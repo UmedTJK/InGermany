@@ -16,6 +16,8 @@ final class ArticleRowViewModelTests: XCTestCase {
     private var cancellables: Set<AnyCancellable> = []
     private var favoritesManager: FavoritesManager!
     private var ratingManager: RatingManager!
+    private var localizationManager: LocalizationManager!
+    private var readingStatsManager: ReadingStatsManager!
     
     // MARK: - Setup & Teardown
     
@@ -24,6 +26,8 @@ final class ArticleRowViewModelTests: XCTestCase {
         
         favoritesManager = FavoritesManager()
         ratingManager = RatingManager()
+        localizationManager = LocalizationManager()
+        readingStatsManager = ReadingStatsManager()
         
         // Clean up before each test
         favoritesManager.clearForTesting()
@@ -53,11 +57,11 @@ final class ArticleRowViewModelTests: XCTestCase {
         // Initialize ViewModel with real managers
         sut = ArticleRowViewModel(
             article: testArticle,
-            localizationManager: LocalizationManager.shared,
+            localizationManager: localizationManager,
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
             categoriesRepo: CategoriesRepositoryImpl(dataService: DataService(networkService: NetworkService.shared, cacheManager: CacheService.shared)),
-            readingStatsManager: ReadingStatsManager.shared,
+            readingStatsManager: readingStatsManager,
             articleFormatter: ArticleFormatter()
         )
     }
@@ -69,6 +73,8 @@ final class ArticleRowViewModelTests: XCTestCase {
         sut = nil
         testArticle = nil
         cancellables.removeAll()
+        localizationManager = nil
+        readingStatsManager = nil
         favoritesManager = nil
         ratingManager = nil
         super.tearDown()
@@ -79,7 +85,7 @@ final class ArticleRowViewModelTests: XCTestCase {
     private func makeVM(article: Article) -> ArticleRowViewModel {
         ArticleRowViewModel(
             article: article,
-            localizationManager: LocalizationManager.shared,
+            localizationManager: localizationManager,
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
             categoriesRepo: CategoriesRepositoryImpl(
@@ -88,7 +94,7 @@ final class ArticleRowViewModelTests: XCTestCase {
                     cacheManager: CacheService.shared
                 )
             ),
-            readingStatsManager: ReadingStatsManager.shared,
+            readingStatsManager: readingStatsManager,
             articleFormatter: ArticleFormatter()
         )
     }
