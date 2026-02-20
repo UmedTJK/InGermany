@@ -22,7 +22,7 @@ class SearchViewModel: ObservableObject {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     /// Manager for handling favorite articles.
-    let favoritesManager: FavoritesManager
+    let favoritesManager: FavoritesManagingProtocol
     /// Repository for retrieving categories.
     private let categoriesRepo: CategoriesRepositoryProtocol
     /// Repository for loading articles.
@@ -30,22 +30,13 @@ class SearchViewModel: ObservableObject {
 
     /// Injects dependencies.
     init(
-        favoritesManager: FavoritesManager,
+        favoritesManager: FavoritesManagingProtocol,
         categoriesRepo: CategoriesRepositoryProtocol,
         articlesRepo: ArticlesRepositoryProtocol
     ) {
         self.favoritesManager = favoritesManager
         self.categoriesRepo = categoriesRepo
         self.articlesRepo = articlesRepo
-    }
-    
-    /// Uses shared singletons for defaults.
-    convenience init() {
-        self.init(
-            favoritesManager: FavoritesManager.shared,
-            categoriesRepo: DefaultCategoriesRepository.shared,
-            articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared)
-        )
     }
 
     // MARK: - Filtering
