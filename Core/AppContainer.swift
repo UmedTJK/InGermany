@@ -31,7 +31,7 @@ final class AppContainer: ObservableObject {
     private let textAnalysisService = TextAnalysisService.shared
     
     // MARK: - Services
-    let dataService: DataService
+    let dataService: DataServiceProtocol
     private let articleFormatter: ArticleFormatter
     
     // ✅ ShareService
@@ -48,15 +48,28 @@ final class AppContainer: ObservableObject {
         ratingManager: RatingManager? = nil,
         textSizeManager: TextSizeManager? = nil,
         localizationManager: LocalizationManager? = nil,
-        dataService: DataService? = nil,
+        dataService: DataServiceProtocol? = nil,
         readingStatsManager: ReadingStatsManager? = nil
     ) {
         // ✅ Services & Repos
-        let dataServiceInstance = dataService ?? DataService.shared
-        self.dataService = dataServiceInstance
-        
-        self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: dataServiceInstance)
-        self.categoriesRepo = categoriesRepo ?? CategoriesRepositoryImpl(dataService: dataServiceInstance)
+        // We keep a concrete DataService instance here because some components still require it.
+        // AppContainer exposes it as DataServiceProtocol.
+        let concreteDataService: DataService
+        if let injected = dataService {
+            if let injectedConcrete = injected as? DataService {
+                concreteDataService = injectedConcrete
+            } else {
+                assertionFailure("Injected dataService must be DataService for now. Provide DataService or refactor consumers to DataServiceProtocol.")
+                concreteDataService = DataService(networkService: NetworkService.shared, cacheManager: CacheService.shared)
+            }
+        } else {
+            concreteDataService = DataService(networkService: NetworkService.shared, cacheManager: CacheService.shared)
+        }
+
+        self.dataService = concreteDataService
+
+        self.articlesRepo = articlesRepo ?? ArticlesRepositoryImpl(dataService: concreteDataService)
+        self.categoriesRepo = categoriesRepo ?? CategoriesRepositoryImpl(dataService: concreteDataService)
         
         // ✅ Managers
         self.favoritesManager = favoritesManager ?? FavoritesManager.shared
