@@ -9,12 +9,12 @@ import SwiftUI
 /// A section view displaying all available articles in a horizontally scrollable list.
 struct AllArticlesSection: View {
     let articles: [Article]
-    let favoritesManager: FavoritesManager
+    let favoritesManager: any FavoritesManagingProtocol
     @EnvironmentObject private var appContainer: AppContainer
 
     init(
         articles: [Article],
-        favoritesManager: FavoritesManager
+        favoritesManager: any FavoritesManagingProtocol
     ) {
         self.articles = articles
         self.favoritesManager = favoritesManager
