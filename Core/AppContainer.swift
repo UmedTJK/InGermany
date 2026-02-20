@@ -27,6 +27,8 @@ final class AppContainer: ObservableObject {
     var readingStatsService: ReadingStatsManagingProtocol { readingStatsManager }
     /// Доступ к избранному через протокол (для ViewModel)
     var favoritesService: any FavoritesManagingProtocol { favoritesManagerConcrete }
+    /// Concrete instance for SwiftUI EnvironmentObject injection
+    var favoritesManagerForUI: FavoritesManager { favoritesManagerConcrete }
 
     
     private let dateFormattingService = DateFormattingService.shared
