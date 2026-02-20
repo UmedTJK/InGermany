@@ -10,21 +10,21 @@ import SwiftUI
 /// Секция, отображающая избранные статьи в горизонтальном списке.
 struct FavoritesSection: View {
     let articles: [Article]
-    let favoritesManager: FavoritesManager
+    let favoritesManager: any FavoritesManagingProtocol
 
     @EnvironmentObject private var appContainer: AppContainer
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     init(
         articles: [Article],
-        favoritesManager: FavoritesManager
+        favoritesManager: any FavoritesManagingProtocol
     ) {
         self.articles = articles
         self.favoritesManager = favoritesManager
     }
 
     var body: some View {
-        let favoriteArticles = favoritesManager.favoriteArticles(from: articles)
+        let favoriteArticles = articles.filter { favoritesManager.isFavorite($0.id) }
 
         if !favoriteArticles.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
