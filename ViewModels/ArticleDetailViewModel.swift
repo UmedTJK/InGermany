@@ -23,7 +23,7 @@ final class ArticleDetailViewModel: ObservableObject {
 
     let localizationManager: LocalizationManager
     let textSizeManager: TextSizeManager
-    let favoritesManager: FavoritesManager
+    let favoritesManager: any FavoritesManagingProtocol
     let ratingManager: RatingManager
     let readingStatsManager: ReadingStatsManagingProtocol
     let articleFormatter: ArticleFormatter
@@ -41,7 +41,7 @@ final class ArticleDetailViewModel: ObservableObject {
         allArticles: [Article],
         localizationManager: LocalizationManager,
         textSizeManager: TextSizeManager,
-        favoritesManager: FavoritesManager,
+        favoritesManager: any FavoritesManagingProtocol,
         ratingManager: RatingManager,
         readingStatsManager: ReadingStatsManagingProtocol,
         articleFormatter: ArticleFormatter,
