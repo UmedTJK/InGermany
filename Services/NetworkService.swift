@@ -7,11 +7,9 @@
 
 import Foundation
 
-/// A singleton service responsible for loading JSON data with OFFLINE-FIRST strategy.
-/// Uses: Bundle → File Cache → Network (async update)
+/// Service responsible for loading JSON data with OFFLINE-FIRST strategy.
+/// Uses: Bundle → File Cache → Network (async refresh)
 class NetworkService {
-    /// Shared singleton instance of `NetworkService`.
-    static let shared = NetworkService()
     
     /// Base URL pointing to the GitHub raw resources used for fetching JSON files.
     private let baseURL = "https://raw.githubusercontent.com/UmedTJK/InGermany/main/Resources/"
@@ -35,8 +33,8 @@ class NetworkService {
         return URLSession(configuration: config)
     }()
     
-    /// Private initializer. Sets up the cache directory on first use.
-    private init() {
+    /// Initializes cache directory and session configuration
+    init() {
         // Создаем директорию для кэша
         let directories = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         cacheDirectory = directories[0].appendingPathComponent("InGermanyCache")

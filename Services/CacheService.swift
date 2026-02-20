@@ -11,14 +11,12 @@ import Foundation
 /// Note: This is an in-memory TTL cache only.
 actor CacheService: CacheServiceProtocol {
 
-    // MARK: - Singleton (temporary; keep while migrating DI)
-    static let shared = CacheService()
 
     // MARK: - Storage
     private var memoryCache: [String: Any] = [:]
     private let defaultCacheLifetime: TimeInterval = 15 * 60 // 15 minutes
 
-    private init() {}
+    init() {}
 
     // MARK: - CacheServiceProtocol
 

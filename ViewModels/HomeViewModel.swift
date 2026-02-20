@@ -30,7 +30,7 @@ class HomeViewModel: ObservableObject {
         readingStatsManager: ReadingStatsManagingProtocol,
         categoriesRepository: CategoriesRepositoryProtocol,
         articlesRepo: ArticlesRepositoryProtocol,
-        localizationManager: LocalizationManager = LocalizationManager.shared
+        localizationManager: LocalizationManager = LocalizationManager()
     ) {
         self.favoritesManager = favoritesManager
         self.readingStatsManager = readingStatsManager
@@ -46,7 +46,7 @@ class HomeViewModel: ObservableObject {
             readingStatsManager: ReadingStatsManager(),
             categoriesRepository: DefaultCategoriesRepository.shared,
             articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared),
-            localizationManager: LocalizationManager.shared
+            localizationManager: LocalizationManager()
         )
     }
 

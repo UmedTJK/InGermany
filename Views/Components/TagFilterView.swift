@@ -14,6 +14,8 @@ struct TagFilterView: View {
     /// A closure called when a tag is selected, passing the selected tag as a parameter.
     var onTagSelected: (String) -> Void
 
+    @EnvironmentObject private var localizationManager: LocalizationManager
+
     /// The main view layout displaying tags in a horizontally scrollable list.
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -22,7 +24,7 @@ struct TagFilterView: View {
                     Button(action: {
                         onTagSelected(tag)
                     }) {
-                        Text("#" + t(tag))
+                        Text("#" + t(tag, using: localizationManager))
                             .font(.caption)
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)
