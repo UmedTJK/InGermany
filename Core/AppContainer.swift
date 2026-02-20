@@ -18,7 +18,7 @@ final class AppContainer: ObservableObject {
     let ratingManager: RatingManager
     let textSizeManager: TextSizeManager
     let localizationManager: LocalizationManager
-    let settingsManager = SettingsManager()
+    let settingsManager: SettingsManager
 
     
     /// Конкретный экземпляр для SwiftUI
@@ -52,6 +52,7 @@ final class AppContainer: ObservableObject {
         ratingManager: RatingManager? = nil,
         textSizeManager: TextSizeManager? = nil,
         localizationManager: LocalizationManager? = nil,
+        settingsManager: SettingsManager? = nil,
         dataService: DataServiceProtocol? = nil,
         readingStatsManager: ReadingStatsManager? = nil
     ) {
@@ -71,6 +72,7 @@ final class AppContainer: ObservableObject {
         self.ratingManager = ratingManager ?? RatingManager()
         self.textSizeManager = textSizeManager ?? TextSizeManager()
         self.localizationManager = localizationManager ?? LocalizationManager()
+        self.settingsManager = settingsManager ?? SettingsManager()
         self.readingStatsManager = readingStatsManager ?? ReadingStatsManager()
         
         // ✅ Formatters & Services
@@ -93,7 +95,8 @@ final class AppContainer: ObservableObject {
             favoritesManager: favoritesService,
             readingStatsManager: readingStatsManager,
             categoriesRepository: categoriesRepo,
-            articlesRepo: articlesRepo
+            articlesRepo: articlesRepo,
+            localizationManager: localizationManager
         )
     }
     
@@ -229,17 +232,6 @@ final class AppContainer: ObservableObject {
         )
     }
     
-    // MARK: - Global Environment Injection
-    
-    func provideEnvironmentObjects() -> some View {
-        EmptyView()
-            .environmentObject(self)
-            .environmentObject(favoritesManagerConcrete)
-            .environmentObject(textSizeManager)
-            .environmentObject(localizationManager)
-            .environmentObject(ratingManager)
-            .environmentObject(readingStatsManager)
-    }
     
     // MARK: - Clear All Data (for testing)
     
