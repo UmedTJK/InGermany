@@ -12,7 +12,7 @@ public final  class LocalizationManager: ObservableObject {
     
     @AppStorage("selectedLanguage") var selectedLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
     
-    private init() {}
+    init() {}
     
     // MARK: - Словари
     
