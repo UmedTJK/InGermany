@@ -9,7 +9,6 @@ import Foundation
 
 @MainActor
 final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol {
-    static let shared = ReadingStatsManager()
 
     // MARK: - Internal State
     @Published private(set) var progress: [String: CGFloat] = [:]
