@@ -36,8 +36,8 @@ final class RatingManagerTests: XCTestCase {
                         let rating = (queueIndex + operationIndex) % 6
                         
                         // ✅ Все вызовы теперь безопасны благодаря @MainActor
-                        await sut.setRating(rating, for: articleId)
-                        let retrievedRating = await sut.getRating(for: articleId)
+                        await self.sut.setRating(rating, for: articleId)
+                        let retrievedRating = await self.sut.getRating(for: articleId)
                         XCTAssertEqual(retrievedRating, rating)
                     }
                 }
