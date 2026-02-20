@@ -140,7 +140,7 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     }
 
     func progressStatus(for progress: CGFloat, language: String) -> String {
-        let lm = LocalizationManager.shared
+        let lm = LocalizationManager()
         switch progress {
         case 0..<0.1: return lm.getTranslation(key: "Начало", language: language)
         case 0.1..<0.7: return lm.getTranslation(key: "В процессе", language: language)
