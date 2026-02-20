@@ -75,7 +75,7 @@ final class ArticleDetailViewModelTests: XCTestCase {
     }
     
     private func setupMockDependencies() {
-        mockLocalizationManager = LocalizationManager.shared
+        mockLocalizationManager = LocalizationManager()
         
         mockTextSizeManager = TextSizeManager()
         
