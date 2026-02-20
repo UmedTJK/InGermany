@@ -31,7 +31,7 @@ final class AppContainer: ObservableObject {
     var favoritesManagerForUI: FavoritesManager { favoritesManagerConcrete }
 
     
-    private let dateFormattingService = DateFormattingService.shared
+    private let dateFormattingService = DateFormattingService()
     private let textAnalysisService = TextAnalysisService()
     
     // MARK: - Services
