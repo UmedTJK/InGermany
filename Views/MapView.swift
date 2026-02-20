@@ -117,7 +117,7 @@ struct MapView: View {
     
     private func refreshLocations() async {
         isLoading = true
-        await appContainer.dataService.refreshData()
+        await appContainer.dataService.clearCache()
         locations = await appContainer.dataService.loadLocations()
         isLoading = false
     }
