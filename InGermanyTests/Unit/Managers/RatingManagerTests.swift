@@ -10,7 +10,7 @@ final class RatingManagerTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        sut = RatingManager.shared
+        sut = RatingManager()
         cancellables = []
         sut.clearForTesting()
     }
@@ -36,8 +36,8 @@ final class RatingManagerTests: XCTestCase {
                         let rating = (queueIndex + operationIndex) % 6
                         
                         // ✅ Все вызовы теперь безопасны благодаря @MainActor
-                        await RatingManager.shared.setRating(rating, for: articleId)
-                        let retrievedRating = await RatingManager.shared.getRating(for: articleId)
+                        await sut.setRating(rating, for: articleId)
+                        let retrievedRating = await sut.getRating(for: articleId)
                         XCTAssertEqual(retrievedRating, rating)
                     }
                 }
