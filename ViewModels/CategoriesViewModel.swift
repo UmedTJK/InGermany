@@ -12,17 +12,17 @@ final class CategoriesViewModel: ObservableObject {
 
     private let categoriesRepo: CategoriesRepositoryProtocol
     private let articlesRepo: ArticlesRepositoryProtocol
-    let favoritesManager: FavoritesManager
+    let favoritesManager: FavoritesManagingProtocol
 
     /// Инжекция зависимостей: можно подменять репозитории (например, на моки в тестах)
     init(
         categoriesRepo: CategoriesRepositoryProtocol,
         articlesRepo: ArticlesRepositoryProtocol,
-        favoritesManager: FavoritesManager? = nil
+        favoritesManager: FavoritesManagingProtocol
     ) {
         self.categoriesRepo = categoriesRepo
         self.articlesRepo = articlesRepo
-        self.favoritesManager = favoritesManager ?? FavoritesManager.shared
+        self.favoritesManager = favoritesManager
     }
 
     /// Загрузить категории (инициализация)
