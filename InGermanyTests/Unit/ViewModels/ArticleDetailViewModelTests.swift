@@ -12,6 +12,8 @@ final class ArticleDetailViewModelTests: XCTestCase {
     var sut: ArticleDetailViewModel!
     var testArticle: Article!
     var testArticles: [Article]!
+    var favoritesManager: FavoritesManager!
+    var historyManager: ReadingHistoryManager!
     
     // Mock dependencies
     var mockLocalizationManager: LocalizationManager!
@@ -25,8 +27,9 @@ final class ArticleDetailViewModelTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
         
-        // Clean up before each test
-        FavoritesManager.shared.clearForTesting()
+        favoritesManager = FavoritesManager()
+        historyManager = ReadingHistoryManager()
+        favoritesManager.clearForTesting()
         
         // Create test data
         testArticle = Article(
@@ -62,8 +65,8 @@ final class ArticleDetailViewModelTests: XCTestCase {
         sut = ArticleDetailViewModel(
             article: testArticle,
             allArticles: testArticles,
-            favoritesManager: FavoritesManager.shared,
-            historyManager: ReadingHistoryManager.shared,
+            favoritesManager: favoritesManager,
+            historyManager: historyManager,
             localizationManager: mockLocalizationManager,
             textSizeManager: mockTextSizeManager,
             ratingManager: mockRatingManager,
@@ -96,9 +99,10 @@ final class ArticleDetailViewModelTests: XCTestCase {
     }
     
     override func tearDown() async throws {
-        // Clean up after each test
-        FavoritesManager.shared.clearForTesting()
-        ReadingHistoryManager.shared.clearForTesting()
+        favoritesManager.clearForTesting()
+        historyManager.clearForTesting()
+        favoritesManager = nil
+        historyManager = nil
         sut = nil
         testArticle = nil
         testArticles = nil
@@ -118,46 +122,46 @@ final class ArticleDetailViewModelTests: XCTestCase {
     func testToggleFavorite() {
         // Given - initial state
         XCTAssertFalse(sut.isFavorite)
-        XCTAssertFalse(FavoritesManager.shared.isFavorite("test1"))
+        XCTAssertFalse(favoritesManager.isFavorite("test1"))
         
         // When - toggle favorite
         sut.toggleFavorite()
         
         // Then - should become favorite
         XCTAssertTrue(sut.isFavorite, "Should be favorite after toggling")
-        XCTAssertTrue(FavoritesManager.shared.isFavorite("test1"), "FavoritesManager should reflect change")
+        XCTAssertTrue(favoritesManager.isFavorite("test1"), "FavoritesManager should reflect change")
         
         // When - toggle again
         sut.toggleFavorite()
         
         // Then - should remove from favorites
         XCTAssertFalse(sut.isFavorite, "Should not be favorite after second toggle")
-        XCTAssertFalse(FavoritesManager.shared.isFavorite("test1"), "FavoritesManager should reflect removal")
+        XCTAssertFalse(favoritesManager.isFavorite("test1"), "FavoritesManager should reflect removal")
     }
     
     // MARK: - Reading History Tests
     
     func testMarkAsRead() {
         // Given - article not in history initially
-        XCTAssertFalse(ReadingHistoryManager.shared.isRead("test1"))
+        XCTAssertFalse(historyManager.isRead("test1"))
         
         // When - mark as read
         sut.markAsRead()
         
         // Then - should be in history
-        XCTAssertTrue(ReadingHistoryManager.shared.isRead("test1"), "Should be marked as read")
+        XCTAssertTrue(historyManager.isRead("test1"), "Should be marked as read")
     }
     
     func testMarkAsReadMultipleTimes() {
         // Given - mark as read once
         sut.markAsRead()
-        _ = ReadingHistoryManager.shared.lastReadDate(for: "test1")
+        _ = historyManager.lastReadDate(for: "test1")
         
         // When - mark as read again
         sut.markAsRead()
         
         // Then - should update reading time
-        let secondReadDate = ReadingHistoryManager.shared.lastReadDate(for: "test1")
+        let secondReadDate = historyManager.lastReadDate(for: "test1")
         XCTAssertNotNil(secondReadDate)
     }
     
@@ -185,8 +189,8 @@ final class ArticleDetailViewModelTests: XCTestCase {
         let uniqueSut = ArticleDetailViewModel(
             article: uniqueArticle,
             allArticles: testArticles,
-            favoritesManager: FavoritesManager.shared,
-            historyManager: ReadingHistoryManager.shared,
+            favoritesManager: favoritesManager,
+            historyManager: historyManager,
             localizationManager: mockLocalizationManager,
             textSizeManager: mockTextSizeManager,
             ratingManager: mockRatingManager,
@@ -241,7 +245,7 @@ final class ArticleDetailViewModelTests: XCTestCase {
     
     func testAppContainerIntegration() {
         // When - create via AppContainer
-        let container = AppContainer.shared
+        let container = AppContainer()
         let containerVM = container.makeArticleDetailViewModel(
             article: testArticle,
             allArticles: testArticles
@@ -260,8 +264,8 @@ final class ArticleDetailViewModelTests: XCTestCase {
         let emptySut = ArticleDetailViewModel(
             article: testArticle,
             allArticles: [],
-            favoritesManager: FavoritesManager.shared,
-            historyManager: ReadingHistoryManager.shared,
+            favoritesManager: favoritesManager,
+            historyManager: historyManager,
             localizationManager: mockLocalizationManager,
             textSizeManager: mockTextSizeManager,
             ratingManager: mockRatingManager,
@@ -293,8 +297,8 @@ final class ArticleDetailViewModelTests: XCTestCase {
         let mixedSut = ArticleDetailViewModel(
             article: testArticle,
             allArticles: articlesWithMixed,
-            favoritesManager: FavoritesManager.shared,
-            historyManager: ReadingHistoryManager.shared,
+            favoritesManager: favoritesManager,
+            historyManager: historyManager,
             localizationManager: mockLocalizationManager,
             textSizeManager: mockTextSizeManager,
             ratingManager: mockRatingManager,
