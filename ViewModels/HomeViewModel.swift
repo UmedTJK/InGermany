@@ -41,11 +41,15 @@ class HomeViewModel: ObservableObject {
 
     // MARK: - Convenience init (Preview)
     convenience init() {
+        let network = NetworkService()
+        let cache = CacheService()
+        let dataService = DataService(networkService: network, cacheManager: cache)
+        
         self.init(
             favoritesManager: FavoritesManager(),
             readingStatsManager: ReadingStatsManager(),
-            categoriesRepository: DefaultCategoriesRepository.shared,
-            articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared),
+            categoriesRepository: CategoriesRepositoryImpl(dataService: dataService),
+            articlesRepo: ArticlesRepositoryImpl(dataService: dataService),
             localizationManager: LocalizationManager()
         )
     }
