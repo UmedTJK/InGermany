@@ -6,11 +6,19 @@
 ---
 
 ## [Unreleased]
+### Architecture & DI
+- Major DI refactor: removed singletons across app code and tests
+- Introduced protocol-based DI for services and managers (Favorites, Rating, Cache, Network, ReadingStats, etc.)
+- AppContainer hardened as composition root: explicit dependency graph and constructor injection
+- Formatter/services now require explicit DI (no shared defaults)
+- Test suite updated to be DI-pure (no .shared usage)
+
 ### Changed
 - Refactored settings architecture: introduced SettingsManager as single source of truth
 - Removed AppStorage usage from SettingsViewModel and ContentView
 - Bound app color scheme to SettingsManager
 - Cleaned up ContentView dependencies
+- Updated environment wiring via AppContainer/AppEnvironment helpers
 
 ---
 
