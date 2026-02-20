@@ -16,13 +16,13 @@ final class InGermanyTests: XCTestCase {
     }
 
     @MainActor
-    func testFavoritesManagerSingleton() {
-        let manager = FavoritesManager.shared
-        XCTAssertNotNil(manager, "FavoritesManager.shared should be accessible")
+    func testFavoritesManagerInitialization() {
+        let manager = FavoritesManager()
+        XCTAssertNotNil(manager, "FavoritesManager should be initialized successfully")
     }
 
     func testDataServiceLoadsArticles() async throws {
-        let service = DataService.shared
+        let service = DataService(networkService: NetworkService(), cacheManager: CacheService())
         let articles = await service.loadArticles()
         XCTAssertFalse(articles.isEmpty, "DataService should load articles from bundled JSON")
     }
