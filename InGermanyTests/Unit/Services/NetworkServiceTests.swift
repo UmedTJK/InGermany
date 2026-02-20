@@ -10,7 +10,7 @@ import XCTest
 
 final class NetworkServiceTests: XCTestCase {
     func testOfflineFirstStrategy() async throws {
-        let service = NetworkService.shared
+        let service = NetworkService()
         
         // Тест должен проходить даже без сети (использует Bundle)
         let articles: [Article] = try await service.loadJSON(from: "articles.json") // 🔧 Явно указали тип
@@ -19,7 +19,7 @@ final class NetworkServiceTests: XCTestCase {
     }
     
     func testDataSourceTracking() async throws {
-        let service = NetworkService.shared
+        let service = NetworkService()
         
         // 🔧 Явно указали тип возвращаемого значения
         let (articles, source): ([Article], NetworkService.DataSource) = try await service.loadJSONWithSource(from: "articles.json")
