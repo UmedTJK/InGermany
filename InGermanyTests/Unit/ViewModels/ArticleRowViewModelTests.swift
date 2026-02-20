@@ -2,7 +2,7 @@
 //  ArticleRowViewModelTests.swift
 //  InGermanyTests
 //
-/*
+
 import XCTest
 import Combine
 @testable import InGermany
@@ -14,15 +14,20 @@ final class ArticleRowViewModelTests: XCTestCase {
     private var sut: ArticleRowViewModel!
     private var testArticle: Article!
     private var cancellables: Set<AnyCancellable> = []
+    private var favoritesManager: FavoritesManager!
+    private var ratingManager: RatingManager!
     
     // MARK: - Setup & Teardown
     
     override func setUp() {
         super.setUp()
         
+        favoritesManager = FavoritesManager()
+        ratingManager = RatingManager()
+        
         // Clean up before each test
-        FavoritesManager.shared.clearForTesting()
-        RatingManager.shared.clearForTesting()
+        favoritesManager.clearForTesting()
+        ratingManager.clearForTesting()
         
         // Create test article
         testArticle = Article(
@@ -46,17 +51,46 @@ final class ArticleRowViewModelTests: XCTestCase {
         )
         
         // Initialize ViewModel with real managers
-        sut = ArticleRowViewModel(article: testArticle)
+        sut = ArticleRowViewModel(
+            article: testArticle,
+            localizationManager: LocalizationManager.shared,
+            favoritesManager: favoritesManager,
+            ratingManager: ratingManager,
+            categoriesRepo: CategoriesRepositoryImpl(dataService: DataService(networkService: NetworkService.shared, cacheManager: CacheService.shared)),
+            readingStatsManager: ReadingStatsManager.shared,
+            articleFormatter: ArticleFormatter()
+        )
     }
     
     override func tearDown() {
         // Clean up after each test
-        FavoritesManager.shared.clearForTesting()
-        RatingManager.shared.clearForTesting()
+        favoritesManager.clearForTesting()
+        ratingManager.clearForTesting()
         sut = nil
         testArticle = nil
         cancellables.removeAll()
+        favoritesManager = nil
+        ratingManager = nil
         super.tearDown()
+    }
+    
+    // MARK: - Helpers
+
+    private func makeVM(article: Article) -> ArticleRowViewModel {
+        ArticleRowViewModel(
+            article: article,
+            localizationManager: LocalizationManager.shared,
+            favoritesManager: favoritesManager,
+            ratingManager: ratingManager,
+            categoriesRepo: CategoriesRepositoryImpl(
+                dataService: DataService(
+                    networkService: NetworkService.shared,
+                    cacheManager: CacheService.shared
+                )
+            ),
+            readingStatsManager: ReadingStatsManager.shared,
+            articleFormatter: ArticleFormatter()
+        )
     }
     
     // MARK: - Initial State Tests
@@ -71,7 +105,7 @@ final class ArticleRowViewModelTests: XCTestCase {
     
     func testConvenienceInitializer() {
         // When - use convenience init
-        let convenienceVM = ArticleRowViewModel(article: testArticle)
+        let convenienceVM = makeVM(article: testArticle)
         
         // Then - should initialize correctly
         XCTAssertEqual(convenienceVM.article.id, "test-article-1")
@@ -88,14 +122,14 @@ final class ArticleRowViewModelTests: XCTestCase {
         
         // Then
         XCTAssertTrue(sut.isFavorite)
-        XCTAssertTrue(FavoritesManager.shared.isFavorite("test-article-1"))
+        XCTAssertTrue(favoritesManager.isFavorite("test-article-1"))
         
         // When - toggle back
         sut.toggleFavorite()
         
         // Then
         XCTAssertFalse(sut.isFavorite)
-        XCTAssertFalse(FavoritesManager.shared.isFavorite("test-article-1"))
+        XCTAssertFalse(favoritesManager.isFavorite("test-article-1"))
     }
     
     func testToggleFavoriteUpdatesPublishedProperty() {
@@ -133,7 +167,7 @@ final class ArticleRowViewModelTests: XCTestCase {
         
         // Then - should update rating
         XCTAssertEqual(sut.rating, 4)
-        XCTAssertEqual(RatingManager.shared.getRating(for: "test-article-1"), 4)
+        XCTAssertEqual(ratingManager.getRating(for: "test-article-1"), 4)
     }
     
     func testSetRatingMultipleTimes() {
@@ -210,7 +244,7 @@ final class ArticleRowViewModelTests: XCTestCase {
         )
         
         // When
-        let vm = ArticleRowViewModel(article: articleWithoutImage)
+        let vm = makeVM(article: articleWithoutImage)
         
         // Then
         XCTAssertNil(vm.imageName)
@@ -227,7 +261,7 @@ final class ArticleRowViewModelTests: XCTestCase {
         )
         
         // When
-        let vm = ArticleRowViewModel(article: articleWithImage)
+        let vm = makeVM(article: articleWithImage)
         
         // Then
         XCTAssertEqual(vm.imageName, "photo.jpg")
@@ -250,8 +284,8 @@ final class ArticleRowViewModelTests: XCTestCase {
             categoryId: "test"
         )
         
-        let vm1 = ArticleRowViewModel(article: article1)
-        let vm2 = ArticleRowViewModel(article: article2)
+        let vm1 = makeVM(article: article1)
+        let vm2 = makeVM(article: article2)
         
         // When
         vm1.toggleFavorite()
@@ -276,8 +310,8 @@ final class ArticleRowViewModelTests: XCTestCase {
             categoryId: "test"
         )
         
-        let vm1 = ArticleRowViewModel(article: article1)
-        let vm2 = ArticleRowViewModel(article: article2)
+        let vm1 = makeVM(article: article1)
+        let vm2 = makeVM(article: article2)
         
         // When
         vm1.setRating(3)
@@ -314,7 +348,7 @@ final class ArticleRowViewModelTests: XCTestCase {
         )
         
         // When
-        let minimalVM = ArticleRowViewModel(article: minimalArticle)
+        let minimalVM = makeVM(article: minimalArticle)
         
         // Then
         XCTAssertEqual(minimalVM.title, "Minimal")
@@ -335,7 +369,7 @@ final class ArticleRowViewModelTests: XCTestCase {
         )
         
         // When
-        let noDateVM = ArticleRowViewModel(article: noDateArticle)
+        let noDateVM = makeVM(article: noDateArticle)
         
         // Then
         let metaInfo = noDateVM.metaInfo
@@ -352,12 +386,9 @@ final class ArticleRowViewModelTests: XCTestCase {
         )
         
         // When
-        let englishVM = ArticleRowViewModel(article: englishArticle)
+        let englishVM = makeVM(article: englishArticle)
         
         // Then
         XCTAssertEqual(englishVM.title, "English Only")
     }
 }
-
-
-*/
