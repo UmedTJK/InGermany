@@ -142,7 +142,7 @@ actor DataService: DataServiceProtocol {
 
     private func loadArticlesFromNetwork() async -> [Article] {
         do {
-            let (articles, source): ([Article], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "articles.json")
+            let (articles, source): ([Article], NetworkDataSource) = try await networkService.loadJSONWithSource(from: "articles.json")
 
             await cacheManager.set(CacheKeys.articles, value: articles)
             articlesCache = articles
@@ -199,7 +199,7 @@ actor DataService: DataServiceProtocol {
 
         do {
             let networkStart = Date()
-            let (categories, source): ([Category], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "categories.json")
+            let (categories, source): ([Category], NetworkDataSource) = try await networkService.loadJSONWithSource(from: "categories.json")
             print("⏱ [DataService] loadCategories network finished in \(Date().timeIntervalSince(networkStart)) sec")
 
             await cacheManager.set(CacheKeys.categories, value: categories)
@@ -251,7 +251,7 @@ actor DataService: DataServiceProtocol {
 
         do {
             let networkStart = Date()
-            let (locations, source): ([Location], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "locations.json")
+            let (locations, source): ([Location], NetworkDataSource) = try await networkService.loadJSONWithSource(from: "locations.json")
             print("⏱ [DataService] loadLocations network finished in \(Date().timeIntervalSince(networkStart)) sec")
 
             await cacheManager.set(CacheKeys.locations, value: locations)
@@ -268,7 +268,7 @@ actor DataService: DataServiceProtocol {
     // MARK: - Refresh helpers (background)
     private func refreshArticlesIfNeeded() async {
         do {
-            let (articles, source): ([Article], NetworkService.DataSource) = try await networkService.loadJSONWithSource(from: "articles.json")
+            let (articles, source): ([Article], NetworkDataSource) = try await networkService.loadJSONWithSource(from: "articles.json")
             if source == .network {
                 await cacheManager.set(CacheKeys.articles, value: articles)
                 articlesCache = articles
