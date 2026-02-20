@@ -58,7 +58,7 @@ final class AppContainer: ObservableObject {
         // ✅ Services & Repos
         let dataServiceInstance: DataServiceProtocol = dataService ?? DataService(
             networkService: NetworkService.shared,
-            cacheManager: CacheService.shared
+            cacheManager: CacheService()
         )
 
         self.dataService = dataServiceInstance
