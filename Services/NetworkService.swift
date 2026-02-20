@@ -71,7 +71,7 @@ class NetworkService {
     }
     
     /// Loads JSON with detailed source information for tracking
-    func loadJSONWithSource<T: Decodable>(from file: String) async throws -> (T, DataSource) {
+    func loadJSONWithSource<T: Decodable>(from file: String) async throws -> (T, NetworkDataSource) {
         // Шаг 1: Bundle
         if let bundleData = loadFromBundle(file: file) {
             print("📦 [NetworkService] Загружено из Bundle: \(file)")
