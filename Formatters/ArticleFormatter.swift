@@ -5,52 +5,51 @@
 //  Created by SUM TJK on 08.10.25.
 //
 
-
 import Foundation
 
-class ArticleFormatter {
+final class ArticleFormatter {
     private let dateFormattingService: DateFormattingServiceProtocol
     private let textAnalysisService: TextAnalysisServiceProtocol
-    
+
     init(
-        dateFormattingService: DateFormattingServiceProtocol = DateFormattingService.shared,
-        textAnalysisService: TextAnalysisServiceProtocol = TextAnalysisService.shared
+        dateFormattingService: DateFormattingServiceProtocol,
+        textAnalysisService: TextAnalysisServiceProtocol
     ) {
         self.dateFormattingService = dateFormattingService
         self.textAnalysisService = textAnalysisService
     }
-    
+
     func formattedCreatedDate(_ article: Article, for language: String) -> String {
         guard let createdAt = article.createdAt else {
             return localizedFallback("Дата неизвестна", for: language)
         }
         return dateFormattingService.formattedDate(createdAt, for: language)
     }
-    
+
     func formattedUpdatedDate(_ article: Article, for language: String) -> String {
         guard let updatedAt = article.updatedAt else {
             return localizedFallback("Не обновлялась", for: language)
         }
         return dateFormattingService.formattedDate(updatedAt, for: language)
     }
-    
+
     func relativeCreatedDate(_ article: Article, for language: String) -> String {
         guard let createdAt = article.createdAt else {
             return localizedFallback("Дата неизвестна", for: language)
         }
         return dateFormattingService.relativeDate(createdAt, for: language)
     }
-    
+
     func wordCount(_ article: Article, for language: String) -> Int {
         let content = article.localizedContent(for: language)
         return textAnalysisService.wordCount(for: content)
     }
-    
+
     func readingTime(_ article: Article, for language: String) -> Int {
         let content = article.localizedContent(for: language)
         return textAnalysisService.readingTime(for: content, language: language)
     }
-    
+
     private func localizedFallback(_ key: String, for language: String) -> String {
         let translations: [String: [String: String]] = [
             "Дата неизвестна": [
@@ -69,6 +68,7 @@ class ArticleFormatter {
         return translations[key]?[language] ?? key
     }
 }
+
 // MARK: - ArticleFormatterProtocol Implementation
 extension ArticleFormatter: ArticleFormatterProtocol {
     func formatReadingTime(_ minutes: Int, language: String) -> String {
@@ -86,4 +86,3 @@ extension ArticleFormatter: ArticleFormatterProtocol {
         }
     }
 }
-
