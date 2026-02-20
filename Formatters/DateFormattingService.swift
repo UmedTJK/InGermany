@@ -16,8 +16,7 @@ protocol DateFormattingServiceProtocol {
     func relativeDate(_ date: Date, for language: String) -> String
 }
 
-class DateFormattingService: DateFormattingServiceProtocol {
-    static let shared = DateFormattingService()
+final class DateFormattingService: DateFormattingServiceProtocol {
     
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -32,7 +31,7 @@ class DateFormattingService: DateFormattingServiceProtocol {
         return formatter
     }()
     
-    private init() {}
+    init() {}
     
     func formattedDate(_ date: Date, for language: String) -> String {
         dateFormatter.locale = locale(for: language)

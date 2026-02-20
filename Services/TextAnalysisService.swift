@@ -11,10 +11,9 @@ protocol TextAnalysisServiceProtocol {
     func readingTime(for text: String, language: String) -> Int
 }
 
-class TextAnalysisService: TextAnalysisServiceProtocol {
-    static let shared = TextAnalysisService()
-    
-    private init() {}
+final class TextAnalysisService: TextAnalysisServiceProtocol {
+
+    init() {}
     
     func wordCount(for text: String) -> Int {
         let components = text.components(separatedBy: .whitespacesAndNewlines)
