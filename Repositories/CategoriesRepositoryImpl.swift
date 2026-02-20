@@ -1,22 +1,25 @@
-//  CategoryManager.swift
+//  CategoriesRepositoryImpl.swift
 //  InGermany
 //
-//  Created by SUM TJK on 10.10.25.
+//  Refactored: removed singleton, injected DataService
 //
 
 import Foundation
 
 @MainActor
 final class CategoriesRepositoryImpl: ObservableObject, CategoriesRepositoryProtocol {
-    static let shared = CategoriesRepositoryImpl()
 
     @Published private(set) var categories: [Category] = []
     private var byId: [String: Category] = [:]
 
-    private init() {}
+    private let dataService: DataService
+
+    init(dataService: DataService) {
+        self.dataService = dataService
+    }
 
     func bootstrap() async {
-        let list = await DataService.shared.loadCategories()
+        let list = await dataService.loadCategories()
         categories = list
         byId = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
     }
