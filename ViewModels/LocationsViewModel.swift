@@ -5,9 +5,9 @@ final class LocationsViewModel: ObservableObject {
     @Published var locations: [Location] = []
     @Published var isLoading: Bool = false
     
-    private let dataService: DataService
-    
-    init(dataService: DataService) {
+    private let dataService: DataServiceProtocol
+
+    init(dataService: DataServiceProtocol) {
         self.dataService = dataService
     }
     
