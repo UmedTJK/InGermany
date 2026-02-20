@@ -18,7 +18,7 @@ final class ReadingHistoryManagerTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        sut = ReadingStatsManager.shared
+        sut = ReadingStatsManager()
         cancellables = []
         sut.clearHistory()
     }
@@ -187,7 +187,7 @@ final class ReadingHistoryManagerTests: XCTestCase {
         // When - Add entry and create new instance
         sut.addReadingEntry(articleId: articleId, readingTime: readingTime)
         
-        let newInstance = ReadingStatsManager.shared
+        let newInstance = ReadingStatsManager()
         
         // Then
         XCTAssertTrue(newInstance.isRead(articleId), "Should persist history between instances")
