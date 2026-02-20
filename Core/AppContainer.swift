@@ -129,7 +129,7 @@ final class AppContainer: ObservableObject {
             allArticles: allArticles,
             localizationManager: localizationManager,
             textSizeManager: textSizeManager,
-            favoritesManager: favoritesManager,
+            favoritesManager: favoritesService,
             ratingManager: ratingManager,
             readingStatsManager: readingStatsService,
             articleFormatter: articleFormatter,
@@ -147,7 +147,7 @@ final class AppContainer: ObservableObject {
         ArticleRowViewModel(
             article: article,
             localizationManager: localizationManager,
-            favoritesManager: favoritesManager,
+            favoritesManager: favoritesService,
             ratingManager: ratingManager,
             categoriesRepo: categoriesRepo,
             readingStatsManager: readingStatsService,
