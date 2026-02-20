@@ -576,8 +576,9 @@ public final  class LocalizationManager: ObservableObject {
 
 // MARK: - Шорткат для SwiftUI
 extension View {
-    public func t(_ key: String) -> String {
-        LocalizationManager.shared.t(key)
+    /// Avoids global singleton access; pass the LocalizationManager from DI / Environment.
+    public func t(_ key: String, using localizationManager: LocalizationManager) -> String {
+        localizationManager.t(key)
     }
 }
 
