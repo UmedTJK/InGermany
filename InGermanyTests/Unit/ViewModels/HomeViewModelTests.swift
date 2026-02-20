@@ -12,11 +12,17 @@ final class HomeViewModelTests: XCTestCase {
 
     override func setUp() async throws {
         try await super.setUp()
+        
+        let network = NetworkService()
+        let cache = CacheService()
+        let dataService = DataService(networkService: network, cacheManager: cache)
+        
         sut = HomeViewModel(
-            favoritesManager: FavoritesManager.shared,
-            readingStatsManager: ReadingStatsManager.shared,
-            categoriesRepository: DefaultCategoriesRepository.shared,
-            articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared)
+            favoritesManager: FavoritesManager(),
+            readingStatsManager: ReadingStatsManager(),
+            categoriesRepository: CategoriesRepositoryImpl(dataService: dataService),
+            articlesRepo: ArticlesRepositoryImpl(dataService: dataService),
+            localizationManager: LocalizationManager()
         )
     }
 
