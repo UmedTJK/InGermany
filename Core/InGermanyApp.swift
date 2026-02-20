@@ -1,3 +1,5 @@
+import SwiftUI
+
 @main
 struct InGermanyApp: App {
 
@@ -14,7 +16,7 @@ struct InGermanyApp: App {
 
                 // остальные менеджеры — если реально нужны
                 .environmentObject(appContainer.localizationManager)
-                .environmentObject(appContainer.favoritesManager)
+                .environmentObject(appContainer.favoritesManagerForUI)
                 .environmentObject(appContainer.ratingManager)
                 .environmentObject(appContainer.readingStatsManager)
 

@@ -16,7 +16,7 @@ class HomeViewModel: ObservableObject {
     @Published var randomArticle: Article?
 
     // MARK: - Dependencies
-    let favoritesManager: FavoritesManager
+    let favoritesManager: FavoritesManagingProtocol
     let readingStatsManager: ReadingStatsManagingProtocol
     let categoriesRepository: CategoriesRepositoryProtocol
     let articlesRepo: ArticlesRepositoryProtocol
@@ -26,7 +26,7 @@ class HomeViewModel: ObservableObject {
 
     // MARK: - Init
     init(
-        favoritesManager: FavoritesManager,
+        favoritesManager: FavoritesManagingProtocol,
         readingStatsManager: ReadingStatsManagingProtocol,
         categoriesRepository: CategoriesRepositoryProtocol,
         articlesRepo: ArticlesRepositoryProtocol,
