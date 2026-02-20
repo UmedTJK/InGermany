@@ -110,7 +110,7 @@ final class AppContainer: ObservableObject {
     
     func makeFavoritesViewModel() -> FavoritesViewModel {
         FavoritesViewModel(
-            favoritesManager: favoritesManager,
+            favoritesManager: favoritesService,
             articlesRepo: articlesRepo
         )
     }
