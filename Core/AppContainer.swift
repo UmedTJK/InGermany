@@ -32,7 +32,7 @@ final class AppContainer: ObservableObject {
 
     
     private let dateFormattingService = DateFormattingService.shared
-    private let textAnalysisService = TextAnalysisService.shared
+    private let textAnalysisService = TextAnalysisService()
     
     // MARK: - Services
     let dataService: DataServiceProtocol
