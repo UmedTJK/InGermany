@@ -14,7 +14,7 @@ final class AppContainer: ObservableObject {
     let categoriesRepo: CategoriesRepositoryProtocol
     
     // MARK: - Managers
-    let favoritesManager: FavoritesManager
+    private let favoritesManagerConcrete: FavoritesManager
     let ratingManager: RatingManager
     let textSizeManager: TextSizeManager
     let localizationManager: LocalizationManager
@@ -26,7 +26,7 @@ final class AppContainer: ObservableObject {
     /// Доступ через протокол (для ViewModel)
     var readingStatsService: ReadingStatsManagingProtocol { readingStatsManager }
     /// Доступ к избранному через протокол (для ViewModel)
-    var favoritesService: any FavoritesManagingProtocol { favoritesManager }
+    var favoritesService: any FavoritesManagingProtocol { favoritesManagerConcrete }
 
     
     private let dateFormattingService = DateFormattingService.shared
@@ -65,7 +65,7 @@ final class AppContainer: ObservableObject {
         self.categoriesRepo = categoriesRepo ?? CategoriesRepositoryImpl(dataService: dataServiceInstance)
         
         // ✅ Managers
-        self.favoritesManager = favoritesManager ?? FavoritesManager()
+        self.favoritesManagerConcrete = favoritesManager ?? FavoritesManager()
         self.ratingManager = ratingManager ?? RatingManager.shared
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
         self.localizationManager = localizationManager ?? LocalizationManager.shared
@@ -229,7 +229,7 @@ final class AppContainer: ObservableObject {
     func provideEnvironmentObjects() -> some View {
         EmptyView()
             .environmentObject(self)
-            .environmentObject(favoritesManager)
+            .environmentObject(favoritesManagerConcrete)
             .environmentObject(textSizeManager)
             .environmentObject(localizationManager)
             .environmentObject(ratingManager)
@@ -239,7 +239,7 @@ final class AppContainer: ObservableObject {
     // MARK: - Clear All Data (for testing)
     
     func clearAllData() {
-        favoritesManager.clearForTesting()
+        favoritesManagerConcrete.clearForTesting()
         ratingManager.clearForTesting()
         readingStatsManager.clearHistory()
     }
