@@ -25,6 +25,8 @@ final class AppContainer: ObservableObject {
     let readingStatsManager: ReadingStatsManager
     /// Доступ через протокол (для ViewModel)
     var readingStatsService: ReadingStatsManagingProtocol { readingStatsManager }
+    /// Доступ к избранному через протокол (для ViewModel)
+    var favoritesService: any FavoritesManagingProtocol { favoritesManager }
 
     
     private let dateFormattingService = DateFormattingService.shared
@@ -83,7 +85,7 @@ final class AppContainer: ObservableObject {
     
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
-            favoritesManager: favoritesManager,
+            favoritesManager: favoritesService,
             readingStatsManager: readingStatsManager,
             categoriesRepository: categoriesRepo,
             articlesRepo: articlesRepo
@@ -92,7 +94,7 @@ final class AppContainer: ObservableObject {
     
     func makeSearchViewModel() -> SearchViewModel {
         SearchViewModel(
-            favoritesManager: favoritesManager,
+            favoritesManager: favoritesService,
             categoriesRepo: categoriesRepo,
             articlesRepo: articlesRepo
         )
@@ -102,7 +104,7 @@ final class AppContainer: ObservableObject {
         CategoriesViewModel(
             categoriesRepo: categoriesRepo,
             articlesRepo: articlesRepo,
-            favoritesManager: favoritesManager
+            favoritesManager: favoritesService
         )
     }
     
