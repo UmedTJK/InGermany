@@ -20,7 +20,7 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     private let sessionsKey = "readingSessions"
     private let maxHistoryEntries = 100
 
-    private init() {
+    init() {
         loadHistory()
         loadSessions()
     }
