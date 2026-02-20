@@ -11,12 +11,14 @@ final class SearchViewModelTests: XCTestCase {
     var sut: SearchViewModel!
     var mockArticlesRepo: MockArticlesRepository!
     var mockCategoriesRepo: MockCategoriesRepository!
+    var favoritesManager: FavoritesManager!
     
     override func setUp() async throws {
         try await super.setUp()
         
         // Clean up before each test
-        FavoritesManager.shared.clearForTesting()
+        favoritesManager = FavoritesManager()
+        favoritesManager.clearForTesting()
         
         // Create mocks
         mockArticlesRepo = MockArticlesRepository()
@@ -24,7 +26,7 @@ final class SearchViewModelTests: XCTestCase {
         
         // Initialize ViewModel with dependencies - исправлены названия параметров
         sut = SearchViewModel(
-            favoritesManager: FavoritesManager.shared,
+            favoritesManager: favoritesManager,
             categoriesRepo: mockCategoriesRepo, // было categoriesRepository
             articlesRepo: mockArticlesRepo
         )
@@ -32,7 +34,8 @@ final class SearchViewModelTests: XCTestCase {
     
     override func tearDown() async throws {
         // Clean up after each test
-        FavoritesManager.shared.clearForTesting()
+        favoritesManager.clearForTesting()
+        favoritesManager = nil
         sut = nil
         mockArticlesRepo = nil
         mockCategoriesRepo = nil
@@ -161,16 +164,5 @@ final class SearchViewModelTests: XCTestCase {
         
         // Then - should apply both filters
         XCTAssertTrue(sut.filteredArticles.isEmpty, "Should apply both search and tag filters")
-    }
-    
-    // MARK: - Convenience Initializer Test
-    
-    func testConvenienceInitializer() {
-        // When - use convenience init
-        let convenienceVM = SearchViewModel()
-        
-        // Then - should initialize with shared instances
-        XCTAssertNotNil(convenienceVM.favoritesManager)
-        // categoriesRepo и articlesRepo приватные, поэтому не проверяем напрямую
     }
 }
