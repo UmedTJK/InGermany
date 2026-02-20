@@ -95,7 +95,7 @@ extension ShareService {
     /// Статический метод для обратной совместимости (будет удален после рефакторинга)
     static func shareArticle(_ article: Article, language: String = "ru") {
         let formatter = ArticleFormatter()
-        let localizationManager = LocalizationManager.shared
+        let localizationManager = LocalizationManager()
         
         let service = ShareService(
             articleFormatter: formatter,

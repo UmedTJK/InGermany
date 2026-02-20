@@ -24,7 +24,6 @@ enum TextSize: String, Codable, CaseIterable {
 /// Использует DefaultsStore для сохранения и загрузки.
 @MainActor
 final class TextSizeManager: ObservableObject {
-    static let shared = TextSizeManager()
 
     @Published private(set) var textSize: TextSize = .medium
     @Published var customScale: Double = 1.0 { // добавлено поле под ползунок
@@ -34,7 +33,7 @@ final class TextSizeManager: ObservableObject {
     private let key = "textSize"
     private let customKey = "customTextScale"
 
-    private init() {
+    init() {
         if let saved: TextSize = DefaultsStore.load(key, as: TextSize.self) {
             textSize = saved
         }

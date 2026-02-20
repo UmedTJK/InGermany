@@ -104,6 +104,6 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(AppContainer.previewMock())
-        .environmentObject(LocalizationManager.shared)
+        .environmentObject(LocalizationManager())
         .environmentObject(SettingsManager())
 }
