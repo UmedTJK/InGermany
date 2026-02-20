@@ -6,19 +6,11 @@ struct InGermanyApp: App {
     @StateObject private var appContainer = AppContainer()
     @StateObject private var settingsManager = SettingsManager()
 
-    @Environment(\.scenePhase) private var scenePhase
-
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(appContainer)
+                .appEnvironment(using: appContainer)
                 .environmentObject(settingsManager)
-
-                // остальные менеджеры — если реально нужны
-                .environmentObject(appContainer.localizationManager)
-                .environmentObject(appContainer.favoritesManagerForUI)
-                .environmentObject(appContainer.ratingManager)
-                .environmentObject(appContainer.readingStatsManager)
 
                 // 🌙 ЕДИНСТВЕННЫЙ источник темы
                 .preferredColorScheme(
