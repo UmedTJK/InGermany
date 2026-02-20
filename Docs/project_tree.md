@@ -14,6 +14,7 @@
 │   ├── ARTICLE_EDITOR_ROADMAP.md
 │   ├── CHANGELOG.md
 │   ├── CLEAN_CODE_CHECKLIST.md
+│   ├── DI_GRAPH.md
 │   ├── Git_Mini_Guide.md
 │   ├── PROMPTS_FOR_AI_AGENTS.md
 │   ├── README.md
@@ -113,10 +114,13 @@
 ├── Protocols
 │   ├── ArticleFormatterProtocol.swift
 │   ├── ArticlesRepositoryProtocol.swift
+│   ├── CacheServiceProtocol.swift
 │   ├── CategoriesRepositoryProtocol.swift
+│   ├── DataServiceProtocol.swift
 │   ├── FavoritesManagingProtocol.swift
 │   ├── FontProviding.swift
 │   ├── LocalizationManagerProtocol.swift
+│   ├── NetworkServiceProtocol.swift
 │   ├── RatingManagerProtocol.swift
 │   ├── ReadingProgressTrackerProtocol.swift
 │   ├── ReadingStatsManagingProtocol.swift
@@ -261,4 +265,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-72 directories, 190 files
+72 directories, 194 files
