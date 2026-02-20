@@ -10,14 +10,14 @@ import SwiftUI
 struct CategorySection: View {
     let category: Category
     let articles: [Article]
-    let favoritesManager: FavoritesManager
+    let favoritesManager: any FavoritesManagingProtocol
     let language: String
     @EnvironmentObject private var appContainer: AppContainer
 
     init(
         category: Category,
         articles: [Article],
-        favoritesManager: FavoritesManager,
+        favoritesManager: any FavoritesManagingProtocol,
         language: String
     ) {
         self.category = category

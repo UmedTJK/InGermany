@@ -7,7 +7,7 @@ import SwiftUI
 
 struct RecentlyReadSection: View {
     let articles: [Article]
-    let favoritesManager: FavoritesManager
+    let favoritesManager: any FavoritesManagingProtocol
     let readingStatsManager: any ReadingStatsManagingProtocol
     @EnvironmentObject private var appContainer: AppContainer
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
