@@ -11,9 +11,15 @@ final class ArticlesRepositoryImplTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        // 🔧 ИСПРАВЛЕНО: Передаем DataService в инициализатор
-        sut = ArticlesRepositoryImpl(dataService: DataService.shared)
-        articleFormatter = ArticleFormatter()
+        let networkService = NetworkService()
+        let cacheService = CacheService()
+        let dataService = DataService(networkService: networkService, cacheManager: cacheService)
+        
+        sut = ArticlesRepositoryImpl(dataService: dataService)
+        articleFormatter = ArticleFormatter(
+            dateFormattingService: DateFormattingService(),
+            textAnalysisService: TextAnalysisService()
+        )
     }
     
     override func tearDown() {

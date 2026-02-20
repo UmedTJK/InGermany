@@ -14,7 +14,7 @@ final class FavoritesManagerTests: XCTestCase {
     var sut: FavoritesManager!
 
     override func setUp() async throws {
-        sut = FavoritesManager.shared
+        sut = FavoritesManager()
         // Очистим избранное, убрав все текущие id
         for id in Array(sut.favorites) {
             sut.toggleFavorite(for: id)

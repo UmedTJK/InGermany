@@ -8,13 +8,17 @@ import XCTest
 
 final class DataServiceTests: XCTestCase {
     func testLoadArticles() async {
-        let dataService = DataService.shared
+        let networkService = NetworkService()
+        let cacheService = CacheService()
+        let dataService = DataService(networkService: networkService, cacheManager: cacheService)
         let articles = await dataService.loadArticles()
         XCTAssertFalse(articles.isEmpty, "Articles should not be empty")
     }
 
     func testRefreshArticles() async {
-        let dataService = DataService.shared
+        let networkService = NetworkService()
+        let cacheService = CacheService()
+        let dataService = DataService(networkService: networkService, cacheManager: cacheService)
         await dataService.refreshData()
         let articles = await dataService.loadArticles()
         XCTAssertFalse(articles.isEmpty, "Articles should not be empty after refresh")
