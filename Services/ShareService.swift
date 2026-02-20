@@ -89,19 +89,3 @@ final class ShareService: ShareServiceProtocol {
         localizationManager.getTranslation(key: key, language: language)
     }
 }
-
-// MARK: - Статический метод для обратной совместимости
-extension ShareService {
-    /// Статический метод для обратной совместимости (будет удален после рефакторинга)
-    static func shareArticle(_ article: Article, language: String = "ru") {
-        let formatter = ArticleFormatter()
-        let localizationManager = LocalizationManager()
-        
-        let service = ShareService(
-            articleFormatter: formatter,
-            localizationManager: localizationManager
-        )
-        
-        service.showShareSheet(article: article, selectedLanguage: language)
-    }
-}
