@@ -5,10 +5,12 @@
 ├── Core
 │   ├── AppContainer.swift
 │   ├── ContentView.swift
-│   └── InGermanyApp.swift
+│   ├── InGermanyApp.swift
+│   └── View+AppEnvironment.swift
 ├── Docs
 │   ├── AI_CONTEXT.md
 │   ├── AI_CONTEXT_20251006.md
+│   ├── ARCHITECTURE.md
 │   ├── ARCHITECTURE_ISSUES.md
 │   ├── ARCHITECTURE_ISSUES_old.md
 │   ├── ARTICLE_EDITOR_ROADMAP.md
@@ -265,4 +267,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-72 directories, 194 files
+72 directories, 196 files
