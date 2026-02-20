@@ -63,7 +63,7 @@ final class AppContainer: ObservableObject {
         self.categoriesRepo = categoriesRepo ?? CategoriesRepositoryImpl(dataService: dataServiceInstance)
         
         // ✅ Managers
-        self.favoritesManager = favoritesManager ?? FavoritesManager.shared
+        self.favoritesManager = favoritesManager ?? FavoritesManager()
         self.ratingManager = ratingManager ?? RatingManager.shared
         self.textSizeManager = textSizeManager ?? TextSizeManager.shared
         self.localizationManager = localizationManager ?? LocalizationManager.shared
