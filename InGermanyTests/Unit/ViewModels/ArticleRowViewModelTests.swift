@@ -60,7 +60,7 @@ final class ArticleRowViewModelTests: XCTestCase {
             localizationManager: localizationManager,
             favoritesManager: favoritesManager,
             ratingManager: ratingManager,
-            categoriesRepo: CategoriesRepositoryImpl(dataService: DataService(networkService: NetworkService.shared, cacheManager: CacheService())),
+            categoriesRepo: CategoriesRepositoryImpl(dataService: DataService(networkService: NetworkService(), cacheManager: CacheService())),
             readingStatsManager: readingStatsManager,
             articleFormatter: ArticleFormatter()
         )
@@ -90,7 +90,7 @@ final class ArticleRowViewModelTests: XCTestCase {
             ratingManager: ratingManager,
             categoriesRepo: CategoriesRepositoryImpl(
                 dataService: DataService(
-                    networkService: NetworkService.shared,
+                    networkService: NetworkService(),
                     cacheManager: CacheService()
                 )
             ),
