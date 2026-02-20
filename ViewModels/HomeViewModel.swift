@@ -43,7 +43,7 @@ class HomeViewModel: ObservableObject {
     convenience init() {
         self.init(
             favoritesManager: FavoritesManager(),
-            readingStatsManager: ReadingStatsManager.shared,
+            readingStatsManager: ReadingStatsManager(),
             categoriesRepository: DefaultCategoriesRepository.shared,
             articlesRepo: ArticlesRepositoryImpl(dataService: DataService.shared),
             localizationManager: LocalizationManager.shared
