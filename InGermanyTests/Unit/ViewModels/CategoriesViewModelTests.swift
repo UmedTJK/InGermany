@@ -13,14 +13,19 @@ final class CategoriesViewModelTests: XCTestCase {
     var sut: CategoriesViewModel!
     var mockCategoriesRepo: MockCategoriesRepository!
     var mockArticlesRepo: MockArticlesRepository!
+    var favoritesManager: FavoritesManager!
 
     override func setUp() async throws {
         try await super.setUp()
         mockCategoriesRepo = MockCategoriesRepository()
         mockArticlesRepo = MockArticlesRepository()
+        favoritesManager = FavoritesManager()
+        favoritesManager.clearForTesting()
+
         sut = CategoriesViewModel(
             categoriesRepo: mockCategoriesRepo,
-            articlesRepo: mockArticlesRepo
+            articlesRepo: mockArticlesRepo,
+            favoritesManager: favoritesManager
         )
     }
 
@@ -28,6 +33,7 @@ final class CategoriesViewModelTests: XCTestCase {
         sut = nil
         mockCategoriesRepo = nil
         mockArticlesRepo = nil
+        favoritesManager = nil
         try await super.tearDown()
     }
 

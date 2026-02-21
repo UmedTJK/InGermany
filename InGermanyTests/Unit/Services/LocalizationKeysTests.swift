@@ -1,45 +1,40 @@
 //
 //  LocalizationKeysTests.swift
-//  InGermany
-//
-//  Created by SUM TJK on 10.10.25.
-//
-//
-//  LocalizationKeysTests.swift
 //  InGermanyTests
+//
+//  Verifies that required localization keys are present in our custom LocalizationManager
+//  (not in .lproj/Localizable.strings).
 //
 
 import XCTest
+@testable import InGermany
 
 final class LocalizationKeysTests: XCTestCase {
 
-    /// Список обязательных ключей для проверки
-    private let requiredKeys = [
+    /// Required keys that must resolve to a real, non-empty translation.
+    private let requiredKeys: [String] = [
         "category_none"
     ]
 
-    /// Список поддерживаемых языков в проекте
-    private let supportedLanguages = [
+    /// Languages we expect the app to support.
+    /// NOTE: We validate via LocalizationManager, so absence of a `<lang>.lproj` is not an error.
+    private let supportedLanguages: [String] = [
         "ru", "en", "de", "tj", "fa", "ar", "uk"
     ]
 
     func testRequiredLocalizationKeysExist() {
-        for lang in supportedLanguages {
-            guard let path = Bundle.main.path(forResource: lang, ofType: "lproj"),
-                  let bundle = Bundle(path: path)
-            else {
-                XCTFail("Не найден .lproj для языка: \(lang)")
-                continue
-            }
+        let lm = LocalizationManager()
+        lm.preload()
 
+        for lang in supportedLanguages {
             for key in requiredKeys {
-                let translation = NSLocalizedString(key, tableName: nil, bundle: bundle, value: "", comment: "")
+                let translation = lm.getTranslation(key: key, language: lang)
+
                 XCTAssertFalse(
-                    translation.isEmpty || translation == key,
+                    translation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || translation == key,
                     "Отсутствует перевод для ключа `\(key)` в языке: \(lang)"
                 )
             }
         }
     }
 }
-
