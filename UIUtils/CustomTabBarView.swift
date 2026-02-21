@@ -8,18 +8,9 @@ struct CustomTabBarView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            Group {
-                switch selectedTab {
-                case 0: HomeView(appContainer: appContainer)
-                case 1: CategoriesView(appContainer: appContainer)
-                case 2: SearchView(viewModel: appContainer.makeSearchViewModel())
-                case 3: FavoritesView(viewModel: appContainer.makeFavoritesViewModel())
-                case 4: SettingsView(viewModel: appContainer.makeSettingsViewModel())
-                default: HomeView(appContainer: appContainer)
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .edgesIgnoringSafeArea(.bottom)
+            tabContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.bottom)
 
             HStack {
                 tabButton(icon: "house.fill", label: localizationManager.t("tab_home"), index: 0)
@@ -79,6 +70,50 @@ struct CustomTabBarView: View {
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity)
+        }
+    }
+
+    @ViewBuilder
+    private var tabContent: some View {
+        switch selectedTab {
+        case 0:
+            HomeView(appContainer: appContainer)
+
+        case 1:
+            CategoriesView(
+                viewModel: appContainer.makeCategoriesViewModel(),
+                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                makeDetailViewModel: { article, all in
+                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                }
+            )
+
+        case 2:
+            SearchView(
+                viewModel: appContainer.makeSearchViewModel(),
+                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                makeDetailViewModel: { article, all in
+                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                }
+            )
+
+        case 3:
+            FavoritesView(
+                viewModel: appContainer.makeFavoritesViewModel(),
+                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                makeDetailViewModel: { article, all in
+                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                }
+            )
+
+        case 4:
+            SettingsView(
+                viewModel: appContainer.makeSettingsViewModel(),
+                makeAboutViewModel: appContainer.makeAboutViewModel
+            )
+
+        default:
+            HomeView(appContainer: appContainer)
         }
     }
 }

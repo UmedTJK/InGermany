@@ -41,7 +41,13 @@ struct ContentView: View {
             .tag(0)
 
             LazyView {
-                CategoriesView(appContainer: appContainer)
+                CategoriesView(
+                    viewModel: appContainer.makeCategoriesViewModel(),
+                    makeRowViewModel: appContainer.makeArticleRowViewModel,
+                    makeDetailViewModel: { article, all in
+                        appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                    }
+                )
             }
             .tabItem {
                 Label(
@@ -53,7 +59,11 @@ struct ContentView: View {
 
             LazyView {
                 SearchView(
-                    viewModel: appContainer.makeSearchViewModel()
+                    viewModel: appContainer.makeSearchViewModel(),
+                    makeRowViewModel: appContainer.makeArticleRowViewModel,
+                    makeDetailViewModel: { article, all in
+                        appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                    }
                 )
             }
             .tabItem {
@@ -66,7 +76,11 @@ struct ContentView: View {
 
             LazyView {
                 FavoritesView(
-                    viewModel: appContainer.makeFavoritesViewModel()
+                    viewModel: appContainer.makeFavoritesViewModel(),
+                    makeRowViewModel: appContainer.makeArticleRowViewModel,
+                    makeDetailViewModel: { article, all in
+                        appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                    }
                 )
             }
             .tabItem {
@@ -79,7 +93,8 @@ struct ContentView: View {
 
             LazyView {
                 SettingsView(
-                    viewModel: appContainer.makeSettingsViewModel()
+                    viewModel: appContainer.makeSettingsViewModel(),
+                    makeAboutViewModel: appContainer.makeAboutViewModel
                 )
             }
             .tabItem {
