@@ -70,7 +70,8 @@ DI exists, but is NOT pure.
 `AppContainer` creates view models and provides dependencies, **however** many deps are still singletons:
 - `DataService.shared`
 - `CategoriesRepositoryImpl.shared`
-- `FavoritesManager.shared`, `RatingManager.shared`, `TextSizeManager.shared`, `LocalizationManager.shared`, `ReadingStatsManager.shared`
+- `FavoritesManager.shared`, `RatingManager.shared`, `TextSizeManager.shared`, `LocalizationManager.shared`
+- `ReadingStatsManager` is no longer accessed via `.shared` in ViewModels (encapsulated behind protocol in AppContainer)
 - `DateFormattingService.shared`, `TextAnalysisService.shared` (in container fields)
 
 **Definition:** Current DI = *factory + service locator facade* over several `.shared`.
@@ -100,6 +101,8 @@ DI exists, but is NOT pure.
 
 **Note:** This is UI-coupled state; not protocolized yet.
 
+**Reading statistics:** Temporarily disabled in Settings UI to prevent main-thread UI freeze. Planned refactor: snapshot-based async aggregation model.
+
 ---
 
 ## 6) Packages / SharedCore (status)
@@ -118,7 +121,7 @@ This repo includes SwiftPM packages:
 ## 7) Known Architectural Debt (short, high-signal)
 
 ### 7.1 Hybrid DI + Singletons
-Many dependencies are still `.shared`. This reduces testability and violates pure DIP.
+Many dependencies are still `.shared`. ReadingStatsManager has been encapsulated behind protocol-based DI, but other services still use shared singletons. This reduces testability and violates pure DIP.
 
 ### 7.2 CategoriesRepositoryImpl is singleton + ObservableObject
 It maintains published state + byId cache internally and pulls from `DataService.shared`.
