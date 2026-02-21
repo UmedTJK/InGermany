@@ -14,15 +14,18 @@ struct UsefulToolsSection: View {
     let articles: [Article]
     let onRandomArticleSelected: (Article) -> Void
     private let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+    private let makeDataService: () -> DataServiceProtocol
     
     init(
         articles: [Article],
         onRandomArticleSelected: @escaping (Article) -> Void,
-        makePDFLibraryViewModel: @escaping () -> PDFLibraryViewModel
+        makePDFLibraryViewModel: @escaping () -> PDFLibraryViewModel,
+        makeDataService: @escaping () -> DataServiceProtocol
     ) {
         self.articles = articles
         self.onRandomArticleSelected = onRandomArticleSelected
         self.makePDFLibraryViewModel = makePDFLibraryViewModel
+        self.makeDataService = makeDataService
     }
 
     var body: some View {
@@ -34,7 +37,7 @@ struct UsefulToolsSection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     
-                    NavigationLink(destination: MapView()) {
+                    NavigationLink(destination: MapView(dataService: makeDataService())) {
                         ToolCard(
                             title: t("tool_map"),
                             systemImage: "map",

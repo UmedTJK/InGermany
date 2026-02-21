@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PDFLibraryView: View {
-    @EnvironmentObject var appContainer: AppContainer
+    @EnvironmentObject private var localizationManager: LocalizationManager
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     @ObservedObject var viewModel: PDFLibraryViewModel
@@ -94,6 +94,6 @@ struct PDFLibraryView: View {
     }
 
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }

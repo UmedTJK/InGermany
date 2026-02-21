@@ -40,7 +40,8 @@ struct HomeView: View {
                                 onRandomArticleSelected: { _ in
                                     viewModel.selectRandomArticle()
                                 },
-                                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel
+                                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
+                                makeDataService: { appContainer.dataService }
                             )
 
                             RecentlyReadSection(
