@@ -107,9 +107,11 @@ class NetworkService {
         var lastError: Error?
         
         while attempt < maxRetryAttempts {
+            if Task.isCancelled { throw CancellationError() }
             do {
                 return try await operation()
             } catch {
+                if error is CancellationError { throw error }
                 lastError = error
                 attempt += 1
                 
@@ -118,7 +120,12 @@ class NetworkService {
                 }
                 
                 let delay = baseRetryDelay * UInt64(pow(2.0, Double(attempt - 1)))
-                try? await Task.sleep(nanoseconds: delay)
+                do {
+                    try await Task.sleep(nanoseconds: delay)
+                } catch {
+                    // Preserve structured cancellation semantics
+                    throw error
+                }
             }
         }
         
