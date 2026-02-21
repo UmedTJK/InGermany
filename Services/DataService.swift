@@ -9,13 +9,7 @@ import Foundation
 
 actor DataService: DataServiceProtocol {
 
-    // MARK: - Temporary singleton bridge (keep during DI migration)
-    static let shared = DataService(
-        networkService: NetworkService(),
-        cacheManager: CacheService()
-    )
-
-    // MARK: - Dependencies (DI)
+    // MARK: - Dependencies (DI-only; no singletons)
     private let networkService: NetworkServiceProtocol
     private let cacheManager: CacheServiceProtocol
 
@@ -76,7 +70,7 @@ actor DataService: DataServiceProtocol {
 
     // MARK: - Fire-and-forget preload
     func preloadAll() {
-        Task.detached { [weak self] in
+        Task { [weak self] in
             guard let self else { return }
             let start = Date()
             await self.refreshArticlesIfNeeded()
@@ -98,7 +92,7 @@ actor DataService: DataServiceProtocol {
             print("⏱ [DataService] loadArticles returned from MEMORY in \(Date().timeIntervalSince(start)) sec")
 
             // background refresh without blocking UI
-            Task.detached { [weak self] in
+            Task { [weak self] in
                 await self?.refreshArticlesIfNeeded()
             }
             return cached
@@ -111,7 +105,7 @@ actor DataService: DataServiceProtocol {
             yieldArticles(cached)
             print("⏱ [DataService] loadArticles returned from DISK/TTL cache in \(Date().timeIntervalSince(start)) sec")
 
-            Task.detached { [weak self] in
+            Task { [weak self] in
                 await self?.refreshArticlesIfNeeded()
             }
             return cached
@@ -171,7 +165,7 @@ actor DataService: DataServiceProtocol {
             yieldCategories(cached)
             print("⏱ [DataService] loadCategories returned from TTL cache in \(Date().timeIntervalSince(start)) sec")
 
-            Task.detached { [weak self] in
+            Task { [weak self] in
                 guard let self else { return }
                 let networkStart = Date()
                 await self.refreshCategoriesIfNeeded()
@@ -188,7 +182,7 @@ actor DataService: DataServiceProtocol {
             yieldCategories(local)
             print("⏱ [DataService] loadCategories returned from bundle in \(Date().timeIntervalSince(start)) sec")
 
-            Task.detached { [weak self] in
+            Task { [weak self] in
                 guard let self else { return }
                 let networkStart = Date()
                 await self.refreshCategoriesIfNeeded()
@@ -223,7 +217,7 @@ actor DataService: DataServiceProtocol {
             yieldLocations(cached)
             print("⏱ [DataService] loadLocations returned from TTL cache in \(Date().timeIntervalSince(start)) sec")
 
-            Task.detached { [weak self] in
+            Task { [weak self] in
                 guard let self else { return }
                 let networkStart = Date()
                 await self.refreshLocationsIfNeeded()
@@ -240,7 +234,7 @@ actor DataService: DataServiceProtocol {
             yieldLocations(local)
             print("⏱ [DataService] loadLocations returned from bundle in \(Date().timeIntervalSince(start)) sec")
 
-            Task.detached { [weak self] in
+            Task { [weak self] in
                 guard let self else { return }
                 let networkStart = Date()
                 await self.refreshLocationsIfNeeded()
@@ -275,7 +269,9 @@ actor DataService: DataServiceProtocol {
                 lastDataSource["articles"] = source.rawValue
                 yieldArticles(articles)
             }
-        } catch {}
+        } catch {
+            print("⚠️ [DataService] refreshArticlesIfNeeded failed: \(error)")
+        }
     }
 
     private func refreshCategoriesIfNeeded() async {
@@ -285,7 +281,9 @@ actor DataService: DataServiceProtocol {
             categoriesCache = categories
             lastDataSource["categories"] = "network"
             yieldCategories(categories)
-        } catch {}
+        } catch {
+            print("⚠️ [DataService] refreshCategoriesIfNeeded failed: \(error)")
+        }
     }
 
     private func refreshLocationsIfNeeded() async {
@@ -295,7 +293,9 @@ actor DataService: DataServiceProtocol {
             locationsCache = locations
             lastDataSource["locations"] = "network"
             yieldLocations(locations)
-        } catch {}
+        } catch {
+            print("⚠️ [DataService] refreshLocationsIfNeeded failed: \(error)")
+        }
     }
 
     // MARK: - Local fallbacks
