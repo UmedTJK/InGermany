@@ -4,7 +4,7 @@ struct AboutView: View {
 
     @StateObject private var viewModel: AboutViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject var appContainer: AppContainer
+    @EnvironmentObject private var localizationManager: LocalizationManager
 
     /// Initializes the view with AppContainer for dependency injection
     init(appContainer: AppContainer) {
@@ -43,12 +43,13 @@ struct AboutView: View {
     }
 
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 // MARK: - Preview
 #Preview {
-    AboutView(appContainer: AppContainer.previewMock())
-        .environmentObject(AppContainer.previewMock())
+    let container = AppContainer.previewMock()
+    AboutView(appContainer: container)
+        .appEnvironment(using: container)
 }
