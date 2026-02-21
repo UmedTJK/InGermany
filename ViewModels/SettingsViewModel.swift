@@ -6,6 +6,13 @@
 import SwiftUI
 import Combine
 
+struct SettingsStats: Equatable {
+    let totalArticlesRead: Int
+    let formattedTotalReadingTime: String
+    let formattedAverageReadingTime: String
+    let currentStreak: Int
+}
+
 /// ViewModel для экрана настроек
 @MainActor
 final class SettingsViewModel: ObservableObject {
@@ -17,6 +24,8 @@ final class SettingsViewModel: ObservableObject {
 
     // MARK: - Published
     @Published var isHistoryCleared: Bool = false
+    @Published private(set) var stats: SettingsStats? = nil
+    @Published private(set) var isStatsLoading: Bool = false
 
     // MARK: - Supported languages
     let supportedLanguages = ["ru", "en", "de", "tj", "fa", "ar", "uk"]
@@ -36,7 +45,10 @@ final class SettingsViewModel: ObservableObject {
 
     var selectedLanguage: String {
         get { settings.selectedLanguage }
-        set { settings.selectedLanguage = newValue }
+        set {
+            settings.selectedLanguage = newValue
+            invalidateStatsCache()
+        }
     }
 
     var isDarkMode: Bool {
@@ -76,9 +88,12 @@ final class SettingsViewModel: ObservableObject {
     var selectedCardStyle: CardImageStyle {
         get {
             let all = Array(CardImageStyle.allCases)
+            guard let first = all.first else {
+                preconditionFailure("CardImageStyle must define at least one case")
+            }
             return all.indices.contains(settings.selectedCardStyleIndex)
                 ? all[settings.selectedCardStyleIndex]
-                : all.first!
+                : first
         }
         set {
             if let idx = Array(CardImageStyle.allCases).firstIndex(of: newValue) {
@@ -87,7 +102,7 @@ final class SettingsViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Stats
+    // MARK: - Stats (raw)
 
     var totalArticlesRead: Int {
         statsManager.totalArticlesRead
@@ -114,10 +129,36 @@ final class SettingsViewModel: ObservableObject {
         0
     }
 
+    // MARK: - Stats Cache
+
+    func loadStatsIfNeeded() {
+        if stats != nil || isStatsLoading { return }
+        isStatsLoading = true
+
+        Task { @MainActor in
+            await Task.yield()
+
+            let computed = SettingsStats(
+                totalArticlesRead: totalArticlesRead,
+                formattedTotalReadingTime: formattedTotalReadingTime,
+                formattedAverageReadingTime: formattedAverageReadingTime,
+                currentStreak: currentStreak
+            )
+
+            self.stats = computed
+            self.isStatsLoading = false
+        }
+    }
+
+    func invalidateStatsCache() {
+        stats = nil
+    }
+
     // MARK: - Actions
 
     func clearHistory() {
         statsManager.clearHistory()
+        invalidateStatsCache()
         isHistoryCleared = true
 
         Task {
@@ -128,6 +169,7 @@ final class SettingsViewModel: ObservableObject {
 
     func resetToDefaults() {
         settings.resetToDefaults()
+        invalidateStatsCache()
         clearHistory()
     }
 }

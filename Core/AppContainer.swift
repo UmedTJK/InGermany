@@ -21,14 +21,16 @@ final class AppContainer: ObservableObject {
     let settingsManager: SettingsManager
 
     
-    /// Конкретный экземпляр для SwiftUI
-    let readingStatsManager: ReadingStatsManager
-    /// Доступ через протокол (для ViewModel)
-    var readingStatsService: ReadingStatsManagingProtocol { readingStatsManager }
+    /// Concrete instance is kept private; outside access is via protocol only.
+    private let readingStatsManager: ReadingStatsManager
+    /// Protocol-based access for ViewModels / services.
+    let readingStatsService: ReadingStatsManagingProtocol
+    /// Concrete instance for SwiftUI EnvironmentObject injection (UI-only).
+    var readingStatsManagerForUI: ReadingStatsManager { readingStatsManager }
     /// Доступ к избранному через протокол (для ViewModel)
     var favoritesService: any FavoritesManagingProtocol { favoritesManagerConcrete }
     /// Concrete instance for SwiftUI EnvironmentObject injection
-    var favoritesManagerForUI: FavoritesManager { favoritesManagerConcrete }
+    var favoritesManagerForUI: FavoritesManager { favoritesManagerConcrete } // UI-only
 
     
     private let dateFormattingService = DateFormattingService()
@@ -74,6 +76,7 @@ final class AppContainer: ObservableObject {
         self.localizationManager = localizationManager ?? LocalizationManager()
         self.settingsManager = settingsManager ?? SettingsManager()
         self.readingStatsManager = readingStatsManager ?? ReadingStatsManager()
+        self.readingStatsService = self.readingStatsManager
         
         // ✅ Formatters & Services
         self.articleFormatter = ArticleFormatter(
@@ -93,7 +96,7 @@ final class AppContainer: ObservableObject {
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(
             favoritesManager: favoritesService,
-            readingStatsManager: readingStatsManager,
+            readingStatsManager: readingStatsService,
             categoriesRepository: categoriesRepo,
             articlesRepo: articlesRepo,
             localizationManager: localizationManager
@@ -214,9 +217,6 @@ final class AppContainer: ObservableObject {
     
      */
     
-    func makeShareService() -> ShareServiceProtocol {
-        return shareService
-    }
     
     func makeArticleLibraryViewModel() -> ArticleLibraryViewModel {
         ArticleLibraryViewModel()

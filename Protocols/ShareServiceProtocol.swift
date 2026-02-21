@@ -8,7 +8,6 @@
 import Foundation
 
 /// Протокол для сервиса шаринга контента
-@MainActor
 protocol ShareServiceProtocol {
     /// Генерирует plain text для шаринга статьи
     func generatePlainText(article: Article, selectedLanguage: String) -> String
@@ -16,6 +15,6 @@ protocol ShareServiceProtocol {
     /// Генерирует форматированный текст для шаринга
     func generateFormattedText(article: Article, selectedLanguage: String) -> String
     
-    /// Показывает системное окно шаринга
-    func showShareSheet(article: Article, selectedLanguage: String)
+    /// Возвращает элементы для системного шаринга. UI-презентация должна происходить в UI-слое (SwiftUI .sheet).
+    func makeShareItems(article: Article, selectedLanguage: String) -> [Any]
 }

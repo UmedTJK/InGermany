@@ -3,7 +3,6 @@ import SwiftUI
 import UIKit
 
 /// Сервис для предоставления возможности шаринга статей через системное окно iOS.
-@MainActor
 final class ShareService: ShareServiceProtocol {
     private let articleFormatter: ArticleFormatter
     private let localizationManager: LocalizationManager
@@ -54,18 +53,16 @@ final class ShareService: ShareServiceProtocol {
         """
     }
     
-    func showShareSheet(article: Article, selectedLanguage: String) {
+    /// Возвращает элементы для системного шаринга. UI-презентация должна происходить в UI-слое (SwiftUI .sheet).
+    func makeShareItems(article: Article, selectedLanguage: String) -> [Any] {
         let shareText = generateFormattedText(article: article, selectedLanguage: selectedLanguage)
-        
-        let activityVC = UIActivityViewController(
-            activityItems: [shareText],
-            applicationActivities: nil
-        )
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = windowScene.windows.first?.rootViewController {
-            rootViewController.present(activityVC, animated: true)
-        }
+        return [shareText]
+    }
+
+    /// Deprecated: презентация UI из сервиса запрещена (UIKit global). Используй `makeShareItems` + `ActivityView`.
+    @available(*, deprecated, message: "UI presentation is handled by the UI layer. Use makeShareItems(...) and ActivityView in a .sheet.")
+    func showShareSheet(article: Article, selectedLanguage: String) {
+        assertionFailure("ShareService.showShareSheet is deprecated. Present ActivityView from the UI layer.")
     }
     
     // MARK: - Private Helpers
@@ -87,5 +84,19 @@ final class ShareService: ShareServiceProtocol {
     
     private func localize(_ key: String, language: String) -> String {
         localizationManager.getTranslation(key: key, language: language)
+    }
+}
+
+/// SwiftUI wrapper для UIActivityViewController.
+struct ActivityView: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        // no-op
     }
 }

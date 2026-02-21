@@ -9,6 +9,8 @@ struct ArticleDetailView: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
+    @State private var isSharePresented: Bool = false
+    @State private var shareItems: [Any] = []
     
     // MARK: - Dependencies
     private let localizationManager: LocalizationManager
@@ -175,7 +177,8 @@ struct ArticleDetailView: View {
                     
                     // Кнопка шаринга
                     Button(action: {
-                        viewModel.showShareSheet(selectedLanguage: selectedLanguage)
+                        shareItems = viewModel.shareItems(selectedLanguage: selectedLanguage)
+                        isSharePresented = true
                     }) {
                         Image(systemName: "square.and.arrow.up")
                     }
@@ -193,6 +196,9 @@ struct ArticleDetailView: View {
         .sheet(isPresented: $viewModel.showTextSizePanel) {
             TextSizeSettingsPanel()
                 .environmentObject(viewModel.textSizeManager)
+        }
+        .sheet(isPresented: $isSharePresented) {
+            ActivityView(activityItems: shareItems)
         }
         .task {
             viewModel.onAppear()

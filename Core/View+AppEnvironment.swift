@@ -14,6 +14,6 @@ extension View {
             .environmentObject(container.textSizeManager)
             .environmentObject(container.localizationManager)
             .environmentObject(container.ratingManager)
-            .environmentObject(container.readingStatsManager)
+            .environmentObject(container.readingStatsManagerForUI)
     }
 }

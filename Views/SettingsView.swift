@@ -21,15 +21,11 @@ struct SettingsView: View {
             Form {
                 languageSection
                 appearanceSection
-                cardStyleSection
                 dateFormatSection
-                statisticsSection
+                Section(header: Text(viewModel.localizedText("settings_stats_title"))) {
+                    Text("Статистика чтения временно отключена")
+                }
                 aboutSection
-
-                #if DEBUG
-                debugSection
-                #endif
-
                 clearHistorySection
                 resetSection
             }
@@ -93,31 +89,6 @@ struct SettingsView: View {
         }
     }
 
-    private var statisticsSection: some View {
-        Section(header: Text(viewModel.localizedText("settings_stats_title"))) {
-            HStack {
-                Text(viewModel.localizedText("settings_articles_read"))
-                Spacer()
-                Text("\(viewModel.totalArticlesRead)")
-            }
-            HStack {
-                Text(viewModel.localizedText("settings_total_time"))
-                Spacer()
-                Text(viewModel.formattedTotalReadingTime)
-            }
-            HStack {
-                Text(viewModel.localizedText("settings_average_time"))
-                Spacer()
-                Text(viewModel.formattedAverageReadingTime)
-            }
-            HStack {
-                Text(viewModel.localizedText("settings_streak"))
-                Spacer()
-                Text("\(viewModel.currentStreak)")
-            }
-        }
-    }
-
     private var aboutSection: some View {
         Section(header: Text(viewModel.localizedText("settings_about_title"))) {
             NavigationLink(destination: AboutView(viewModel: appContainer.makeAboutViewModel())) {
@@ -126,14 +97,6 @@ struct SettingsView: View {
         }
     }
 
-    // MARK: - Debug Section
-    #if DEBUG
-    private var debugSection: some View {
-        Section(header: Text("Debug")) {
-            Text("Debug options are only available in CMS (macOS).")
-        }
-    }
-    #endif
 
     private var clearHistorySection: some View {
         Section {

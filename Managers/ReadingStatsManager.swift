@@ -18,10 +18,13 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     private let storageKey = "readingHistory"
     private let sessionsKey = "readingSessions"
     private let maxHistoryEntries = 100
+    private var didLoadFromStorage = false
+    private var isLoadingFromStorage = false
 
     init() {
-        loadHistory()
-        loadSessions()
+        Task { [weak self] in
+            await self?.loadFromStorageIfNeeded()
+        }
     }
 
     // MARK: - Progress
@@ -40,6 +43,7 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
 
     // MARK: - Sessions
     private var activeSessions: [String: ReadingSession] = [:]
+    private let localizationManager = LocalizationManager()
 
     func startSession(articleId: String) {
         let session = ReadingSession(articleId: articleId, startTime: Date())
@@ -64,9 +68,33 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     }
 
     // MARK: - History
+    // Async load from storage if needed
+    private func loadFromStorageIfNeeded() async {
+        if didLoadFromStorage || isLoadingFromStorage { return }
+        isLoadingFromStorage = true
+
+        let storageKey = self.storageKey
+        let sessionsKey = self.sessionsKey
+
+        // Decode off the main thread to avoid UI freeze.
+        let loaded = await Task.detached(priority: .userInitiated) { () -> (history: [ReadingHistoryEntry], sessions: [ReadingSession]) in
+            let entries: [ReadingHistoryEntry] = DefaultsStore.load(storageKey, as: [ReadingHistoryEntry].self) ?? []
+            let sessions: [ReadingSession] = DefaultsStore.load(sessionsKey, as: [ReadingSession].self) ?? []
+            return (entries, sessions)
+        }.value
+
+        // Publish on main actor
+        self.history = loaded.history.sorted { $0.readAt > $1.readAt }
+        self.completedSessions = loaded.sessions
+
+        self.didLoadFromStorage = true
+        self.isLoadingFromStorage = false
+    }
+
+    // Synchronous wrappers kept for callers (if any). They just schedule async loading.
     private func loadHistory() {
-        if let entries: [ReadingHistoryEntry] = DefaultsStore.load(storageKey, as: [ReadingHistoryEntry].self) {
-            history = entries.sorted { $0.readAt > $1.readAt }
+        Task { [weak self] in
+            await self?.loadFromStorageIfNeeded()
         }
     }
 
@@ -103,6 +131,7 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
         completedSessions.removeAll()
         saveSessions()
         progress.removeAll()
+        didLoadFromStorage = true
     }
 
     // MARK: - Statistics
@@ -121,8 +150,8 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
 
     // MARK: - Sessions Persistence
     private func loadSessions() {
-        if let saved: [ReadingSession] = DefaultsStore.load(sessionsKey, as: [ReadingSession].self) {
-            completedSessions = saved
+        Task { [weak self] in
+            await self?.loadFromStorageIfNeeded()
         }
     }
 
@@ -140,12 +169,11 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     }
 
     func progressStatus(for progress: CGFloat, language: String) -> String {
-        let lm = LocalizationManager()
         switch progress {
-        case 0..<0.1: return lm.getTranslation(key: "Начало", language: language)
-        case 0.1..<0.7: return lm.getTranslation(key: "В процессе", language: language)
-        case 0.7..<0.99: return lm.getTranslation(key: "Почти готово", language: language)
-        default: return lm.getTranslation(key: "Готово", language: language)
+        case 0..<0.1: return localizationManager.getTranslation(key: "Начало", language: language)
+        case 0.1..<0.7: return localizationManager.getTranslation(key: "В процессе", language: language)
+        case 0.7..<0.99: return localizationManager.getTranslation(key: "Почти готово", language: language)
+        default: return localizationManager.getTranslation(key: "Готово", language: language)
         }
     }
 }

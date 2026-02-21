@@ -73,7 +73,6 @@ class HomeViewModel: ObservableObject {
     }
 
     // MARK: - Data loading
-    // MARK: - Data loading
     func loadData() async {
         let start = Date()
         print("⏱ loadData started at \(start)")
@@ -99,7 +98,6 @@ class HomeViewModel: ObservableObject {
             print("⏱ Articles loaded in \(Date().timeIntervalSince(start)) sec")
         }
 
-
         // 4. Фоновое обновление из сети
         Task.detached { [weak self] in
             guard let self else { return }
@@ -112,7 +110,7 @@ class HomeViewModel: ObservableObject {
             }
         }
     }
-    
+
     // MARK: - Refresh
     func refreshData() async {
         print("🔄 refreshData triggered from HomeView")
@@ -125,8 +123,6 @@ class HomeViewModel: ObservableObject {
             }
         }
     }
-
-
 
     // MARK: - Random article
     func selectRandomArticle() {

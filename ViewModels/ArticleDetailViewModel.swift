@@ -133,8 +133,9 @@ final class ArticleDetailViewModel: ObservableObject {
         shareService.generatePlainText(article: article, selectedLanguage: selectedLanguage)
     }
 
-    func showShareSheet(selectedLanguage: String) {
-        shareService.showShareSheet(article: article, selectedLanguage: selectedLanguage)
+
+    func shareItems(selectedLanguage: String) -> [Any] {
+        shareService.makeShareItems(article: article, selectedLanguage: selectedLanguage)
     }
 
     // MARK: - Category (с фолбэком)
