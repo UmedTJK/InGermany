@@ -62,8 +62,9 @@ class HomeViewModel: ObservableObject {
         categoriesRepository.allCategories()
     }
 
-    @MainActor var articlesByCategory: [String: [Article]] {
-        Dictionary(grouping: articles, by: { $0.categoryId })
+    @MainActor @Published private(set) var articlesByCategory: [String: [Article]] = [:]
+    @MainActor private func rebuildArticlesByCategory(from articles: [Article]) {
+        self.articlesByCategory = Dictionary(grouping: articles, by: { $0.categoryId })
     }
 
     /// Возвращает локализованное имя категории по ID или "Без категории".
@@ -97,6 +98,7 @@ class HomeViewModel: ObservableObject {
 
         await MainActor.run {
             self.articles = articles
+            self.rebuildArticlesByCategory(from: articles)
             self.dataSource = source
             print("⏱ Articles loaded in \(Date().timeIntervalSince(start)) sec")
         }
@@ -114,6 +116,7 @@ class HomeViewModel: ObservableObject {
                 if !fresh.isEmpty {
                     await MainActor.run {
                         self.articles = fresh
+                        self.rebuildArticlesByCategory(from: fresh)
                         self.dataSource = "network"
                     }
                 }
@@ -131,6 +134,7 @@ class HomeViewModel: ObservableObject {
         await MainActor.run {
             if !refreshed.isEmpty {
                 self.articles = refreshed
+                self.rebuildArticlesByCategory(from: refreshed)
                 self.dataSource = "network"
             }
         }
