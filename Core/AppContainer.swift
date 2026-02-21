@@ -246,15 +246,20 @@ final class AppContainer: ObservableObject {
         // ⚡ Инициализируем только локализацию, без подгрузки статей/категорий
         localizationManager.preload()
 
-        // ⚡ Явная загрузка статистики чтения и избранного (без async side-effects в init)
+        // ⚡ Параллельная загрузка статистики чтения и избранного (без async side-effects в init)
         Task { [weak self] in
             guard let self else { return }
-            async let stats = self.readingStatsManager.bootstrap()
-            async let favs = self.favoritesManagerConcrete.bootstrap()
-            _ = await (stats, favs)
+
+            await withTaskGroup(of: Void.self) { group in
+                group.addTask {
+                    await self.readingStatsManager.bootstrap()
+                }
+                group.addTask {
+                    await self.favoritesManagerConcrete.bootstrap()
+                }
+            }
         }
     }
-
 }
 
 // MARK: - Preview / Mocks
