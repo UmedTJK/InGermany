@@ -3,8 +3,14 @@ import SwiftUI
 @main
 struct InGermanyApp: App {
 
-    @StateObject private var appContainer = AppContainer()
-    @StateObject private var settingsManager = SettingsManager()
+    @StateObject private var settingsManager: SettingsManager
+    @StateObject private var appContainer: AppContainer
+
+    init() {
+        let sm = SettingsManager()
+        _settingsManager = StateObject(wrappedValue: sm)
+        _appContainer = StateObject(wrappedValue: AppContainer(settingsManager: sm))
+    }
 
     var body: some Scene {
         WindowGroup {
