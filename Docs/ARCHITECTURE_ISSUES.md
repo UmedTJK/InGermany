@@ -185,3 +185,184 @@ Further improvements are evolutionary, not corrective.
 ---
 
 End of status document.
+
+🚧 Architecture Issues — InGermany
+
+📅 Updated: 2026-02-21  
+🏷 Milestone: v0.2.4-concurrency-audit  
+📘 Architecture Spec: v2.1 (DI-based, Concurrency Stabilization Phase)
+
+---
+
+# ⚠️ ARCHITECTURE STATUS — UNDER STABILIZATION
+
+The project remains DI-based and structurally clean, however a recent deep technical audit (2026-02) identified critical concurrency and lifecycle issues that must be addressed before declaring the system fully production-stable.
+
+This document supersedes previous “architecture fully stable” statements.
+
+---
+
+# 🚨 CRITICAL CONCURRENCY & LIFECYCLE ISSUES (Audit 2026-02)
+
+## 🔴 P0 — Must Be Fixed Immediately
+
+### 1. Uncontrolled `Task.detached` Usage
+Locations:
+- DataService background refresh
+- HomeViewModel background refresh
+
+Risks:
+- No cancellation propagation
+- No lifecycle binding
+- Possible race conditions
+- UI updates after ViewModel deallocation
+- Priority not inherited
+
+Action:
+- Replace with structured concurrency (`Task {}` or task groups)
+- Bind to ViewModel lifecycle
+
+---
+
+### 2. Silent Error Swallowing (`catch {}`)
+Found in DataService refresh helpers.
+
+Risks:
+- Lost diagnostics
+- Impossible retry logic
+- Undetectable data failures
+- Impossible to test failure paths
+
+Action:
+- Replace with explicit error propagation or structured logging.
+
+---
+
+### 3. Repository Bound to `@MainActor` While Performing Async I/O
+`CategoriesRepositoryImpl` marked `@MainActor`.
+
+Risks:
+- Excess actor hopping
+- UI-bound data layer
+- Performance instability under load
+
+Action:
+- Remove `@MainActor`
+- Confine MainActor usage to UI state mutation only.
+
+---
+
+### 4. ViewModel Globally Marked `@MainActor` While Performing I/O
+`HomeViewModel` is `@MainActor` but performs async data loading.
+
+Risks:
+- Unnecessary main-thread hops
+- Reduced concurrency flexibility
+- Harder to scale
+
+Action:
+- Remove global `@MainActor`
+- Wrap only UI updates in `MainActor.run`.
+
+---
+
+## 🟠 P1 — High Priority Structural Improvements
+
+### 5. Async Work in Initializer (ReadingStatsManager)
+Implicit background Task in `init`.
+
+Risks:
+- Hard to test
+- Hidden side effects
+- Lifecycle unpredictability
+
+Action:
+- Introduce explicit `bootstrap()`.
+
+---
+
+### 6. GCD Usage in DataService (`DispatchQueue.global`)
+Legacy concurrency pattern.
+
+Risks:
+- Not cancellable
+- Not structured
+- Harder reasoning
+
+Action:
+- Replace with structured concurrency primitives.
+
+---
+
+### 7. No Retry / Timeout Strategy in Network Layer
+Current network implementation lacks:
+- Retry policy
+- Backoff strategy
+- Explicit timeout configuration
+
+Action:
+- Introduce configurable retry/backoff mechanism.
+
+---
+
+### 8. DefaultsStore Synchronous Heavy JSON Work
+Large data writes may block main thread.
+
+Action:
+- Consider background persistence or batching.
+
+---
+
+## 🟡 P2 — Architectural Refinements
+
+- Service Locator exposure via EnvironmentObject(AppContainer)
+- Heavy computed grouping in HomeViewModel
+- Missing cancellation checks in async flows
+- Hard-coded TTL (15 min) without configuration layer
+
+---
+
+# 📊 UPDATED ARCHITECTURE HEALTH METRICS
+
+- DI Compliance: ✅ High
+- Layer Integrity: ✅ Strong
+- Test Isolation: ✅ Clean
+- Global State: ❌ None in production
+- Threading Discipline: ⚠️ Under Refactor
+- Structured Concurrency: ⚠️ Partial
+- Error Handling Discipline: ⚠️ Needs Hardening
+- Circular Dependencies: ❌ None detected
+
+---
+
+# 🧭 CURRENT PHASE: CONCURRENCY STABILIZATION
+
+The next milestone focuses on:
+
+1. Removing all `Task.detached`
+2. Making DataService actor-isolated
+3. Enforcing structured concurrency
+4. Eliminating silent error swallowing
+5. Decoupling repositories from MainActor
+6. Introducing retry & timeout policies
+
+This is a corrective phase, not a feature phase.
+
+---
+
+# 🏁 CONCLUSION
+
+The architecture is structurally sound (DI, layering, testability), but not yet concurrency-hardened.
+
+The system is entering a stabilization phase focused on:
+
+- Lifecycle correctness
+- Deterministic async behavior
+- Structured concurrency compliance
+- Production-grade reliability
+
+After completion of the stabilization phase (v0.3 target), the architecture can again be considered production-robust.
+
+---
+
+End of status document.

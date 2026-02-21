@@ -425,3 +425,317 @@ No shortcuts.
 ---
 
 End of specification.
+
+# InGermany — Architecture Specification (v2.1)
+
+📅 Updated: 2026-02-21  
+🏷 Status: Concurrency Stabilization Phase  
+
+---
+
+# 1. Architectural Principles
+
+This project follows a strict Dependency Injection architecture with a single composition root.
+
+Core principles:
+
+1. No hidden global state (no singletons in production code).
+2. All dependencies are explicit via initializers.
+3. Clear separation of Presentation, Domain, and Data layers.
+4. Unidirectional dependency flow.
+5. Testability by construction.
+6. Structured concurrency only (no uncontrolled background tasks).
+
+AppContainer is the only composition root.
+
+---
+
+# 2. Tech Stack
+
+- SwiftUI
+- MVVM
+- async/await (structured concurrency only)
+- Protocol-oriented design
+- Dependency Injection via AppContainer
+
+---
+
+# 3. Layered Architecture
+
+## 3.1 Presentation Layer
+
+Contains:
+- SwiftUI Views
+- ViewModels
+
+Rules:
+
+- Views never instantiate services, repositories, or managers.
+- Views may receive:
+  - ViewModels
+  - Lightweight value objects
+  - Factory closures
+- ViewModels receive all dependencies via initializer injection.
+- ViewModels depend only on protocols.
+- ViewModels must not be globally marked `@MainActor`.
+- UI state mutations must be wrapped in `MainActor.run` when necessary.
+- No async work inside ViewModel initializers.
+- No `Task.detached` in Presentation layer.
+
+Strictly forbidden:
+
+- Direct usage of DataService, NetworkService, CacheService in Views.
+- Creating managers inside Views.
+- Service locator patterns via EnvironmentObject.
+- Silent error swallowing.
+
+---
+
+## 3.2 Domain Layer
+
+Contains:
+- Protocol definitions
+- Pure business logic
+- Domain abstractions
+
+Rules:
+
+- No references to concrete implementations.
+- No references to SwiftUI.
+- No references to UIKit.
+- No global state access.
+- No concurrency side-effects.
+
+The Domain layer defines contracts only.
+
+---
+
+## 3.3 Data Layer
+
+Contains:
+- Repository implementations
+- DataService
+- Infrastructure (NetworkService, CacheService)
+- State managers (FavoritesManager, RatingManager, ReadingStatsManager, etc.)
+
+Rules:
+
+- Concrete types are created only inside AppContainer.
+- DataService must be actor-isolated.
+- No `Task.detached` in Data layer.
+- All background refresh must use structured concurrency.
+- No silent `catch {}` blocks.
+- Repositories must not be `@MainActor`.
+- No reverse dependency to Presentation layer.
+
+---
+
+# 4. Dependency Flow
+
+Allowed direction:
+
+Presentation → Domain (Protocols) → Data (Concrete)
+
+Disallowed:
+
+Data → Presentation  
+Domain → Concrete Data  
+View → Concrete Service  
+
+Dependency graph must remain acyclic.
+
+---
+
+# 5. Composition Root (AppContainer)
+
+AppContainer is responsible for:
+
+- Instantiating all concrete services
+- Wiring repositories
+- Wiring managers
+- Providing factory methods for ViewModels
+
+Rules:
+
+- No other file may create core services.
+- No other file may construct repository graphs.
+- No static shared access.
+- No UI logic inside AppContainer.
+- AppContainer must not perform heavy async work on initialization.
+
+---
+
+# 6. Dependency Injection Policy
+
+## 6.1 Constructor Injection
+
+All non-trivial dependencies must be injected via initializer.
+
+Forbidden:
+
+- static let shared
+- .shared usage
+- Accessing global singletons
+- Implicit dependency lookup
+
+---
+
+## 6.2 EnvironmentObject Policy
+
+EnvironmentObject is allowed only for true UI-global state.
+
+Allowed examples:
+- LocalizationManager
+- TextSizeManager
+
+Restrictions:
+- ViewModels must not depend on EnvironmentObject.
+- EnvironmentObject must not act as service locator.
+- AppContainer exposure via EnvironmentObject is discouraged and must not be used to bypass DI.
+
+---
+
+# 7. Concurrency & Threading Policy (Hardened)
+
+## 7.1 Structured Concurrency Only
+
+Allowed:
+- async/await
+- Task (child tasks only)
+- withTaskGroup
+
+Forbidden:
+- Task.detached
+- DispatchQueue for async business logic
+- Async work inside initializers
+- Blocking I/O on MainActor
+
+---
+
+## 7.2 Actor Isolation
+
+- DataService must be actor-isolated.
+- CacheService is actor-based.
+- Managers mutating UI state may use `@MainActor`.
+- Repositories must not be globally `@MainActor`.
+
+---
+
+## 7.3 Error Handling Discipline
+
+- No empty catch blocks.
+- Errors must be:
+  - Propagated
+  - Logged
+  - Converted to domain-safe results
+- Retry and timeout policies must be implemented in NetworkService.
+
+---
+
+# 8. Performance Guidelines
+
+ViewModels:
+- Avoid heavy computed properties recalculated during View updates.
+- Avoid synchronous large transformations.
+- Memoize expensive derived data.
+- Do not perform grouping/sorting inside SwiftUI body.
+
+Views:
+- No heavy work in body.
+- No nested expensive layout structures.
+
+Services:
+- Avoid repeated JSON decoding of identical data.
+- Cache responsibly.
+- Avoid main-thread blocking.
+
+---
+
+# 9. Responsibilities
+
+## 9.1 DataService
+- Single source of truth.
+- Orchestrates cache + network.
+- Must support cancellation.
+- Must not swallow errors silently.
+
+## 9.2 Repositories
+- Provide domain-ready data.
+- Thin abstraction over DataService.
+- No UI state.
+- No MainActor binding.
+
+## 9.3 Managers
+- Own specific mutable application state.
+- Must not perform heavy I/O on main thread.
+- No async work in initializer.
+
+Single Responsibility Principle must be enforced.
+
+---
+
+# 10. Testing Strategy
+
+- No global state in tests.
+- No .shared usage.
+- Each test composes dependencies explicitly.
+- Prefer mock protocols.
+- Async flows must be testable deterministically.
+- No implicit background work inside initializers.
+
+---
+
+# 11. Anti-Patterns (Strictly Forbidden)
+
+- Instantiating services in Views
+- Accessing .shared in production code
+- Service locator patterns
+- Circular dependencies
+- UIKit in Domain/Data
+- Task.detached
+- Silent catch blocks
+
+---
+
+# 12. Stabilization Phase (v0.2.4 → v0.3 Target)
+
+Current focus:
+
+1. Remove all Task.detached usage.
+2. Actor-isolate DataService.
+3. Remove global @MainActor from ViewModels/Repositories.
+4. Introduce retry/backoff/timeout policy.
+5. Enforce structured concurrency across layers.
+6. Harden error handling.
+
+This is a corrective stabilization phase, not a feature phase.
+
+---
+
+# 13. Migration History
+
+The project was migrated from singleton-heavy architecture to full DI:
+
+- Removed all *.shared usage
+- Introduced protocol-based contracts
+- Centralized wiring in AppContainer
+- Stabilized test suite under DI
+- Encapsulated ReadingStatsManager behind protocol
+- Entered Concurrency Stabilization Phase (2026-02)
+
+---
+
+# 14. Adding a New Dependency (Recipe)
+
+1. Define protocol in Protocols/.
+2. Implement concrete type in appropriate layer.
+3. Register instance in AppContainer.
+4. Inject protocol into ViewModel initializer.
+5. Update tests to compose dependency explicitly.
+6. Ensure structured concurrency compliance.
+
+No shortcuts.
+
+---
+
+End of Architecture Specification v2.1
