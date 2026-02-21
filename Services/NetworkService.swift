@@ -13,6 +13,9 @@ class NetworkService {
     
     /// Base URL pointing to the GitHub raw resources used for fetching JSON files.
     private let baseURL = "https://raw.githubusercontent.com/UmedTJK/InGermany/main/Resources/"
+    /// Retry configuration
+    private let maxRetryAttempts = 3
+    private let baseRetryDelay: UInt64 = 300_000_000 // 0.3 seconds (in nanoseconds)
     /// In-memory and disk cache used for URLSession requests.
     private let cache = URLCache(memoryCapacity: 10 * 1024 * 1024,
                                  diskCapacity: 50 * 1024 * 1024,
@@ -96,6 +99,32 @@ class NetworkService {
     
     // MARK: - Приватные методы загрузки
     
+    /// Executes a network request with exponential backoff retry.
+    private func performWithRetry<T>(
+        operation: @escaping () async throws -> T
+    ) async throws -> T {
+        var attempt = 0
+        var lastError: Error?
+        
+        while attempt < maxRetryAttempts {
+            do {
+                return try await operation()
+            } catch {
+                lastError = error
+                attempt += 1
+                
+                if attempt >= maxRetryAttempts {
+                    break
+                }
+                
+                let delay = baseRetryDelay * UInt64(pow(2.0, Double(attempt - 1)))
+                try? await Task.sleep(nanoseconds: delay)
+            }
+        }
+        
+        throw lastError ?? NetworkError.networkUnavailable
+    }
+    
     private func loadFromBundle(file: String) -> Data? {
         guard let bundleURL = Bundle.main.url(forResource: file, withExtension: nil) else {
             return nil
@@ -110,39 +139,46 @@ class NetworkService {
     
     private func loadFromNetwork<T: Decodable>(file: String) async throws -> T {
         let url = URL(string: baseURL + file)!
-        var request = URLRequest(url: url)
-        request.cachePolicy = .returnCacheDataElseLoad
         
-        let (data, response) = try await session.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw NetworkError.invalidResponse
+        return try await performWithRetry { [self] in
+            var request = URLRequest(url: url)
+            request.cachePolicy = .returnCacheDataElseLoad
+            
+            let (data, response) = try await self.session.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                throw NetworkError.invalidResponse
+            }
+            
+            self.saveToCache(data: data, for: file)
+            return try self.decodeData(data)
         }
-        
-        saveToCache(data: data, for: file)
-        return try decodeData(data)
     }
     
     private func refreshFromNetwork(file: String) async {
         let url = URL(string: baseURL + file)!
         
         do {
-            var request = URLRequest(url: url)
-            request.cachePolicy = .reloadIgnoringLocalCacheData
-            request.timeoutInterval = 3.0
-            
-            let (data, response) = try await session.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                return
+            try await performWithRetry { [self] in
+                var request = URLRequest(url: url)
+                request.cachePolicy = .reloadIgnoringLocalCacheData
+                request.timeoutInterval = 3.0
+                
+                let (data, response) = try await self.session.data(for: request)
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    throw NetworkError.invalidResponse
+                }
+                
+                self.saveToCache(data: data, for: file)
+                return ()
             }
             
-            saveToCache(data: data, for: file)
             print("🔄 [NetworkService] Данные обновлены из сети: \(file)")
         } catch {
-            print("⚠️ [NetworkService] Не удалось обновить данные из сети: \(error.localizedDescription)")
+            print("⚠️ [NetworkService] Не удалось обновить данные из сети после retry: \(error.localizedDescription)")
         }
     }
     
