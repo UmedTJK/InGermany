@@ -496,3 +496,11 @@
 - Карта с локациями
 - Поддержка PDF-документов
 - Фильтрация статей по тегам
+
+
+---
+
+## Links
+
+[v0.2.3-di-localization-clean]: https://github.com/UmedTJK/InGermany/releases/tag/v0.2.3-di-localization-clean
+[v0.2-di-refactor]: https://github.com/UmedTJK/InGermany/releases/tag/v0.2-di-refactor
