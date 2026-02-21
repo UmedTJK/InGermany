@@ -6,14 +6,13 @@
 import SwiftUI
 
 /// Manages state and actions for the home screen, including articles, categories, favorites, and random article selection.
-@MainActor
 class HomeViewModel: ObservableObject {
     // MARK: - UI State
-    @Published var articles: [Article] = []
-    @Published var isLoading: Bool = true
-    @Published var dataSource: String = "unknown"
-    @Published var isShowingRandomArticle: Bool = false
-    @Published var randomArticle: Article?
+    @MainActor @Published var articles: [Article] = []
+    @MainActor @Published var isLoading: Bool = true
+    @MainActor @Published var dataSource: String = "unknown"
+    @MainActor @Published var isShowingRandomArticle: Bool = false
+    @MainActor @Published var randomArticle: Article?
 
     // MARK: - Dependencies
     let favoritesManager: FavoritesManagingProtocol
@@ -44,7 +43,7 @@ class HomeViewModel: ObservableObject {
     }
 
     // MARK: - Convenience init (Preview)
-    convenience init() {
+    @MainActor convenience init() {
         let network = NetworkService()
         let cache = CacheService()
         let dataService = DataService(networkService: network, cacheManager: cache)
@@ -59,16 +58,16 @@ class HomeViewModel: ObservableObject {
     }
 
     // MARK: - Derived data
-    var allCategories: [Category] {
+    @MainActor var allCategories: [Category] {
         categoriesRepository.allCategories()
     }
 
-    var articlesByCategory: [String: [Article]] {
+    @MainActor var articlesByCategory: [String: [Article]] {
         Dictionary(grouping: articles, by: { $0.categoryId })
     }
 
     /// Возвращает локализованное имя категории по ID или "Без категории".
-    func categoryName(for id: String, language: String) -> String {
+    @MainActor func categoryName(for id: String, language: String) -> String {
         if let category = categoriesRepository.category(by: id) {
             return category.localizedName(for: language)
         } else {
@@ -81,7 +80,7 @@ class HomeViewModel: ObservableObject {
         let start = Date()
         print("⏱ loadData started at \(start)")
 
-        isLoading = true
+        await MainActor.run { self.isLoading = true }
 
         // 1. Сначала bootstrap категорий (быстро)
         await categoriesRepository.bootstrap()
@@ -138,7 +137,7 @@ class HomeViewModel: ObservableObject {
     }
 
     // MARK: - Random article
-    func selectRandomArticle() {
+    @MainActor func selectRandomArticle() {
         randomArticle = articles.randomElement()
         isShowingRandomArticle = (randomArticle != nil)
     }
