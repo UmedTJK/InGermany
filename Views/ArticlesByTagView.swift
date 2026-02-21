@@ -9,23 +9,38 @@ struct ArticlesByTagView: View {
     let tag: String
     let articles: [Article]
     
-    @EnvironmentObject private var appContainer: AppContainer
+    // MARK: - Dependencies
+    private let localizationManager: LocalizationManager
+    private let articleRowFactory: (Article) -> ArticleRowViewModel
+    private let articleDetailFactory: (Article, [Article]) -> ArticleDetailViewModel
+    
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
+
+    init(
+        tag: String,
+        articles: [Article],
+        localizationManager: LocalizationManager,
+        articleRowFactory: @escaping (Article) -> ArticleRowViewModel,
+        articleDetailFactory: @escaping (Article, [Article]) -> ArticleDetailViewModel
+    ) {
+        self.tag = tag
+        self.articles = articles
+        self.localizationManager = localizationManager
+        self.articleRowFactory = articleRowFactory
+        self.articleDetailFactory = articleDetailFactory
+    }
 
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink {
                 ArticleDetailView(
-                    viewModel: appContainer.makeArticleDetailViewModel(
-                        article: article,
-                        allArticles: articles
-                    ),
-                    localizationManager: appContainer.localizationManager,
-                    articleRowFactory: appContainer.makeArticleRowViewModel
+                    viewModel: articleDetailFactory(article, articles),
+                    localizationManager: localizationManager,
+                    articleRowFactory: articleRowFactory
                 )
             } label: {
-                ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                ArticleRow(viewModel: articleRowFactory(article))
                     .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard) // ✅ применяем выбранный стиль
             }
         }
@@ -39,9 +54,15 @@ struct ArticlesByTagView: View {
 
 // MARK: - Preview
 #Preview {
-    ArticlesByTagView(
+    let container = AppContainer.previewMock()
+
+    return ArticlesByTagView(
         tag: "финансы",
-        articles: Article.sampleArticles
+        articles: Article.sampleArticles,
+        localizationManager: container.localizationManager,
+        articleRowFactory: container.makeArticleRowViewModel,
+        articleDetailFactory: { article, allArticles in
+            container.makeArticleDetailViewModel(article: article, allArticles: allArticles)
+        }
     )
-    .environmentObject(AppContainer.previewMock())
 }
