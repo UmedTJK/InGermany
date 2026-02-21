@@ -77,7 +77,19 @@ struct CustomTabBarView: View {
     private var tabContent: some View {
         switch selectedTab {
         case 0:
-            HomeView(appContainer: appContainer)
+            HomeView(
+                viewModelFactory: { appContainer.makeHomeViewModel() },
+                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
+                makeDataService: { appContainer.dataService },
+                makeArticleRowViewModel: appContainer.makeArticleRowViewModel,
+                makeArticleDetailViewModel: { article, all in
+                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                },
+                makeArticleDetailView: { article, all in
+                    appContainer.makeArticleDetailView(article: article, allArticles: all)
+                },
+                localizationManager: localizationManager
+            )
 
         case 1:
             CategoriesView(
@@ -113,7 +125,19 @@ struct CustomTabBarView: View {
             )
 
         default:
-            HomeView(appContainer: appContainer)
+            HomeView(
+                viewModelFactory: { appContainer.makeHomeViewModel() },
+                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
+                makeDataService: { appContainer.dataService },
+                makeArticleRowViewModel: appContainer.makeArticleRowViewModel,
+                makeArticleDetailViewModel: { article, all in
+                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                },
+                makeArticleDetailView: { article, all in
+                    appContainer.makeArticleDetailView(article: article, allArticles: all)
+                },
+                localizationManager: localizationManager
+            )
         }
     }
 }

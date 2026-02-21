@@ -13,15 +13,30 @@ struct ArticleMetaView: View {
     /// Выбранный язык интерфейса для локализации.
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     
-    // ✅ ИСПРАВЛЕНО: Используем DI через AppContainer
-    @EnvironmentObject private var appContainer: AppContainer
+    @EnvironmentObject private var localizationManager: LocalizationManager
+
+    private let categoryProvider: any CategoriesRepositoryProtocol
+    private let ratingManager: RatingManagerProtocol
+    private let articleFormatter: ArticleFormatterProtocol
+
+    init(
+        article: Article,
+        categoryProvider: any CategoriesRepositoryProtocol,
+        ratingManager: any RatingManagerProtocol,
+        articleFormatter: any ArticleFormatterProtocol
+    ) {
+        self.article = article
+        self.categoryProvider = categoryProvider
+        self.ratingManager = ratingManager
+        self.articleFormatter = articleFormatter
+    }
 
     /// Основное содержимое: категория, рейтинг, время чтения, даты и бейджи.
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 12) {
                 // 🔹 Категория
-                if let category = appContainer.categoriesRepo.category(by: article.categoryId) {
+                if let category = categoryProvider.category(by: article.categoryId) {
                     HStack(spacing: 6) {
                         Circle()
                             .fill(Color(hex: category.colorHex) ?? .blue)
@@ -34,7 +49,7 @@ struct ArticleMetaView: View {
                 }
 
                 // 🔹 Рейтинг
-                let currentRating = appContainer.ratingManager.getRating(for: article.id)
+                let currentRating = ratingManager.getRating(for: article.id)
                 if currentRating > 0 {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
@@ -87,21 +102,21 @@ struct ArticleMetaView: View {
     
     // ✅ ДОБАВЛЕНО: Вычисляемые свойства для форматирования
     private var formattedReadingTime: String {
-        let readingTime = appContainer.makeArticleFormatter().readingTime(article, for: selectedLanguage)
+        let readingTime = articleFormatter.readingTime(article, for: selectedLanguage)
         return ReadingTimeCalculator.formatReadingTime(readingTime, language: selectedLanguage)
     }
     
     private var formattedCreatedDate: String {
-        appContainer.makeArticleFormatter().formattedCreatedDate(article, for: selectedLanguage)
+        articleFormatter.formattedCreatedDate(article, for: selectedLanguage)
     }
     
     private var formattedUpdatedDate: String {
-        appContainer.makeArticleFormatter().formattedUpdatedDate(article, for: selectedLanguage)
+        articleFormatter.formattedUpdatedDate(article, for: selectedLanguage)
     }
     
     /// Локализует строку по ключу для выбранного языка.
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
@@ -126,8 +141,14 @@ struct BadgeView: View {
 
 #if DEBUG
 #Preview {
-    ArticleMetaView(article: Article.sampleArticle)
-        .environmentObject(AppContainer.previewMock())
-        .padding()
+    let container = AppContainer.previewMock()
+    ArticleMetaView(
+        article: Article.sampleArticle,
+        categoryProvider: container.categoriesRepo,
+        ratingManager: container.ratingManager,
+        articleFormatter: container.makeArticleFormatter()
+    )
+    .environmentObject(container.localizationManager)
+    .padding()
 }
 #endif

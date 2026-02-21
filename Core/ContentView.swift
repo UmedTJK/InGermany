@@ -30,7 +30,19 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
 
             LazyView {
-                HomeView(appContainer: appContainer)
+                HomeView(
+                    viewModelFactory: { appContainer.makeHomeViewModel() },
+                    makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
+                    makeDataService: { appContainer.dataService },
+                    makeArticleRowViewModel: appContainer.makeArticleRowViewModel,
+                    makeArticleDetailViewModel: { article, all in
+                        appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                    },
+                    makeArticleDetailView: { article, all in
+                        appContainer.makeArticleDetailView(article: article, allArticles: all)
+                    },
+                    localizationManager: localizationManager
+                )
             }
             .tabItem {
                 Label(

@@ -8,8 +8,9 @@ import SwiftUI
 /// Панель для изменения размера текста
 struct TextSizeSettingsPanel: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    /// Контейнер зависимостей для получения менеджеров.
-    @EnvironmentObject private var appContainer: AppContainer
+    @EnvironmentObject private var textSizeManager: TextSizeManager
+    @EnvironmentObject private var localizationManager: LocalizationManager
+    @Environment(\.dismiss) private var dismiss
 
     /// Строит пользовательский интерфейс для настройки размера текста с предварительным просмотром, ползунком, сбросом и кнопкой подтверждения
     var body: some View {
@@ -17,7 +18,7 @@ struct TextSizeSettingsPanel: View {
             VStack(spacing: 20) {
                 // Пример текста
                 Text(t("Пример текста"))
-                    .font(.system(size: 17 * appContainer.textSizeManager.customScale))
+                    .font(.system(size: 17 * textSizeManager.customScale))
                     .padding()
 
                 // Ползунок
@@ -26,10 +27,7 @@ struct TextSizeSettingsPanel: View {
                         Text("A")
                             .font(.system(size: 14))
                         Slider(
-                            value: Binding(
-                                get: { appContainer.textSizeManager.customScale },
-                                set: { appContainer.textSizeManager.customScale = $0 }
-                            ),
+                            value: $textSizeManager.customScale,
                             in: 0.8...1.5,
                             step: 0.05
                         )
@@ -38,7 +36,7 @@ struct TextSizeSettingsPanel: View {
                     }
                     .padding(.horizontal)
 
-                    Text("\(Int(appContainer.textSizeManager.customScale * 100))%")
+                    Text("\(Int(textSizeManager.customScale * 100))%")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }
@@ -46,7 +44,7 @@ struct TextSizeSettingsPanel: View {
                 // Сброс
                 HStack {
                     Button(action: {
-                        appContainer.textSizeManager.setTextSize(.medium)
+                        textSizeManager.setTextSize(.medium)
                     }) {
                         Text(t("Сбросить"))
                             .foregroundColor(.red)
@@ -62,7 +60,7 @@ struct TextSizeSettingsPanel: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(t("Готово")) {
-                        // закрытие панели
+                        dismiss()
                     }
                 }
             }
@@ -71,12 +69,14 @@ struct TextSizeSettingsPanel: View {
 
     /// Обрабатывает локализованный поиск перевода для строк пользовательского интерфейса
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 // MARK: - Preview
 #Preview {
+    let container = AppContainer.previewMock()
     TextSizeSettingsPanel()
-        .environmentObject(AppContainer.previewMock())
+        .environmentObject(container.textSizeManager)
+        .environmentObject(container.localizationManager)
 }
