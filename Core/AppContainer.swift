@@ -75,7 +75,7 @@ final class AppContainer: ObservableObject {
         self.textSizeManager = textSizeManager ?? TextSizeManager()
         self.localizationManager = localizationManager ?? LocalizationManager()
         self.settingsManager = settingsManager ?? SettingsManager()
-        self.readingStatsManager = readingStatsManager ?? ReadingStatsManager()
+        self.readingStatsManager = readingStatsManager ?? ReadingStatsManager(localizationManager: self.localizationManager)
         self.readingStatsService = self.readingStatsManager
         
         // ✅ Formatters & Services
@@ -245,6 +245,12 @@ final class AppContainer: ObservableObject {
     func bootstrap() {
         // ⚡ Инициализируем только локализацию, без подгрузки статей/категорий
         localizationManager.preload()
+
+        // ⚡ Явная загрузка статистики чтения (без async side-effects в init)
+        Task { [weak self] in
+            guard let self else { return }
+            await self.readingStatsManager.bootstrap()
+        }
     }
 
 }
