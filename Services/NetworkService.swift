@@ -10,9 +10,25 @@ import Foundation
 /// Service responsible for loading JSON data with OFFLINE-FIRST strategy.
 /// Uses: Bundle → File Cache → Network (async refresh)
 class NetworkService {
+
+    /// Base URL for remote JSON files (GitHub raw). Must end with a slash.
+    private let baseURL: String = "https://raw.githubusercontent.com/sumtjk/InGermany/main/Resources/"
     
-    /// Base URL pointing to the GitHub raw resources used for fetching JSON files.
-    private let baseURL = "https://raw.githubusercontent.com/UmedTJK/InGermany/main/Resources/"
+    // MARK: - In-flight refresh dedup (one per file)
+    private var inFlightRefresh: [String: Task<Void, Never>] = [:]
+    
+    private func scheduleRefresh(file: String) {
+        // Dedup: if there is an in-flight refresh for this file, don't start another.
+        guard inFlightRefresh[file] == nil else { return }
+        if Task.isCancelled { return }
+        
+        inFlightRefresh[file] = Task(priority: .utility) { [weak self] in
+            guard let self else { return }
+            defer { self.inFlightRefresh[file] = nil }
+            await self.refreshFromNetwork(file: file)
+        }
+    }
+    
     /// Retry configuration
     private let maxRetryAttempts = 3
     private let baseRetryDelay: UInt64 = 300_000_000 // 0.3 seconds (in nanoseconds)
@@ -57,14 +73,14 @@ class NetworkService {
         // Шаг 1: Bundle
         if let bundleData = loadFromBundle(file: file) {
             print("📦 [NetworkService] Загружено из Bundle: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             return try decodeData(bundleData)
         }
         
         // Шаг 2: File Cache
         if let cachedData = loadFromCache(for: file) {
             print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             return try decodeData(cachedData)
         }
         
@@ -78,7 +94,7 @@ class NetworkService {
         // Шаг 1: Bundle
         if let bundleData = loadFromBundle(file: file) {
             print("📦 [NetworkService] Загружено из Bundle: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             let decoded: T = try decodeData(bundleData)
             return (decoded, .bundle)
         }
@@ -86,7 +102,7 @@ class NetworkService {
         // Шаг 2: File Cache
         if let cachedData = loadFromCache(for: file) {
             print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             let decoded: T = try decodeData(cachedData)
             return (decoded, .fileCache)
         }
@@ -222,6 +238,10 @@ class NetworkService {
     }
     
     func clearCache() {
+        // Cancel any in-flight refresh tasks
+        for (_, task) in inFlightRefresh { task.cancel() }
+        inFlightRefresh.removeAll()
+    
         do {
             let files = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)
             for file in files {
