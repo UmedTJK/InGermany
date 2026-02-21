@@ -10,15 +10,33 @@ struct ArticlesByCategoryView: View {
     let category: Category
     let articles: [Article]
 
-    @EnvironmentObject private var appContainer: AppContainer
+    // MARK: - Dependencies (pure DI)
+    private let localizationManager: LocalizationManager
+    private let articleRowFactory: (Article) -> ArticleRowViewModel
+    private let articleDetailFactory: (Article, [Article]) -> ArticleDetailViewModel
+
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
+
+    init(
+        category: Category,
+        articles: [Article],
+        localizationManager: LocalizationManager,
+        articleRowFactory: @escaping (Article) -> ArticleRowViewModel,
+        articleDetailFactory: @escaping (Article, [Article]) -> ArticleDetailViewModel
+    ) {
+        self.category = category
+        self.articles = articles
+        self.localizationManager = localizationManager
+        self.articleRowFactory = articleRowFactory
+        self.articleDetailFactory = articleDetailFactory
+    }
 
     var body: some View {
         List(filteredArticles) { article in
             NavigationLink(value: article) {
                 ArticleRow(
-                    viewModel: appContainer.makeArticleRowViewModel(article: article)
+                    viewModel: articleRowFactory(article)
                 )
                 .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard)
             }
@@ -27,12 +45,9 @@ struct ArticlesByCategoryView: View {
         // ✅ Навигация по Article
         .navigationDestination(for: Article.self) { article in
             ArticleDetailView(
-                viewModel: appContainer.makeArticleDetailViewModel(
-                    article: article,
-                    allArticles: articles
-                ),
-                localizationManager: appContainer.localizationManager,
-                articleRowFactory: appContainer.makeArticleRowViewModel
+                viewModel: articleDetailFactory(article, articles),
+                localizationManager: localizationManager,
+                articleRowFactory: articleRowFactory
             )
         }
     }
@@ -53,7 +68,14 @@ struct ArticlesByCategoryView: View {
     let sampleArticles = Article.sampleArticles
 
     NavigationStack {
-        ArticlesByCategoryView(category: sampleCategory, articles: sampleArticles)
-            .environmentObject(container)
+        ArticlesByCategoryView(
+            category: sampleCategory,
+            articles: sampleArticles,
+            localizationManager: container.localizationManager,
+            articleRowFactory: container.makeArticleRowViewModel,
+            articleDetailFactory: { article, allArticles in
+                container.makeArticleDetailViewModel(article: article, allArticles: allArticles)
+            }
+        )
     }
 }

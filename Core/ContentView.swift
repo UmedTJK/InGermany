@@ -18,7 +18,7 @@ struct LazyView<Content: View>: View {
 
 struct ContentView: View {
 
-    @EnvironmentObject var appContainer: AppContainer
+    let appContainer: AppContainer
     @EnvironmentObject var localizationManager: LocalizationManager
 
     // ✅ Источник темы — SettingsManager
@@ -102,6 +102,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .appEnvironment(using: AppContainer.previewMock())
+    let container = AppContainer.previewMock()
+    ContentView(appContainer: container)
+        .appEnvironment(using: container)
 }

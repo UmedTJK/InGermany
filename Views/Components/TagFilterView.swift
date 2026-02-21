@@ -15,6 +15,7 @@ struct TagFilterView: View {
     var onTagSelected: (String) -> Void
 
     @EnvironmentObject private var localizationManager: LocalizationManager
+    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     /// The main view layout displaying tags in a horizontally scrollable list.
     var body: some View {
@@ -24,7 +25,7 @@ struct TagFilterView: View {
                     Button(action: {
                         onTagSelected(tag)
                     }) {
-                        Text("#" + t(tag, using: localizationManager))
+                        Text("#" + t(tag, using: localizationManager, language: selectedLanguage))
                             .font(.caption)
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)

@@ -14,8 +14,7 @@ struct ArticleDetailView: View {
     private let localizationManager: LocalizationManager
     private let articleRowFactory: (Article) -> ArticleRowViewModel
     
-    // MARK: - DI через Environment
-    @EnvironmentObject private var appContainer: AppContainer
+
 
     // MARK: - Init with DI
     init(
@@ -135,7 +134,7 @@ struct ArticleDetailView: View {
                                                 localizationManager: localizationManager,
                                                 articleRowFactory: articleRowFactory
                                             )
-                                            .environmentObject(appContainer) // 👈 пробрасываем контейнер дальше
+
                                         } label: {
                                             ArticleRow(viewModel: articleRowFactory(relatedArticle))
                                                 .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard)
@@ -193,7 +192,7 @@ struct ArticleDetailView: View {
         }
         .sheet(isPresented: $viewModel.showTextSizePanel) {
             TextSizeSettingsPanel()
-                .environmentObject(appContainer) // ✅ вместо AppContainer.shared
+                .environmentObject(viewModel.textSizeManager)
         }
         .task {
             viewModel.onAppear()

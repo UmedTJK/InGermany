@@ -45,7 +45,15 @@ struct CategoriesView: View {
             .navigationDestination(for: Category.self) { category in
                 ArticlesByCategoryView(
                     category: category,
-                    articles: viewModel.articles(for: category.id)
+                    articles: viewModel.articles(for: category.id),
+                    localizationManager: appContainer.localizationManager,
+                    articleRowFactory: appContainer.makeArticleRowViewModel,
+                    articleDetailFactory: { article, allArticles in
+                        appContainer.makeArticleDetailViewModel(
+                            article: article,
+                            allArticles: allArticles
+                        )
+                    }
                 )
                 .environmentObject(appContainer)
             }
