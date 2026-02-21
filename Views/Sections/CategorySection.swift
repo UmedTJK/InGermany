@@ -12,18 +12,24 @@ struct CategorySection: View {
     let articles: [Article]
     let favoritesManager: any FavoritesManagingProtocol
     let language: String
-    @EnvironmentObject private var appContainer: AppContainer
+
+    private let makeRowViewModel: (Article) -> ArticleRowViewModel
+    private let makeDetailView: (Article, [Article]) -> ArticleDetailView
 
     init(
         category: Category,
         articles: [Article],
         favoritesManager: any FavoritesManagingProtocol,
-        language: String
+        language: String,
+        makeRowViewModel: @escaping (Article) -> ArticleRowViewModel,
+        makeDetailView: @escaping (Article, [Article]) -> ArticleDetailView
     ) {
         self.category = category
         self.articles = articles
         self.favoritesManager = favoritesManager
         self.language = language
+        self.makeRowViewModel = makeRowViewModel
+        self.makeDetailView = makeDetailView
     }
 
     var body: some View {
@@ -35,12 +41,10 @@ struct CategorySection: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
                     ForEach(articles.prefix(10)) { article in
-                        // Views/Sections/CategorySection.swift - ИСПРАВЛЕННАЯ версия
                         NavigationLink {
-                            // ✅ ИСПРАВЛЕНО: используем фабричный метод
-                            appContainer.makeArticleDetailView(article: article, allArticles: articles)
+                            makeDetailView(article, articles)
                         } label: {
-                            ArticleCompactCard(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                            ArticleCompactCard(viewModel: makeRowViewModel(article))
                         }
                     }
                 }

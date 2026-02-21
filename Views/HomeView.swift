@@ -39,18 +39,27 @@ struct HomeView: View {
                                 articles: viewModel.articles,
                                 onRandomArticleSelected: { _ in
                                     viewModel.selectRandomArticle()
-                                }
+                                },
+                                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel
                             )
 
                             RecentlyReadSection(
                                 articles: viewModel.articles,
                                 favoritesManager: viewModel.favoritesManager,
-                                readingStatsManager: viewModel.readingStatsManager
+                                readingStatsManager: viewModel.readingStatsManager,
+                                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                makeDetailViewModel: { article, all in
+                                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                                }
                             )
 
                             FavoritesSection(
                                 articles: viewModel.articles,
-                                favoritesManager: viewModel.favoritesManager
+                                favoritesManager: viewModel.favoritesManager,
+                                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                makeDetailViewModel: { article, all in
+                                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                                }
                             )
 
                             ForEach(viewModel.allCategories, id: \.id) { category in
@@ -60,14 +69,22 @@ struct HomeView: View {
                                         category: category,
                                         articles: categoryArticles,
                                         favoritesManager: viewModel.favoritesManager,
-                                        language: selectedLanguage
+                                        language: selectedLanguage,
+                                        makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                        makeDetailView: { article, all in
+                                            appContainer.makeArticleDetailView(article: article, allArticles: all)
+                                        }
                                     )
                                 }
                             }
 
                             AllArticlesSection(
                                 articles: viewModel.articles,
-                                favoritesManager: viewModel.favoritesManager
+                                favoritesManager: viewModel.favoritesManager,
+                                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                makeDetailViewModel: { article, all in
+                                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                                }
                             )
                         }
                         .padding(.vertical)

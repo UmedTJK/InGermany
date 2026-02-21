@@ -10,14 +10,22 @@ import SwiftUI
 struct AllArticlesSection: View {
     let articles: [Article]
     let favoritesManager: any FavoritesManagingProtocol
-    @EnvironmentObject private var appContainer: AppContainer
+
+    @EnvironmentObject private var localizationManager: LocalizationManager
+
+    private let makeRowViewModel: (Article) -> ArticleRowViewModel
+    private let makeDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
 
     init(
         articles: [Article],
-        favoritesManager: any FavoritesManagingProtocol
+        favoritesManager: any FavoritesManagingProtocol,
+        makeRowViewModel: @escaping (Article) -> ArticleRowViewModel,
+        makeDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel
     ) {
         self.articles = articles
         self.favoritesManager = favoritesManager
+        self.makeRowViewModel = makeRowViewModel
+        self.makeDetailViewModel = makeDetailViewModel
     }
 
     var body: some View {
@@ -31,16 +39,13 @@ struct AllArticlesSection: View {
                     ForEach(articles) { article in
                         NavigationLink {
                             ArticleDetailView(
-                                viewModel: appContainer.makeArticleDetailViewModel(
-                                    article: article,
-                                    allArticles: articles
-                                ),
-                                localizationManager: appContainer.localizationManager,
-                                articleRowFactory: appContainer.makeArticleRowViewModel
+                                viewModel: makeDetailViewModel(article, articles),
+                                localizationManager: localizationManager,
+                                articleRowFactory: makeRowViewModel
                             )
                         } label: {
                             ArticleCompactCard(
-                                viewModel: appContainer.makeArticleRowViewModel(article: article)
+                                viewModel: makeRowViewModel(article)
                             )
                         }
                     }
