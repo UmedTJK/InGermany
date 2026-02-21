@@ -25,12 +25,13 @@
 5. **Concurrency-чистота**.
 6. **UI = Apple HIG**.
 7. **Документируемое изменение**.
+8. Dependency Injection-first: ViewModels зависят только от протоколов, concrete реализации скрыты в AppContainer.
 
 ---
 
 ## 2) Архитектура и структура проекта
 
-* **Core/**: `InGermanyApp.swift`, `ContentView.swift`
+* **Core/**: InGermanyApp.swift, ContentView.swift, AppContainer.swift, View+AppEnvironment.swift
 * **Models/**: `Article.swift`, `Category.swift`, `Location.swift`
 * **Services/**: `DataService.swift`, `NetworkService.swift`, `ShareService.swift`, `AuthService.swift`
 * **Utils/**: `LocalizationManager.swift`, `CategoryManager.swift`, `CategoriesStore.swift`, `ReadingTimeCalculator.swift`, `ExportToPDF.swift`, `Theme.swift`, `Animations.swift`, `CardSize.swift`, `Color+Hex.swift`, `TextSizeManager.swift`
@@ -64,6 +65,7 @@
 * **Favorites**: `@AppStorage("favoriteArticles")` как JSON `Set<String>`.
 * **Rating**: `UserDefaults` (`rating_<articleId>`).
 * **ReadingHistory**: `@AppStorage("readingHistory")` JSON → массив `ReadingHistoryEntry`.
+  - Используется через ReadingStatsManager (protocol-based DI).
 * **Text size**: `UserDefaults` (`textSize` + toggle).
 
 ---
@@ -96,7 +98,7 @@ FavoritesManager: isFavorite(id:), toggleFavorite(id:), favoriteArticles(from:).
 
 RatingManager: rating(for:), setRating(_:for:).
 
-ReadingHistoryManager: addReadingEntry, recentlyReadArticles, isRead, lastReadDate, totalReadingTimeMinutes, totalArticlesRead, clearHistory.
+ReadingStatsManager: addReadingEntry, recentlyReadArticles, isRead, lastReadDate, totalReadingTimeMinutes, totalArticlesRead, clearHistory. (Injected via protocol ReadingStatsManagingProtocol)
 
 ReadingTracker: startReading, finishReading, currentReadingTime.
 
@@ -179,6 +181,7 @@ git log --oneline --graph -n 10
 
 См. раздел Roadmap в README.md и CHANGELOG.md.
 Основные планы: улучшение UI, поддержка сетевой загрузки, тесты ViewModel, расширение контента.
+- Refactor reading statistics to snapshot-based async model (temporary disabled in Settings for UI stability).
 
 ---
 

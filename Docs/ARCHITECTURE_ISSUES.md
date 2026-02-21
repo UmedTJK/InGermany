@@ -35,6 +35,11 @@
    - **Селективное управление**: Очистка отдельных типов данных
    - **Fallback стратегия**: Bundle → File Cache → Network
 
+7. **Инкапсуляция ReadingStatsManager через DI**
+   - Concrete ReadingStatsManager скрыт внутри AppContainer
+   - ViewModels получают зависимость только через ReadingStatsManagingProtocol
+   - Для SwiftUI используется явный UI-only accessor
+
 ## 🔄 СЛЕДУЮЩИЕ ШАГИ ДЛЯ СОВЕРШЕНСТВА
 
 ### 🎯 Приоритет 1 (Оптимизация):
@@ -113,6 +118,11 @@ The project has successfully migrated from a singleton-heavy structure to a stri
    - Network sync
    - TTL-based invalidation
 
+6. **Encapsulated ReadingStatsManager**
+   - No concrete leakage outside AppContainer
+   - Protocol-only injection in ViewModels
+   - UI-only accessor for EnvironmentObject
+
 ---
 
 ## ⚖️ KNOWN CONSTRAINTS (NOT DEFECTS, BUT DESIGN DECISIONS)
@@ -130,6 +140,11 @@ The project has successfully migrated from a singleton-heavy structure to a stri
    - UI-coupled but controlled
    - Acceptable for current scope
    - Future improvement: storage abstraction layer
+
+4. **Reading Statistics Temporarily Disabled in Settings**
+   - Heavy computed properties caused UI freeze
+   - Statistics removed from Settings UI
+   - Planned refactor: snapshot-based async statistics model (v0.3)
 
 ---
 
@@ -150,6 +165,8 @@ The project has successfully migrated from a singleton-heavy structure to a stri
 2. Replace UIKit bridge with injectable presentation adapter
 3. Optional: Extract Settings storage abstraction
 4. Performance audit (computed properties + scroll-heavy views)
+
+5. Reintroduce Reading Statistics using snapshot-based async aggregation (no heavy logic in SwiftUI body)
 
 ---
 

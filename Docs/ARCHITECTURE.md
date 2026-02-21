@@ -61,9 +61,9 @@ AppContainer
 - Services
   - DataService (depends on NetworkService + CacheService)
 - Managers (UI/state)
-  - FavoritesManager
+  - FavoritesManager (exposed via protocol FavoritesManagingProtocol)
   - RatingManager
-  - ReadingStatsManager
+  - ReadingStatsManager (exposed via ReadingStatsManagingProtocol; concrete kept private in AppContainer)
   - TextSizeManager
   - LocalizationManager
 
@@ -86,6 +86,7 @@ No reverse dependencies from Data/Managers into Presentation.
 3. AppContainer is the only place where concrete instances are created.
 4. Views do not instantiate dependencies (except small value objects).
 5. Tests compose dependencies explicitly (no shared global state).
+6. Concrete managers may be injected into SwiftUI only via explicit UI-only accessors in AppContainer (no direct concrete leakage).
 
 ### Environment injection
 In `InGermanyApp` we inject:
@@ -121,6 +122,8 @@ In `InGermanyApp` we inject:
   - Stores and retrieves user ratings
 - **ReadingStatsManager** (ReadingStatsManagingProtocol)
   - Tracks read status, history, stats
+  - Injected via protocol into ViewModels
+  - Concrete instance is private in AppContainer
 - **TextSizeManager**
   - Tracks user preferred text size
 - **LocalizationManager**
@@ -151,6 +154,8 @@ This project was migrated from singleton-heavy access (`*.shared`) to explicit D
 - Rating/TextSize/ReadingStats/Localization moved to DI
 - CacheService + NetworkService moved to DI
 - DataService and repositories composed via AppContainer
+- Encapsulated ReadingStatsManager behind protocol and UI-only accessor
+- Temporarily disabled reading statistics in Settings to prevent main-thread UI freeze
 
 ---
 
@@ -340,6 +345,7 @@ ViewModels:
 - Avoid heavy computed properties recalculated during View body updates.
 - Avoid synchronous large data transformations.
 - Prefer memoization where appropriate.
+- Statistics and heavy aggregations must not be computed directly inside SwiftUI body via computed properties.
 
 Views:
 - Avoid expensive work inside body.
@@ -401,9 +407,8 @@ The project was migrated from singleton-heavy architecture to full DI:
 - Introduced protocol-based contracts
 - Centralized wiring in AppContainer
 - Stabilized test suite under DI
-
-Current milestone:
-v0.2.3-di-localization-clean
+- Encapsulated ReadingStatsManager behind protocol and UI-only accessor
+- Temporarily disabled reading statistics in Settings to prevent main-thread UI freeze
 
 ---
 
