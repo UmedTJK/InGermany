@@ -8,16 +8,41 @@ import SwiftUI
 struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: HomeViewModel
-    @EnvironmentObject private var appContainer: AppContainer
 
-    /// Основной init через DI (используется в приложении)
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeHomeViewModel())
+    private let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+    private let makeDataService: () -> DataServiceProtocol
+    private let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
+    private let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
+    private let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
+    private let localizationManager: LocalizationManager
+
+    init(
+        viewModelFactory: @escaping () -> HomeViewModel,
+        makePDFLibraryViewModel: @escaping () -> PDFLibraryViewModel,
+        makeDataService: @escaping () -> DataServiceProtocol,
+        makeArticleRowViewModel: @escaping (Article) -> ArticleRowViewModel,
+        makeArticleDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel,
+        makeArticleDetailView: @escaping (Article, [Article]) -> ArticleDetailView,
+        localizationManager: LocalizationManager
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModelFactory())
+        self.makePDFLibraryViewModel = makePDFLibraryViewModel
+        self.makeDataService = makeDataService
+        self.makeArticleRowViewModel = makeArticleRowViewModel
+        self.makeArticleDetailViewModel = makeArticleDetailViewModel
+        self.makeArticleDetailView = makeArticleDetailView
+        self.localizationManager = localizationManager
     }
 
     /// Для превью и тестов
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.makePDFLibraryViewModel = { fatalError("Not implemented") }
+        self.makeDataService = { fatalError("Not implemented") }
+        self.makeArticleRowViewModel = { _ in fatalError("Not implemented") }
+        self.makeArticleDetailViewModel = { _, _ in fatalError("Not implemented") }
+        self.makeArticleDetailView = { _, _ in fatalError("Not implemented") }
+        self.localizationManager = LocalizationManager()
     }
 
     var body: some View {
@@ -40,26 +65,26 @@ struct HomeView: View {
                                 onRandomArticleSelected: { _ in
                                     viewModel.selectRandomArticle()
                                 },
-                                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
-                                makeDataService: { appContainer.dataService }
+                                makePDFLibraryViewModel: makePDFLibraryViewModel,
+                                makeDataService: makeDataService
                             )
 
                             RecentlyReadSection(
                                 articles: viewModel.articles,
                                 favoritesManager: viewModel.favoritesManager,
                                 readingStatsManager: viewModel.readingStatsManager,
-                                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                makeRowViewModel: makeArticleRowViewModel,
                                 makeDetailViewModel: { article, all in
-                                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                                    makeArticleDetailViewModel(article, all)
                                 }
                             )
 
                             FavoritesSection(
                                 articles: viewModel.articles,
                                 favoritesManager: viewModel.favoritesManager,
-                                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                makeRowViewModel: makeArticleRowViewModel,
                                 makeDetailViewModel: { article, all in
-                                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                                    makeArticleDetailViewModel(article, all)
                                 }
                             )
 
@@ -71,9 +96,9 @@ struct HomeView: View {
                                         articles: categoryArticles,
                                         favoritesManager: viewModel.favoritesManager,
                                         language: selectedLanguage,
-                                        makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                        makeRowViewModel: makeArticleRowViewModel,
                                         makeDetailView: { article, all in
-                                            appContainer.makeArticleDetailView(article: article, allArticles: all)
+                                            makeArticleDetailView(article, all)
                                         }
                                     )
                                 }
@@ -82,9 +107,9 @@ struct HomeView: View {
                             AllArticlesSection(
                                 articles: viewModel.articles,
                                 favoritesManager: viewModel.favoritesManager,
-                                makeRowViewModel: appContainer.makeArticleRowViewModel,
+                                makeRowViewModel: makeArticleRowViewModel,
                                 makeDetailViewModel: { article, all in
-                                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                                    makeArticleDetailViewModel(article, all)
                                 }
                             )
                         }
@@ -98,12 +123,12 @@ struct HomeView: View {
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {
                     ArticleDetailView(
-                        viewModel: appContainer.makeArticleDetailViewModel(
-                            article: article,
-                            allArticles: viewModel.articles
+                        viewModel: makeArticleDetailViewModel(
+                            article,
+                            viewModel.articles
                         ),
-                        localizationManager: appContainer.localizationManager,
-                        articleRowFactory: appContainer.makeArticleRowViewModel
+                        localizationManager: localizationManager,
+                        articleRowFactory: makeArticleRowViewModel
                     )
                 }
             }
@@ -121,11 +146,23 @@ struct HomeView: View {
     }
 
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 #Preview {
-    HomeView(appContainer: AppContainer.previewMock())
-        .environmentObject(AppContainer.previewMock())
+    let container = AppContainer.previewMock()
+    HomeView(
+        viewModelFactory: { container.makeHomeViewModel() },
+        makePDFLibraryViewModel: container.makePDFLibraryViewModel,
+        makeDataService: { container.dataService },
+        makeArticleRowViewModel: container.makeArticleRowViewModel,
+        makeArticleDetailViewModel: { article, all in
+            container.makeArticleDetailViewModel(article: article, allArticles: all)
+        },
+        makeArticleDetailView: { article, all in
+            container.makeArticleDetailView(article: article, allArticles: all)
+        },
+        localizationManager: container.localizationManager
+    )
 }

@@ -9,6 +9,7 @@ import SwiftUI
 struct SearchView: View {
     @StateObject private var viewModel: SearchViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @State private var didInitialLoad: Bool = false
     @EnvironmentObject private var localizationManager: LocalizationManager
 
     private let makeRowViewModel: (Article) -> ArticleRowViewModel
@@ -57,6 +58,8 @@ struct SearchView: View {
                 prompt: t("Искать по статьям или категориям")
             )
             .task {
+                guard !didInitialLoad else { return }
+                didInitialLoad = true
                 await viewModel.loadArticles()
             }
         }

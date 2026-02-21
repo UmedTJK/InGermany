@@ -21,6 +21,10 @@ class HomeViewModel: ObservableObject {
     let articlesRepo: ArticlesRepositoryProtocol
 
     // MARK: - Tasks (lifecycle-bound)
+    // MARK: - Concurrency guards
+    /// Monotonic token to prevent stale async results from overwriting newer loads.
+    private var loadGeneration: UInt64 = 0
+
     private var backgroundRefreshTask: Task<Void, Never>?
     deinit { backgroundRefreshTask?.cancel() }
 
@@ -78,47 +82,66 @@ class HomeViewModel: ObservableObject {
 
     // MARK: - Data loading
     func loadData() async {
+        // New generation for this run; older tasks must not commit state.
+        loadGeneration &+= 1
+        let gen = loadGeneration
+
         let start = Date()
-        print("⏱ loadData started at \(start)")
+        print("⏱ loadData started at \(start) [gen=\(gen)]")
 
-        await MainActor.run { self.isLoading = true }
-
-        // 1. Сначала bootstrap категорий (быстро)
-        await categoriesRepository.bootstrap()
-
-        // 2. UI готов к показу
+        guard !Task.isCancelled else { return }
         await MainActor.run {
-            self.isLoading = false
-            print("⏱ UI ready in \(Date().timeIntervalSince(start)) sec")
+            // Only the latest generation may mutate UI state.
+            guard gen == self.loadGeneration else { return }
+            self.isLoading = true
         }
 
-        // 3. Параллельно загружаем статьи
+        // 1) Bootstrap categories (fast)
+        await categoriesRepository.bootstrap()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        // 2) UI ready
+        await MainActor.run {
+            guard gen == self.loadGeneration else { return }
+            self.isLoading = false
+            print("⏱ UI ready in \(Date().timeIntervalSince(start)) sec [gen=\(gen)]")
+        }
+
+        // 3) Load articles (may hit disk/cache)
         let articles = await articlesRepo.loadArticles()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
         let source = await articlesRepo.getLastSource()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
 
         await MainActor.run {
+            guard gen == self.loadGeneration else { return }
             self.articles = articles
             self.rebuildArticlesByCategory(from: articles)
             self.dataSource = source
-            print("⏱ Articles loaded in \(Date().timeIntervalSince(start)) sec")
+            print("⏱ Articles loaded in \(Date().timeIntervalSince(start)) sec [gen=\(gen)]")
         }
 
-        // 4. Фоновое обновление из сети (только если первичная загрузка была НЕ из сети)
-        if source != "network", !Task.isCancelled {
-            backgroundRefreshTask?.cancel()
-            backgroundRefreshTask = Task(priority: .background) { [weak self] in
-                guard let self else { return }
-                guard !Task.isCancelled else { return }
+        // 4) Background refresh from network (only if initial load was NOT from network)
+        guard source != "network", !Task.isCancelled, gen == loadGeneration else { return }
 
-                let fresh = await self.articlesRepo.refreshArticles()
-                guard !Task.isCancelled else { return }
+        backgroundRefreshTask?.cancel()
+        backgroundRefreshTask = Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            guard !Task.isCancelled else { return }
+            // If a newer load started, abort.
+            guard gen == self.loadGeneration else { return }
 
-                if !fresh.isEmpty {
-                    await MainActor.run {
-                        self.articles = fresh
-                        self.rebuildArticlesByCategory(from: fresh)
-                        self.dataSource = "network"
-                    }
+            let fresh = await self.articlesRepo.refreshArticles()
+            guard !Task.isCancelled else { return }
+            guard gen == self.loadGeneration else { return }
+
+            if !fresh.isEmpty {
+                await MainActor.run {
+                    guard gen == self.loadGeneration else { return }
+                    self.articles = fresh
+                    self.rebuildArticlesByCategory(from: fresh)
+                    self.dataSource = "network"
                 }
             }
         }
@@ -126,12 +149,21 @@ class HomeViewModel: ObservableObject {
 
     // MARK: - Refresh
     func refreshData() async {
+        // Treat pull-to-refresh as a new authoritative generation.
+        loadGeneration &+= 1
+        let gen = loadGeneration
+
         guard !Task.isCancelled else { return }
-        print("🔄 refreshData triggered from HomeView")
+        print("🔄 refreshData triggered from HomeView [gen=\(gen)]")
+
         await categoriesRepository.refresh()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
         let refreshed = await articlesRepo.refreshArticles()
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
         await MainActor.run {
+            guard gen == self.loadGeneration else { return }
             if !refreshed.isEmpty {
                 self.articles = refreshed
                 self.rebuildArticlesByCategory(from: refreshed)
