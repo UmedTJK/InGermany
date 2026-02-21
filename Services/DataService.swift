@@ -21,6 +21,31 @@ actor DataService: DataServiceProtocol {
     // MARK: - Metadata
     private var lastDataSource: [String: String] = [:]
 
+    // MARK: - In-flight refresh dedup (one per resource)
+    private enum RefreshKind: Hashable {
+        case articles, categories, locations
+    }
+    
+    private var inFlightRefresh: [RefreshKind: Task<Void, Never>] = [:]
+    
+    private func scheduleRefresh(
+        _ kind: RefreshKind,
+        _ operation: @escaping @Sendable (DataService) async -> Void
+    ) {
+        // Dedup: if there is an in-flight refresh for this kind, don't start another.
+        guard inFlightRefresh[kind] == nil else { return }
+        
+        inFlightRefresh[kind] = Task { [weak self] in
+            guard let self else { return }
+            defer { Task { await self.clearInFlight(kind) } }
+            await operation(self)
+        }
+    }
+    
+    private func clearInFlight(_ kind: RefreshKind) {
+        inFlightRefresh[kind] = nil
+    }
+
     // MARK: - Streams
     private var articleContinuations: [AsyncStream<[Article]>.Continuation] = []
     private var categoryContinuations: [AsyncStream<[Category]>.Continuation] = []
@@ -70,14 +95,19 @@ actor DataService: DataServiceProtocol {
 
     // MARK: - Fire-and-forget preload
     func preloadAll() {
-        Task { [weak self] in
-            guard let self else { return }
-            let start = Date()
-            await self.refreshArticlesIfNeeded()
-            await self.refreshCategoriesIfNeeded()
-            await self.refreshLocationsIfNeeded()
-            print("⏱ [DataService] preloadAll refresh finished in \(Date().timeIntervalSince(start)) sec")
+        let start = Date()
+        
+        scheduleRefresh(.articles) { service in
+            await service.refreshArticlesIfNeeded()
         }
+        scheduleRefresh(.categories) { service in
+            await service.refreshCategoriesIfNeeded()
+        }
+        scheduleRefresh(.locations) { service in
+            await service.refreshLocationsIfNeeded()
+        }
+        
+        print("⏱ [DataService] preloadAll refresh scheduled in \(Date().timeIntervalSince(start)) sec")
     }
 
     // MARK: - Unified loaders
@@ -91,9 +121,9 @@ actor DataService: DataServiceProtocol {
             lastDataSource["articles"] = "memory_cache"
             print("⏱ [DataService] loadArticles returned from MEMORY in \(Date().timeIntervalSince(start)) sec")
 
-            // background refresh without blocking UI
-            Task { [weak self] in
-                await self?.refreshArticlesIfNeeded()
+            // background refresh (dedup, non-blocking)
+            scheduleRefresh(.articles) { service in
+                await service.refreshArticlesIfNeeded()
             }
             return cached
         }
@@ -105,8 +135,8 @@ actor DataService: DataServiceProtocol {
             yieldArticles(cached)
             print("⏱ [DataService] loadArticles returned from DISK/TTL cache in \(Date().timeIntervalSince(start)) sec")
 
-            Task { [weak self] in
-                await self?.refreshArticlesIfNeeded()
+            scheduleRefresh(.articles) { service in
+                await service.refreshArticlesIfNeeded()
             }
             return cached
         }
@@ -165,10 +195,9 @@ actor DataService: DataServiceProtocol {
             yieldCategories(cached)
             print("⏱ [DataService] loadCategories returned from TTL cache in \(Date().timeIntervalSince(start)) sec")
 
-            Task { [weak self] in
-                guard let self else { return }
+            scheduleRefresh(.categories) { service in
                 let networkStart = Date()
-                await self.refreshCategoriesIfNeeded()
+                await service.refreshCategoriesIfNeeded()
                 print("⏱ [DataService] refreshCategoriesIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
             }
             return cached
@@ -182,10 +211,9 @@ actor DataService: DataServiceProtocol {
             yieldCategories(local)
             print("⏱ [DataService] loadCategories returned from bundle in \(Date().timeIntervalSince(start)) sec")
 
-            Task { [weak self] in
-                guard let self else { return }
+            scheduleRefresh(.categories) { service in
                 let networkStart = Date()
-                await self.refreshCategoriesIfNeeded()
+                await service.refreshCategoriesIfNeeded()
                 print("⏱ [DataService] refreshCategoriesIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
             }
             return local
@@ -217,10 +245,9 @@ actor DataService: DataServiceProtocol {
             yieldLocations(cached)
             print("⏱ [DataService] loadLocations returned from TTL cache in \(Date().timeIntervalSince(start)) sec")
 
-            Task { [weak self] in
-                guard let self else { return }
+            scheduleRefresh(.locations) { service in
                 let networkStart = Date()
-                await self.refreshLocationsIfNeeded()
+                await service.refreshLocationsIfNeeded()
                 print("⏱ [DataService] refreshLocationsIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
             }
             return cached
@@ -234,10 +261,9 @@ actor DataService: DataServiceProtocol {
             yieldLocations(local)
             print("⏱ [DataService] loadLocations returned from bundle in \(Date().timeIntervalSince(start)) sec")
 
-            Task { [weak self] in
-                guard let self else { return }
+            scheduleRefresh(.locations) { service in
                 let networkStart = Date()
-                await self.refreshLocationsIfNeeded()
+                await service.refreshLocationsIfNeeded()
                 print("⏱ [DataService] refreshLocationsIfNeeded finished in \(Date().timeIntervalSince(networkStart)) sec")
             }
             return local
@@ -336,6 +362,10 @@ actor DataService: DataServiceProtocol {
 
         networkService.clearCache()
         lastDataSource.removeAll()
+
+        // Cancel any in-flight refresh tasks
+        for (_, task) in inFlightRefresh { task.cancel() }
+        inFlightRefresh.removeAll()
 
         yieldArticles([])
         yieldCategories([])
