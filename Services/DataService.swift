@@ -330,21 +330,25 @@ actor DataService: DataServiceProtocol {
     private func loadLocalLocations() async -> [Location] { await loadLocal("locations.json") }
 
     private func loadLocal<T: Decodable>(_ filename: String) async -> [T] {
-        await withCheckedContinuation { continuation in
-            DispatchQueue.global().async {
-                let name = filename.replacingOccurrences(of: ".json", with: "")
-                guard let file = Bundle.main.url(forResource: name, withExtension: "json") else {
-                    continuation.resume(returning: []); return
-                }
-                do {
-                    let data = try Data(contentsOf: file)
-                    let decoded = try JSONDecoder().decode([T].self, from: data)
-                    continuation.resume(returning: decoded)
-                } catch {
-                    continuation.resume(returning: [])
-                }
+        await Task(priority: .utility) { [filename] in
+            if Task.isCancelled { return [] }
+
+            let name = filename.replacingOccurrences(of: ".json", with: "")
+            guard let fileURL = Bundle.main.url(forResource: name, withExtension: "json") else {
+                return []
             }
-        }
+
+            do {
+                // I/O + decode off-main
+                let data = try Data(contentsOf: fileURL)
+
+                if Task.isCancelled { return [] }
+
+                return try JSONDecoder().decode([T].self, from: data)
+            } catch {
+                return []
+            }
+        }.value
     }
 
     // MARK: - Broadcasting helpers
