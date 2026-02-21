@@ -8,11 +8,14 @@ import SwiftUI
 /// Менеджер локализации приложения.
 /// Отвечает за хранение выбранного языка и получение переведённых строк из словаря.
 public final  class LocalizationManager: ObservableObject {
-    static let shared = LocalizationManager()
-    
-    @AppStorage("selectedLanguage") var selectedLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
-    
-    init() {}
+    /// Default language used when caller does not provide an explicit language.
+    private let defaultLanguage: String
+
+    /// Initializes LocalizationManager as a pure translation provider (no AppStorage).
+    /// - Parameter defaultLanguage: Fallback language code if caller doesn't pass one.
+    public init(defaultLanguage: String = Locale.current.language.languageCode?.identifier ?? "en") {
+        self.defaultLanguage = defaultLanguage
+    }
     
     // MARK: - Словари
     
@@ -554,7 +557,7 @@ public final  class LocalizationManager: ObservableObject {
     }
     
     public func t(_ key: String, language: String? = nil) -> String {
-        let lang = language ?? selectedLanguage
+        let lang = language ?? defaultLanguage
         return getTranslation(key: key, language: lang)
     }
     
@@ -577,8 +580,8 @@ public final  class LocalizationManager: ObservableObject {
 // MARK: - Шорткат для SwiftUI
 extension View {
     /// Avoids global singleton access; pass the LocalizationManager from DI / Environment.
-    public func t(_ key: String, using localizationManager: LocalizationManager) -> String {
-        localizationManager.t(key)
+    public func t(_ key: String, using localizationManager: LocalizationManager, language: String) -> String {
+        localizationManager.t(key, language: language)
     }
 }
 
