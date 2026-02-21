@@ -6,21 +6,47 @@
 ---
 
 ## [Unreleased]
+### Added
+- _TBD_
+
+### Changed
+- _TBD_
+
+### Fixed
+- _TBD_
+
+
+## [v0.2.3-di-localization-clean] – 2026-02-21
+
+### Architecture & DI
+- DI migration completed across app + SharedKit: removed singleton usage and enforced constructor injection
+- Localization decoupled: `LocalizationManager` is pure DI (no `AppStorage`, no `.shared`)
+- View layer updated to use DI-based `LocalizationManager` + `AppContainer` wiring
+
+### Tests
+- Stabilized ViewModel + localization tests after DI migration
+
+### Docs
+- Updated `Docs/next_steps.md` with post-migration notes and follow-ups
+
+---
+
+## [v0.2-di-refactor] – 2026-02-21
+
 ### Architecture & DI
 - Major DI refactor: removed singletons across app code and tests
 - Introduced protocol-based DI for services and managers (Favorites, Rating, Cache, Network, ReadingStats, etc.)
-- AppContainer hardened as composition root: explicit dependency graph and constructor injection
+- `AppContainer` hardened as composition root: explicit dependency graph and constructor injection
 - Formatter/services now require explicit DI (no shared defaults)
-- Test suite updated to be DI-pure (no .shared usage)
 
 ### Changed
-- Refactored settings architecture: introduced SettingsManager as single source of truth
-- Removed AppStorage usage from SettingsViewModel and ContentView
-- Bound app color scheme to SettingsManager
-- Cleaned up ContentView dependencies
+- Refactored settings architecture: introduced `SettingsManager` as single source of truth
+- Bound app color scheme to `SettingsManager`
+- Cleaned up `ContentView` dependencies
 - Updated environment wiring via AppContainer/AppEnvironment helpers
 
----
+### Tests
+- Test suite updated to be DI-pure (no `.shared` usage)
 
 
 
