@@ -186,6 +186,7 @@
 		ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+SwiftUI.swift"; sourceTree = "<group>"; };
 		ADE23B732E9BEED400BD152B /* burgeramt_registration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration.json; sourceTree = "<group>"; };
 		ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
+		ADE9E0362F49D3A100849FF4 /* AUDIT_2026-02-21_TECHNICAL_PLAN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "AUDIT_2026-02-21_TECHNICAL_PLAN.md"; sourceTree = "<group>"; };
 		ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
 		ADF339452E8850FA00AE4CBF /* RatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingManager.swift; sourceTree = "<group>"; };
 		ADF339472E8850FA00AE4CBF /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
@@ -557,6 +558,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				ADE9E0362F49D3A100849FF4 /* AUDIT_2026-02-21_TECHNICAL_PLAN.md */,
 				ADC6DA552F4903CD0040AFF8 /* ARCHITECTURE.md */,
 				AD7906902F48C5C10047F511 /* DI_GRAPH.md */,
 				AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */,
