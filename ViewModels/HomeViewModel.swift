@@ -21,6 +21,10 @@ class HomeViewModel: ObservableObject {
     let categoriesRepository: CategoriesRepositoryProtocol
     let articlesRepo: ArticlesRepositoryProtocol
 
+    // MARK: - Tasks (lifecycle-bound)
+    private var backgroundRefreshTask: Task<Void, Never>?
+    deinit { backgroundRefreshTask?.cancel() }
+
     // Локализация
     private let localizationManager: LocalizationManager
 
@@ -98,14 +102,21 @@ class HomeViewModel: ObservableObject {
             print("⏱ Articles loaded in \(Date().timeIntervalSince(start)) sec")
         }
 
-        // 4. Фоновое обновление из сети
-        Task.detached { [weak self] in
-            guard let self else { return }
-            let fresh = await self.articlesRepo.refreshArticles()
-            if !fresh.isEmpty {
-                await MainActor.run {
-                    self.articles = fresh
-                    self.dataSource = "network"
+        // 4. Фоновое обновление из сети (только если первичная загрузка была НЕ из сети)
+        if source != "network", !Task.isCancelled {
+            backgroundRefreshTask?.cancel()
+            backgroundRefreshTask = Task(priority: .background) { [weak self] in
+                guard let self else { return }
+                guard !Task.isCancelled else { return }
+
+                let fresh = await self.articlesRepo.refreshArticles()
+                guard !Task.isCancelled else { return }
+
+                if !fresh.isEmpty {
+                    await MainActor.run {
+                        self.articles = fresh
+                        self.dataSource = "network"
+                    }
                 }
             }
         }
@@ -113,9 +124,11 @@ class HomeViewModel: ObservableObject {
 
     // MARK: - Refresh
     func refreshData() async {
+        guard !Task.isCancelled else { return }
         print("🔄 refreshData triggered from HomeView")
         await categoriesRepository.refresh()
         let refreshed = await articlesRepo.refreshArticles()
+        guard !Task.isCancelled else { return }
         await MainActor.run {
             if !refreshed.isEmpty {
                 self.articles = refreshed
