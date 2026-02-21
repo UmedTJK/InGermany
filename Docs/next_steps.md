@@ -9,19 +9,20 @@
 - Работа с JSON, статические данные  
 - UI-компоненты и секции вынесены в отдельные модули  
 - GitHub workflow: feature-ветки, changelog, теги релизов  
+- Полный DI-рефакторинг (удалены singletons, чистый Composition Root, DI-pure тесты)
 
 
 ## 🎯 Следующая цель – Middle showcase
 
 ### Архитектура и код
-- [ ] Unit-тесты для Managers, Services, ViewModels  
+- [x] Unit-тесты для Managers, Services, ViewModels (DI-pure, без singletons)  
 - [ ] UI-тесты (например, запуск HomeView / SearchView)  
-- [ ] Dependency Injection через протоколы и мок-реализации  
-- [ ] Асинхронный DataService (`async/await`) + обработка ошибок  
+- [x] Dependency Injection через протоколы и мок-реализации (полный отказ от .shared)  
+- [x] Асинхронный DataService (`async/await`) + обработка ошибок  
 
 ### Работа с данными
 - [ ] SwiftData/CoreData для избранного и истории  
-- [ ] Кэширование и офлайн-режим  
+- [x] Кэширование и офлайн-режим (CacheService + offline-first NetworkService)  
 - [ ] ArticlesRepository с реальным API (например, GitHub Pages)  
 
 ### UI/UX
