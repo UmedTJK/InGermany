@@ -8,7 +8,7 @@ struct InGermanyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(appContainer: appContainer)
                 .appEnvironment(using: appContainer)
                 .environmentObject(settingsManager)
 
