@@ -41,8 +41,8 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 ### Components
 - [x] CardContainer modifier (replaces cardStyle/lightCardStyle/applyCardStyle/sectionCardStyle)
 - [x] SectionHeader (title + optional action)
-- [ ] CategoryBadge (contrast-safe, extracted component)
-- [ ] TagChip (hit target + dynamic type strategy)
+- [x] CategoryBadge (contrast-safe, extracted component)
+- [x] TagChip (hit target + dynamic type strategy)
 - [x] HorizontalCarousel wrapper (padding/spacing unified)
 
 ---
@@ -54,13 +54,13 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Replace section headers with SectionHeader
 - [x] Apply .buttonStyle(.plain) to all card NavigationLinks
 - [x] Normalize carousels using HorizontalCarousel wrapper
-- [ ] Remove/DEBUG-gate datasource bar (3pt)
+- [x] Remove/DEBUG-gate datasource bar (3pt)
 
 ### C2 ArticleCompactCard (DS aligned)
 - [x] Unify radius/padding via DS
 - [x] Replace magic numbers with DS tokens
-- [ ] Image placeholder consistent + no layout jump
-- [ ] Category badge: contrast-safe text color logic
+- [x] Image placeholder consistent + no layout jump
+- [x] Category badge: contrast-safe text color logic
 - [x] Accessibility: single VO element label/value/hint
 - [x] Dynamic Type: adjust line limits for accessibility sizes
 
