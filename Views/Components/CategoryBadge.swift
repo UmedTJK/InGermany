@@ -2,12 +2,6 @@
 //  CategoryBadge.swift
 //  InGermany
 //
-//  Created by SUM TJK on 22.02.26.
-//
-//
-//  CategoryBadge.swift
-//  InGermany
-//
 
 import SwiftUI
 
@@ -35,37 +29,32 @@ struct CategoryBadge: View {
     }
 
     private static func contrastForeground(for hex: String) -> Color {
-        guard let uiColor = UIColor(hex: hex) else { return .white }
-        var r: CGFloat = 0
-        var g: CGFloat = 0
-        var b: CGFloat = 0
-        var a: CGFloat = 0
-        uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
+        guard let rgb = parseRGB(from: hex) else { return .white }
 
         func toLinear(_ c: CGFloat) -> CGFloat {
             c <= 0.03928 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4)
         }
-        let rl = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b)
+
+        let r = toLinear(rgb.r)
+        let g = toLinear(rgb.g)
+        let b = toLinear(rgb.b)
+        let rl = 0.2126 * r + 0.7152 * g + 0.0722 * b
         return rl > 0.55 ? .black : .white
     }
-}
 
-private extension UIColor {
-    convenience init?(hex: String) {
+    private static func parseRGB(from hex: String) -> (r: CGFloat, g: CGFloat, b: CGFloat)? {
         var string = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         if string.hasPrefix("#") { string.removeFirst() }
-
         guard let value = UInt64(string, radix: 16) else { return nil }
 
-        let a, r, g, b: UInt64
+        let r, g, b: UInt64
         switch string.count {
         case 6:
-            a = 255
             r = (value >> 16) & 0xFF
             g = (value >> 8) & 0xFF
             b = value & 0xFF
         case 8:
-            a = (value >> 24) & 0xFF
+            // ARGB
             r = (value >> 16) & 0xFF
             g = (value >> 8) & 0xFF
             b = value & 0xFF
@@ -73,11 +62,21 @@ private extension UIColor {
             return nil
         }
 
-        self.init(
-            red: CGFloat(r) / 255,
-            green: CGFloat(g) / 255,
-            blue: CGFloat(b) / 255,
-            alpha: CGFloat(a) / 255
+        return (
+            r: CGFloat(r) / 255,
+            g: CGFloat(g) / 255,
+            b: CGFloat(b) / 255
         )
     }
 }
+
+#if DEBUG
+#Preview {
+    VStack(spacing: DS.Spacing.m) {
+        CategoryBadge(title: "Light BG", systemImage: "tag.fill", backgroundHex: "#E6F0FF")
+        CategoryBadge(title: "Dark BG", systemImage: "tag.fill", backgroundHex: "#1B3A57")
+    }
+    .padding()
+    .background(DS.Color.background)
+}
+#endif
