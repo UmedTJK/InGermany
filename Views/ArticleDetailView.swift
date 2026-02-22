@@ -8,7 +8,6 @@ import SwiftUI
 struct ArticleDetailView: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
     @State private var isSharePresented: Bool = false
     @State private var shareItems: [Any] = []
     
@@ -139,9 +138,12 @@ struct ArticleDetailView: View {
 
                                         } label: {
                                             ArticleRow(viewModel: articleRowFactory(relatedArticle))
-                                                .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard)
+                                                .cardContainer()
+                                                .padding(.vertical, DS.Spacing.xs)
+                                                .frame(minHeight: DS.Size.hitTarget)
+                                                .contentShape(Rectangle())
                                         }
-                                        .buttonStyle(PlainButtonStyle())
+                                        .buttonStyle(.plain)
                                     }
                                 }
                                 .padding(.horizontal)
