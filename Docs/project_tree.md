@@ -24,6 +24,7 @@
 │   ├── PROMPTS_FOR_AI_AGENTS.md
 │   ├── README.md
 │   ├── UIUTILS_GUIDE.md
+│   ├── UI_PRE_RELEASE.md
 │   ├── di_refactoring_progress.md
 │   ├── git_snapshot.md
 │   ├── hooks
@@ -198,6 +199,9 @@
 │   ├── CardStyle.swift
 │   ├── Color+Hex.swift
 │   ├── CustomTabBarView.swift
+│   ├── DesignSystem
+│   │   ├── CardContainerStyle.swift
+│   │   └── DS.swift
 │   ├── Environment+ScreenSize.swift
 │   ├── NSWindow+SwiftUI.swift
 │   ├── PDFThumbnailGenerator.swift
@@ -234,12 +238,16 @@
 │   │   ├── ArticleCardView.swift
 │   │   ├── ArticleMetaView.swift
 │   │   ├── ArticleRow.swift
+│   │   ├── CategoryBadge.swift
 │   │   ├── Components.swift
 │   │   ├── FavoriteCard.swift
+│   │   ├── HorizontalCarousel.swift
 │   │   ├── LanguagePickerView.swift
 │   │   ├── PDFViewer.swift
 │   │   ├── ReadingProgressBar.swift
+│   │   ├── SectionHeader.swift
 │   │   ├── StarRatingView.swift
+│   │   ├── TagChip.swift
 │   │   ├── TagFilterView.swift
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
@@ -274,4 +282,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-74 directories, 201 files
+75 directories, 208 files
