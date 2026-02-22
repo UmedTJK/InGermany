@@ -42,6 +42,25 @@ struct InGermanyApp: App {
                 .environment(\.screenSize, UIScreen.main.bounds.size)
                 .onAppear {
                     appContainer.bootstrap()
+
+#if DEBUG
+                    Task {
+                        // Wait for initial bootstrap + async refresh
+                        try? await Task.sleep(nanoseconds: 2_000_000_000)
+
+                        let metricsDump = await appContainer.dumpNetworkMetrics()
+
+                        print("""
+
+📊 ================================
+NETWORK METRICS SNAPSHOT (LAUNCH)
+================================
+\(metricsDump)
+=================================
+
+""")
+                    }
+#endif
                 }
         }
     }

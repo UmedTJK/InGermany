@@ -30,6 +30,7 @@ struct ContentView: View {
     let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
     let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
     let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
+    let dumpNetworkMetrics: @Sendable (_ reset: Bool) async -> String
 
     @EnvironmentObject var localizationManager: LocalizationManager
 
@@ -37,6 +38,35 @@ struct ContentView: View {
     @EnvironmentObject var settingsManager: SettingsManager
 
     @State private var selectedTab: Int = 0
+
+    // MARK: - Init
+    init(
+        makeHomeViewModel: @escaping () -> HomeViewModel,
+        makeCategoriesViewModel: @escaping () -> CategoriesViewModel,
+        makeSearchViewModel: @escaping () -> SearchViewModel,
+        makeFavoritesViewModel: @escaping () -> FavoritesViewModel,
+        makeSettingsViewModel: @escaping () -> SettingsViewModel,
+        makeAboutViewModel: @escaping () -> AboutViewModel,
+        makePDFLibraryViewModel: @escaping () -> PDFLibraryViewModel,
+        makeDataService: @escaping () -> DataServiceProtocol,
+        makeArticleRowViewModel: @escaping (Article) -> ArticleRowViewModel,
+        makeArticleDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel,
+        makeArticleDetailView: @escaping (Article, [Article]) -> ArticleDetailView,
+        dumpNetworkMetrics: @escaping @Sendable (_ reset: Bool) async -> String = { _ in "" }
+    ) {
+        self.makeHomeViewModel = makeHomeViewModel
+        self.makeCategoriesViewModel = makeCategoriesViewModel
+        self.makeSearchViewModel = makeSearchViewModel
+        self.makeFavoritesViewModel = makeFavoritesViewModel
+        self.makeSettingsViewModel = makeSettingsViewModel
+        self.makeAboutViewModel = makeAboutViewModel
+        self.makePDFLibraryViewModel = makePDFLibraryViewModel
+        self.makeDataService = makeDataService
+        self.makeArticleRowViewModel = makeArticleRowViewModel
+        self.makeArticleDetailViewModel = makeArticleDetailViewModel
+        self.makeArticleDetailView = makeArticleDetailView
+        self.dumpNetworkMetrics = dumpNetworkMetrics
+    }
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -108,7 +138,8 @@ struct ContentView: View {
             LazyView {
                 SettingsView(
                     viewModel: makeSettingsViewModel(),
-                    makeAboutViewModel: makeAboutViewModel
+                    makeAboutViewModel: makeAboutViewModel,
+                    dumpNetworkMetrics: dumpNetworkMetrics
                 )
             }
             .tabItem {
@@ -147,6 +178,9 @@ struct ContentView: View {
         },
         makeArticleDetailView: { article, all in
             container.makeArticleDetailView(article: article, allArticles: all)
+        },
+        dumpNetworkMetrics: { reset in
+            await container.dumpNetworkMetrics(reset: reset)
         }
     )
     .appEnvironment(using: container)

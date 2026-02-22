@@ -149,14 +149,12 @@
 		AD52FD452E8585B300CC9F61 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLEAN_CODE_CHECKLIST.md; sourceTree = "<group>"; };
 		AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Git_Mini_Guide.md; sourceTree = "<group>"; };
-		AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROMPTS_FOR_AI_AGENTS.md; sourceTree = "<group>"; };
 		AD5D36C82E96D4BB00DB63EF /* CacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheService.swift; sourceTree = "<group>"; };
 		AD5D36CC2E96DF4900DB63EF /* TextAnalysisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnalysisService.swift; sourceTree = "<group>"; };
 		AD675BA72E93D85C007B0994 /* FavoritesManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManagingProtocol.swift; sourceTree = "<group>"; };
 		AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
-		AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARTICLE_EDITOR_ROADMAP.md; sourceTree = "<group>"; };
 		AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHistoryManager.swift; sourceTree = "<group>"; };
 		AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration_base64.json; sourceTree = "<group>"; };
 		AD7906902F48C5C10047F511 /* DI_GRAPH.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DI_GRAPH.md; sourceTree = "<group>"; };
@@ -565,7 +563,6 @@
 				ADE9E0362F49D3A100849FF4 /* AUDIT_2026-02-21_TECHNICAL_PLAN.md */,
 				ADC6DA552F4903CD0040AFF8 /* ARCHITECTURE.md */,
 				AD7906902F48C5C10047F511 /* DI_GRAPH.md */,
-				AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */,
 				AD1626002E9ADD3400E6E14B /* README.md */,
 				AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */,
 				AD160DA82E9511A5009B49F2 /* ARCHITECTURE_ISSUES.md */,
@@ -577,7 +574,6 @@
 				AD2A64D02E8FAD42006A94DD /* git_snapshot.md */,
 				AD52FD462E8585B300CC9F61 /* CLEAN_CODE_CHECKLIST.md */,
 				AD52FD472E8585B300CC9F61 /* Git_Mini_Guide.md */,
-				AD52FD4D2E8585B300CC9F61 /* PROMPTS_FOR_AI_AGENTS.md */,
 				AD1626022E9ADDD900E6E14B /* screenshots */,
 			);
 			path = Docs;

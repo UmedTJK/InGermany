@@ -10,13 +10,19 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     private let makeAboutViewModel: () -> AboutViewModel
 
+    private let dumpNetworkMetrics: (_ reset: Bool) async -> String
+
     // MARK: - Init
     init(
         viewModel: SettingsViewModel,
-        makeAboutViewModel: @escaping () -> AboutViewModel
+        makeAboutViewModel: @escaping () -> AboutViewModel,
+        dumpNetworkMetrics: @escaping (_ reset: Bool) async -> String = { _ in
+            "Network metrics are not wired"
+        }
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.makeAboutViewModel = makeAboutViewModel
+        self.dumpNetworkMetrics = dumpNetworkMetrics
     }
 
     // MARK: - Body
@@ -32,6 +38,9 @@ struct SettingsView: View {
                 aboutSection
                 clearHistorySection
                 resetSection
+                #if DEBUG
+                debugSection
+                #endif
             }
             .navigationTitle(viewModel.localizedText("settings_title"))
             .toolbar {
@@ -123,6 +132,20 @@ struct SettingsView: View {
             .accessibilityLabel(viewModel.localizedText("settings_reset_defaults_accessibility"))
         }
     }
+
+    #if DEBUG
+        private var debugSection: some View {
+            Section(header: Text("Debug")) {
+                NavigationLink("Debug Overlay") {
+                    DebugOverlayView(dump: dumpNetworkMetrics)
+                }
+
+                NavigationLink("Network Metrics") {
+                    NetworkMetricsDebugView(dump: dumpNetworkMetrics)
+                }
+            }
+        }
+    #endif
 }
 
 // MARK: - HistoryClearedToast
@@ -148,3 +171,124 @@ private struct HistoryClearedToast: View {
         .animation(.spring(), value: true)
     }
 }
+
+#if DEBUG
+private struct DebugOverlayView: View {
+    let dump: (_ reset: Bool) async -> String
+
+    @State private var snapshot: String = ""
+    @State private var isLoading: Bool = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                Button("Refresh") {
+                    Task { await refresh(reset: false) }
+                }
+                .buttonStyle(.bordered)
+
+                Button(role: .destructive) {
+                    Task { await refresh(reset: true) }
+                } label: {
+                    Text("Reset")
+                }
+                .buttonStyle(.bordered)
+
+                Spacer()
+            }
+
+            GroupBox("Snapshot") {
+                VStack(alignment: .leading, spacing: 6) {
+                    let lines = snapshot.split(separator: "\n").map(String.init)
+                    if lines.isEmpty {
+                        Text("(empty)")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(Array(lines.prefix(12).enumerated()), id: \.offset) { _, line in
+                            Text(line)
+                                .font(.system(.footnote, design: .monospaced))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        if lines.count > 12 {
+                            Text("… (+\(lines.count - 12) more)")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+
+            Spacer()
+        }
+        .padding()
+        .navigationTitle("Debug Overlay")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await refresh(reset: false)
+        }
+        .overlay {
+            if isLoading { ProgressView() }
+        }
+    }
+
+    private func refresh(reset: Bool) async {
+        isLoading = true
+        defer { isLoading = false }
+        snapshot = await dump(reset)
+    }
+}
+
+private struct NetworkMetricsDebugView: View {
+    let dump: (_ reset: Bool) async -> String
+
+    @State private var snapshot: String = ""
+    @State private var isLoading: Bool = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                Button("Refresh") {
+                    Task { await refresh(reset: false) }
+                }
+                .buttonStyle(.bordered)
+
+                Button(role: .destructive) {
+                    Task { await refresh(reset: true) }
+                } label: {
+                    Text("Reset")
+                }
+                .buttonStyle(.bordered)
+
+                Spacer()
+            }
+
+            ScrollView {
+                Text(snapshot.isEmpty ? "(empty)" : snapshot)
+                    .font(.system(.footnote, design: .monospaced))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 4)
+            }
+            .frame(maxWidth: .infinity)
+
+            Spacer()
+        }
+        .padding()
+        .navigationTitle("Network Metrics")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await refresh(reset: false)
+        }
+        .overlay {
+            if isLoading { ProgressView() }
+        }
+    }
+
+    private func refresh(reset: Bool) async {
+        isLoading = true
+        defer { isLoading = false }
+        snapshot = await dump(reset)
+    }
+}
+#endif
