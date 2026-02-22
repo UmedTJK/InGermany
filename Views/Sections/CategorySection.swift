@@ -33,13 +33,11 @@ struct CategorySection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(category.localizedName(for: language))
-                .font(.headline)
-                .padding(.horizontal)
+        VStack(alignment: .leading, spacing: DS.Spacing.m) {
+            SectionHeader(title: category.localizedName(for: language))
 
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
+                LazyHStack(spacing: DS.Spacing.carouselItem) {
                     ForEach(articles.prefix(10)) { article in
                         NavigationLink {
                             makeDetailView(article, articles)
@@ -48,10 +46,10 @@ struct CategorySection: View {
                         }
                     }
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 4)
+                .padding(.horizontal, DS.Spacing.contentInset)
+                .padding(.vertical, DS.Spacing.carouselVPad)
             }
         }
-        .padding(.bottom, 24)
+        .padding(.bottom, DS.Spacing.xl)
     }
 }
