@@ -35,26 +35,30 @@ struct FavoritesView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            VStack(spacing: DS.Spacing.m) {
+#if DEBUG
                 Rectangle()
                     .fill(getDataSourceColor())
                     .frame(height: 3)
                     .frame(maxWidth: .infinity)
+#endif
 
                 if viewModel.isLoading {
                     ProgressView(t("Загрузка избранного..."))
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .padding()
+                        .progressViewStyle(.circular)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if filteredFavoriteArticles.isEmpty {
+                    ContentUnavailableView(
+                        t("Нет избранных статей"),
+                        systemImage: "heart",
+                        description: Text(t("Добавьте статьи в избранное, чтобы они появились здесь."))
+                    )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    if filteredFavoriteArticles.isEmpty {
-                        Text(t("Нет избранных статей"))
-                            .foregroundColor(.secondary)
-                            .padding()
-                    } else {
-                        favoritesList
-                    }
+                    favoritesList
                 }
             }
+            .background(DS.Color.background)
             .navigationTitle(t("tab_favorites"))
             .searchable(
                 text: $searchText,
@@ -78,8 +82,11 @@ struct FavoritesView: View {
             } label: {
                 ArticleRow(viewModel: makeRowViewModel(article))
             }
+            .buttonStyle(.plain)
         }
         .listStyle(PlainListStyle())
+        .scrollContentBackground(.hidden)
+        .background(DS.Color.background)
     }
 
     private func getDataSourceColor() -> Color {
