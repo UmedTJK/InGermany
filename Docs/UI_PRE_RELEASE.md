@@ -65,8 +65,8 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Dynamic Type: adjust line limits for accessibility sizes
 
 ### C3 Other tabs
-- [ ] Categories/Search/Favorites/Settings: unified nav + background + list style
-- [ ] Empty states & loading states unified
+- [x] Categories/Search/Favorites/Settings: unified nav + background + list style
+- [x] Empty states & loading states unified
 
 ---
 
@@ -75,6 +75,8 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Dynamic Type: XXL + accessibility sizes
 - [x] VoiceOver: labels, traits, hints
 - [ ] Hit targets: ≥ 44pt
+  - Done: Categories/Search/Favorites list rows
+  - Pending: Home carousels/cards + Settings buttons (verify tappable areas)
 - [ ] Contrast (light/dark)
 - [ ] Reduce Motion support
 
@@ -88,7 +90,9 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [ ] Lazy stacks for long lists
 - [ ] Avoid heavy work in `body`
 - [ ] Image loading: avoid repeated decoding/lookups
+  - Audit: UIImage(named:) usage inside card bodies; prefer cached/resolved images
 - [ ] Smooth scrolling on Home
+  - Audit: carousels + ArticleCompactCard body cost; confirm LazyVStack + LazyHStack usage
 
 ### Definition of Done (UI)
 - [ ] No magic numbers in screens/sections (only DS tokens)
@@ -96,3 +100,32 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [ ] Stable navigation structure per tab
 - [ ] Accessibility pass completed (Dynamic Type + VoiceOver + hit targets)
 - [ ] Verified on: iPhone SE / iPhone 15 / iPad split view
+
+
+---
+
+## Step D — Execution Plan (next)
+
+### D1 Remove legacy UI debt
+- [ ] Delete/deprecate legacy card style APIs: `Theme.sectionCardStyle`, `applyCardStyle`, `cardStyle/lightCardStyle` (keep only `cardContainer`)
+- [ ] Remove remaining magic numbers (search via `padding(`, `cornerRadius(`, `spacing:`) where DS tokens exist
+
+### D2 Accessibility audit
+- [ ] Hit targets: verify ≥ 44pt for Home tool cards, article cards, badges/chips, Settings buttons
+- [ ] Contrast: verify DS colors + badge contrast in both light/dark (WCAG-ish sanity)
+- [ ] Reduce Motion: respect `accessibilityReduceMotion` in animations (scale/press/slide)
+
+### D3 Visual consistency audit
+- [ ] Navigation titles/toolbars consistent across tabs (inline/large where appropriate)
+- [ ] Card surfaces consistent (materials/shadows/strokes) across light/dark
+- [ ] Typography consistency pass (titles/body/meta) across list rows + cards
+
+### D4 Performance audit
+- [ ] Home: ensure lazy containers everywhere + minimal work in `body`
+- [ ] Image rendering: avoid repeated decoding and re-layout; verify placeholder sizes
+- [ ] Scrolling sanity on iPhone SE + iPad split view
+
+### D5 Final QA
+- [ ] Run through core flows: open article, favorite/unfavorite, search, open category list, open settings
+- [ ] Quick VO pass on Home + ArticleDetail + Search results
+- [ ] Final screenshot pass (Docs/screenshots) for release notes / store listing
