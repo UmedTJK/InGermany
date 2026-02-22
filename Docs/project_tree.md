@@ -14,6 +14,7 @@
 │   ├── ARCHITECTURE_ISSUES.md
 │   ├── ARCHITECTURE_ISSUES_old.md
 │   ├── ARTICLE_EDITOR_ROADMAP.md
+│   ├── AUDIT_2026-02-21_TECHNICAL_PLAN.md
 │   ├── CHANGELOG.md
 │   ├── CLEAN_CODE_CHECKLIST.md
 │   ├── DI_GRAPH.md
@@ -267,4 +268,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-72 directories, 196 files
+72 directories, 197 files
