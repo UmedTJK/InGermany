@@ -82,6 +82,23 @@ extension DS {
     }
 }
 
+// MARK: - Interaction
+extension DS {
+    enum Interaction {
+        /// Subtle press scale for interactive surfaces (use with Reduce Motion awareness).
+        static let pressScale: CGFloat = 0.99
+
+        /// Shadow multiplier when pressed (keeps the same direction, but reduces depth).
+        static let pressedShadowMultiplier: CGFloat = 0.65
+
+        /// Stroke opacity boost when pressed (adds a bit of definition).
+        static let pressedStrokeOpacityBoost: CGFloat = 0.06
+
+        /// Default press animation duration.
+        static let pressAnimationDuration: CGFloat = 0.16
+    }
+}
+
 extension DS {
     enum Radius {
         static let card: CGFloat = 16
