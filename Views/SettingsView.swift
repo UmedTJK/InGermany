@@ -31,6 +31,7 @@ struct SettingsView: View {
             Form {
                 languageSection
                 appearanceSection
+                cardStyleSection
                 dateFormatSection
                 Section(header: Text(viewModel.localizedText("settings_stats_title"))) {
                     Text("Статистика чтения временно отключена")
@@ -50,6 +51,8 @@ struct SettingsView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(DS.Color.background)
             .overlay {
                 if viewModel.isHistoryCleared {
                     HistoryClearedToast(
@@ -57,6 +60,7 @@ struct SettingsView: View {
                     )
                 }
             }
+            .animation(.spring(), value: viewModel.isHistoryCleared)
         }
     }
 
@@ -107,6 +111,7 @@ struct SettingsView: View {
             NavigationLink(destination: AboutView(viewModel: makeAboutViewModel())) {
                 Text(viewModel.localizedText("tab_about"))
             }
+            .buttonStyle(.plain)
         }
     }
 
@@ -139,10 +144,12 @@ struct SettingsView: View {
                 NavigationLink("Debug Overlay") {
                     DebugOverlayView(dump: dumpNetworkMetrics)
                 }
+                .buttonStyle(.plain)
 
                 NavigationLink("Network Metrics") {
                     NetworkMetricsDebugView(dump: dumpNetworkMetrics)
                 }
+                .buttonStyle(.plain)
             }
         }
     #endif
@@ -161,14 +168,19 @@ private struct HistoryClearedToast: View {
                 Text(message)
                     .foregroundColor(.primary)
             }
-            .padding()
-            .background(Color(.systemBackground))
-            .cornerRadius(10)
-            .shadow(radius: 5)
-            .padding()
+            .padding(DS.Spacing.m)
+            .background(DS.Color.surface)
+            .cornerRadius(DS.Radius.card)
+            .shadow(
+                color: Color.black.opacity(0.08),
+                radius: 8,
+                x: 0,
+                y: 2
+            )
+            .padding(.horizontal, DS.Spacing.contentInset)
+            .padding(.bottom, DS.Spacing.m)
         }
         .transition(.scale.combined(with: .opacity))
-        .animation(.spring(), value: true)
     }
 }
 
