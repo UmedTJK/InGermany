@@ -15,7 +15,6 @@ struct ArticlesByTagView: View {
     private let articleDetailFactory: (Article, [Article]) -> ArticleDetailViewModel
     
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @AppStorage("cardStyle") private var cardStyleRaw: String = CardStyle.standard.rawValue
 
     init(
         tag: String,
@@ -41,10 +40,19 @@ struct ArticlesByTagView: View {
                 )
             } label: {
                 ArticleRow(viewModel: articleRowFactory(article))
-                    .applyCardStyle(CardStyle(rawValue: cardStyleRaw) ?? .standard) // ✅ применяем выбранный стиль
+                    .cardContainer()
+                    .padding(.vertical, DS.Spacing.xs)
+                    .frame(minHeight: DS.Size.hitTarget)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
+            .listRowBackground(DS.Color.background)
         }
         .navigationTitle("#\(tag)")
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(DS.Color.background)
     }
 
     private var filteredArticles: [Article] {
