@@ -26,7 +26,8 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 - DataService.loadLocal replaced with structured concurrency
 - NetworkService enhanced with retry and cancellation-aware backoff; refresh deduplication implemented
 - DataService refresh deduplication and cancellation checks added
-- ⚠️ EnvironmentObject(AppContainer) usage still present in several Views (cleanup not fully completed)
+- ✅ E1/F1. Single SettingsManager source (App init injected into AppContainer)
+- ✅ E2/F2. Environment policy cleanup: remove AppContainer from all UI (factories only)
 
 ---
 
@@ -61,7 +62,7 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 
 ### 🟠 P1 — High Priority (architecture cleanliness, testability, perf)
 
-**P1-1 — Duplicate SettingsManager source**  
+**P1-1 — Duplicate SettingsManager source** ✅ Resolved  
 - Location: SettingsManager created in both `InGermanyApp` and `AppContainer`  
 - Risk: state divergence.
 
@@ -95,7 +96,7 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 **P2-1 — AppContainer marked `@MainActor` too broadly**  
 - Risk: MainActor “leaks” into composition/wiring.
 
-**P2-2 — AppContainer exposed as EnvironmentObject (Service Locator risk)** ❗ STILL PRESENT  
+**P2-2 — AppContainer exposed as EnvironmentObject (Service Locator risk)** ✅ Resolved  
 - Location: `View+AppEnvironment.swift` and Views using `@EnvironmentObject appContainer`  
 - Risk: any view can bypass DI and pull services directly.
 
@@ -254,45 +255,30 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 
 ---
 
-### Phase E — DI & Environment cleanup (P1/P2)
+### Phase E — DI & Environment cleanup (P1/P2) ✅ DONE
 
-**E1. Single SettingsManager source**  
+**E1. Single SettingsManager source** ✅ DONE  
 - Files: `Core/InGermanyApp.swift`, `Core/AppContainer.swift`  
 - Verify:  
   - theme/settings consistent between UI and VMs
 
-**E2. Environment policy**  
+**E2. Environment policy** ✅ DONE  
 - Files: `Core/View+AppEnvironment.swift`, views relying on container  
 - Verify:  
-  - Audit shows multiple Views still use @EnvironmentObject AppContainer  
-  - Refactor required: remove AppContainer from Views and inject concrete dependencies  
-  - Re-run grep to confirm zero @EnvironmentObject AppContainer occurrences
+  - grep shows zero `@EnvironmentObject.*AppContainer` in Views/Core/UIUtils  
+  - UI composed via factories only; AppContainer stays in composition root
 
 ---
 
-### Phase F — Remaining Work (Open)
+### Phase F — Remaining Work (Open) (Next)
 
-**F1. Single SettingsManager source (P1-1)**  
-- Files: `Core/InGermanyApp.swift`, `Core/AppContainer.swift`  
-- Verify:  
-  - no duplicate SettingsManager instances  
-  - consistent state across app and container  
-  - proper injection and usage in views and VMs
-
-**F2. Environment policy / reduce service locator footprint (P2-2)**  
-- Files: `Core/View+AppEnvironment.swift`, affected Views  
-- Verify:  
-  - no direct access to AppContainer via EnvironmentObject in views  
-  - all dependencies injected explicitly or via environment keys  
-  - minimized service locator usage
-
-**F3. AppContainer MainActor leakage cleanup (P2-1)**  
+**F3. AppContainer MainActor leakage cleanup (Optional / nice-to-have)**  
 - Files: `Core/AppContainer.swift`  
 - Notes:  
   - remove broad `@MainActor` annotation  
   - keep only UI-mutating managers or state isolated on MainActor
 
-**F4. Tests & reliability hardening**  
+**F4. Tests & reliability hardening (Recommended)**  
 - Add unit tests for retry/backoff logic in NetworkService  
 - Add tests for async DefaultsStore operations  
 - Add tests for DataService refresh deduplication and cancellation  
@@ -308,7 +294,7 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 - Repositories are not `@MainActor`  
 - ViewModels not globally `@MainActor` unless explicitly justified  
 - Network timeout + retry implemented and covered by tests  
-- Zero @EnvironmentObject AppContainer usages in Views
+- Zero @EnvironmentObject AppContainer usages in Views/Core/UIUtils  
 - Thread Sanitizer: 0 data races  
 - No main-thread stalls during data load/scroll (Instruments)  
 - NetworkService retry is cancellation-aware and refresh is deduplicated per file  
