@@ -19,6 +19,7 @@
 - [ ] UI-тесты (например, запуск HomeView / SearchView)  
 - [x] Dependency Injection через протоколы и мок-реализации (полный отказ от .shared)  
 - [x] Асинхронный DataService (`async/await`) + обработка ошибок  
+- [x] Strict in-flight deduplication + cancellation-safe retry (F4 stabilization, actors + structured concurrency)
 
 ### Работа с данными
 - [ ] SwiftData/CoreData для избранного и истории  
@@ -53,21 +54,22 @@
 - [ ] Архитектурные паттерны: TCA или Clean Architecture  
 - [ ] Продвинутый DI-контейнер (Needle, Resolver)  
 - [ ] Multiplatform (iPad + Mac Catalyst)  
-- [ ] Swift Concurrency best practices (actors, structured concurrency)  
+- [x] Swift Concurrency best practices (actors, structured concurrency, cancellation-aware retry)  
 
 ### Тестирование
 - [ ] Покрытие ключевых Managers, Services и ViewModels (>80%)  
 - [ ] Тестирование краевых случаев (пустые данные, ошибки парсинга, локализация)  
 - [ ] Использование Mocking & Stubs для изоляции зависимостей  
 - [ ] Property-based testing (генерация случайных входных данных)  
-- [ ] Performance-тесты для ресурсоёмких операций (например, парсинг JSON)  
+- [x] Performance-тесты для ресурсоёмких операций (JSON load + parallel stress validation)  
 - [ ] End-to-End сценарии (поиск → избранное → статья → экспорт PDF)  
 - [ ] Snapshot-тесты для основных экранов (HomeView, SearchView, ArticleDetailView)  
 - [ ] Accessibility-тесты (VoiceOver, Dynamic Type)  
-- [ ] Test Plans в Xcode для разных типов тестов (Unit/UI)  
+- [x] Test Plans в Xcode для разных типов тестов (Unit + TSAN stress suite)  
 - [ ] Code coverage reports (например, Slather + GitHub Actions)  
 
 ### Инфраструктура
 - [ ] CI/CD с автодеплоем на TestFlight  
 - [ ] Параллельный запуск тестов на CI  
 - [ ] Перфоманс-профилирование (Instruments)  
+- [ ] CI integration with TSAN + parallel stress runs

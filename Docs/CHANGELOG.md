@@ -5,15 +5,46 @@
 
 ---
 
+
 ## [Unreleased]
 ### Added
-- _TBD_
+- _Next: Observability / performance roadmap_
 
 ### Changed
-- _TBD_
+- _Next: tighten refresh scheduling + metrics_
 
 ### Fixed
-- _TBD_
+- _Next: address any TSAN regressions immediately_
+
+
+## [v0.3.0-f4-stabilization] – 2026-02-22
+
+### Stabilization (F4)
+- Strict in-flight request deduplication implemented in `NetworkService` (shared tasks with waiter-aware cancellation)
+- Retry policy hardened: cancellation-aware exponential backoff; `URLError(.cancelled)` treated as structured cancellation
+- Refresh scheduling deduped per file to prevent request storms under parallel load
+
+### Tests
+- Added/updated unit tests for `NetworkService`:
+  - network success decoding
+  - retry on 5xx then success
+  - invalid JSON decode failure
+  - cancellation stops retries deterministically
+  - strict parallel-load dedupe (20+ parallel calls → 1 network request)
+- Added/updated unit tests for `DataService`:
+  - offline-first cache behavior
+  - background refresh deduplication (parallel calls → 1 refresh)
+  - update behavior gated by `.network` data source
+- Persistence tests stabilized for reading history/stats
+
+### Tooling
+- Added `.xctestplan` and enabled Thread Sanitizer (TSAN) diagnostics for test runs
+- TSAN verified clean under stress runs
+
+### Notes
+- F4 stabilization milestone merged to `main` and pushed
+
+---
 
 
 ## [v0.2.3-di-localization-clean] – 2026-02-21
@@ -501,6 +532,6 @@
 ---
 
 ## Links
-
+[v0.3.0-f4-stabilization]: https://github.com/UmedTJK/InGermany/releases/tag/v0.3.0-f4-stabilization
 [v0.2.3-di-localization-clean]: https://github.com/UmedTJK/InGermany/releases/tag/v0.2.3-di-localization-clean
 [v0.2-di-refactor]: https://github.com/UmedTJK/InGermany/releases/tag/v0.2-di-refactor

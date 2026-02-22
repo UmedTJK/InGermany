@@ -426,7 +426,7 @@ No shortcuts.
 
 End of specification.
 
-# InGermany — Architecture Specification (v2.1)
+# InGermany — Architecture Specification (v2.2)
 
 📅 Updated: 2026-02-21  
 🏷 Status: Concurrency Stabilization Phase  
@@ -699,16 +699,22 @@ Single Responsibility Principle must be enforced.
 
 # 12. Stabilization Phase (v0.2.4 → v0.3 Target)
 
-Current focus:
+Current status: F4 Concurrency Stabilization Completed (2026‑02‑22)
 
-1. Remove all Task.detached usage.
-2. Actor-isolate DataService.
-3. Remove global @MainActor from ViewModels/Repositories.
-4. Introduce retry/backoff/timeout policy.
-5. Enforce structured concurrency across layers.
-6. Harden error handling.
+Completed milestones:
 
-This is a corrective stabilization phase, not a feature phase.
+1. All Task.detached usage removed.
+2. DataService fully actor-isolated.
+3. Strict in-flight deduplication implemented in NetworkService.
+4. Cancellation-aware retry policy implemented and verified.
+5. Structured concurrency enforced across layers.
+6. DataService refresh deduplication hardened.
+7. Thread Sanitizer (TSAN) run clean under stress.
+8. Concurrency test suite deterministic and green.
+
+The stabilization phase is complete. The architecture is now concurrency-safe and production-ready.
+
+Future phases will focus on performance optimization, observability, and feature expansion rather than corrective stabilization.
 
 ---
 

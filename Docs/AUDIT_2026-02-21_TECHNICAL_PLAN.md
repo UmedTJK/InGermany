@@ -270,7 +270,7 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 
 ---
 
-### Phase F — Remaining Work (Open) (Next)
+### Phase F — Remaining Work (Open)
 
 **F3. AppContainer MainActor leakage cleanup (Optional / nice-to-have)**  
 - Files: `Core/AppContainer.swift`  
@@ -278,11 +278,15 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
   - remove broad `@MainActor` annotation  
   - keep only UI-mutating managers or state isolated on MainActor
 
-**F4. Tests & reliability hardening (Recommended)**  
-- Add unit tests for retry/backoff logic in NetworkService  
-- Add tests for async DefaultsStore operations  
-- Add tests for DataService refresh deduplication and cancellation  
-- Run Thread Sanitizer (TSAN) to confirm zero data races
+**F4. Tests & reliability hardening** ✅ DONE
+
+- ✅ Unit tests added for retry/backoff logic in NetworkService  
+- ✅ Tests added for strict in-flight deduplication  
+- ✅ Tests added for cancellation-aware retry behavior  
+- ✅ Tests added for DataService refresh deduplication  
+- ✅ DefaultsStore async operations covered  
+- ✅ Thread Sanitizer (TSAN) run clean  
+- All concurrency tests deterministic and green
 
 ---
 
@@ -299,6 +303,8 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 - No main-thread stalls during data load/scroll (Instruments)  
 - NetworkService retry is cancellation-aware and refresh is deduplicated per file  
 - DefaultsStore async is used by managers (ReadingStatsManager, FavoritesManager) with explicit bootstrap
+
+- F4 milestone merged to main and verified under TSAN stress runs
 
 ---
 
