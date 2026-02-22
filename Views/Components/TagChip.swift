@@ -2,13 +2,6 @@
 //  TagChip.swift
 //  InGermany
 //
-//  Created by SUM TJK on 22.02.26.
-//
-
-//
-//  TagChip.swift
-//  InGermany
-//
 
 import SwiftUI
 
@@ -29,3 +22,15 @@ struct TagChip: View {
             .accessibilityLabel(Text(text))
     }
 }
+
+#if DEBUG
+#Preview {
+    VStack(spacing: DS.Spacing.m) {
+        TagChip(text: "Residence Permit")
+        TagChip(text: "Integration Course")
+        TagChip(text: "VeryLongTagExampleThatShouldTruncate")
+    }
+    .padding()
+    .background(DS.Color.background)
+}
+#endif
