@@ -39,54 +39,54 @@ struct ArticleCompactCard: View {
                     baseView
                         .frame(width: cardWidth, height: cardHeight * 0.55)
                         .clipped()
-                        .cornerRadius(12)
+                        .cornerRadius(DS.Radius.media)
                 case .bottomCorners, .fullWidth:
                     baseView
                         .frame(width: cardWidth, height: cardHeight * 0.55)
                         .clipped()
-                        .cornerRadius(12, corners: UIRectCorner([.bottomLeft, .bottomRight]))
+                        .cornerRadius(DS.Radius.media, corners: UIRectCorner([.bottomLeft, .bottomRight]))
                 }
 
                 if let category = viewModel.category,
                    let color = Color(hex: category.colorHex) {
-                    HStack(spacing: 4) {
+                    HStack(spacing: DS.Spacing.xs) {
                         Image(systemName: category.icon)
-                            .font(.caption)
+                            .font(DS.Typography.meta)
                         Text(category.localizedName(for: selectedLanguage))
-                            .font(.caption2)
+                            .font(DS.Typography.badge)
                             .bold()
                     }
-                    .padding(6)
+                    .padding(DS.Spacing.s)
                     .background(color.opacity(0.85))
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-                    .padding(8)
+                    .foregroundStyle(.white)
+                    .cornerRadius(DS.Radius.badge)
+                    .padding(DS.Spacing.s)
                 }
             }
             .frame(width: cardWidth)
 
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: DS.Spacing.m) {
                 Text(viewModel.article.localizedTitle(for: selectedLanguage))
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                    .font(DS.Typography.cardTitle)
+                    .foregroundStyle(DS.Color.textPrimary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
 
                 Text(viewModel.article.localizedContent(for: selectedLanguage))
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(DS.Typography.cardBody)
+                    .foregroundStyle(DS.Color.textSecondary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
 
                 if !viewModel.article.tags.isEmpty {
-                    HStack(spacing: 6) {
+                    HStack(spacing: DS.Spacing.xs) {
                         ForEach(viewModel.article.tags.prefix(3), id: \.self) { tag in
                             Text(tag)
-                                .font(.caption2)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.secondary.opacity(0.15))
-                                .cornerRadius(6)
+                                .font(DS.Typography.chip)
+                                .padding(.horizontal, DS.Spacing.s)
+                                .padding(.vertical, DS.Spacing.xs)
+                                .background(DS.Color.secondarySurface)
+                                .cornerRadius(DS.Radius.chip)
                         }
                     }
                 }
@@ -94,26 +94,26 @@ struct ArticleCompactCard: View {
                 HStack {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                            .font(.caption)
+                            .foregroundStyle(.yellow)
+                            .font(DS.Typography.meta)
                         StarRatingView(rating: $viewModel.rating)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                            .font(DS.Typography.meta)
+                            .foregroundStyle(DS.Color.textSecondary)
                     }
 
                     Spacer()
 
                     HStack(spacing: 4) {
                         Image(systemName: "clock")
-                            .foregroundColor(.secondary)
-                            .font(.caption)
+                            .foregroundStyle(DS.Color.textSecondary)
+                            .font(DS.Typography.meta)
                         Text(viewModel.subtitle)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                            .font(DS.Typography.meta)
+                            .foregroundStyle(DS.Color.textSecondary)
                     }
                 }
             }
-            .padding(12)
+            .padding(DS.Spacing.m)
         }
         .frame(width: cardWidth)
         .cardContainer()
@@ -129,4 +129,3 @@ struct ArticleCompactCard: View {
         .environmentObject(container)
 }
 #endif
-
