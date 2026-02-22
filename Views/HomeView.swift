@@ -48,10 +48,12 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+#if DEBUG
                 Rectangle()
                     .fill(getDataSourceColor())
                     .frame(height: 3)
                     .frame(maxWidth: .infinity)
+#endif
 
                 if viewModel.isLoading {
                     ProgressView(t("Загрузка данных..."))
