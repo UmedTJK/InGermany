@@ -75,12 +75,7 @@ struct ArticleCompactCard: View {
                 if !viewModel.article.tags.isEmpty {
                     HStack(spacing: DS.Spacing.xs) {
                         ForEach(viewModel.article.tags.prefix(3), id: \.self) { tag in
-                            Text(tag)
-                                .font(DS.Typography.chip)
-                                .padding(.horizontal, DS.Spacing.s)
-                                .padding(.vertical, DS.Spacing.xs)
-                                .background(DS.Color.secondarySurface)
-                                .cornerRadius(DS.Radius.chip)
+                            TagChip(text: tag)
                         }
                     }
                 }
@@ -205,6 +200,24 @@ struct ArticleCompactCard: View {
         case "uk": return "Двічі торкніться, щоб відкрити статтю."
         default: return "Double-tap to open the article."
         }
+    }
+}
+
+private struct TagChip: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(DS.Typography.chip)
+            .foregroundStyle(DS.Color.textSecondary)
+            .lineLimit(1)
+            .truncationMode(.tail)
+            .padding(.horizontal, DS.Spacing.s)
+            .padding(.vertical, DS.Spacing.xs)
+            .frame(minHeight: 28)
+            .background(DS.Color.secondarySurface)
+            .cornerRadius(DS.Radius.chip)
+            .accessibilityLabel(Text(text))
     }
 }
 
