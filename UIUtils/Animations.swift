@@ -7,50 +7,75 @@ import SwiftUI
 
 // MARK: - View Modifiers
 extension View {
-    /// Applies the standard card style with background, corner radius, and shadow.
-    func cardStyle() -> some View {
-        self
-            .background(Color(.systemBackground))
-            .cornerRadius(12)
-            .shadow(
-                color: Theme.cardShadow.color,
-                radius: Theme.cardShadow.radius,
-                x: Theme.cardShadow.x,
-                y: Theme.cardShadow.y
-            )
-    }
-    
-    /// Applies a card style with a lighter shadow effect.
-    func lightCardStyle() -> some View {
-        self
-            .background(Color(.systemBackground))
-            .cornerRadius(10)
-            .shadow(
-                color: Theme.lightShadow.color,
-                radius: Theme.lightShadow.radius,
-                x: Theme.lightShadow.x,
-                y: Theme.lightShadow.y
-            )
-    }
-    
-    /// Adds a spring scale animation on view appearance.
+    /// Adds a spring scale-in on first appearance.
+    /// Respects Reduce Motion (no scaling/animation when enabled).
     func scaleOnAppear() -> some View {
-        self
-            .scaleEffect(0.95)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: UUID())
+        modifier(ScaleOnAppearModifier())
     }
-    
-    /// Adds a press (tap down) animation.
+
+    /// Adds a press (tap down) scale effect.
+    /// Respects Reduce Motion (no scaling/animation when enabled).
     func pressAnimation() -> some View {
-        self
-            .scaleEffect(0.97)
-            .animation(.easeInOut(duration: 0.2), value: UUID())
+        modifier(PressScaleModifier())
     }
-    
-    /// Adds a slide-in animation with optional delay.
+
+    /// Provides a standard transition for views that are inserted/removed.
+    /// Note: transition animation should be driven by the state change (e.g., `withAnimation`).
+    /// Respects Reduce Motion by using a simple opacity transition.
     func slideInAnimation(delay: Double = 0) -> some View {
-        self
-            .transition(.move(edge: .bottom).combined(with: .opacity))
-            .animation(.easeOut(duration: 0.3).delay(delay), value: UUID())
+        modifier(SlideInTransitionModifier(delay: delay))
+    }
+}
+
+private struct ScaleOnAppearModifier: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var hasAppeared = false
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(reduceMotion ? 1.0 : (hasAppeared ? 1.0 : 0.95))
+            .onAppear { hasAppeared = true }
+            .animation(
+                reduceMotion ? nil : .spring(response: 0.3, dampingFraction: 0.6),
+                value: hasAppeared
+            )
+    }
+}
+
+private struct PressScaleModifier: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isPressed = false
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(reduceMotion ? 1.0 : (isPressed ? 0.97 : 1.0))
+            .onLongPressGesture(
+                minimumDuration: 0,
+                maximumDistance: 50,
+                pressing: { isPressed = $0 },
+                perform: {}
+            )
+            .animation(
+                reduceMotion ? nil : .easeInOut(duration: 0.2),
+                value: isPressed
+            )
+    }
+}
+
+private struct SlideInTransitionModifier: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let delay: Double
+
+    func body(content: Content) -> some View {
+        content
+            .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+            .transaction { txn in
+                // Disable implicit animations when Reduce Motion is enabled.
+                if reduceMotion {
+                    txn.animation = nil
+                } else if txn.animation != nil {
+                    txn.animation = txn.animation?.delay(delay)
+                }
+            }
     }
 }
