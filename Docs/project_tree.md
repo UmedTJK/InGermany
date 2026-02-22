@@ -177,6 +177,7 @@
 │   ├── ExportToPDF.swift
 │   ├── Network
 │   │   ├── NetworkMetrics.swift
+│   │   ├── NetworkMetricsCollector.swift
 │   │   └── NetworkService.swift
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
@@ -273,4 +274,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-74 directories, 200 files
+74 directories, 201 files
