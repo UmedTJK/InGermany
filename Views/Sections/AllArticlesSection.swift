@@ -32,24 +32,21 @@ struct AllArticlesSection: View {
         VStack(alignment: .leading, spacing: DS.Spacing.m) {
             SectionHeader(title: localizationManager.t("section_all_articles"))
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: DS.Spacing.carouselItem) {
-                    ForEach(articles) { article in
-                        NavigationLink {
-                            ArticleDetailView(
-                                viewModel: makeDetailViewModel(article, articles),
-                                localizationManager: localizationManager,
-                                articleRowFactory: makeRowViewModel
-                            )
-                        } label: {
-                            ArticleCompactCard(
-                                viewModel: makeRowViewModel(article)
-                            )
-                        }
+            HorizontalCarousel {
+                ForEach(articles) { article in
+                    NavigationLink {
+                        ArticleDetailView(
+                            viewModel: makeDetailViewModel(article, articles),
+                            localizationManager: localizationManager,
+                            articleRowFactory: makeRowViewModel
+                        )
+                    } label: {
+                        ArticleCompactCard(
+                            viewModel: makeRowViewModel(article)
+                        )
                     }
+                    .buttonStyle(.plain)
                 }
-                .padding(.horizontal, DS.Spacing.contentInset)
-                .padding(.vertical, DS.Spacing.carouselVPad)
             }
         }
         .padding(.bottom, DS.Spacing.xl)
