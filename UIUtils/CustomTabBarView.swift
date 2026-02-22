@@ -3,23 +3,25 @@ import SwiftUI
 struct CustomTabBarView: View {
     @State private var selectedTab: Int = 0
     @Namespace private var animation
-    let appContainer: AppContainer
+    // Factories injected from composition root (no AppContainer in UI layer)
+    let makeHomeViewModel: () -> HomeViewModel
+    let makeCategoriesViewModel: () -> CategoriesViewModel
+    let makeSearchViewModel: () -> SearchViewModel
+    let makeFavoritesViewModel: () -> FavoritesViewModel
+    let makeSettingsViewModel: () -> SettingsViewModel
+    let makeAboutViewModel: () -> AboutViewModel
+    let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+    let makeDataService: () -> DataServiceProtocol
+    let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
+    let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
+    let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
     @EnvironmentObject var localizationManager: LocalizationManager
     
     var body: some View {
         VStack(spacing: 0) {
-            Group {
-                switch selectedTab {
-                case 0: HomeView(appContainer: appContainer)
-                case 1: CategoriesView(appContainer: appContainer)
-                case 2: SearchView(viewModel: appContainer.makeSearchViewModel())
-                case 3: FavoritesView(viewModel: appContainer.makeFavoritesViewModel())
-                case 4: SettingsView(viewModel: appContainer.makeSettingsViewModel())
-                default: HomeView(appContainer: appContainer)
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .edgesIgnoringSafeArea(.bottom)
+            tabContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.bottom)
 
             HStack {
                 tabButton(icon: "house.fill", label: localizationManager.t("tab_home"), index: 0)
@@ -79,6 +81,60 @@ struct CustomTabBarView: View {
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity)
+        }
+    }
+
+    @ViewBuilder
+    private var tabContent: some View {
+        switch selectedTab {
+        case 0:
+            HomeView(
+                viewModelFactory: makeHomeViewModel,
+                makePDFLibraryViewModel: makePDFLibraryViewModel,
+                makeDataService: makeDataService,
+                makeArticleRowViewModel: makeArticleRowViewModel,
+                makeArticleDetailViewModel: makeArticleDetailViewModel,
+                makeArticleDetailView: makeArticleDetailView,
+                localizationManager: localizationManager
+            )
+
+        case 1:
+            CategoriesView(
+                viewModel: makeCategoriesViewModel(),
+                makeRowViewModel: makeArticleRowViewModel,
+                makeDetailViewModel: makeArticleDetailViewModel
+            )
+
+        case 2:
+            SearchView(
+                viewModel: makeSearchViewModel(),
+                makeRowViewModel: makeArticleRowViewModel,
+                makeDetailViewModel: makeArticleDetailViewModel
+            )
+
+        case 3:
+            FavoritesView(
+                viewModel: makeFavoritesViewModel(),
+                makeRowViewModel: makeArticleRowViewModel,
+                makeDetailViewModel: makeArticleDetailViewModel
+            )
+
+        case 4:
+            SettingsView(
+                viewModel: makeSettingsViewModel(),
+                makeAboutViewModel: makeAboutViewModel
+            )
+
+        default:
+            HomeView(
+                viewModelFactory: makeHomeViewModel,
+                makePDFLibraryViewModel: makePDFLibraryViewModel,
+                makeDataService: makeDataService,
+                makeArticleRowViewModel: makeArticleRowViewModel,
+                makeArticleDetailViewModel: makeArticleDetailViewModel,
+                makeArticleDetailView: makeArticleDetailView,
+                localizationManager: localizationManager
+            )
         }
     }
 }

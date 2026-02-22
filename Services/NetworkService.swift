@@ -10,9 +10,28 @@ import Foundation
 /// Service responsible for loading JSON data with OFFLINE-FIRST strategy.
 /// Uses: Bundle → File Cache → Network (async refresh)
 class NetworkService {
+
+    /// Base URL for remote JSON files (GitHub raw). Must end with a slash.
+    private let baseURL: String = "https://raw.githubusercontent.com/sumtjk/InGermany/main/Resources/"
     
-    /// Base URL pointing to the GitHub raw resources used for fetching JSON files.
-    private let baseURL = "https://raw.githubusercontent.com/UmedTJK/InGermany/main/Resources/"
+    // MARK: - In-flight refresh dedup (one per file)
+    private var inFlightRefresh: [String: Task<Void, Never>] = [:]
+    
+    private func scheduleRefresh(file: String) {
+        // Dedup: if there is an in-flight refresh for this file, don't start another.
+        guard inFlightRefresh[file] == nil else { return }
+        if Task.isCancelled { return }
+        
+        inFlightRefresh[file] = Task(priority: .utility) { [weak self] in
+            guard let self else { return }
+            defer { self.inFlightRefresh[file] = nil }
+            await self.refreshFromNetwork(file: file)
+        }
+    }
+    
+    /// Retry configuration
+    private let maxRetryAttempts = 3
+    private let baseRetryDelay: UInt64 = 300_000_000 // 0.3 seconds (in nanoseconds)
     /// In-memory and disk cache used for URLSession requests.
     private let cache = URLCache(memoryCapacity: 10 * 1024 * 1024,
                                  diskCapacity: 50 * 1024 * 1024,
@@ -54,14 +73,14 @@ class NetworkService {
         // Шаг 1: Bundle
         if let bundleData = loadFromBundle(file: file) {
             print("📦 [NetworkService] Загружено из Bundle: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             return try decodeData(bundleData)
         }
         
         // Шаг 2: File Cache
         if let cachedData = loadFromCache(for: file) {
             print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             return try decodeData(cachedData)
         }
         
@@ -75,7 +94,7 @@ class NetworkService {
         // Шаг 1: Bundle
         if let bundleData = loadFromBundle(file: file) {
             print("📦 [NetworkService] Загружено из Bundle: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             let decoded: T = try decodeData(bundleData)
             return (decoded, .bundle)
         }
@@ -83,7 +102,7 @@ class NetworkService {
         // Шаг 2: File Cache
         if let cachedData = loadFromCache(for: file) {
             print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
-            Task { await refreshFromNetwork(file: file) }
+            scheduleRefresh(file: file)
             let decoded: T = try decodeData(cachedData)
             return (decoded, .fileCache)
         }
@@ -95,6 +114,39 @@ class NetworkService {
     }
     
     // MARK: - Приватные методы загрузки
+    
+    /// Executes a network request with exponential backoff retry.
+    private func performWithRetry<T>(
+        operation: @escaping () async throws -> T
+    ) async throws -> T {
+        var attempt = 0
+        var lastError: Error?
+        
+        while attempt < maxRetryAttempts {
+            if Task.isCancelled { throw CancellationError() }
+            do {
+                return try await operation()
+            } catch {
+                if error is CancellationError { throw error }
+                lastError = error
+                attempt += 1
+                
+                if attempt >= maxRetryAttempts {
+                    break
+                }
+                
+                let delay = baseRetryDelay * UInt64(pow(2.0, Double(attempt - 1)))
+                do {
+                    try await Task.sleep(nanoseconds: delay)
+                } catch {
+                    // Preserve structured cancellation semantics
+                    throw error
+                }
+            }
+        }
+        
+        throw lastError ?? NetworkError.networkUnavailable
+    }
     
     private func loadFromBundle(file: String) -> Data? {
         guard let bundleURL = Bundle.main.url(forResource: file, withExtension: nil) else {
@@ -110,39 +162,46 @@ class NetworkService {
     
     private func loadFromNetwork<T: Decodable>(file: String) async throws -> T {
         let url = URL(string: baseURL + file)!
-        var request = URLRequest(url: url)
-        request.cachePolicy = .returnCacheDataElseLoad
         
-        let (data, response) = try await session.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw NetworkError.invalidResponse
+        return try await performWithRetry { [self] in
+            var request = URLRequest(url: url)
+            request.cachePolicy = .returnCacheDataElseLoad
+            
+            let (data, response) = try await self.session.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                throw NetworkError.invalidResponse
+            }
+            
+            self.saveToCache(data: data, for: file)
+            return try self.decodeData(data)
         }
-        
-        saveToCache(data: data, for: file)
-        return try decodeData(data)
     }
     
     private func refreshFromNetwork(file: String) async {
         let url = URL(string: baseURL + file)!
         
         do {
-            var request = URLRequest(url: url)
-            request.cachePolicy = .reloadIgnoringLocalCacheData
-            request.timeoutInterval = 3.0
-            
-            let (data, response) = try await session.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                return
+            try await performWithRetry { [self] in
+                var request = URLRequest(url: url)
+                request.cachePolicy = .reloadIgnoringLocalCacheData
+                request.timeoutInterval = 3.0
+                
+                let (data, response) = try await self.session.data(for: request)
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    throw NetworkError.invalidResponse
+                }
+                
+                self.saveToCache(data: data, for: file)
+                return ()
             }
             
-            saveToCache(data: data, for: file)
             print("🔄 [NetworkService] Данные обновлены из сети: \(file)")
         } catch {
-            print("⚠️ [NetworkService] Не удалось обновить данные из сети: \(error.localizedDescription)")
+            print("⚠️ [NetworkService] Не удалось обновить данные из сети после retry: \(error.localizedDescription)")
         }
     }
     
@@ -179,6 +238,10 @@ class NetworkService {
     }
     
     func clearCache() {
+        // Cancel any in-flight refresh tasks
+        for (_, task) in inFlightRefresh { task.cancel() }
+        inFlightRefresh.removeAll()
+    
         do {
             let files = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)
             for file in files {

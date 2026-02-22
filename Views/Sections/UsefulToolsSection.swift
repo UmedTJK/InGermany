@@ -4,14 +4,29 @@
 //
 //  Created by SUM TJK on 28.09.25.
 //
+
 import SwiftUI
 
 struct UsefulToolsSection: View {
-    @EnvironmentObject var appContainer: AppContainer
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    @EnvironmentObject private var localizationManager: LocalizationManager
     
     let articles: [Article]
     let onRandomArticleSelected: (Article) -> Void
+    private let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+    private let makeDataService: () -> DataServiceProtocol
+    
+    init(
+        articles: [Article],
+        onRandomArticleSelected: @escaping (Article) -> Void,
+        makePDFLibraryViewModel: @escaping () -> PDFLibraryViewModel,
+        makeDataService: @escaping () -> DataServiceProtocol
+    ) {
+        self.articles = articles
+        self.onRandomArticleSelected = onRandomArticleSelected
+        self.makePDFLibraryViewModel = makePDFLibraryViewModel
+        self.makeDataService = makeDataService
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -21,21 +36,37 @@ struct UsefulToolsSection: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    NavigationLink(destination: MapView()) {
-                        ToolCard(title: t("tool_map"), systemImage: "map", color: .blue)
+                    
+                    NavigationLink(destination: MapView(dataService: makeDataService())) {
+                        ToolCard(
+                            title: t("tool_map"),
+                            systemImage: "map",
+                            color: .blue
+                        )
                     }
 
-                    NavigationLink(destination: PDFLibraryView(viewModel: appContainer.makePDFLibraryViewModel())) {
-                        ToolCard(title: t("tool_pdf_docs"), systemImage: "doc.richtext", color: .green)
+                    NavigationLink(
+                        destination: PDFLibraryView(
+                            viewModel: makePDFLibraryViewModel()
+                        )
+                    ) {
+                        ToolCard(
+                            title: t("tool_pdf_docs"),
+                            systemImage: "doc.richtext",
+                            color: .green
+                        )
                     }
-
 
                     Button {
                         if let random = articles.randomElement() {
                             onRandomArticleSelected(random)
                         }
                     } label: {
-                        ToolCard(title: t("tool_random_article"), systemImage: "shuffle", color: .orange)
+                        ToolCard(
+                            title: t("tool_random_article"),
+                            systemImage: "shuffle",
+                            color: .orange
+                        )
                     }
                 }
                 .padding(.horizontal)
@@ -44,6 +75,9 @@ struct UsefulToolsSection: View {
     }
 
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(
+            key: key,
+            language: selectedLanguage
+        )
     }
 }

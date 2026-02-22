@@ -28,6 +28,15 @@ class SearchViewModel: ObservableObject {
     /// Repository for loading articles.
     private let articlesRepo: ArticlesRepositoryProtocol
 
+    // MARK: - Concurrency guards
+    /// Prevents stale async loads from overwriting newer state.
+    private var loadGeneration: UInt64 = 0
+
+    // MARK: - Search memoization
+    /// Cache of lowercased searchable blobs per (articleId, language).
+    /// Key format: "\(articleId)|\(language)"
+    private var searchBlobCache: [String: String] = [:]
+
     /// Injects dependencies.
     init(
         favoritesManager: FavoritesManagingProtocol,
@@ -47,14 +56,11 @@ class SearchViewModel: ObservableObject {
             results = results.filter { $0.tags.contains(tag) }
         }
         if !searchText.isEmpty {
-            let lowercased = searchText.lowercased()
+            let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            guard !query.isEmpty else { return results }
+
             results = results.filter { article in
-                article.localizedTitle(for: selectedLanguage).lowercased().contains(lowercased) ||
-                article.localizedContent(for: selectedLanguage).lowercased().contains(lowercased) ||
-                categoriesRepo.category(by: article.categoryId)?
-                    .localizedName(for: selectedLanguage)
-                    .lowercased()
-                    .contains(lowercased) ?? false
+                searchableBlob(for: article).contains(query)
             }
         }
         return results
@@ -69,9 +75,45 @@ class SearchViewModel: ObservableObject {
     // MARK: - Data loading
     /// Загружает статьи из репозитория и обновляет состояние загрузки
     func loadArticles() async {
+        loadGeneration &+= 1
+        let gen = loadGeneration
+
         isLoading = true
-        defer { isLoading = false }
-        self.articles = await articlesRepo.loadArticles()
-        self.dataSource = await articlesRepo.getLastSource()
+        defer {
+            // Only the latest generation may end loading.
+            if gen == loadGeneration {
+                isLoading = false
+            }
+        }
+
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        let loaded = await articlesRepo.loadArticles()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        let source = await articlesRepo.getLastSource()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        // Commit state (still on MainActor).
+        self.searchBlobCache.removeAll(keepingCapacity: true)
+        self.articles = loaded
+        self.dataSource = source
+    }
+
+    private func searchableBlob(for article: Article) -> String {
+        let key = "\(article.id)|\(selectedLanguage)"
+        if let cached = searchBlobCache[key] {
+            return cached
+        }
+
+        // Build a single lowercased blob used for "contains" checks.
+        let title = article.localizedTitle(for: selectedLanguage)
+        let content = article.localizedContent(for: selectedLanguage)
+        let categoryName = categoriesRepo.category(by: article.categoryId)?
+            .localizedName(for: selectedLanguage) ?? ""
+
+        let blob = "\(title)\n\(categoryName)\n\(content)".lowercased()
+        searchBlobCache[key] = blob
+        return blob
     }
 }

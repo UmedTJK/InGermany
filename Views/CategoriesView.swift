@@ -5,16 +5,19 @@ struct CategoriesView: View {
 
     @StateObject private var viewModel: CategoriesViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject var appContainer: AppContainer
+    @EnvironmentObject private var localizationManager: LocalizationManager
 
-    /// Основной init через DI
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeCategoriesViewModel())
-    }
+    private let makeRowViewModel: (Article) -> ArticleRowViewModel
+    private let makeDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
 
-    /// Для превью и тестов
-    init(viewModel: CategoriesViewModel) {
+    init(
+        viewModel: CategoriesViewModel,
+        makeRowViewModel: @escaping (Article) -> ArticleRowViewModel,
+        makeDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.makeRowViewModel = makeRowViewModel
+        self.makeDetailViewModel = makeDetailViewModel
     }
 
     var body: some View {
@@ -46,28 +49,31 @@ struct CategoriesView: View {
                 ArticlesByCategoryView(
                     category: category,
                     articles: viewModel.articles(for: category.id),
-                    localizationManager: appContainer.localizationManager,
-                    articleRowFactory: appContainer.makeArticleRowViewModel,
+                    localizationManager: localizationManager,
+                    articleRowFactory: makeRowViewModel,
                     articleDetailFactory: { article, allArticles in
-                        appContainer.makeArticleDetailViewModel(
-                            article: article,
-                            allArticles: allArticles
-                        )
+                        makeDetailViewModel(article, allArticles)
                     }
                 )
-                .environmentObject(appContainer)
             }
         }
     }
 
     /// Provides localized strings for UI elements.
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 // MARK: - Preview
 #Preview {
-    CategoriesView(appContainer: AppContainer.previewMock())
-        .environmentObject(AppContainer.previewMock())
+    let container = AppContainer.previewMock()
+    CategoriesView(
+        viewModel: container.makeCategoriesViewModel(),
+        makeRowViewModel: container.makeArticleRowViewModel,
+        makeDetailViewModel: { article, all in
+            container.makeArticleDetailViewModel(article: article, allArticles: all)
+        }
+    )
+    .environmentObject(container.localizationManager)
 }

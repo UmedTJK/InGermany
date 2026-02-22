@@ -14,6 +14,10 @@ final class CategoriesViewModel: ObservableObject {
     private let articlesRepo: ArticlesRepositoryProtocol
     let favoritesManager: FavoritesManagingProtocol
 
+    // MARK: - Concurrency guards
+    /// Prevents stale async loads from overwriting newer state.
+    private var loadGeneration: UInt64 = 0
+
     /// Инжекция зависимостей: можно подменять репозитории (например, на моки в тестах)
     init(
         categoriesRepo: CategoriesRepositoryProtocol,
@@ -27,16 +31,40 @@ final class CategoriesViewModel: ObservableObject {
 
     /// Загрузить категории (инициализация)
     func load() async {
+        loadGeneration &+= 1
+        let gen = loadGeneration
+
         await categoriesRepo.bootstrap()
-        categories = categoriesRepo.allCategories()
-        articles = await articlesRepo.loadArticles()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        let loadedCategories = categoriesRepo.allCategories()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        let loadedArticles = await articlesRepo.loadArticles()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        guard gen == loadGeneration else { return }
+        self.categories = loadedCategories
+        self.articles = loadedArticles
     }
 
     /// Обновить категории
     func refresh() async {
+        loadGeneration &+= 1
+        let gen = loadGeneration
+
         await categoriesRepo.refresh()
-        categories = categoriesRepo.allCategories()
-        articles = await articlesRepo.refreshArticles()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        let refreshedCategories = categoriesRepo.allCategories()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        let refreshedArticles = await articlesRepo.refreshArticles()
+        guard !Task.isCancelled, gen == loadGeneration else { return }
+
+        guard gen == loadGeneration else { return }
+        self.categories = refreshedCategories
+        self.articles = refreshedArticles
     }
 
     /// Найти категорию по ID

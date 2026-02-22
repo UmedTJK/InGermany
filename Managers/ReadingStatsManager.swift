@@ -21,10 +21,13 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     private var didLoadFromStorage = false
     private var isLoadingFromStorage = false
 
-    init() {
-        Task { [weak self] in
-            await self?.loadFromStorageIfNeeded()
-        }
+    init(localizationManager: LocalizationManager = LocalizationManager()) {
+        self.localizationManager = localizationManager
+    }
+
+    // MARK: - Bootstrap
+    func bootstrap() async {
+        await loadFromStorageIfNeeded()
     }
 
     // MARK: - Progress
@@ -43,7 +46,7 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
 
     // MARK: - Sessions
     private var activeSessions: [String: ReadingSession] = [:]
-    private let localizationManager = LocalizationManager()
+    private let localizationManager: LocalizationManager
 
     func startSession(articleId: String) {
         let session = ReadingSession(articleId: articleId, startTime: Date())
@@ -69,25 +72,32 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
 
     // MARK: - History
     // Async load from storage if needed
-    private func loadFromStorageIfNeeded() async {
+    func loadFromStorageIfNeeded() async {
         if didLoadFromStorage || isLoadingFromStorage { return }
         isLoadingFromStorage = true
 
         let storageKey = self.storageKey
         let sessionsKey = self.sessionsKey
 
-        // Decode off the main thread to avoid UI freeze.
-        let loaded = await Task.detached(priority: .userInitiated) { () -> (history: [ReadingHistoryEntry], sessions: [ReadingSession]) in
-            let entries: [ReadingHistoryEntry] = DefaultsStore.load(storageKey, as: [ReadingHistoryEntry].self) ?? []
-            let sessions: [ReadingSession] = DefaultsStore.load(sessionsKey, as: [ReadingSession].self) ?? []
-            return (entries, sessions)
-        }.value
+        do {
+            async let loadedHistory: [ReadingHistoryEntry] = DefaultsStore.loadAsync(storageKey, as: [ReadingHistoryEntry].self) ?? []
+            async let loadedSessions: [ReadingSession] = DefaultsStore.loadAsync(sessionsKey, as: [ReadingSession].self) ?? []
 
-        // Publish on main actor
-        self.history = loaded.history.sorted { $0.readAt > $1.readAt }
-        self.completedSessions = loaded.sessions
+            let (entries, sessions) = try await (loadedHistory, loadedSessions)
 
-        self.didLoadFromStorage = true
+            // Publish on main actor (we are already @MainActor)
+            self.history = entries.sorted { $0.readAt > $1.readAt }
+            self.completedSessions = sessions
+
+            self.didLoadFromStorage = true
+        } catch {
+            // Keep app functional; record the error for diagnostics.
+            print("⚠️ [ReadingStatsManager] Failed to load reading stats from storage: \(error)")
+            self.history = []
+            self.completedSessions = []
+            self.didLoadFromStorage = true
+        }
+
         self.isLoadingFromStorage = false
     }
 
@@ -99,7 +109,14 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     }
 
     private func saveHistory() {
-        DefaultsStore.save(history, for: storageKey)
+        let snapshot = history
+        Task(priority: .utility) {
+            do {
+                try await DefaultsStore.saveAsync(snapshot, for: storageKey)
+            } catch {
+                print("⚠️ [ReadingStatsManager] Failed to save history: \(error)")
+            }
+        }
     }
 
     func addReadingEntry(articleId: String, readingTime: TimeInterval) {
@@ -131,6 +148,9 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
         completedSessions.removeAll()
         saveSessions()
         progress.removeAll()
+        // Persist cleared state
+        saveHistory()
+        saveSessions()
         didLoadFromStorage = true
     }
 
@@ -156,7 +176,14 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     }
 
     private func saveSessions() {
-        DefaultsStore.save(completedSessions, for: sessionsKey)
+        let snapshot = completedSessions
+        Task(priority: .utility) {
+            do {
+                try await DefaultsStore.saveAsync(snapshot, for: sessionsKey)
+            } catch {
+                print("⚠️ [ReadingStatsManager] Failed to save sessions: \(error)")
+            }
+        }
     }
 
     // MARK: - Helpers
@@ -177,4 +204,3 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
         }
     }
 }
-

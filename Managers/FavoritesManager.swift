@@ -6,7 +6,7 @@
 import Foundation
 import Combine
 
-/// Singleton-менеджер для управления избранными статьями.
+/// Менеджер для управления избранными статьями.
 /// Работает как `ObservableObject`, чтобы UI мог подписываться на изменения.
 /// Использует `DefaultsStore` для сохранения и загрузки списка избранных.
 @MainActor
@@ -16,10 +16,21 @@ final class FavoritesManager: ObservableObject {
 
     private let key = "favorites"
 
-    /// Инициализация с загрузкой сохранённых данных из `DefaultsStore`.
-    init() {
-        if let saved: [String] = DefaultsStore.load(key, as: [String].self) {
+    /// Инициализация без I/O. Загрузка выполняется явно через `bootstrap()`.
+    init() {}
+
+    // MARK: - Bootstrap
+    func bootstrap() async {
+        await loadFavoritesFromStorage()
+    }
+
+    private func loadFavoritesFromStorage() async {
+        do {
+            let saved: [String] = try await DefaultsStore.loadAsync(key, as: [String].self) ?? []
             favorites = Set(saved)
+        } catch {
+            print("⚠️ [FavoritesManager] Failed to load favorites: \(error)")
+            favorites = []
         }
     }
 
@@ -56,9 +67,16 @@ final class FavoritesManager: ObservableObject {
         isFavorite(id)
     }
 
-    /// Сохраняет текущий список избранных в `DefaultsStore`.
+    /// Сохраняет текущий список избранных в `DefaultsStore` (async, encode off-main).
     private func save() {
-        DefaultsStore.save(Array(favorites), for: key)
+        let snapshot = Array(favorites)
+        Task(priority: .utility) {
+            do {
+                try await DefaultsStore.saveAsync(snapshot, for: key)
+            } catch {
+                print("⚠️ [FavoritesManager] Failed to save favorites: \(error)")
+            }
+        }
     }
     
     // В FavoritesManager.swift исправьте метод clearForTesting():

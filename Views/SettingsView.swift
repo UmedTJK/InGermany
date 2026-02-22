@@ -6,13 +6,17 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @EnvironmentObject var appContainer: AppContainer
     @StateObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
-    
+    private let makeAboutViewModel: () -> AboutViewModel
+
     // MARK: - Init
-    init(viewModel: SettingsViewModel) {
+    init(
+        viewModel: SettingsViewModel,
+        makeAboutViewModel: @escaping () -> AboutViewModel
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.makeAboutViewModel = makeAboutViewModel
     }
 
     // MARK: - Body
@@ -91,7 +95,7 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         Section(header: Text(viewModel.localizedText("settings_about_title"))) {
-            NavigationLink(destination: AboutView(viewModel: appContainer.makeAboutViewModel())) {
+            NavigationLink(destination: AboutView(viewModel: makeAboutViewModel())) {
                 Text(viewModel.localizedText("tab_about"))
             }
         }

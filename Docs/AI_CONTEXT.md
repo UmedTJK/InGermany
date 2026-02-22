@@ -1,5 +1,5 @@
 # AI_CONTEXT.md — InGermany (iOS)
-**Last update:** 2026-02-20  
+**Last update:** 2026-02-21  
 **Repository scope:** iOS app only (SwiftUI). macOS Editor is in a separate repository and is NOT a dependency here.
 
 
@@ -9,7 +9,7 @@
 **InGermany** — iOS приложение-справочник для жизни в Германии: статьи/категории/локации/PDF + персонализация (избранное, история, прогресс чтения, статистика) + мультиязычность.
 
 **UI:** SwiftUI  
-**Arch style (current):** MVVM + Repository + Actor-based data layer + Hybrid DI (DI facade over several singletons)  
+**Arch style (current):** MVVM + Repository + Actor-based data layer + DI container (AppContainer) + explicit bootstrap  
 **Offline-first:** Bundle → in-memory/disk cache → network refresh
 
 ---
@@ -46,14 +46,14 @@ Runtime caching:
 - **Protocols** (contracts for repos/managers/services)
 - **Repositories**
   - `ArticlesRepositoryImpl` — thin wrapper over `DataService`
-  - `CategoriesRepositoryImpl` — singleton repository that bootstraps categories from `DataService`
+  - `CategoriesRepositoryImpl` — DI repository; publishes categories on MainActor, loads via injected DataService
 - **Services**
   - `DataService` (actor) — core offline-first orchestrator (cache, load, refresh, streams)
-  - `NetworkService` (singleton class) — bundle/cache/network loader + file cache
+  - `NetworkService` (class; DI-owned) — bundle/cache/network loader + file cache; retry + cancellation-aware backoff; refresh dedup per file
   - `CacheService` (actor singleton) — TTL memory cache
-  - `DefaultsStore` — UserDefaults Codable helpers
+  - `DefaultsStore` — UserDefaults Codable helpers (sync + async variants; JSON encode/decode off-main)
 - **Managers**
-  - Favorites/Rating/TextSize/Localization/ReadingStats/etc. (many are singletons)
+  - Managers are DI-owned instances created by AppContainer; persistence bootstrapped explicitly (no async side-effects in init).
   - `SettingsManager` — ObservableObject wrapper over `@AppStorage`
 - **Formatters / UIUtils** — formatting + UI helpers
 
@@ -62,19 +62,17 @@ Typical flow (Articles):
 View → ViewModel → ArticlesRepository → DataService(actor) → NetworkService(bundle/file/network) + CacheService → decoded `[Article]`
 
 Categories:
-CategoriesRepositoryImpl.shared.bootstrap() → DataService.shared.loadCategories()
+CategoriesRepositoryImpl.bootstrap() → DataService.loadCategories() (injected)
 
 ### 3.3 Current DI truth (important)
-DI exists, but is NOT pure.
 
-`AppContainer` creates view models and provides dependencies, **however** many deps are still singletons:
-- `DataService.shared`
-- `CategoriesRepositoryImpl.shared`
-- `FavoritesManager.shared`, `RatingManager.shared`, `TextSizeManager.shared`, `LocalizationManager.shared`
-- `ReadingStatsManager` is no longer accessed via `.shared` in ViewModels (encapsulated behind protocol in AppContainer)
-- `DateFormattingService.shared`, `TextAnalysisService.shared` (in container fields)
+DI is now the primary composition mechanism.
 
-**Definition:** Current DI = *factory + service locator facade* over several `.shared`.
+- `AppContainer` creates repositories, services, managers and ViewModels via factory methods.
+- No `.shared` singletons are used in the production graph (Docs may still mention historic usage).
+- App lifecycle uses explicit bootstrapping:
+  - `AppContainer.bootstrap()` preloads localization and bootstraps persistent managers (reading stats, favorites) asynchronously.
+- `SettingsManager` is a single source of truth instance (created in `InGermanyApp.init()` and injected into `AppContainer`).
 
 ---
 
@@ -82,8 +80,8 @@ DI exists, but is NOT pure.
 
 - `DataService` is an **actor**: protects its own caches and streams.
 - `CacheService` is an **actor**: protects TTL cache.
-- `NetworkService` is a **class singleton** (not actor): concurrency safety is weaker; it uses its own URLSession + file cache.
-- Some code uses `Task.detached` for background refreshes. This is intentional for non-blocking refresh.
+- `NetworkService` is a class (not actor). Concurrency is strengthened via: retry + cancellation-aware backoff and in-flight refresh dedup per file.
+- Background refresh uses structured Tasks (no Task.detached). DataService and NetworkService both deduplicate in-flight refreshes to avoid request storms.
 
 **Rule:** any new shared mutable state must be in an actor (or otherwise synchronized).
 
@@ -97,11 +95,9 @@ DI exists, but is NOT pure.
   - `@AppStorage("relativeDates")`
   - `@AppStorage("selectedCardStyleIndex")`
 
-`InGermanyApp` injects `SettingsManager` into environment and uses it as the **single theme source** (preferredColorScheme).
+InGermanyApp injects a single SettingsManager instance into the environment and uses it as the theme source (preferredColorScheme). The same instance is injected into AppContainer.
 
-**Note:** This is UI-coupled state; not protocolized yet.
-
-**Reading statistics:** Temporarily disabled in Settings UI to prevent main-thread UI freeze. Planned refactor: snapshot-based async aggregation model.
+**Reading statistics are bootstrapped explicitly and persisted via async DefaultsStore (encode/decode off-main).**
 
 ---
 
@@ -120,14 +116,14 @@ This repo includes SwiftPM packages:
 
 ## 7) Known Architectural Debt (short, high-signal)
 
-### 7.1 Hybrid DI + Singletons
-Many dependencies are still `.shared`. ReadingStatsManager has been encapsulated behind protocol-based DI, but other services still use shared singletons. This reduces testability and violates pure DIP.
+### 7.1 Remaining DI hardening
+Most of the production graph is DI-owned. Remaining work: reduce service-locator footprint in SwiftUI Environment and continue protocol-first boundaries where valuable for tests.
 
-### 7.2 CategoriesRepositoryImpl is singleton + ObservableObject
-It maintains published state + byId cache internally and pulls from `DataService.shared`.
+### 7.2 AppContainer is @MainActor (broad isolation)
+AppContainer is currently @MainActor; future cleanup may narrow MainActor isolation to UI-only state to reduce accidental main-thread coupling.
 
 ### 7.3 NetworkService is not actor
-Potential race/consistency risks under concurrent usage; file cache writes happen without explicit synchronization.
+NetworkService is still not an actor. While dedup + retry improved safety, full actor conversion or synchronized file-cache critical sections may be considered if contention appears.
 
 ### 7.4 SettingsManager uses @AppStorage directly
 Harder to test deterministically; not injectable via protocol in a strict way.
@@ -162,8 +158,8 @@ Goal: protocol-first DI (no `.shared` in production graph), testable services, c
 
 Minimal steps (order matters):
 1) Introduce protocols for DataService/NetworkService/CacheService (+ mocks)
-2) Remove `.shared` usage from repositories (inject protocols)
-3) Convert `NetworkService` to actor OR fully synchronize critical sections
+2) Continue protocol-first DI where it increases test value (e.g., NetworkService/SettingsStore), but avoid premature abstraction.
+3) Convert NetworkService to actor OR synchronize file-cache critical sections (if needed).
 4) Replace `@AppStorage` usage in core UI flow with a protocol-driven SettingsStore (optional)
 5) Add integration tests for DI graph + offline-first scenarios
 
@@ -175,8 +171,8 @@ Minimal steps (order matters):
 - App entry & env: `Core/InGermanyApp.swift`
 - Tabs composition: `Core/ContentView.swift`
 - Data core: `Services/DataService.swift` (actor)
-- Network loader: `Services/NetworkService.swift`
+- Network loader: `Services/NetworkService.swift` (retry + dedup refresh)
 - TTL cache: `Services/CacheService.swift` (actor)
 - Settings: `Managers/SettingsManager.swift`
-- UserDefaults helper: `Services/DefaultsStore.swift`
+- UserDefaults helper: `Services/DefaultsStore.swift` (async variants)
 - Repos: `Repositories/*`

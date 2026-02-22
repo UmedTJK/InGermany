@@ -4,17 +4,19 @@ import SwiftUI
 struct FavoritesView: View {
     @StateObject private var viewModel: FavoritesViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @State private var searchText = ""
-    @EnvironmentObject private var appContainer: AppContainer
+    @EnvironmentObject private var localizationManager: LocalizationManager
 
-    /// Основной init через DI
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeFavoritesViewModel())
-    }
+    private let makeRowViewModel: (Article) -> ArticleRowViewModel
+    private let makeDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
 
-    /// Для превью и тестов
-    init(viewModel: FavoritesViewModel) {
+    init(
+        viewModel: FavoritesViewModel,
+        makeRowViewModel: @escaping (Article) -> ArticleRowViewModel,
+        makeDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.makeRowViewModel = makeRowViewModel
+        self.makeDetailViewModel = makeDetailViewModel
     }
 
     private var filteredFavoriteArticles: [Article] {
@@ -28,6 +30,8 @@ struct FavoritesView: View {
             }
         }
     }
+
+    @State private var searchText = ""
 
     var body: some View {
         NavigationStack {
@@ -67,16 +71,12 @@ struct FavoritesView: View {
         List(filteredFavoriteArticles) { article in
             NavigationLink {
                 ArticleDetailView(
-                    viewModel: appContainer.makeArticleDetailViewModel(
-                        article: article,
-                        allArticles: viewModel.allArticles
-                    ),
-                    localizationManager: appContainer.localizationManager,
-                    articleRowFactory: appContainer.makeArticleRowViewModel
+                    viewModel: makeDetailViewModel(article, viewModel.allArticles),
+                    localizationManager: localizationManager,
+                    articleRowFactory: makeRowViewModel
                 )
-                .environmentObject(appContainer)
             } label: {
-                ArticleRow(viewModel: appContainer.makeArticleRowViewModel(article: article))
+                ArticleRow(viewModel: makeRowViewModel(article))
             }
         }
         .listStyle(PlainListStyle())
@@ -93,13 +93,19 @@ struct FavoritesView: View {
 
     /// Унифицированная функция перевода
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 // MARK: - Preview
 #Preview {
     let container = AppContainer.previewMock()
-    FavoritesView(appContainer: container)
-        .environmentObject(container)
+    FavoritesView(
+        viewModel: container.makeFavoritesViewModel(),
+        makeRowViewModel: container.makeArticleRowViewModel,
+        makeDetailViewModel: { article, all in
+            container.makeArticleDetailViewModel(article: article, allArticles: all)
+        }
+    )
+    .environmentObject(container.localizationManager)
 }

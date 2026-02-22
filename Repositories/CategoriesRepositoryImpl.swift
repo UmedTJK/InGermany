@@ -6,11 +6,10 @@
 
 import Foundation
 
-@MainActor
 final class CategoriesRepositoryImpl: ObservableObject, CategoriesRepositoryProtocol {
 
-    @Published private(set) var categories: [Category] = []
-    private var byId: [String: Category] = [:]
+    @MainActor @Published private(set) var categories: [Category] = []
+    @MainActor private var byId: [String: Category] = [:]
 
     private let dataService: DataServiceProtocol
 
@@ -20,19 +19,22 @@ final class CategoriesRepositoryImpl: ObservableObject, CategoriesRepositoryProt
 
     func bootstrap() async {
         let list = await dataService.loadCategories()
-        categories = list
-        byId = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
+        await MainActor.run {
+            self.categories = list
+            self.byId = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
+        }
     }
 
     func refresh() async {
+        guard !Task.isCancelled else { return }
         await bootstrap()
     }
 
-    func category(by id: String) -> Category? {
+    @MainActor func category(by id: String) -> Category? {
         byId[id]
     }
 
-    func allCategories() -> [Category] {
+    @MainActor func allCategories() -> [Category] {
         categories
     }
 }

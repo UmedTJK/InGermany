@@ -38,7 +38,12 @@ struct MapView: View {
         center: CLLocationCoordinate2D(latitude: 50.4250, longitude: 10.7317),
         span: MKCoordinateSpan(latitudeDelta: 5.0, longitudeDelta: 5.0)
     )
-    @EnvironmentObject private var appContainer: AppContainer
+    @EnvironmentObject private var localizationManager: LocalizationManager
+    private let dataService: DataServiceProtocol
+
+    init(dataService: DataServiceProtocol) {
+        self.dataService = dataService
+    }
 
     var body: some View {
         NavigationStack {
@@ -111,24 +116,25 @@ struct MapView: View {
     }
     
     private func loadLocations() async {
-        locations = await appContainer.dataService.loadLocations()
+        locations = await dataService.loadLocations()
         isLoading = false
     }
     
     private func refreshLocations() async {
         isLoading = true
-        await appContainer.dataService.clearCache()
-        locations = await appContainer.dataService.loadLocations()
+        await dataService.clearCache()
+        locations = await dataService.loadLocations()
         isLoading = false
     }
 
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 // MARK: - Preview
 #Preview {
-    MapView()
-        .environmentObject(AppContainer.previewMock())
+    let container = AppContainer.previewMock()
+    MapView(dataService: container.dataService)
+        .environmentObject(container.localizationManager)
 }

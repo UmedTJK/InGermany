@@ -9,16 +9,21 @@ import SwiftUI
 struct SearchView: View {
     @StateObject private var viewModel: SearchViewModel
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var appContainer: AppContainer
+    @State private var didInitialLoad: Bool = false
+    @EnvironmentObject private var localizationManager: LocalizationManager
 
-    /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeSearchViewModel())
-    }
+    private let makeRowViewModel: (Article) -> ArticleRowViewModel
+    private let makeDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
 
-    /// For preview and testing
-    init(viewModel: SearchViewModel) {
+    /// Initializes the view with injected viewModel and factory closures
+    init(
+        viewModel: SearchViewModel,
+        makeRowViewModel: @escaping (Article) -> ArticleRowViewModel,
+        makeDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.makeRowViewModel = makeRowViewModel
+        self.makeDetailViewModel = makeDetailViewModel
     }
 
     /// Builds the main search interface with tag filter, searchable list of articles, and navigation to detail view.
@@ -35,17 +40,13 @@ struct SearchView: View {
                 List(viewModel.filteredArticles) { article in
                     NavigationLink {
                         ArticleDetailView(
-                            viewModel: appContainer.makeArticleDetailViewModel(
-                                article: article,
-                                allArticles: viewModel.articles
-                            ),
-                            localizationManager: appContainer.localizationManager,
-                            articleRowFactory: appContainer.makeArticleRowViewModel
+                            viewModel: makeDetailViewModel(article, viewModel.articles),
+                            localizationManager: localizationManager,
+                            articleRowFactory: makeRowViewModel
                         )
-                        .environmentObject(appContainer) // ✅ проброс контейнера
                     } label: {
                         ArticleRow(
-                            viewModel: appContainer.makeArticleRowViewModel(article: article)
+                            viewModel: makeRowViewModel(article)
                         )
                     }
                 }
@@ -57,20 +58,28 @@ struct SearchView: View {
                 prompt: t("Искать по статьям или категориям")
             )
             .task {
+                guard !didInitialLoad else { return }
+                didInitialLoad = true
                 await viewModel.loadArticles()
             }
         }
     }
 
-    /// Shortcut method to fetch localized translations using AppContainer's LocalizationManager.
+    /// Shortcut method to fetch localized translations using LocalizationManager.
     private func t(_ key: String) -> String {
-        appContainer.localizationManager.getTranslation(key: key, language: selectedLanguage)
+        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
 // MARK: - Preview
 #Preview {
     let container = AppContainer.previewMock()
-    SearchView(appContainer: container)
-        .environmentObject(container)
+    SearchView(
+        viewModel: container.makeSearchViewModel(),
+        makeRowViewModel: container.makeArticleRowViewModel,
+        makeDetailViewModel: { article, all in
+            container.makeArticleDetailViewModel(article: article, allArticles: all)
+        }
+    )
+    .environmentObject(container.localizationManager)
 }
