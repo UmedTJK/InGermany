@@ -34,13 +34,11 @@ struct RecentlyReadSection: View {
         let recentArticles = readingStatsManager.recentlyReadArticles(from: articles, limit: 7)
 
         if !recentArticles.isEmpty {
-            VStack(alignment: .leading, spacing: 12) {
-                Text(t("section_recently_read"))
-                    .font(.headline)
-                    .padding(.horizontal)
+            VStack(alignment: .leading, spacing: DS.Spacing.m) {
+                SectionHeader(title: t("section_recently_read"))
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: 16) {
+                    LazyHStack(spacing: DS.Spacing.carouselItem) {
                         ForEach(recentArticles) { article in
                             NavigationLink {
                                 ArticleDetailView(
@@ -55,11 +53,11 @@ struct RecentlyReadSection: View {
                             }
                         }
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, DS.Spacing.contentInset)
+                    .padding(.vertical, DS.Spacing.carouselVPad)
                 }
             }
-            .padding(.bottom, 24)
+            .padding(.bottom, DS.Spacing.xl)
         }
     }
 
