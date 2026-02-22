@@ -38,25 +38,21 @@ struct FavoritesSection: View {
             VStack(alignment: .leading, spacing: DS.Spacing.m) {
                 SectionHeader(title: t("section_favorites"))
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: DS.Spacing.carouselItem) {
-                        ForEach(favoriteArticles) { article in
-                            NavigationLink {
-                                ArticleDetailView(
-                                    viewModel: makeDetailViewModel(article, articles),
-                                    localizationManager: localizationManager,
-                                    articleRowFactory: makeRowViewModel
-                                )
-                            } label: {
-                                ArticleCompactCard(
-                                    viewModel: makeRowViewModel(article)
-                                )
-                            }
-                            .buttonStyle(.plain)
+                HorizontalCarousel {
+                    ForEach(favoriteArticles) { article in
+                        NavigationLink {
+                            ArticleDetailView(
+                                viewModel: makeDetailViewModel(article, articles),
+                                localizationManager: localizationManager,
+                                articleRowFactory: makeRowViewModel
+                            )
+                        } label: {
+                            ArticleCompactCard(
+                                viewModel: makeRowViewModel(article)
+                            )
                         }
+                        .buttonStyle(.plain)
                     }
-                    .padding(.horizontal, DS.Spacing.contentInset)
-                    .padding(.vertical, DS.Spacing.carouselVPad)
                 }
             }
             .padding(.bottom, DS.Spacing.xl)
