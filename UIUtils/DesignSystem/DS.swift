@@ -49,3 +49,17 @@ extension DS {
         static let chip: Font = .caption2
     }
 }
+
+// MARK: - Size
+extension DS {
+    enum Size {
+        /// Standard minimum tappable target per HIG.
+        static let hitTarget: CGFloat = 44
+
+        /// Category list leading icon background circle.
+        static let categoryIconCircle: CGFloat = 32
+
+        /// Category list SF Symbol size.
+        static let categoryIconSymbol: CGFloat = 16
+    }
+}

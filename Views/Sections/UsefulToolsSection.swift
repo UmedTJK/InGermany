@@ -32,46 +32,42 @@ struct UsefulToolsSection: View {
         VStack(alignment: .leading, spacing: DS.Spacing.m) {
             SectionHeader(title: t("section_useful_tools"))
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: DS.Spacing.carouselItem) {
-                    
-                    NavigationLink(destination: MapView(dataService: makeDataService())) {
-                        ToolCard(
-                            title: t("tool_map"),
-                            systemImage: "map",
-                            color: .blue
-                        )
-                    }
-                    .buttonStyle(.plain)
+            HorizontalCarousel {
 
-                    NavigationLink(
-                        destination: PDFLibraryView(
-                            viewModel: makePDFLibraryViewModel()
-                        )
-                    ) {
-                        ToolCard(
-                            title: t("tool_pdf_docs"),
-                            systemImage: "doc.richtext",
-                            color: .green
-                        )
-                    }
-                    .buttonStyle(.plain)
-
-                    Button {
-                        if let random = articles.randomElement() {
-                            onRandomArticleSelected(random)
-                        }
-                    } label: {
-                        ToolCard(
-                            title: t("tool_random_article"),
-                            systemImage: "shuffle",
-                            color: .orange
-                        )
-                    }
-                    .buttonStyle(.plain)
+                NavigationLink(destination: MapView(dataService: makeDataService())) {
+                    ToolCard(
+                        title: t("tool_map"),
+                        systemImage: "map",
+                        color: .blue
+                    )
                 }
-                .padding(.horizontal, DS.Spacing.contentInset)
-                .padding(.vertical, DS.Spacing.carouselVPad)
+                .buttonStyle(.plain)
+
+                NavigationLink(
+                    destination: PDFLibraryView(
+                        viewModel: makePDFLibraryViewModel()
+                    )
+                ) {
+                    ToolCard(
+                        title: t("tool_pdf_docs"),
+                        systemImage: "doc.richtext",
+                        color: .green
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    if let random = articles.randomElement() {
+                        onRandomArticleSelected(random)
+                    }
+                } label: {
+                    ToolCard(
+                        title: t("tool_random_article"),
+                        systemImage: "shuffle",
+                        color: .orange
+                    )
+                }
+                .buttonStyle(.plain)
             }
         }
     }

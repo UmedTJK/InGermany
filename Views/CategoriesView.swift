@@ -42,14 +42,17 @@ struct CategoriesView: View {
                             .foregroundStyle(DS.Color.textPrimary)
                     }
                     .padding(.vertical, DS.Spacing.s)
+                    .frame(minHeight: DS.Size.hitTarget)
                     .contentShape(Rectangle())
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text(category.localizedName(for: selectedLanguage)))
                 }
                 .buttonStyle(.plain)
+                .listRowSeparator(.hidden)
+                .listRowBackground(DS.Color.background)
             }
             .navigationTitle(t("tab_categories"))
-            .listStyle(PlainListStyle())
+            .listStyle(.plain)
             .scrollContentBackground(.hidden)
             .background(DS.Color.background)
             .task {
