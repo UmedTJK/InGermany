@@ -11,15 +11,23 @@ import Foundation
 /// Uses: Bundle → File Cache → Network (async refresh)
 final class NetworkService {
     typealias Sleeper = @Sendable (_ nanoseconds: UInt64) async throws -> Void
-
+    
+    private let logger = AppLogger.logger(for: .network)
+    private let metrics: any NetworkMetricsCollecting
+    
     private actor RefreshRegistry {
         private var tasks: [String: Task<Void, Never>] = [:]
 
-        func getOrCreateTask(for key: String, create: @Sendable () -> Task<Void, Never>) -> Task<Void, Never> {
-            if let existing = tasks[key] { return existing }
+        func getOrCreateTask(
+            for key: String,
+            create: @Sendable () -> Task<Void, Never>
+        ) -> (task: Task<Void, Never>, created: Bool) {
+            if let existing = tasks[key] {
+                return (existing, false)
+            }
             let task = create()
             tasks[key] = task
-            return task
+            return (task, true)
         }
 
         func removeTask(for key: String) {
@@ -29,6 +37,10 @@ final class NetworkService {
         func cancelAll() {
             for (_, t) in tasks { t.cancel() }
             tasks.removeAll()
+        }
+        
+        func hasTask(for key: String) -> Bool {
+            tasks[key] != nil
         }
     }
     
@@ -40,16 +52,19 @@ final class NetworkService {
 
         private var entries: [String: Entry] = [:]
 
-        func acquireTask(for key: String, create: @Sendable () -> Task<Data, Error>) -> Task<Data, Error> {
+        func acquireTask(
+            for key: String,
+            create: @Sendable () -> Task<Data, Error>
+        ) -> (task: Task<Data, Error>, deduped: Bool) {
             if var entry = entries[key] {
                 entry.waiters += 1
                 entries[key] = entry
-                return entry.task
+                return (entry.task, true)
             }
 
             let task = create()
             entries[key] = Entry(task: task, waiters: 1)
-            return task
+            return (task, false)
         }
 
         func cancelIfOnlyWaiter(for key: String) {
@@ -75,6 +90,10 @@ final class NetworkService {
             for (_, entry) in entries { entry.task.cancel() }
             entries.removeAll()
         }
+        
+        func hasEntry(for key: String) -> Bool {
+            entries[key] != nil
+        }
     }
 
     /// Base URL for remote JSON files (GitHub raw). Must end with a slash.
@@ -88,8 +107,9 @@ final class NetworkService {
         Task(priority: .utility) { [weak self] in
             guard let self else { return }
             if Task.isCancelled { return }
+            await self.metrics.increment(.refresh_scheduled, file: file)
 
-            let task = await self.refreshRegistry.getOrCreateTask(for: file) {
+            let result = await self.refreshRegistry.getOrCreateTask(for: file) {
                 Task(priority: .utility) { [weak self] in
                     guard let self else { return }
                     defer { Task { await self.refreshRegistry.removeTask(for: file) } }
@@ -97,8 +117,12 @@ final class NetworkService {
                 }
             }
 
-            // If task was already in-flight, just return.
-            _ = task
+            if !result.created {
+                await self.metrics.increment(.refresh_dedupe_hit, file: file)
+                return
+            }
+
+            _ = result.task
         }
     }
     
@@ -106,10 +130,6 @@ final class NetworkService {
     private let maxRetryAttempts: Int
     private let baseRetryDelay: UInt64 // nanoseconds
     private let sleeper: Sleeper
-    /// In-memory and disk cache used for URLSession requests.
-    private let cache = URLCache(memoryCapacity: 10 * 1024 * 1024,
-                                 diskCapacity: 50 * 1024 * 1024,
-                                 diskPath: "github_cache")
     /// FileManager instance for file system operations.
     private let fileManager = FileManager.default
     /// Directory where cached JSON files are stored.
@@ -125,13 +145,15 @@ final class NetworkService {
         baseURL: URL = URL(string: "https://raw.githubusercontent.com/sumtjk/InGermany/main/Resources/")!,
         maxRetryAttempts: Int = 3,
         baseRetryDelay: UInt64 = 300_000_000,
-        sleeper: @escaping Sleeper = { try await Task.sleep(nanoseconds: $0) }
+        sleeper: @escaping Sleeper = { try await Task.sleep(nanoseconds: $0) },
+        metrics: any NetworkMetricsCollecting = NoopNetworkMetricsCollector()
     ) {
         self.session = session
         self.baseURL = baseURL
         self.maxRetryAttempts = maxRetryAttempts
         self.baseRetryDelay = baseRetryDelay
         self.sleeper = sleeper
+        self.metrics = metrics
 
         // Создаем директорию для кэша
         let directories = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
@@ -140,7 +162,7 @@ final class NetworkService {
         do {
             try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
         } catch {
-            print("⚠️ Не удалось создать директорию кэша: \(error)")
+            logger.error("Failed to create cache directory: \(String(describing: error), privacy: .public)")
         }
     }
 
@@ -160,20 +182,23 @@ final class NetworkService {
     func loadJSON<T: Decodable>(from file: String) async throws -> T {
         // Шаг 1: Bundle
         if let bundleData = loadFromBundle(file: file) {
-            print("📦 [NetworkService] Загружено из Bundle: \(file)")
+            logger.debug("Loaded from bundle: \(file, privacy: .public)")
+            await metrics.increment(.load_bundle_hit, file: file)
             scheduleRefresh(file: file)
             return try decodeData(bundleData)
         }
         
         // Шаг 2: File Cache
         if let cachedData = loadFromCache(for: file) {
-            print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
+            logger.debug("Loaded from file cache: \(file, privacy: .public)")
+            await metrics.increment(.load_filecache_hit, file: file)
             scheduleRefresh(file: file)
             return try decodeData(cachedData)
         }
         
         // Шаг 3: Network
-        print("🌐 [NetworkService] Загружаем из сети: \(file)")
+        logger.debug("Loading from network: \(file, privacy: .public)")
+        await metrics.increment(.load_network_start, file: file)
         return try await loadFromNetwork(file: file)
     }
     
@@ -181,7 +206,8 @@ final class NetworkService {
     func loadJSONWithSource<T: Decodable>(from file: String) async throws -> (T, NetworkDataSource) {
         // Шаг 1: Bundle
         if let bundleData = loadFromBundle(file: file) {
-            print("📦 [NetworkService] Загружено из Bundle: \(file)")
+            logger.debug("Loaded from bundle: \(file, privacy: .public)")
+            await metrics.increment(.load_bundle_hit, file: file)
             scheduleRefresh(file: file)
             let decoded: T = try decodeData(bundleData)
             return (decoded, .bundle)
@@ -189,14 +215,16 @@ final class NetworkService {
         
         // Шаг 2: File Cache
         if let cachedData = loadFromCache(for: file) {
-            print("📂 [NetworkService] Загружено из файлового кэша: \(file)")
+            logger.debug("Loaded from file cache: \(file, privacy: .public)")
+            await metrics.increment(.load_filecache_hit, file: file)
             scheduleRefresh(file: file)
             let decoded: T = try decodeData(cachedData)
             return (decoded, .fileCache)
         }
         
         // Шаг 3: Network
-        print("🌐 [NetworkService] Загружаем из сети: \(file)")
+        logger.debug("Loading from network: \(file, privacy: .public)")
+        await metrics.increment(.load_network_start, file: file)
         let decoded: T = try await loadFromNetwork(file: file)
         return (decoded, .network)
     }
@@ -205,6 +233,7 @@ final class NetworkService {
     
     /// Executes a network request with exponential backoff retry.
     private func performWithRetry<T>(
+        file: String,
         operation: @escaping () async throws -> T
     ) async throws -> T {
         var attempt = 0
@@ -231,11 +260,15 @@ final class NetworkService {
                     break
                 }
 
+                // Retry scheduled (attempt is 1-based for observers).
+                await metrics.increment(.retry_scheduled, file: file)
+
                 let delay = baseRetryDelay * UInt64(pow(2.0, Double(attempt - 1)))
                 try await sleeper(delay)
             }
         }
         
+        await metrics.increment(.retry_exhausted, file: file)
         throw lastError ?? NetworkError.networkUnavailable
     }
     
@@ -257,18 +290,27 @@ final class NetworkService {
     }
 
     private func loadDataFromNetworkDeduped(file: String) async throws -> Data {
-        let task = await loadRegistry.acquireTask(for: file) { [weak self] in
+        let acquired = await loadRegistry.acquireTask(for: file) { [weak self] in
             Task<Data, Error>(priority: .userInitiated) {
                 guard let self else { throw CancellationError() }
                 return try await self.loadDataFromNetwork(file: file)
             }
         }
 
+        if acquired.deduped {
+            await metrics.increment(.load_network_dedupe_hit, file: file)
+        }
+
+        let task = acquired.task
+
         defer { Task { await loadRegistry.releaseWaiter(for: file) } }
 
         return try await withTaskCancellationHandler {
             try await task.value
         } onCancel: {
+            Task { [metrics] in
+                await metrics.increment(.cancelled, file: file)
+            }
             Task { await loadRegistry.cancelIfOnlyWaiter(for: file) }
         }
     }
@@ -276,7 +318,7 @@ final class NetworkService {
     private func loadDataFromNetwork(file: String) async throws -> Data {
         let url = baseURL.appendingPathComponent(file)
 
-        return try await performWithRetry { [self] in
+        return try await performWithRetry(file: file) { [self] in
             var request = URLRequest(url: url)
             request.cachePolicy = .returnCacheDataElseLoad
 
@@ -284,10 +326,12 @@ final class NetworkService {
 
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
+                await metrics.increment(.load_network_failure, file: file)
                 throw NetworkError.invalidResponse
             }
 
             self.saveToCache(data: data, for: file)
+            await metrics.increment(.load_network_success, file: file)
             return data
         }
     }
@@ -296,7 +340,7 @@ final class NetworkService {
         let url = baseURL.appendingPathComponent(file)
 
         do {
-            try await performWithRetry { [self] in
+            try await performWithRetry(file: file) { [self] in
                 var request = URLRequest(url: url)
                 request.cachePolicy = .reloadIgnoringLocalCacheData
                 request.timeoutInterval = 3.0
@@ -312,9 +356,11 @@ final class NetworkService {
                 return ()
             }
 
-            print("🔄 [NetworkService] Данные обновлены из сети: \(file)")
+            logger.info("Background refresh succeeded: \(file, privacy: .public)")
+            await metrics.increment(.refresh_success, file: file)
         } catch {
-            print("⚠️ [NetworkService] Не удалось обновить данные из сети после retry: \(error.localizedDescription)")
+            logger.error("Background refresh failed after retry: \(String(describing: error), privacy: .public)")
+            await metrics.increment(.refresh_failure, file: file)
         }
     }
     
@@ -328,7 +374,10 @@ final class NetworkService {
         do {
             try data.write(to: cacheFile)
         } catch {
-            print("⚠️ [NetworkService] Ошибка сохранения в файловый кэш: \(error)")
+            logger.error("Failed to save file cache: \(String(describing: error), privacy: .public)")
+            Task { [metrics] in
+                await metrics.increment(.cache_save_failure, file: file)
+            }
         }
     }
     
@@ -362,9 +411,15 @@ final class NetworkService {
             for file in files {
                 try fileManager.removeItem(at: file)
             }
-            print("🗑️ [NetworkService] Файловый кэш очищен")
+            logger.info("File cache cleared")
+            Task { [metrics] in
+                await metrics.increment(.cache_clear_success, file: "*")
+            }
         } catch {
-            print("⚠️ [NetworkService] Не удалось очистить кэш: \(error)")
+            logger.error("Failed to clear cache: \(String(describing: error), privacy: .public)")
+            Task { [metrics] in
+                await metrics.increment(.cache_clear_failure, file: "*")
+            }
         }
     }
 }

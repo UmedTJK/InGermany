@@ -59,7 +59,6 @@
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
 		AD70954F2E9D8ECD00E79E19 /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */; };
 		AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */ = {isa = PBXBuildFile; fileRef = AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */; };
-		AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD74546B2E7E7937001FC732 /* NetworkService.swift */; };
 		AD7906922F48D5540047F511 /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7906912F48D5520047F511 /* NetworkServiceProtocol.swift */; };
 		AD7906942F48D5700047F511 /* CacheServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7906932F48D56D0047F511 /* CacheServiceProtocol.swift */; };
 		AD7906962F48D5850047F511 /* DataServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7906952F48D5830047F511 /* DataServiceProtocol.swift */; };
@@ -160,7 +159,6 @@
 		AD7095492E9D81AB00E79E19 /* ARTICLE_EDITOR_ROADMAP.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARTICLE_EDITOR_ROADMAP.md; sourceTree = "<group>"; };
 		AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHistoryManager.swift; sourceTree = "<group>"; };
 		AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration_base64.json; sourceTree = "<group>"; };
-		AD74546B2E7E7937001FC732 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AD7906902F48C5C10047F511 /* DI_GRAPH.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DI_GRAPH.md; sourceTree = "<group>"; };
 		AD7906912F48D5520047F511 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		AD7906932F48D56D0047F511 /* CacheServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheServiceProtocol.swift; sourceTree = "<group>"; };
@@ -279,6 +277,11 @@
 		ADB930472F135E6200A961D7 /* Adapters */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Adapters;
+			sourceTree = "<group>";
+		};
+		ADE9E5722F4B05C600849FF4 /* Network */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -622,10 +625,10 @@
 		AD8552C32E75B452003D3826 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				ADE9E5722F4B05C600849FF4 /* Network */,
 				AD5D36CC2E96DF4900DB63EF /* TextAnalysisService.swift */,
 				AD2A65592E8FEF44006A94DD /* DefaultsStore.swift */,
 				AD2A655A2E8FEF44006A94DD /* ExportToPDF.swift */,
-				AD74546B2E7E7937001FC732 /* NetworkService.swift */,
 				AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */,
 				AD8552C42E75B463003D3826 /* DataService.swift */,
 				AD8552C52E75B471003D3826 /* AuthService.swift */,
@@ -785,6 +788,7 @@
 				AD8552B62E75B300003D3826 /* Views */,
 				AD8552BC2E75B417003D3826 /* Models */,
 				ADB930472F135E6200A961D7 /* Adapters */,
+				ADE9E5722F4B05C600849FF4 /* Network */,
 			);
 			name = InGermany;
 			packageProductDependencies = (
@@ -933,7 +937,6 @@
 				AD459C1D2E98BB2800F540F3 /* ShareServiceProtocol.swift in Sources */,
 				AD16243F2E9ADA4600E6E14B /* ScaleOnTap.swift in Sources */,
 				AD16243D2E9ADA0300E6E14B /* ShakeEffect.swift in Sources */,
-				AD74546C2E7E7939001FC732 /* NetworkService.swift in Sources */,
 				AD2E60EB2EA172C900436C9A /* DateFormattingService.swift in Sources */,
 				AD2E60EC2EA172C900436C9A /* ArticleFormatter.swift in Sources */,
 				AD8552D02E75BB58003D3826 /* AuthService.swift in Sources */,
