@@ -187,6 +187,7 @@
 		ADE23B732E9BEED400BD152B /* burgeramt_registration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration.json; sourceTree = "<group>"; };
 		ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
 		ADE9E0362F49D3A100849FF4 /* AUDIT_2026-02-21_TECHNICAL_PLAN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "AUDIT_2026-02-21_TECHNICAL_PLAN.md"; sourceTree = "<group>"; };
+		ADE9E45F2F4AE26000849FF4 /* InGermany.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = InGermany.xctestplan; path = InGermanyTests/InGermany.xctestplan; sourceTree = "<group>"; };
 		ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
 		ADF339452E8850FA00AE4CBF /* RatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingManager.swift; sourceTree = "<group>"; };
 		ADF339472E8850FA00AE4CBF /* TextSizeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSizeManager.swift; sourceTree = "<group>"; };
@@ -582,6 +583,7 @@
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				ADE9E45F2F4AE26000849FF4 /* InGermany.xctestplan */,
 				ADB930472F135E6200A961D7 /* Adapters */,
 				AD38F5862E76899600E36EA4 /* README.md */,
 				AD38F5842E76890C00E36EA4 /* .gitignore */,

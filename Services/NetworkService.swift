@@ -9,29 +9,59 @@ import Foundation
 
 /// Service responsible for loading JSON data with OFFLINE-FIRST strategy.
 /// Uses: Bundle → File Cache → Network (async refresh)
-class NetworkService {
+final class NetworkService {
+    typealias Sleeper = @Sendable (_ nanoseconds: UInt64) async throws -> Void
+
+    private actor RefreshRegistry {
+        private var tasks: [String: Task<Void, Never>] = [:]
+
+        func hasTask(for key: String) -> Bool {
+            tasks[key] != nil
+        }
+
+        func setTask(_ task: Task<Void, Never>, for key: String) {
+            tasks[key] = task
+        }
+
+        func removeTask(for key: String) {
+            tasks[key] = nil
+        }
+
+        func cancelAll() {
+            for (_, t) in tasks { t.cancel() }
+            tasks.removeAll()
+        }
+    }
 
     /// Base URL for remote JSON files (GitHub raw). Must end with a slash.
-    private let baseURL: String = "https://raw.githubusercontent.com/sumtjk/InGermany/main/Resources/"
+    private let baseURL: URL
     
     // MARK: - In-flight refresh dedup (one per file)
-    private var inFlightRefresh: [String: Task<Void, Never>] = [:]
+    private let refreshRegistry = RefreshRegistry()
     
     private func scheduleRefresh(file: String) {
-        // Dedup: if there is an in-flight refresh for this file, don't start another.
-        guard inFlightRefresh[file] == nil else { return }
-        if Task.isCancelled { return }
-        
-        inFlightRefresh[file] = Task(priority: .utility) { [weak self] in
+        Task(priority: .utility) { [weak self] in
             guard let self else { return }
-            defer { self.inFlightRefresh[file] = nil }
-            await self.refreshFromNetwork(file: file)
+            if Task.isCancelled { return }
+
+            // Dedup inside actor registry.
+            let alreadyInFlight = await self.refreshRegistry.hasTask(for: file)
+            guard !alreadyInFlight else { return }
+
+            let task = Task(priority: .utility) { [weak self] in
+                guard let self else { return }
+                defer { Task { await self.refreshRegistry.removeTask(for: file) } }
+                await self.refreshFromNetwork(file: file)
+            }
+
+            await self.refreshRegistry.setTask(task, for: file)
         }
     }
     
     /// Retry configuration
-    private let maxRetryAttempts = 3
-    private let baseRetryDelay: UInt64 = 300_000_000 // 0.3 seconds (in nanoseconds)
+    private let maxRetryAttempts: Int
+    private let baseRetryDelay: UInt64 // nanoseconds
+    private let sleeper: Sleeper
     /// In-memory and disk cache used for URLSession requests.
     private let cache = URLCache(memoryCapacity: 10 * 1024 * 1024,
                                  diskCapacity: 50 * 1024 * 1024,
@@ -41,28 +71,42 @@ class NetworkService {
     /// Directory where cached JSON files are stored.
     private let cacheDirectory: URL
 
-    /// Custom URLSession with reduced timeouts
-    // В NetworkService.swift
-    private lazy var session: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 2.0    // ⬇️ Уменьшаем с 3 до 2 секунд
-        config.timeoutIntervalForResource = 2.0   // ⬇️ Уменьшаем с 3 до 2 секунд
-        config.waitsForConnectivity = false       // ❌ Не ждем подключения
-        config.requestCachePolicy = .returnCacheDataElseLoad
-        return URLSession(configuration: config)
-    }()
+    /// URLSession used for network requests. Injectable for unit tests (e.g. MockURLProtocol).
+    private let session: URLSession
     
-    /// Initializes cache directory and session configuration
-    init() {
+    /// Initializes cache directory and network session.
+    /// - Parameter session: Injectable session for unit tests (use URLSessionConfiguration with MockURLProtocol).
+    init(
+        session: URLSession = NetworkService.makeDefaultSession(),
+        baseURL: URL = URL(string: "https://raw.githubusercontent.com/sumtjk/InGermany/main/Resources/")!,
+        maxRetryAttempts: Int = 3,
+        baseRetryDelay: UInt64 = 300_000_000,
+        sleeper: @escaping Sleeper = { try await Task.sleep(nanoseconds: $0) }
+    ) {
+        self.session = session
+        self.baseURL = baseURL
+        self.maxRetryAttempts = maxRetryAttempts
+        self.baseRetryDelay = baseRetryDelay
+        self.sleeper = sleeper
+
         // Создаем директорию для кэша
         let directories = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)
         cacheDirectory = directories[0].appendingPathComponent("InGermanyCache")
-        
+
         do {
             try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
         } catch {
             print("⚠️ Не удалось создать директорию кэша: \(error)")
         }
+    }
+
+    private static func makeDefaultSession() -> URLSession {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 2.0
+        config.timeoutIntervalForResource = 2.0
+        config.waitsForConnectivity = false
+        config.requestCachePolicy = .returnCacheDataElseLoad
+        return URLSession(configuration: config)
     }
     
     // MARK: - Основной API
@@ -123,7 +167,7 @@ class NetworkService {
         var lastError: Error?
         
         while attempt < maxRetryAttempts {
-            if Task.isCancelled { throw CancellationError() }
+            try Task.checkCancellation()
             do {
                 return try await operation()
             } catch {
@@ -136,12 +180,7 @@ class NetworkService {
                 }
                 
                 let delay = baseRetryDelay * UInt64(pow(2.0, Double(attempt - 1)))
-                do {
-                    try await Task.sleep(nanoseconds: delay)
-                } catch {
-                    // Preserve structured cancellation semantics
-                    throw error
-                }
+                try await sleeper(delay)
             }
         }
         
@@ -161,44 +200,44 @@ class NetworkService {
     }
     
     private func loadFromNetwork<T: Decodable>(file: String) async throws -> T {
-        let url = URL(string: baseURL + file)!
-        
+        let url = baseURL.appendingPathComponent(file)
+
         return try await performWithRetry { [self] in
             var request = URLRequest(url: url)
             request.cachePolicy = .returnCacheDataElseLoad
-            
+
             let (data, response) = try await self.session.data(for: request)
-            
+
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                 throw NetworkError.invalidResponse
             }
-            
+
             self.saveToCache(data: data, for: file)
             return try self.decodeData(data)
         }
     }
-    
+
     private func refreshFromNetwork(file: String) async {
-        let url = URL(string: baseURL + file)!
-        
+        let url = baseURL.appendingPathComponent(file)
+
         do {
             try await performWithRetry { [self] in
                 var request = URLRequest(url: url)
                 request.cachePolicy = .reloadIgnoringLocalCacheData
                 request.timeoutInterval = 3.0
-                
+
                 let (data, response) = try await self.session.data(for: request)
-                
+
                 guard let httpResponse = response as? HTTPURLResponse,
                       (200...299).contains(httpResponse.statusCode) else {
                     throw NetworkError.invalidResponse
                 }
-                
+
                 self.saveToCache(data: data, for: file)
                 return ()
             }
-            
+
             print("🔄 [NetworkService] Данные обновлены из сети: \(file)")
         } catch {
             print("⚠️ [NetworkService] Не удалось обновить данные из сети после retry: \(error.localizedDescription)")
@@ -239,8 +278,7 @@ class NetworkService {
     
     func clearCache() {
         // Cancel any in-flight refresh tasks
-        for (_, task) in inFlightRefresh { task.cancel() }
-        inFlightRefresh.removeAll()
+        Task { await refreshRegistry.cancelAll() }
     
         do {
             let files = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)

@@ -13,18 +13,23 @@ final class ReadingHistoryManagerTests: XCTestCase {
     
     private var sut: ReadingStatsManager!
     private var cancellables: Set<AnyCancellable>!
+    private var testDefaults: UserDefaults!
     
     // MARK: - Setup & Teardown
     
     override func setUp() {
         super.setUp()
-        sut = ReadingStatsManager()
+        testDefaults = UserDefaults(suiteName: "ReadingStatsManagerTests")
+        testDefaults.removePersistentDomain(forName: "ReadingStatsManagerTests")
+        sut = ReadingStatsManager(defaults: testDefaults)
         cancellables = []
         sut.clearHistory()
     }
     
     override func tearDown() {
         sut.clearHistory()
+        testDefaults.removePersistentDomain(forName: "ReadingStatsManagerTests")
+        testDefaults = nil
         cancellables = []
         super.tearDown()
     }
@@ -187,7 +192,7 @@ final class ReadingHistoryManagerTests: XCTestCase {
         // When - Add entry and create new instance
         sut.addReadingEntry(articleId: articleId, readingTime: readingTime)
         
-        let newInstance = ReadingStatsManager()
+        let newInstance = ReadingStatsManager(defaults: testDefaults)
         
         // Then
         XCTAssertTrue(newInstance.isRead(articleId), "Should persist history between instances")

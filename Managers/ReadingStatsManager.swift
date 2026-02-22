@@ -18,16 +18,26 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     private let storageKey = "readingHistory"
     private let sessionsKey = "readingSessions"
     private let maxHistoryEntries = 100
+    private let defaults: UserDefaults
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
     private var didLoadFromStorage = false
     private var isLoadingFromStorage = false
 
-    init(localizationManager: LocalizationManager = LocalizationManager()) {
+    init(
+        localizationManager: LocalizationManager = LocalizationManager(),
+        defaults: UserDefaults = .standard
+    ) {
         self.localizationManager = localizationManager
+        self.defaults = defaults
+        // Load persisted state synchronously so it is available immediately (unit tests rely on this).
+        self.loadFromStorageSyncIfNeeded()
     }
 
     // MARK: - Bootstrap
     func bootstrap() async {
-        await loadFromStorageIfNeeded()
+        // Kept for API compatibility; state is loaded synchronously on init.
+        loadFromStorageSyncIfNeeded()
     }
 
     // MARK: - Progress
@@ -71,51 +81,49 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     }
 
     // MARK: - History
-    // Async load from storage if needed
-    func loadFromStorageIfNeeded() async {
+    private func loadFromStorageSyncIfNeeded() {
         if didLoadFromStorage || isLoadingFromStorage { return }
         isLoadingFromStorage = true
-
-        let storageKey = self.storageKey
-        let sessionsKey = self.sessionsKey
+        defer { isLoadingFromStorage = false }
 
         do {
-            async let loadedHistory: [ReadingHistoryEntry] = DefaultsStore.loadAsync(storageKey, as: [ReadingHistoryEntry].self) ?? []
-            async let loadedSessions: [ReadingSession] = DefaultsStore.loadAsync(sessionsKey, as: [ReadingSession].self) ?? []
+            if let historyData = defaults.data(forKey: storageKey) {
+                let entries = try decoder.decode([ReadingHistoryEntry].self, from: historyData)
+                self.history = entries.sorted { $0.readAt > $1.readAt }
+            } else {
+                self.history = []
+            }
 
-            let (entries, sessions) = try await (loadedHistory, loadedSessions)
-
-            // Publish on main actor (we are already @MainActor)
-            self.history = entries.sorted { $0.readAt > $1.readAt }
-            self.completedSessions = sessions
+            if let sessionsData = defaults.data(forKey: sessionsKey) {
+                let sessions = try decoder.decode([ReadingSession].self, from: sessionsData)
+                self.completedSessions = sessions
+            } else {
+                self.completedSessions = []
+            }
 
             self.didLoadFromStorage = true
         } catch {
-            // Keep app functional; record the error for diagnostics.
-            print("⚠️ [ReadingStatsManager] Failed to load reading stats from storage: \(error)")
+            print("⚠️ [ReadingStatsManager] Failed to decode reading stats from storage: \(error)")
             self.history = []
             self.completedSessions = []
             self.didLoadFromStorage = true
         }
-
-        self.isLoadingFromStorage = false
     }
 
-    // Synchronous wrappers kept for callers (if any). They just schedule async loading.
+    func loadFromStorageIfNeeded() async {
+        loadFromStorageSyncIfNeeded()
+    }
+
     private func loadHistory() {
-        Task { [weak self] in
-            await self?.loadFromStorageIfNeeded()
-        }
+        loadFromStorageSyncIfNeeded()
     }
 
     private func saveHistory() {
-        let snapshot = history
-        Task(priority: .utility) {
-            do {
-                try await DefaultsStore.saveAsync(snapshot, for: storageKey)
-            } catch {
-                print("⚠️ [ReadingStatsManager] Failed to save history: \(error)")
-            }
+        do {
+            let data = try encoder.encode(history)
+            defaults.set(data, forKey: storageKey)
+        } catch {
+            print("⚠️ [ReadingStatsManager] Failed to encode history: \(error)")
         }
     }
 
@@ -144,11 +152,8 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
     
     func clearHistory() {
         history.removeAll()
-        saveHistory()
         completedSessions.removeAll()
-        saveSessions()
         progress.removeAll()
-        // Persist cleared state
         saveHistory()
         saveSessions()
         didLoadFromStorage = true
@@ -170,19 +175,15 @@ final class ReadingStatsManager: ObservableObject, ReadingStatsManagingProtocol 
 
     // MARK: - Sessions Persistence
     private func loadSessions() {
-        Task { [weak self] in
-            await self?.loadFromStorageIfNeeded()
-        }
+        loadFromStorageSyncIfNeeded()
     }
 
     private func saveSessions() {
-        let snapshot = completedSessions
-        Task(priority: .utility) {
-            do {
-                try await DefaultsStore.saveAsync(snapshot, for: sessionsKey)
-            } catch {
-                print("⚠️ [ReadingStatsManager] Failed to save sessions: \(error)")
-            }
+        do {
+            let data = try encoder.encode(completedSessions)
+            defaults.set(data, forKey: sessionsKey)
+        } catch {
+            print("⚠️ [ReadingStatsManager] Failed to encode sessions: \(error)")
         }
     }
 
