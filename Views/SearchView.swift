@@ -28,13 +28,13 @@ struct SearchView: View {
 
     /// Builds the main search interface with tag filter, searchable list of articles, and navigation to detail view.
     var body: some View {
-        NavigationView {
-            VStack {
+        NavigationStack {
+            VStack(spacing: DS.Spacing.m) {
                 if !viewModel.allTags.isEmpty {
                     TagFilterView(tags: viewModel.allTags) { tag in
                         viewModel.selectedTag = (viewModel.selectedTag == tag) ? nil : tag
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, DS.Spacing.contentInset)
                 }
 
                 List(viewModel.filteredArticles) { article in
@@ -49,13 +49,16 @@ struct SearchView: View {
                             viewModel: makeRowViewModel(article)
                         )
                     }
+                    .buttonStyle(.plain)
                 }
                 .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(DS.Color.background)
             }
-            .navigationTitle(t("Поиск"))
+            .navigationTitle(localizationManager.t("tab_search"))
             .searchable(
                 text: $viewModel.searchText,
-                prompt: t("Искать по статьям или категориям")
+                prompt: localizationManager.t("search_prompt")
             )
             .task {
                 guard !didInitialLoad else { return }
