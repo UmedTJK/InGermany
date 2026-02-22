@@ -83,11 +83,9 @@ struct HomeView: View {
                             .padding(DS.Spacing.section)
                             .cardContainer(.standard(useMaterial: true))
 
-                            Divider()
-                                .overlay(
-                                    Color.primary
-                                        .opacity(0.06)
-                                )
+                            Rectangle()
+                                .fill(DS.Color.separator.opacity(0.4))
+                                .frame(height: 0.5)
                                 .padding(.vertical, DS.Spacing.section)
 
                             RecentlyReadSection(
