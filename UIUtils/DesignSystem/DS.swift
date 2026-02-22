@@ -1,0 +1,54 @@
+import SwiftUI
+
+enum DS {}
+
+// MARK: - Spacing
+extension DS {
+    enum Spacing {
+        static let xs: CGFloat = 4
+        static let s: CGFloat = 8
+        static let m: CGFloat = 12
+        static let l: CGFloat = 16
+        static let xl: CGFloat = 24
+
+        static let section: CGFloat = 28          // Home sections spacing
+        static let contentInset: CGFloat = 16     // default horizontal inset
+        static let carouselItem: CGFloat = 16     // horizontal item spacing
+        static let carouselVPad: CGFloat = 4      // vertical pad in carousels
+    }
+}
+
+// MARK: - Radius
+extension DS {
+    enum Radius {
+        static let card: CGFloat = 16
+        static let media: CGFloat = 14
+        static let badge: CGFloat = 10
+        static let chip: CGFloat = 8
+    }
+}
+
+// MARK: - Typography
+extension DS {
+    enum Typography {
+        static let sectionTitle: Font = .headline
+        static let cardTitle: Font = .headline
+        static let cardBody: Font = .subheadline
+        static let meta: Font = .caption
+        static let badge: Font = .caption2.weight(.semibold)
+        static let chip: Font = .caption2
+    }
+}
+
+// MARK: - Color (semantic)
+extension DS {
+    enum Color {
+        static let background = SwiftUI.Color(.systemGroupedBackground)
+        static let surface = SwiftUI.Color(.systemBackground)
+        static let secondarySurface = SwiftUI.Color(.secondarySystemBackground)
+        static let separator = SwiftUI.Color(.separator)
+
+        static let textPrimary = SwiftUI.Color.primary
+        static let textSecondary = SwiftUI.Color.secondary
+    }
+}
