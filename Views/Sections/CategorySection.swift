@@ -36,19 +36,15 @@ struct CategorySection: View {
         VStack(alignment: .leading, spacing: DS.Spacing.m) {
             SectionHeader(title: category.localizedName(for: language))
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: DS.Spacing.carouselItem) {
-                    ForEach(articles.prefix(10)) { article in
-                        NavigationLink {
-                            makeDetailView(article, articles)
-                        } label: {
-                            ArticleCompactCard(viewModel: makeRowViewModel(article))
-                        }
-                        .buttonStyle(.plain)
+            HorizontalCarousel {
+                ForEach(articles.prefix(10)) { article in
+                    NavigationLink {
+                        makeDetailView(article, articles)
+                    } label: {
+                        ArticleCompactCard(viewModel: makeRowViewModel(article))
                     }
+                    .buttonStyle(.plain)
                 }
-                .padding(.horizontal, DS.Spacing.contentInset)
-                .padding(.vertical, DS.Spacing.carouselVPad)
             }
         }
         .padding(.bottom, DS.Spacing.xl)
