@@ -29,13 +29,11 @@ struct AllArticlesSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Все статьи")
-                .font(.headline)
-                .padding(.horizontal)
+        VStack(alignment: .leading, spacing: DS.Spacing.m) {
+            SectionHeader(title: localizationManager.t("section_all_articles"))
 
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
+                LazyHStack(spacing: DS.Spacing.carouselItem) {
                     ForEach(articles) { article in
                         NavigationLink {
                             ArticleDetailView(
@@ -50,10 +48,10 @@ struct AllArticlesSection: View {
                         }
                     }
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 4)
+                .padding(.horizontal, DS.Spacing.contentInset)
+                .padding(.vertical, DS.Spacing.carouselVPad)
             }
         }
-        .padding(.bottom, 24)
+        .padding(.bottom, DS.Spacing.xl)
     }
 }
