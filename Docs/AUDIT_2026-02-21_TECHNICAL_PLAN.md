@@ -26,6 +26,7 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 - DataService.loadLocal replaced with structured concurrency
 - NetworkService enhanced with retry and cancellation-aware backoff; refresh deduplication implemented
 - DataService refresh deduplication and cancellation checks added
+- ⚠️ EnvironmentObject(AppContainer) usage still present in several Views (cleanup not fully completed)
 
 ---
 
@@ -94,7 +95,7 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 **P2-1 — AppContainer marked `@MainActor` too broadly**  
 - Risk: MainActor “leaks” into composition/wiring.
 
-**P2-2 — AppContainer exposed as EnvironmentObject (Service Locator risk)**  
+**P2-2 — AppContainer exposed as EnvironmentObject (Service Locator risk)** ❗ STILL PRESENT  
 - Location: `View+AppEnvironment.swift` and Views using `@EnvironmentObject appContainer`  
 - Risk: any view can bypass DI and pull services directly.
 
@@ -263,7 +264,9 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 **E2. Environment policy**  
 - Files: `Core/View+AppEnvironment.swift`, views relying on container  
 - Verify:  
-  - views cannot bypass DI by pulling services directly
+  - Audit shows multiple Views still use @EnvironmentObject AppContainer  
+  - Refactor required: remove AppContainer from Views and inject concrete dependencies  
+  - Re-run grep to confirm zero @EnvironmentObject AppContainer occurrences
 
 ---
 
@@ -305,6 +308,7 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 - Repositories are not `@MainActor`  
 - ViewModels not globally `@MainActor` unless explicitly justified  
 - Network timeout + retry implemented and covered by tests  
+- Zero @EnvironmentObject AppContainer usages in Views
 - Thread Sanitizer: 0 data races  
 - No main-thread stalls during data load/scroll (Instruments)  
 - NetworkService retry is cancellation-aware and refresh is deduplicated per file  

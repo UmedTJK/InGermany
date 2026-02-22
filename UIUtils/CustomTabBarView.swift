@@ -3,7 +3,18 @@ import SwiftUI
 struct CustomTabBarView: View {
     @State private var selectedTab: Int = 0
     @Namespace private var animation
-    let appContainer: AppContainer
+    // Factories injected from composition root (no AppContainer in UI layer)
+    let makeHomeViewModel: () -> HomeViewModel
+    let makeCategoriesViewModel: () -> CategoriesViewModel
+    let makeSearchViewModel: () -> SearchViewModel
+    let makeFavoritesViewModel: () -> FavoritesViewModel
+    let makeSettingsViewModel: () -> SettingsViewModel
+    let makeAboutViewModel: () -> AboutViewModel
+    let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+    let makeDataService: () -> DataServiceProtocol
+    let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
+    let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
+    let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
     @EnvironmentObject var localizationManager: LocalizationManager
     
     var body: some View {
@@ -78,64 +89,50 @@ struct CustomTabBarView: View {
         switch selectedTab {
         case 0:
             HomeView(
-                viewModelFactory: { appContainer.makeHomeViewModel() },
-                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
-                makeDataService: { appContainer.dataService },
-                makeArticleRowViewModel: appContainer.makeArticleRowViewModel,
-                makeArticleDetailViewModel: { article, all in
-                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
-                },
-                makeArticleDetailView: { article, all in
-                    appContainer.makeArticleDetailView(article: article, allArticles: all)
-                },
+                viewModelFactory: makeHomeViewModel,
+                makePDFLibraryViewModel: makePDFLibraryViewModel,
+                makeDataService: makeDataService,
+                makeArticleRowViewModel: makeArticleRowViewModel,
+                makeArticleDetailViewModel: makeArticleDetailViewModel,
+                makeArticleDetailView: makeArticleDetailView,
                 localizationManager: localizationManager
             )
 
         case 1:
             CategoriesView(
-                viewModel: appContainer.makeCategoriesViewModel(),
-                makeRowViewModel: appContainer.makeArticleRowViewModel,
-                makeDetailViewModel: { article, all in
-                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
-                }
+                viewModel: makeCategoriesViewModel(),
+                makeRowViewModel: makeArticleRowViewModel,
+                makeDetailViewModel: makeArticleDetailViewModel
             )
 
         case 2:
             SearchView(
-                viewModel: appContainer.makeSearchViewModel(),
-                makeRowViewModel: appContainer.makeArticleRowViewModel,
-                makeDetailViewModel: { article, all in
-                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
-                }
+                viewModel: makeSearchViewModel(),
+                makeRowViewModel: makeArticleRowViewModel,
+                makeDetailViewModel: makeArticleDetailViewModel
             )
 
         case 3:
             FavoritesView(
-                viewModel: appContainer.makeFavoritesViewModel(),
-                makeRowViewModel: appContainer.makeArticleRowViewModel,
-                makeDetailViewModel: { article, all in
-                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
-                }
+                viewModel: makeFavoritesViewModel(),
+                makeRowViewModel: makeArticleRowViewModel,
+                makeDetailViewModel: makeArticleDetailViewModel
             )
 
         case 4:
             SettingsView(
-                viewModel: appContainer.makeSettingsViewModel(),
-                makeAboutViewModel: appContainer.makeAboutViewModel
+                viewModel: makeSettingsViewModel(),
+                makeAboutViewModel: makeAboutViewModel
             )
 
         default:
             HomeView(
-                viewModelFactory: { appContainer.makeHomeViewModel() },
-                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
-                makeDataService: { appContainer.dataService },
-                makeArticleRowViewModel: appContainer.makeArticleRowViewModel,
-                makeArticleDetailViewModel: { article, all in
-                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
-                },
-                makeArticleDetailView: { article, all in
-                    appContainer.makeArticleDetailView(article: article, allArticles: all)
-                },
+                viewModelFactory: makeHomeViewModel,
+                makePDFLibraryViewModel: makePDFLibraryViewModel,
+                makeDataService: makeDataService,
+                makeArticleRowViewModel: makeArticleRowViewModel,
+                makeArticleDetailViewModel: makeArticleDetailViewModel,
+                makeArticleDetailView: makeArticleDetailView,
                 localizationManager: localizationManager
             )
         }

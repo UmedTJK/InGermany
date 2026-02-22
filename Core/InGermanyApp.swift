@@ -14,7 +14,23 @@ struct InGermanyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(appContainer: appContainer)
+            ContentView(
+                makeHomeViewModel: appContainer.makeHomeViewModel,
+                makeCategoriesViewModel: appContainer.makeCategoriesViewModel,
+                makeSearchViewModel: appContainer.makeSearchViewModel,
+                makeFavoritesViewModel: appContainer.makeFavoritesViewModel,
+                makeSettingsViewModel: appContainer.makeSettingsViewModel,
+                makeAboutViewModel: appContainer.makeAboutViewModel,
+                makePDFLibraryViewModel: appContainer.makePDFLibraryViewModel,
+                makeDataService: { appContainer.dataService },
+                makeArticleRowViewModel: appContainer.makeArticleRowViewModel,
+                makeArticleDetailViewModel: { article, all in
+                    appContainer.makeArticleDetailViewModel(article: article, allArticles: all)
+                },
+                makeArticleDetailView: { article, all in
+                    appContainer.makeArticleDetailView(article: article, allArticles: all)
+                }
+            )
                 .appEnvironment(using: appContainer)
                 .environmentObject(settingsManager)
 
