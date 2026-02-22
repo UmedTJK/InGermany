@@ -29,13 +29,11 @@ struct UsefulToolsSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(t("section_useful_tools"))
-                .font(.headline)
-                .padding(.horizontal)
+        VStack(alignment: .leading, spacing: DS.Spacing.m) {
+            SectionHeader(title: t("section_useful_tools"))
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
+                HStack(spacing: DS.Spacing.carouselItem) {
                     
                     NavigationLink(destination: MapView(dataService: makeDataService())) {
                         ToolCard(
@@ -44,6 +42,7 @@ struct UsefulToolsSection: View {
                             color: .blue
                         )
                     }
+                    .buttonStyle(.plain)
 
                     NavigationLink(
                         destination: PDFLibraryView(
@@ -56,6 +55,7 @@ struct UsefulToolsSection: View {
                             color: .green
                         )
                     }
+                    .buttonStyle(.plain)
 
                     Button {
                         if let random = articles.randomElement() {
@@ -68,8 +68,10 @@ struct UsefulToolsSection: View {
                             color: .orange
                         )
                     }
+                    .buttonStyle(.plain)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, DS.Spacing.contentInset)
+                .padding(.vertical, DS.Spacing.carouselVPad)
             }
         }
     }
