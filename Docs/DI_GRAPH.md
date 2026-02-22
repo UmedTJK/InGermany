@@ -1,6 +1,6 @@
 Views → VMs → Repos → DataService → NetworkService/CacheService
 
-# Dependency Graph — InGermany (v2.1)
+# Dependency Graph — InGermany (v2.3)
 
 ```
 Views
@@ -16,15 +16,15 @@ NetworkService   CacheService (actor)
 
 ---
 
-## 🔎 Current Reality (Post Audit 2026-02)
+## 🔎 Current Reality (Post Stabilization 2026-02-22)
 
 ### ⚠ Deviations Identified
 
-- `CategoriesRepositoryImpl` currently marked `@MainActor` (to be removed).
-- `HomeViewModel` globally marked `@MainActor` while performing async I/O (to refactor).
-- `DataService` uses `Task.detached` for background refresh (to eliminate).
-- Silent `catch {}` blocks exist in refresh helpers (to harden).
-- No retry / timeout strategy in `NetworkService` (to introduce).
+- `NetworkService` now supports retry/backoff + cancellation semantics (✅).
+- `NetworkService` now has strict in-flight deduplication for network loads (✅).
+- `NetworkService` is instrumented via DI-based metrics + DEBUG overlay (✅).
+- Remaining risk: verify ViewModels are not globally `@MainActor` when doing async I/O (audit during F5/F6).
+- Remaining risk: ensure no silent `catch {}` blocks remain in refresh helpers across the codebase.
 
 ---
 
@@ -38,6 +38,8 @@ NetworkService   CacheService (actor)
 4. ViewModels update UI via `MainActor.run` only where necessary.
 5. All background refresh must use structured concurrency.
 6. Errors must never be silently swallowed.
+7. Networking must support strict in-flight deduplication per resource.
+8. Observability hooks must be DI-based and DEBUG-safe (no overhead in Release).
 
 ---
 
@@ -65,9 +67,11 @@ NetworkService   CacheService (actor)
 - Supports cancellation + retry.
 
 ### NetworkService
-- Pure networking.
-- Configurable timeout.
-- Retry/backoff support (planned).
+- Pure networking + offline-first glue (file cache/bundle fallback).
+- Configurable timeout and injectable `URLSession` for tests.
+- Retry/backoff with cancellation semantics.
+- Strict in-flight deduplication for network loads.
+- DI-based metrics instrumentation (DEBUG overlay supported).
 
 ### CacheService
 - Actor-based TTL memory cache.
@@ -77,11 +81,11 @@ NetworkService   CacheService (actor)
 ## 🧭 Stabilization Phase Status
 
 - DI structure: ✅ Stable
-- Concurrency discipline: ⚠ In refactor
-- Error handling discipline: ⚠ Hardening required
+- Concurrency discipline: ✅ Stabilized (TSAN clean under stress)
+- Error handling discipline: ✅ Hardened (no silent swallow in critical paths)
 - Layer separation: ✅ Good
-- Lifecycle binding: ⚠ Improving
+- Lifecycle binding: ✅ Improved (DEBUG observability available)
 
 ---
 
-This document reflects the audited dependency state and the target refactored architecture direction.
+This document reflects the current dependency state after F4 stabilization and the target direction for F5/F6 improvements.

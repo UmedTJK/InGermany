@@ -25,9 +25,10 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 - Managers moved to explicit bootstrap pattern (no async work in init)
 - DataService.loadLocal replaced with structured concurrency
 - NetworkService enhanced with retry and cancellation-aware backoff; refresh deduplication implemented
-- DataService refresh deduplication and cancellation checks added
-- ✅ E1/F1. Single SettingsManager source (App init injected into AppContainer)
-- ✅ E2/F2. Environment policy cleanup: remove AppContainer from all UI (factories only)
+- ✅ F5-1. Observability foundation: NetworkMetricsCollector (actor-based, DI)
+- ✅ F5-1. NetworkService instrumented with metrics (bundle/cache/network/retry/cancel/refresh)
+- ✅ F5-1. Debug metrics snapshot on launch (DEBUG only)
+- ✅ F5-1. Settings → Debug → NetworkMetricsDebugView added
 
 ---
 
@@ -290,6 +291,33 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 
 ---
 
+### Phase G — Observability (F5)
+
+**G1. Observability Foundation** ✅ DONE  
+- Files: `Services/NetworkService.swift`, `Services/NetworkMetrics.swift`, `Core/AppContainer.swift`, `Views/NetworkMetricsDebugView.swift`  
+- Actor-based metrics collector (thread-safe)  
+- Counter-based instrumentation for:
+  - bundle/file cache hits
+  - network start/success/failure
+  - retry scheduled/exhausted
+  - cancellation
+  - refresh scheduled/dedupe/success/failure
+  - cache save/clear outcomes
+- DEBUG-only snapshot logging on app launch  
+- DEBUG-only Settings → Debug metrics viewer
+
+**G2. Latency Metrics (Next)**  
+- Measure request duration per file  
+- Track p95/p99 latency  
+- Expose latency in Debug UI
+
+**G3. Stress & Load Metrics (Next)**  
+- Count concurrent in-flight tasks  
+- Detect refresh storms  
+- Add synthetic stress test suite
+
+---
+
 ## 4) Definition of Done (Stabilization)
 
 - Zero `Task.detached` in app code  
@@ -303,6 +331,10 @@ Completed items in branch `fix/concurrency-stabilization-2026-02`:
 - No main-thread stalls during data load/scroll (Instruments)  
 - NetworkService retry is cancellation-aware and refresh is deduplicated per file  
 - DefaultsStore async is used by managers (ReadingStatsManager, FavoritesManager) with explicit bootstrap
+
+- Observability foundation implemented (actor-based metrics, DI, DEBUG-only UI)
+- Metrics do not introduce data races (TSAN clean)
+- Release builds unaffected by debug instrumentation
 
 - F4 milestone merged to main and verified under TSAN stress runs
 

@@ -426,10 +426,10 @@ No shortcuts.
 
 End of specification.
 
-# InGermany — Architecture Specification (v2.2)
+# InGermany — Architecture Specification (v2.3)
 
-📅 Updated: 2026-02-21  
-🏷 Status: Concurrency Stabilization Phase  
+📅 Updated: 2026-02-22  
+🏷 Status: Concurrency Stabilization + Observability Foundation  
 
 ---
 
@@ -697,11 +697,13 @@ Single Responsibility Principle must be enforced.
 
 ---
 
-# 12. Stabilization Phase (v0.2.4 → v0.3 Target)
+# 12. Stabilization & Observability Phase (v0.2.4 → v0.4)
 
-Current status: F4 Concurrency Stabilization Completed (2026‑02‑22)
+Current status:
+- F4 Concurrency Stabilization Completed (2026‑02‑22)
+- F5 Phase 1 Observability Foundation Completed (2026‑02‑22)
 
-Completed milestones:
+Completed milestones (F4):
 
 1. All Task.detached usage removed.
 2. DataService fully actor-isolated.
@@ -712,9 +714,29 @@ Completed milestones:
 7. Thread Sanitizer (TSAN) run clean under stress.
 8. Concurrency test suite deterministic and green.
 
-The stabilization phase is complete. The architecture is now concurrency-safe and production-ready.
+Completed milestones (F5 Phase 1 — Observability Foundation):
 
-Future phases will focus on performance optimization, observability, and feature expansion rather than corrective stabilization.
+9. Network metrics abstraction extracted (NetworkMetricsCollecting).
+10. Metrics implementation fully injectable via DI.
+11. NetworkService instrumented with:
+   - source hits (bundle, file cache, network)
+   - retry scheduling + exhaustion
+   - dedupe hits
+   - cancellation tracking
+   - refresh success/failure
+12. Debug-only metrics snapshot logging on app launch.
+13. Debug Metrics View integrated into Settings (DEBUG-only).
+
+The architecture is now:
+- Concurrency-safe
+- Deterministic under test
+- Observable in DEBUG
+- Release-clean (no debug metrics overhead)
+
+Next phases:
+- F5 Phase 2: latency & duration metrics
+- F6: performance optimization & profiling
+- F7: feature expansion
 
 ---
 
@@ -744,4 +766,4 @@ No shortcuts.
 
 ---
 
-End of Architecture Specification v2.1
+End of Architecture Specification v2.3

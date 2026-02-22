@@ -8,10 +8,10 @@
 
 ## [Unreleased]
 ### Added
-- _Next: Observability / performance roadmap_
+- _Next: add UI/UX polish for Debug overlay + expand metrics coverage across DataService_
 
 ### Changed
-- _Next: tighten refresh scheduling + metrics_
+- _Next: standardize metric names + ensure metrics are emitted on all failure paths_
 
 ### Fixed
 - _Next: address any TSAN regressions immediately_
@@ -40,6 +40,12 @@
 ### Tooling
 - Added `.xctestplan` and enabled Thread Sanitizer (TSAN) diagnostics for test runs
 - TSAN verified clean under stress runs
+
+### Observability (F5 – Phase 1)
+- Introduced DI-based `NetworkMetricsCollecting` with typed `NetworkMetric` counters for `NetworkService`
+- Metrics extracted into `NetworkMetrics.swift` and wired via constructor injection (default: no-op collector)
+- Added Debug-only launch snapshot logging for quick inspection after typical user flow
+- Added lightweight Debug overlay view and linked it from Settings → Debug section
 
 ### Notes
 - F4 stabilization milestone merged to `main` and pushed

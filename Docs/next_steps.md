@@ -19,7 +19,8 @@
 - [ ] UI-тесты (например, запуск HomeView / SearchView)  
 - [x] Dependency Injection через протоколы и мок-реализации (полный отказ от .shared)  
 - [x] Асинхронный DataService (`async/await`) + обработка ошибок  
-- [x] Strict in-flight deduplication + cancellation-safe retry (F4 stabilization, actors + structured concurrency)
+- [x] Strict in-flight deduplication + cancellation-safe retry (F4 stabilization, actors + structured concurrency)  
+- [x] Observability foundation (F5 Phase 1): DI-based metrics, DEBUG snapshot logging, Debug overlay)
 
 ### Работа с данными
 - [ ] SwiftData/CoreData для избранного и истории  
@@ -36,6 +37,7 @@
 - [ ] CI/CD (GitHub Actions): сборка + тесты + линтер  
 - [ ] Автогенерация DocC сайта на GitHub Pages  
 - [ ] SwiftFormat + SwiftLint автопроверка  
+- [ ] Extend metrics coverage to DataService + expose structured metrics export (JSON snapshot)
 
 ### Проф. фичи
 - [ ] Feature flags / Remote config  
@@ -66,6 +68,7 @@
 - [ ] Snapshot-тесты для основных экранов (HomeView, SearchView, ArticleDetailView)  
 - [ ] Accessibility-тесты (VoiceOver, Dynamic Type)  
 - [x] Test Plans в Xcode для разных типов тестов (Unit + TSAN stress suite)  
+- [ ] Metrics validation tests (ensure counters fire on retry / dedupe / cancellation paths)  
 - [ ] Code coverage reports (например, Slather + GitHub Actions)  
 
 ### Инфраструктура
