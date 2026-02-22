@@ -25,8 +25,7 @@ struct FavoritesView: View {
             return favoriteArticles
         } else {
             return favoriteArticles.filter {
-                $0.localizedTitle(for: selectedLanguage)
-                    .localizedCaseInsensitiveContains(searchText)
+                $0.localizedTitle(for: selectedLanguage).localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -81,10 +80,14 @@ struct FavoritesView: View {
                 )
             } label: {
                 ArticleRow(viewModel: makeRowViewModel(article))
+                    .frame(minHeight: DS.Size.hitTarget)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
+            .listRowBackground(DS.Color.background)
         }
-        .listStyle(PlainListStyle())
+        .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(DS.Color.background)
     }
