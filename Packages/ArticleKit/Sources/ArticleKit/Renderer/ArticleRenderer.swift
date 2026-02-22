@@ -60,22 +60,15 @@ private struct EnhancedImageView: View {
             // Отображаем изображение если есть путь
             if let imagePath = section.imageData?.imagePath,
                let image = loadImage(from: imagePath) {
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .cornerRadius(8)
-                    .frame(maxWidth: .infinity)
+                StableImageContainer(aspectRatio: Metrics.remoteImageAspectRatio) {
+                    image
+                        .resizable()
+                        .scaledToFill()
+                }
             } else if let content = section.content, !content.isEmpty {
                 // Fallback: старая логика с URL
                 if let url = URL(string: content) {
-                    AsyncImage(url: url) { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(8)
-                    } placeholder: {
-                        ProgressView()
-                    }
+                    StableRemoteImage(url: url, aspectRatio: Metrics.remoteImageAspectRatio)
                 } else {
                     // Fallback: заглушка
                     placeholderImage
@@ -98,19 +91,29 @@ private struct EnhancedImageView: View {
     }
     
     private var placeholderImage: some View {
-        RoundedRectangle(cornerRadius: 8)
-            .fill(Color.gray.opacity(0.2))
-            .frame(height: 150)
-            .overlay(
-                VStack {
+        StableImageContainer(aspectRatio: Metrics.remoteImageAspectRatio) {
+            ZStack {
+                RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous)
+                    .fill(Color.gray.opacity(0.14))
+
+                LinearGradient(
+                    colors: [Color.white.opacity(0.10), Color.white.opacity(0.02)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .blendMode(.softLight)
+
+                VStack(spacing: 6) {
                     Image(systemName: "photo")
-                        .font(.system(size: 40))
+                        .font(.system(size: Metrics.placeholderIconSize, weight: .regular))
                         .foregroundColor(.secondary)
                     Text("Изображение")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-            )
+                .padding(.vertical, 8)
+            }
+        }
     }
     
     // ✅ ФУНКЦИЯ ЗАГРУЗКИ ИЗОБРАЖЕНИЯ ИЗ ФАЙЛА
@@ -122,6 +125,94 @@ private struct EnhancedImageView: View {
         // Для iOS можно добавить UIImage логику
         return nil
         #endif
+    }
+    private enum Metrics {
+        static let remoteImageAspectRatio: CGFloat = 16.0 / 9.0
+        static let placeholderIconSize: CGFloat = 34
+        static let fadeInDuration: CGFloat = 0.18
+        static let cornerRadius: CGFloat = 12
+    }
+
+    /// A stable container that reserves layout space before the image loads.
+    private struct StableImageContainer<Content: View>: View {
+        let aspectRatio: CGFloat
+        @ViewBuilder var content: () -> Content
+
+        var body: some View {
+            Rectangle()
+                .fill(Color.clear)
+                .aspectRatio(aspectRatio, contentMode: .fit)
+                .overlay(content())
+                .clipShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous))
+        }
+    }
+
+    /// Remote image with a premium placeholder, no layout jumps, and a subtle fade-in.
+    private struct StableRemoteImage: View {
+        let url: URL
+        let aspectRatio: CGFloat
+
+        @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+        @State private var didAppearLoadedImage: Bool = false
+
+        var body: some View {
+            StableImageContainer(aspectRatio: aspectRatio) {
+                AsyncImage(url: url, transaction: Transaction(animation: nil)) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .opacity(didAppearLoadedImage ? 1 : 0)
+                            .onAppear {
+                                guard !didAppearLoadedImage else { return }
+                                if reduceMotion {
+                                    didAppearLoadedImage = true
+                                } else {
+                                    withAnimation(.easeOut(duration: Metrics.fadeInDuration)) {
+                                        didAppearLoadedImage = true
+                                    }
+                                }
+                            }
+
+                    case .failure:
+                        placeholder
+
+                    case .empty:
+                        placeholder
+
+                    @unknown default:
+                        placeholder
+                    }
+                }
+            }
+        }
+
+        private var placeholder: some View {
+            ZStack {
+                RoundedRectangle(cornerRadius: Metrics.cornerRadius, style: .continuous)
+                    .fill(Color.gray.opacity(0.14))
+
+                // Subtle sheen to feel “designed” without heavy shimmer.
+                LinearGradient(
+                    colors: [Color.white.opacity(0.10), Color.white.opacity(0.02)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .blendMode(.softLight)
+
+                VStack(spacing: 6) {
+                    Image(systemName: "photo")
+                        .font(.system(size: Metrics.placeholderIconSize, weight: .regular))
+                        .foregroundColor(.secondary)
+                    Text("Изображение")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.vertical, 8)
+            }
+        }
     }
 }
 
