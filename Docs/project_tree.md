@@ -6,6 +6,8 @@
 │   ├── AppContainer.swift
 │   ├── ContentView.swift
 │   ├── InGermanyApp.swift
+│   ├── Observability
+│   │   └── AppLogger.swift
 │   └── View+AppEnvironment.swift
 ├── Docs
 │   ├── AI_CONTEXT.md
@@ -173,7 +175,9 @@
 │   ├── DataService.swift
 │   ├── DefaultsStore.swift
 │   ├── ExportToPDF.swift
-│   ├── NetworkService.swift
+│   ├── Network
+│   │   ├── NetworkMetrics.swift
+│   │   └── NetworkService.swift
 │   ├── ShareService.swift
 │   └── TextAnalysisService.swift
 ├── SharedCore
@@ -269,4 +273,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-72 directories, 198 files
+74 directories, 200 files
