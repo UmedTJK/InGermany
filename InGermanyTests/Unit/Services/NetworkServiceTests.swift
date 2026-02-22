@@ -109,6 +109,8 @@ final class NetworkServiceTests: XCTestCase {
         let service = makeServiceRealSleepRetry(baseDelay: 200_000_000) // 200ms
         service.clearCache()
 
+        MockURLProtocol.responseDelayNanoseconds = 2_000_000_000 // 2s
+
         let file = "cancel-\(UUID().uuidString).json"
 
         let firstRequest = expectation(description: "first request started")
@@ -144,7 +146,7 @@ final class NetworkServiceTests: XCTestCase {
             // Some implementations may surface cancellation wrapped; still acceptable for this test.
         }
 
-        XCTAssertLessThanOrEqual(MockURLProtocol.requestCount, 2, "Cancellation should prevent further retries")
+        XCTAssertEqual(MockURLProtocol.requestCount, 1, "Cancellation should stop retries before a second request")
     }
 
     func testLoadJSON_parallelRequests_stabilityUnderLoad() async throws {
@@ -180,7 +182,7 @@ final class NetworkServiceTests: XCTestCase {
             XCTAssertTrue(results.allSatisfy { $0 == Dummy(v: 99) })
         }
 
-        XCTAssertGreaterThanOrEqual(MockURLProtocol.requestCount, 1)
+        XCTAssertEqual(MockURLProtocol.requestCount, 1, "Strict in-flight dedupe should perform only one network request")
     }
 }
 
@@ -223,15 +225,28 @@ final class MockURLProtocol: URLProtocol {
         }
     }
 
+    static var responseDelayNanoseconds: UInt64 {
+        get {
+            lock.lock(); defer { lock.unlock() }
+            return _responseDelayNanoseconds
+        }
+        set {
+            lock.lock(); defer { lock.unlock() }
+            _responseDelayNanoseconds = newValue
+        }
+    }
+
     private static var _requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
     private static var _onRequest: (() -> Void)?
     private static var _requestCount: Int = 0
+    private static var _responseDelayNanoseconds: UInt64 = 0
 
     static func reset() {
         lock.lock(); defer { lock.unlock() }
         _requestHandler = nil
         _requestCount = 0
         _onRequest = nil
+        _responseDelayNanoseconds = 0
     }
 
     override class func canInit(with request: URLRequest) -> Bool {
@@ -242,11 +257,14 @@ final class MockURLProtocol: URLProtocol {
         request
     }
 
+    private var delayedWorkItem: DispatchWorkItem?
+
     override func startLoading() {
         Self.lock.lock()
         Self._requestCount += 1
         let handler = Self._requestHandler
         let onRequest = Self._onRequest
+        let delay = Self._responseDelayNanoseconds
         Self.lock.unlock()
 
         onRequest?()
@@ -258,15 +276,29 @@ final class MockURLProtocol: URLProtocol {
             return
         }
 
-        do {
-            let (response, data) = try handler(request)
-            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-            client?.urlProtocol(self, didLoad: data)
-            client?.urlProtocolDidFinishLoading(self)
-        } catch {
-            client?.urlProtocol(self, didFailWithError: error)
+        let deliver: () -> Void = { [weak self] in
+            guard let self else { return }
+            do {
+                let (response, data) = try handler(self.request)
+                self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+                self.client?.urlProtocol(self, didLoad: data)
+                self.client?.urlProtocolDidFinishLoading(self)
+            } catch {
+                self.client?.urlProtocol(self, didFailWithError: error)
+            }
+        }
+
+        if delay > 0 {
+            let item = DispatchWorkItem(block: deliver)
+            delayedWorkItem = item
+            DispatchQueue.global().asyncAfter(deadline: .now() + .nanoseconds(Int(delay)), execute: item)
+        } else {
+            deliver()
         }
     }
 
-    override func stopLoading() { }
+    override func stopLoading() {
+        delayedWorkItem?.cancel()
+        delayedWorkItem = nil
+    }
 }

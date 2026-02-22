@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 @testable import InGermany
 
@@ -21,7 +22,6 @@ final class DataServiceTests: XCTestCase {
 
         func setResponse<T: Encodable>(for file: String, value: T, source: NetworkDataSource = .network) {
             let encoder = JSONEncoder()
-            // Article encodes dates as strings via custom encode(to:), but keep a sane default.
             encoder.dateEncodingStrategy = .iso8601
             dataByFile[file] = try? encoder.encode(value)
             sourceByFile[file] = source
@@ -76,10 +76,6 @@ final class DataServiceTests: XCTestCase {
         }
     }
 
-    private func seedCache(_ cache: CacheService, key: String, articles: [Article]) async {
-        await cache.set(key, value: articles)
-    }
-
     // MARK: - Tests
 
     func testLoadArticles_returnsFromCache_evenIfNetworkFails() async {
@@ -90,7 +86,7 @@ final class DataServiceTests: XCTestCase {
         let sut = DataService(networkService: network, cacheManager: cache)
 
         let expected = makeArticles(3)
-        await seedCache(cache, key: "articles", articles: expected)
+        await cache.set("articles", value: expected)
 
         let result = await sut.loadArticles()
         XCTAssertEqual(result.count, expected.count)
@@ -99,13 +95,13 @@ final class DataServiceTests: XCTestCase {
 
     func testLoadArticles_schedulesBackgroundRefresh_dedupedToSingleInFlight() async {
         let network = TestNetworkService()
-        network.delayNanos = 150_000_000 // 0.15s, чтобы refresh точно был "виден"
+        network.delayNanos = 150_000_000 // 0.15s
         network.setResponse(for: "articles.json", value: makeArticles(2), source: .network)
 
         let cache = CacheService()
         let sut = DataService(networkService: network, cacheManager: cache)
 
-        // чтобы loadArticles сразу вернул и запланировал refresh
+        // Seed cache so loadArticles returns immediately and schedules refresh.
         await cache.set("articles", value: makeArticles(1))
 
         await withTaskGroup(of: Void.self) { group in
@@ -117,7 +113,7 @@ final class DataServiceTests: XCTestCase {
             await group.waitForAll()
         }
 
-        // ждём, пока фоновые таски дернут network
+        // Wait briefly for the refresh task to hit the network.
         let deadline = Date().addingTimeInterval(2.0)
         while Date() < deadline {
             let calls = network.loadJSONWithSourceCalls["articles.json"] ?? 0
@@ -136,20 +132,20 @@ final class DataServiceTests: XCTestCase {
         let old = makeArticles(1)
         await cache.set("articles", value: old)
 
-        // Case 1: source != .network -> НЕ должно обновить
+        // Case 1: source != .network -> should NOT update
         let newer = makeArticles(5)
         network.setResponse(for: "articles.json", value: newer, source: .fileCache)
 
-        _ = await sut.loadArticles() // scheduleRefresh
+        _ = await sut.loadArticles()
         try? await Task.sleep(nanoseconds: 300_000_000)
 
         let after1 = await sut.loadArticles()
         XCTAssertEqual(after1.count, old.count, "Should NOT update when source != .network")
 
-        // Case 2: source == .network -> ДОЛЖНО обновить
+        // Case 2: source == .network -> should update
         network.setResponse(for: "articles.json", value: newer, source: .network)
 
-        _ = await sut.loadArticles() // scheduleRefresh again (dedup cleared after completion)
+        _ = await sut.loadArticles()
         try? await Task.sleep(nanoseconds: 300_000_000)
 
         let after2 = await sut.loadArticles()

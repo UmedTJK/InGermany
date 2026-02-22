@@ -15,12 +15,11 @@ final class NetworkService {
     private actor RefreshRegistry {
         private var tasks: [String: Task<Void, Never>] = [:]
 
-        func hasTask(for key: String) -> Bool {
-            tasks[key] != nil
-        }
-
-        func setTask(_ task: Task<Void, Never>, for key: String) {
+        func getOrCreateTask(for key: String, create: @Sendable () -> Task<Void, Never>) -> Task<Void, Never> {
+            if let existing = tasks[key] { return existing }
+            let task = create()
             tasks[key] = task
+            return task
         }
 
         func removeTask(for key: String) {
@@ -32,29 +31,74 @@ final class NetworkService {
             tasks.removeAll()
         }
     }
+    
+    private actor LoadRegistry {
+        private struct Entry {
+            let task: Task<Data, Error>
+            var waiters: Int
+        }
+
+        private var entries: [String: Entry] = [:]
+
+        func acquireTask(for key: String, create: @Sendable () -> Task<Data, Error>) -> Task<Data, Error> {
+            if var entry = entries[key] {
+                entry.waiters += 1
+                entries[key] = entry
+                return entry.task
+            }
+
+            let task = create()
+            entries[key] = Entry(task: task, waiters: 1)
+            return task
+        }
+
+        func cancelIfOnlyWaiter(for key: String) {
+            guard let entry = entries[key] else { return }
+            // If there is only one waiter (the caller), cancel immediately.
+            if entry.waiters <= 1 {
+                entry.task.cancel()
+                entries[key] = nil
+            }
+        }
+
+        func releaseWaiter(for key: String) {
+            guard var entry = entries[key] else { return }
+            entry.waiters -= 1
+            if entry.waiters <= 0 {
+                entries[key] = nil
+            } else {
+                entries[key] = entry
+            }
+        }
+
+        func cancelAll() {
+            for (_, entry) in entries { entry.task.cancel() }
+            entries.removeAll()
+        }
+    }
 
     /// Base URL for remote JSON files (GitHub raw). Must end with a slash.
     private let baseURL: URL
     
     // MARK: - In-flight refresh dedup (one per file)
     private let refreshRegistry = RefreshRegistry()
+    private let loadRegistry = LoadRegistry()
     
     private func scheduleRefresh(file: String) {
         Task(priority: .utility) { [weak self] in
             guard let self else { return }
             if Task.isCancelled { return }
 
-            // Dedup inside actor registry.
-            let alreadyInFlight = await self.refreshRegistry.hasTask(for: file)
-            guard !alreadyInFlight else { return }
-
-            let task = Task(priority: .utility) { [weak self] in
-                guard let self else { return }
-                defer { Task { await self.refreshRegistry.removeTask(for: file) } }
-                await self.refreshFromNetwork(file: file)
+            let task = await self.refreshRegistry.getOrCreateTask(for: file) {
+                Task(priority: .utility) { [weak self] in
+                    guard let self else { return }
+                    defer { Task { await self.refreshRegistry.removeTask(for: file) } }
+                    await self.refreshFromNetwork(file: file)
+                }
             }
 
-            await self.refreshRegistry.setTask(task, for: file)
+            // If task was already in-flight, just return.
+            _ = task
         }
     }
     
@@ -171,14 +215,22 @@ final class NetworkService {
             do {
                 return try await operation()
             } catch {
+                // Cancellation can surface as CancellationError or as URLError.cancelled from URLSession.
                 if error is CancellationError { throw error }
+                if let urlError = error as? URLError, urlError.code == .cancelled {
+                    throw CancellationError()
+                }
+                if Task.isCancelled {
+                    throw CancellationError()
+                }
+
                 lastError = error
                 attempt += 1
-                
+
                 if attempt >= maxRetryAttempts {
                     break
                 }
-                
+
                 let delay = baseRetryDelay * UInt64(pow(2.0, Double(attempt - 1)))
                 try await sleeper(delay)
             }
@@ -200,6 +252,28 @@ final class NetworkService {
     }
     
     private func loadFromNetwork<T: Decodable>(file: String) async throws -> T {
+        let data = try await loadDataFromNetworkDeduped(file: file)
+        return try decodeData(data)
+    }
+
+    private func loadDataFromNetworkDeduped(file: String) async throws -> Data {
+        let task = await loadRegistry.acquireTask(for: file) { [weak self] in
+            Task<Data, Error>(priority: .userInitiated) {
+                guard let self else { throw CancellationError() }
+                return try await self.loadDataFromNetwork(file: file)
+            }
+        }
+
+        defer { Task { await loadRegistry.releaseWaiter(for: file) } }
+
+        return try await withTaskCancellationHandler {
+            try await task.value
+        } onCancel: {
+            Task { await loadRegistry.cancelIfOnlyWaiter(for: file) }
+        }
+    }
+
+    private func loadDataFromNetwork(file: String) async throws -> Data {
         let url = baseURL.appendingPathComponent(file)
 
         return try await performWithRetry { [self] in
@@ -214,7 +288,7 @@ final class NetworkService {
             }
 
             self.saveToCache(data: data, for: file)
-            return try self.decodeData(data)
+            return data
         }
     }
 
@@ -277,8 +351,11 @@ final class NetworkService {
     }
     
     func clearCache() {
-        // Cancel any in-flight refresh tasks
-        Task { await refreshRegistry.cancelAll() }
+        // Cancel any in-flight refresh and load tasks
+        Task {
+            await refreshRegistry.cancelAll()
+            await loadRegistry.cancelAll()
+        }
     
         do {
             let files = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)
