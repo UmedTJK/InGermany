@@ -146,6 +146,42 @@ final class NetworkServiceTests: XCTestCase {
 
         XCTAssertLessThanOrEqual(MockURLProtocol.requestCount, 2, "Cancellation should prevent further retries")
     }
+
+    func testLoadJSON_parallelRequests_stabilityUnderLoad() async throws {
+        let service = makeServiceFastRetry()
+        service.clearCache()
+
+        let file = "parallel-\(UUID().uuidString).json"
+        let body = try JSONEncoder().encode(Dummy(v: 99))
+
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )!
+            return (response, body)
+        }
+
+        try await withThrowingTaskGroup(of: Dummy.self) { group in
+            for _ in 0..<20 {
+                group.addTask {
+                    try await service.loadJSON(from: file)
+                }
+            }
+
+            var results: [Dummy] = []
+            for try await value in group {
+                results.append(value)
+            }
+
+            XCTAssertEqual(results.count, 20)
+            XCTAssertTrue(results.allSatisfy { $0 == Dummy(v: 99) })
+        }
+
+        XCTAssertGreaterThanOrEqual(MockURLProtocol.requestCount, 1)
+    }
 }
 
 // MARK: - URLProtocol Mock
