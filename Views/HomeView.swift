@@ -83,6 +83,13 @@ struct HomeView: View {
                             .padding(DS.Spacing.section)
                             .cardContainer(.standard(useMaterial: true))
 
+                            Divider()
+                                .overlay(
+                                    Color.primary
+                                        .opacity(0.06)
+                                )
+                                .padding(.vertical, DS.Spacing.section)
+
                             RecentlyReadSection(
                                 articles: viewModel.articles,
                                 favoritesManager: viewModel.favoritesManager,
