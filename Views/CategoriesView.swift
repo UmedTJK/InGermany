@@ -24,24 +24,34 @@ struct CategoriesView: View {
         NavigationStack {
             List(viewModel.categories) { category in
                 NavigationLink(value: category) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: DS.Spacing.m) {
                         ZStack {
                             Circle()
                                 .fill(Color(hex: category.colorHex) ?? .blue)
-                                .frame(width: 32, height: 32)
+                                .frame(width: DS.Size.categoryIconCircle, height: DS.Size.categoryIconCircle)
+
                             Image(systemName: category.icon)
-                                .foregroundColor(.white)
-                                .font(.system(size: 16))
+                                .font(.system(size: DS.Size.categoryIconSymbol, weight: .semibold))
+                                .foregroundStyle(.white)
+                                .accessibilityHidden(true)
                         }
+                        .accessibilityHidden(true)
+
                         Text(category.localizedName(for: selectedLanguage))
-                            .font(.headline)
-                            .foregroundColor(.primary)
+                            .font(DS.Typography.cardTitle)
+                            .foregroundStyle(DS.Color.textPrimary)
                     }
-                    .padding(.vertical, 6)
+                    .padding(.vertical, DS.Spacing.s)
+                    .contentShape(Rectangle())
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text(category.localizedName(for: selectedLanguage)))
                 }
+                .buttonStyle(.plain)
             }
             .navigationTitle(t("tab_categories"))
             .listStyle(PlainListStyle())
+            .scrollContentBackground(.hidden)
+            .background(DS.Color.background)
             .task {
                 await viewModel.load()
             }
