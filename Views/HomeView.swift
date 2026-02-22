@@ -59,7 +59,7 @@ struct HomeView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 28) {
+                        LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
                             UsefulToolsSection(
                                 articles: viewModel.articles,
                                 onRandomArticleSelected: { _ in
@@ -113,13 +113,13 @@ struct HomeView: View {
                                 }
                             )
                         }
-                        .padding(.vertical)
+                        .padding(.vertical, DS.Spacing.section)
                     }
                     .refreshable { await viewModel.refreshData() }
                 }
             }
             .navigationTitle(t("tab_home"))
-            .background(Color(.systemGroupedBackground))
+            .background(DS.Color.background)
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {
                     ArticleDetailView(

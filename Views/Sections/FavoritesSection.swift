@@ -52,6 +52,7 @@ struct FavoritesSection: View {
                                     viewModel: makeRowViewModel(article)
                                 )
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(.horizontal, DS.Spacing.contentInset)
