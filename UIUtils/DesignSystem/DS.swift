@@ -37,3 +37,15 @@ extension DS {
         static let textSecondary = SwiftUI.Color.secondary
     }
 }
+
+// MARK: - Typography
+extension DS {
+    enum Typography {
+        static let sectionTitle: Font = .headline
+        static let cardTitle: Font = .headline
+        static let cardBody: Font = .subheadline
+        static let meta: Font = .caption
+        static let badge: Font = .caption2.weight(.semibold)
+        static let chip: Font = .caption2
+    }
+}
