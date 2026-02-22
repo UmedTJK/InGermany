@@ -35,13 +35,11 @@ struct FavoritesSection: View {
         let favoriteArticles = articles.filter { favoritesManager.isFavorite($0.id) }
 
         if !favoriteArticles.isEmpty {
-            VStack(alignment: .leading, spacing: 12) {
-                Text(t("section_favorites"))
-                    .font(.headline)
-                    .padding(.horizontal)
+            VStack(alignment: .leading, spacing: DS.Spacing.m) {
+                SectionHeader(title: t("section_favorites"))
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: 16) {
+                    LazyHStack(spacing: DS.Spacing.carouselItem) {
                         ForEach(favoriteArticles) { article in
                             NavigationLink {
                                 ArticleDetailView(
@@ -56,11 +54,11 @@ struct FavoritesSection: View {
                             }
                         }
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, DS.Spacing.contentInset)
+                    .padding(.vertical, DS.Spacing.carouselVPad)
                 }
             }
-            .padding(.bottom, 24)
+            .padding(.bottom, DS.Spacing.xl)
         }
     }
 
