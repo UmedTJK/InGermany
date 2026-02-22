@@ -17,6 +17,71 @@ extension DS {
     }
 }
 
+// MARK: - Elevation
+extension DS {
+    /// Elevation tokens (shadow + stroke + optional material) to keep surfaces consistent.
+    enum Elevation {
+        struct CardSurface {
+            // Stroke
+            let strokeWidth: CGFloat
+
+            // Key shadow (directional)
+            let keyShadowRadius: CGFloat
+            let keyShadowX: CGFloat
+            let keyShadowY: CGFloat
+
+            // Ambient shadow (soft)
+            let ambientShadowRadius: CGFloat
+            let ambientShadowX: CGFloat
+            let ambientShadowY: CGFloat
+
+            // Optional material background
+            let material: Material
+
+            func strokeColor(for colorScheme: ColorScheme) -> SwiftUI.Color {
+                switch colorScheme {
+                case .dark:
+                    // Subtle top-edge lift in dark mode.
+                    return SwiftUI.Color.white.opacity(0.10)
+                default:
+                    // Hairline border to define edges on light surfaces.
+                    return SwiftUI.Color.black.opacity(0.06)
+                }
+            }
+
+            func keyShadowColor(for colorScheme: ColorScheme) -> SwiftUI.Color {
+                switch colorScheme {
+                case .dark:
+                    return SwiftUI.Color.black.opacity(0.35)
+                default:
+                    return SwiftUI.Color.black.opacity(0.10)
+                }
+            }
+
+            func ambientShadowColor(for colorScheme: ColorScheme) -> SwiftUI.Color {
+                switch colorScheme {
+                case .dark:
+                    return SwiftUI.Color.black.opacity(0.22)
+                default:
+                    return SwiftUI.Color.black.opacity(0.06)
+                }
+            }
+        }
+
+        /// Default premium card surface.
+        static let card = CardSurface(
+            strokeWidth: 1,
+            keyShadowRadius: 10,
+            keyShadowX: 0,
+            keyShadowY: 6,
+            ambientShadowRadius: 3,
+            ambientShadowX: 0,
+            ambientShadowY: 1,
+            material: .ultraThinMaterial
+        )
+    }
+}
+
 extension DS {
     enum Radius {
         static let card: CGFloat = 16
