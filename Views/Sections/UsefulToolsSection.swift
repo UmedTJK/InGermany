@@ -28,6 +28,20 @@ struct UsefulToolsSection: View {
         self.makeDataService = makeDataService
     }
 
+    private func toolLabel(title: String, systemImage: String, color: Color, hintKey: String) -> some View {
+        ToolCard(
+            title: title,
+            systemImage: systemImage,
+            color: color
+        )
+        .frame(minHeight: DS.Size.hitTarget)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(title))
+        .accessibilityHint(Text(t(hintKey)))
+        .accessibilityAddTraits(.isButton)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.m) {
             SectionHeader(title: t("section_useful_tools"))
@@ -35,10 +49,11 @@ struct UsefulToolsSection: View {
             HorizontalCarousel {
 
                 NavigationLink(destination: MapView(dataService: makeDataService())) {
-                    ToolCard(
+                    toolLabel(
                         title: t("tool_map"),
                         systemImage: "map",
-                        color: .blue
+                        color: .blue,
+                        hintKey: "a11y_open_map_hint"
                     )
                 }
                 .buttonStyle(.plain)
@@ -48,10 +63,11 @@ struct UsefulToolsSection: View {
                         viewModel: makePDFLibraryViewModel()
                     )
                 ) {
-                    ToolCard(
+                    toolLabel(
                         title: t("tool_pdf_docs"),
                         systemImage: "doc.richtext",
-                        color: .green
+                        color: .green,
+                        hintKey: "a11y_open_pdf_library_hint"
                     )
                 }
                 .buttonStyle(.plain)
@@ -61,10 +77,11 @@ struct UsefulToolsSection: View {
                         onRandomArticleSelected(random)
                     }
                 } label: {
-                    ToolCard(
+                    toolLabel(
                         title: t("tool_random_article"),
                         systemImage: "shuffle",
-                        color: .orange
+                        color: .orange,
+                        hintKey: "a11y_open_random_article_hint"
                     )
                 }
                 .buttonStyle(.plain)

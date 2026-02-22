@@ -534,6 +534,66 @@ public final  class LocalizationManager: ObservableObject {
         "Сбросить": [
             "ru": "Сбросить", "en": "Reset", "de": "Zurücksetzen",
             "tj": "Барқарор кардан", "fa": "بازنشانی", "ar": "إعادة تعيين", "uk": "Скинути"
+        ],
+        
+        // 🔹 SearchView empty state
+        "search_no_results_title": [
+            "ru": "Ничего не найдено",
+            "en": "No Results",
+            "de": "Keine Ergebnisse",
+            "tj": "Ҳеҷ чиз ёфт нашуд",
+            "fa": "نتیجه‌ای پیدا نشد",
+            "ar": "لا توجد نتائج",
+            "uk": "Нічого не знайдено"
+        ],
+        "search_no_results_desc": [
+            "ru": "Попробуйте изменить запрос или выбрать другой тег.",
+            "en": "Try changing your query or selecting another tag.",
+            "de": "Ändern Sie Ihre Suche oder wählen Sie einen anderen Tag.",
+            "tj": "Кӯшиш кунед дархостро дигар кунед ё тегро иваз кунед.",
+            "fa": "عبارت جستجو را تغییر دهید یا برچسب دیگری انتخاب کنید.",
+            "ar": "جرّب تعديل البحث أو اختيار وسم آخر.",
+            "uk": "Спробуйте змінити запит або вибрати інший тег."
+        ],
+
+        // 🔹 Generic accessibility hints
+        "a11y_open_article_hint": [
+            "ru": "Откроет статью.",
+            "en": "Opens the article.",
+            "de": "Öffnet den Artikel.",
+            "tj": "Мақоларо мекушояд.",
+            "fa": "مقاله را باز می‌کند.",
+            "ar": "يفتح المقال.",
+            "uk": "Відкриє статтю."
+        ],
+
+        // 🔹 Home tools accessibility hints
+        "a11y_open_map_hint": [
+            "ru": "Откроет карту.",
+            "en": "Opens the map.",
+            "de": "Öffnet die Karte.",
+            "tj": "Харитаро мекушояд.",
+            "fa": "نقشه را باز می‌کند.",
+            "ar": "يفتح الخريطة.",
+            "uk": "Відкриє карту."
+        ],
+        "a11y_open_pdf_library_hint": [
+            "ru": "Откроет библиотеку PDF.",
+            "en": "Opens the PDF library.",
+            "de": "Öffnet die PDF-Bibliothek.",
+            "tj": "Китобхонаи PDF-ро мекушояд.",
+            "fa": "کتابخانه PDF را باز می‌کند.",
+            "ar": "يفتح مكتبة PDF.",
+            "uk": "Відкриє бібліотеку PDF."
+        ],
+        "a11y_open_random_article_hint": [
+            "ru": "Откроет случайную статью.",
+            "en": "Opens a random article.",
+            "de": "Öffnet einen zufälligen Artikel.",
+            "tj": "Мақолаи тасодуфиро мекушояд.",
+            "fa": "یک مقاله تصادفی را باز می‌کند.",
+            "ar": "يفتح مقالاً عشوائياً.",
+            "uk": "Відкриє випадкову статтю."
         ]
     ]
     

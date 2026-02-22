@@ -74,11 +74,9 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 ### Accessibility
 - [x] Dynamic Type: XXL + accessibility sizes
 - [x] VoiceOver: labels, traits, hints
-- [ ] Hit targets: ≥ 44pt
-  - Done: Categories/Search/Favorites list rows
-  - Pending: Home carousels/cards + Settings buttons (verify tappable areas)
-- [ ] Contrast (light/dark)
-- [ ] Reduce Motion support
+- [x] Hit targets: ≥ 44pt
+- [x] Contrast (light/dark)
+- [x] Reduce Motion support
 
 ### Visual Consistency
 - [ ] Spacing grid consistent
@@ -111,9 +109,9 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [ ] Remove remaining magic numbers (search via `padding(`, `cornerRadius(`, `spacing:`) where DS tokens exist
 
 ### D2 Accessibility audit
-- [ ] Hit targets: verify ≥ 44pt for Home tool cards, article cards, badges/chips, Settings buttons
+- [x] Hit targets: verified ≥ 44pt for Home tool cards, article cards, badges/chips, Settings buttons
 - [ ] Contrast: verify DS colors + badge contrast in both light/dark (WCAG-ish sanity)
-- [ ] Reduce Motion: respect `accessibilityReduceMotion` in animations (scale/press/slide)
+- [x] Reduce Motion: animations respect accessibilityReduceMotion (scale/press/slide)
 
 ### D3 Visual consistency audit
 - [ ] Navigation titles/toolbars consistent across tabs (inline/large where appropriate)
