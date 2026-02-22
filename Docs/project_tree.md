@@ -70,6 +70,7 @@
 │   ├── Editor
 │   │   ├── ArticleEditorImportExportTests.swift
 │   │   └── ArticleEditorViewModelTests.swift
+│   ├── InGermany.xctestplan
 │   ├── InGermanyTests.swift
 │   ├── Mocks
 │   │   ├── MockArticlesRepository.swift
@@ -268,4 +269,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-72 directories, 197 files
+72 directories, 198 files
