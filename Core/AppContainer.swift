@@ -36,6 +36,10 @@ final class AppContainer: ObservableObject {
     private let dateFormattingService = DateFormattingService()
     private let textAnalysisService = TextAnalysisService()
     
+    // MARK: - Observability (F5)
+    private let networkMetricsCollector = NetworkMetricsCollector()
+    private let networkService: NetworkServiceProtocol
+    
     // MARK: - Services
     let dataService: DataServiceProtocol
     private let articleFormatter: ArticleFormatter
@@ -56,11 +60,18 @@ final class AppContainer: ObservableObject {
         localizationManager: LocalizationManager? = nil,
         settingsManager: SettingsManager? = nil,
         dataService: DataServiceProtocol? = nil,
-        readingStatsManager: ReadingStatsManager? = nil
+        readingStatsManager: ReadingStatsManager? = nil,
+        networkService: NetworkServiceProtocol? = nil
     ) {
+        // ✅ NetworkService (with metrics in default composition)
+        let networkServiceInstance: NetworkServiceProtocol = networkService ?? NetworkService(
+            metrics: networkMetricsCollector
+        )
+        self.networkService = networkServiceInstance
+
         // ✅ Services & Repos
         let dataServiceInstance: DataServiceProtocol = dataService ?? DataService(
-            networkService: NetworkService(),
+            networkService: networkServiceInstance,
             cacheManager: CacheService()
         )
 
@@ -232,6 +243,11 @@ final class AppContainer: ObservableObject {
         )
     }
     
+    // MARK: - Debug (F5)
+    func dumpNetworkMetrics(reset: Bool = false) async -> String {
+        let snapshot = reset ? await networkMetricsCollector.snapshotAndReset() : await networkMetricsCollector.snapshot()
+        return snapshot.prettyDescription()
+    }
     
     // MARK: - Clear All Data (for testing)
     
