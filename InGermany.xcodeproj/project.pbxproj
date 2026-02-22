@@ -56,6 +56,9 @@
 		AD675BA82E93D85E007B0994 /* FavoritesManagingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BA72E93D85C007B0994 /* FavoritesManagingProtocol.swift */; };
 		AD675BAC2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */; };
 		AD675BAD2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */; };
+		AD67E94F2F4B20A1001E5849 /* UI_PRE_RELEASE.md in Resources */ = {isa = PBXBuildFile; fileRef = AD67E94E2F4B20A1001E5849 /* UI_PRE_RELEASE.md */; };
+		AD67E9542F4B24A1001E5849 /* CardContainerStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD67E9532F4B249E001E5849 /* CardContainerStyle.swift */; };
+		AD67E9562F4B25EF001E5849 /* DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD67E9552F4B25E8001E5849 /* DS.swift */; };
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
 		AD70954F2E9D8ECD00E79E19 /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */; };
 		AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */ = {isa = PBXBuildFile; fileRef = AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */; };
@@ -99,7 +102,6 @@
 		AD16243A2E9AD9D600E6E14B /* ShimmerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerEffect.swift; sourceTree = "<group>"; };
 		AD16243C2E9ADA0100E6E14B /* ShakeEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeEffect.swift; sourceTree = "<group>"; };
 		AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleOnTap.swift; sourceTree = "<group>"; };
-		AD1624402E9ADA7200E6E14B /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Accessibility+Extensions.swift"; sourceTree = "<group>"; };
 		AD1624442E9ADB4D00E6E14B /* UIUTILS_GUIDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = UIUTILS_GUIDE.md; sourceTree = "<group>"; };
 		AD1626002E9ADD3400E6E14B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -154,6 +156,9 @@
 		AD675BA72E93D85C007B0994 /* FavoritesManagingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManagingProtocol.swift; sourceTree = "<group>"; };
 		AD675BAA2E93DD95007B0994 /* ArticlesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesRepositoryProtocol.swift; sourceTree = "<group>"; };
 		AD675BAB2E93DD95007B0994 /* CategoriesRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesRepositoryProtocol.swift; sourceTree = "<group>"; };
+		AD67E94E2F4B20A1001E5849 /* UI_PRE_RELEASE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = UI_PRE_RELEASE.md; sourceTree = "<group>"; };
+		AD67E9532F4B249E001E5849 /* CardContainerStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainerStyle.swift; sourceTree = "<group>"; };
+		AD67E9552F4B25E8001E5849 /* DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DS.swift; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHistoryManager.swift; sourceTree = "<group>"; };
 		AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration_base64.json; sourceTree = "<group>"; };
@@ -335,11 +340,11 @@
 		AD2A65652E8FF0D1006A94DD /* UIUtils */ = {
 			isa = PBXGroup;
 			children = (
+				AD67E9512F4B21B9001E5849 /* DesignSystem */,
 				ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */,
 				AD108D322E9F70130032F0D9 /* PDFThumbnailGenerator.swift */,
 				ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */,
 				AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */,
-				AD1624402E9ADA7200E6E14B /* LoadingView.swift */,
 				AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */,
 				AD16243C2E9ADA0100E6E14B /* ShakeEffect.swift */,
 				AD16243A2E9AD9D600E6E14B /* ShimmerEffect.swift */,
@@ -560,6 +565,7 @@
 		AD52FD4E2E8585B300CC9F61 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				AD67E94E2F4B20A1001E5849 /* UI_PRE_RELEASE.md */,
 				ADE9E0362F49D3A100849FF4 /* AUDIT_2026-02-21_TECHNICAL_PLAN.md */,
 				ADC6DA552F4903CD0040AFF8 /* ARCHITECTURE.md */,
 				AD7906902F48C5C10047F511 /* DI_GRAPH.md */,
@@ -577,6 +583,15 @@
 				AD1626022E9ADDD900E6E14B /* screenshots */,
 			);
 			path = Docs;
+			sourceTree = "<group>";
+		};
+		AD67E9512F4B21B9001E5849 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				AD67E9552F4B25E8001E5849 /* DS.swift */,
+				AD67E9532F4B249E001E5849 /* CardContainerStyle.swift */,
+			);
+			path = DesignSystem;
 			sourceTree = "<group>";
 		};
 		AD8552892E75ABEB003D3826 = {
@@ -861,6 +876,7 @@
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				ADB9303D2F1354D600A961D7 /* .gitignore in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
+				AD67E94F2F4B20A1001E5849 /* UI_PRE_RELEASE.md in Resources */,
 				AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */,
 				ADA942092E78950F008D1364 /* locations.json in Resources */,
 			);
@@ -903,6 +919,7 @@
 				AD2E72302EA2C5C400436C9A /* LocalizationManager.swift in Sources */,
 				ADDF80FD2EA6C8B8000885DE /* NSWindow+SwiftUI.swift in Sources */,
 				AD2E72312EA2C5C400436C9A /* ArticleKit.swift in Sources */,
+				AD67E9562F4B25EF001E5849 /* DS.swift in Sources */,
 				AD2E74952EA3BD4200436C9A /* ArticleModels.swift in Sources */,
 				AD7906922F48D5540047F511 /* NetworkServiceProtocol.swift in Sources */,
 				AD2E74982EA3BE4100436C9A /* ArticleBlock.swift in Sources */,
@@ -912,6 +929,7 @@
 				AD2E72382EA2C5C400436C9A /* LoadingView.swift in Sources */,
 				AD2E72392EA2C5C400436C9A /* SharedKitTests.swift in Sources */,
 				AD2E723E2EA2C5C400436C9A /* ArticleKitTests.swift in Sources */,
+				AD67E9542F4B24A1001E5849 /* CardContainerStyle.swift in Sources */,
 				AD7906942F48D5700047F511 /* CacheServiceProtocol.swift in Sources */,
 				AD2E72422EA2C5C400436C9A /* ArticleRenderer.swift in Sources */,
 				AD2A656B2E8FF0D1006A94DD /* CardImageStyle.swift in Sources */,

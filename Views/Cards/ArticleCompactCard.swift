@@ -116,7 +116,7 @@ struct ArticleCompactCard: View {
             .padding(12)
         }
         .frame(width: cardWidth)
-        .cardStyle() // ✅ вместо applyCardStyle(CardStyle...)
+        .cardContainer()
         .scaleOnAppear()
     }
 }
