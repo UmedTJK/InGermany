@@ -6,12 +6,7 @@ struct AboutView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @EnvironmentObject private var localizationManager: LocalizationManager
 
-    /// Initializes the view with AppContainer for dependency injection
-    init(appContainer: AppContainer) {
-        _viewModel = StateObject(wrappedValue: appContainer.makeAboutViewModel())
-    }
-    
-    /// For preview and testing
+    /// Dependency-injected initializer (composition root / previews)
     init(viewModel: AboutViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -29,7 +24,6 @@ struct AboutView: View {
                     .multilineTextAlignment(.leading)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(t("about_build_label")): \(viewModel.buildNumber)")
                     Text("\(t("about_build")): \(viewModel.buildNumber)")
 
                     Link(viewModel.repositoryURL, destination: URL(string: viewModel.repositoryURL)!)
@@ -50,6 +44,6 @@ struct AboutView: View {
 // MARK: - Preview
 #Preview {
     let container = AppContainer.previewMock()
-    AboutView(appContainer: container)
+    AboutView(viewModel: container.makeAboutViewModel())
         .appEnvironment(using: container)
 }
