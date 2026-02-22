@@ -62,14 +62,26 @@ struct HomeView: View {
                 } else {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
-                            UsefulToolsSection(
-                                articles: viewModel.articles,
-                                onRandomArticleSelected: { _ in
-                                    viewModel.selectRandomArticle()
-                                },
-                                makePDFLibraryViewModel: makePDFLibraryViewModel,
-                                makeDataService: makeDataService
-                            )
+                            VStack(alignment: .leading, spacing: DS.Spacing.section) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Полезные инструменты")
+                                        .font(.headline)
+                                    Text("Быстрые действия и важные разделы")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                UsefulToolsSection(
+                                    articles: viewModel.articles,
+                                    onRandomArticleSelected: { _ in
+                                        viewModel.selectRandomArticle()
+                                    },
+                                    makePDFLibraryViewModel: makePDFLibraryViewModel,
+                                    makeDataService: makeDataService
+                                )
+                            }
+                            .padding(DS.Spacing.section)
+                            .cardContainer(.standard(useMaterial: true))
 
                             RecentlyReadSection(
                                 articles: viewModel.articles,
@@ -115,8 +127,10 @@ struct HomeView: View {
                                 }
                             )
                         }
-                        .padding(.vertical, DS.Spacing.section)
+                        .padding(.top, DS.Spacing.section)
+                        .padding([.horizontal, .bottom], DS.Spacing.section)
                     }
+                    .scrollIndicators(.hidden)
                     .refreshable { await viewModel.refreshData() }
                 }
             }
