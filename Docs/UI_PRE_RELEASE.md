@@ -25,41 +25,44 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - Localization inconsistent (hardcoded strings + multiple translation APIs)
 - Animations incorrect: `.animation(..., value: UUID())` causes unstable re-animations
 - Card sizing based on screen size (risk in iPad/split view)
+- Design System layer introduced (DS + CardContainer + SectionHeader); legacy cardStyle functions deprecated but still present
 
 ---
 
 ## Step B — Design System v1 (tokens + components)
 ### Tokens
-- [ ] DS.Spacing (xs/s/m/l/xl/section/contentInset/carouselItem)
-- [ ] DS.Radius (card/media/badge/chip)
-- [ ] DS.Typography (sectionTitle/cardTitle/body/meta/chip)
-- [ ] DS.Colors (background/surface/secondarySurface/text/separator/accent)
+- [x] DS.Spacing (xs/s/m/l/xl/section/contentInset/carouselItem)
+- [x] DS.Radius (card/media/badge/chip)
+- [x] DS.Typography (sectionTitle/cardTitle/cardBody/meta/chip/badge)
+- [x] DS.Color (background/surface/secondarySurface/textPrimary/textSecondary)
 - [ ] DS.Elevation (shadow/stroke/material, light/dark aware)
 - [ ] DS.Motion (durations, spring presets; reduce motion)
 
 ### Components
-- [ ] CardContainer modifier (replaces cardStyle/lightCardStyle/applyCardStyle/sectionCardStyle)
-- [ ] SectionHeader (title + optional action)
-- [ ] CategoryBadge (contrast-safe)
+- [x] CardContainer modifier (replaces cardStyle/lightCardStyle/applyCardStyle/sectionCardStyle)
+- [x] SectionHeader (title + optional action)
+- [ ] CategoryBadge (contrast-safe, extracted component)
 - [ ] TagChip (hit target + dynamic type strategy)
-- [ ] HorizontalCarousel wrapper (padding/spacing unified)
+- [x] HorizontalCarousel wrapper (padding/spacing unified)
 
 ---
 
 ## Step C — Apply (priority order)
-### C1 Home (first)
-- [ ] Replace Home ScrollView VStack → LazyVStack
-- [ ] Unified contentInset + section spacing via DS tokens
-- [ ] Replace section headers with SectionHeader
-- [ ] Normalize carousels using HorizontalCarousel
+### C1 Home (completed baseline)
+- [x] Home ScrollView VStack → LazyVStack
+- [x] Unified contentInset + section spacing via DS tokens
+- [x] Replace section headers with SectionHeader
+- [x] Apply .buttonStyle(.plain) to all card NavigationLinks
+- [x] Normalize carousels using HorizontalCarousel wrapper
 - [ ] Remove/DEBUG-gate datasource bar (3pt)
 
-### C2 ArticleCompactCard
-- [ ] Unify radius/padding via DS
+### C2 ArticleCompactCard (DS aligned)
+- [x] Unify radius/padding via DS
+- [x] Replace magic numbers with DS tokens
 - [ ] Image placeholder consistent + no layout jump
-- [ ] Category badge: contrast-safe text color
-- [ ] Accessibility: single VO element label/value/hint
-- [ ] Dynamic Type: adjust line limits for accessibility sizes
+- [ ] Category badge: contrast-safe text color logic
+- [x] Accessibility: single VO element label/value/hint
+- [x] Dynamic Type: adjust line limits for accessibility sizes
 
 ### C3 Other tabs
 - [ ] Categories/Search/Favorites/Settings: unified nav + background + list style
@@ -69,8 +72,8 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 
 ## Step D — Pre-Release Checklist
 ### Accessibility
-- [ ] Dynamic Type: XXL + accessibility sizes
-- [ ] VoiceOver: labels, traits, hints
+- [x] Dynamic Type: XXL + accessibility sizes
+- [x] VoiceOver: labels, traits, hints
 - [ ] Hit targets: ≥ 44pt
 - [ ] Contrast (light/dark)
 - [ ] Reduce Motion support
@@ -89,6 +92,7 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 
 ### Definition of Done (UI)
 - [ ] No magic numbers in screens/sections (only DS tokens)
-- [ ] Single source of truth for card styling
+- [ ] Single source of truth for card styling (CardContainer only)
 - [ ] Stable navigation structure per tab
+- [ ] Accessibility pass completed (Dynamic Type + VoiceOver + hit targets)
 - [ ] Verified on: iPhone SE / iPhone 15 / iPad split view
