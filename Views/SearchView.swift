@@ -37,29 +37,42 @@ struct SearchView: View {
                     .padding(.horizontal, DS.Spacing.contentInset)
                 }
 
-                List(viewModel.filteredArticles) { article in
-                    NavigationLink {
-                        ArticleDetailView(
-                            viewModel: makeDetailViewModel(article, viewModel.articles),
-                            localizationManager: localizationManager,
-                            articleRowFactory: makeRowViewModel
-                        )
-                    } label: {
-                        ArticleRow(
-                            viewModel: makeRowViewModel(article)
-                        )
+                if viewModel.filteredArticles.isEmpty {
+                    ContentUnavailableView(
+                        localizationManager.t("search_no_results_title"),
+                        systemImage: "doc.text.magnifyingglass",
+                        description: Text(localizationManager.t("search_no_results_desc"))
+                    )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.horizontal, DS.Spacing.contentInset)
+                } else {
+                    List(viewModel.filteredArticles) { article in
+                        NavigationLink {
+                            ArticleDetailView(
+                                viewModel: makeDetailViewModel(article, viewModel.articles),
+                                localizationManager: localizationManager,
+                                articleRowFactory: makeRowViewModel
+                            )
+                        } label: {
+                            ArticleRow(viewModel: makeRowViewModel(article))
+                                .frame(minHeight: DS.Size.hitTarget)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(DS.Color.background)
                     }
-                    .buttonStyle(.plain)
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(DS.Color.background)
                 }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
-                .background(DS.Color.background)
             }
             .navigationTitle(localizationManager.t("tab_search"))
             .searchable(
                 text: $viewModel.searchText,
                 prompt: localizationManager.t("search_prompt")
             )
+            .background(DS.Color.background)
             .task {
                 guard !didInitialLoad else { return }
                 didInitialLoad = true
