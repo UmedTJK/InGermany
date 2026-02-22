@@ -25,18 +25,6 @@ private struct CardContainerModifier: ViewModifier {
                 .background(backgroundView(useMaterial: useMaterial))
                 .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card, style: .continuous))
                 .overlay(strokeOverlay)
-                .shadow(
-                    color: DS.Elevation.card.keyShadowColor(for: colorScheme),
-                    radius: DS.Elevation.card.keyShadowRadius,
-                    x: DS.Elevation.card.keyShadowX,
-                    y: DS.Elevation.card.keyShadowY
-                )
-                .shadow(
-                    color: DS.Elevation.card.ambientShadowColor(for: colorScheme),
-                    radius: DS.Elevation.card.ambientShadowRadius,
-                    x: DS.Elevation.card.ambientShadowX,
-                    y: DS.Elevation.card.ambientShadowY
-                )
         }
     }
 
@@ -65,5 +53,61 @@ extension View {
     @ViewBuilder
     func cardContainer(_ variant: CardContainerVariant = .standard()) -> some View {
         self.modifier(CardContainerModifier(variant: variant))
+    }
+}
+
+// MARK: - Card press feedback
+
+private struct CardPressStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(reduceMotion ? 1 : (configuration.isPressed ? DS.Interaction.pressScale : 1))
+            .overlay(pressedStrokeOverlay(isPressed: configuration.isPressed))
+            .shadow(
+                color: DS.Elevation.card.keyShadowColor(for: colorScheme),
+                radius: keyRadius(isPressed: configuration.isPressed),
+                x: DS.Elevation.card.keyShadowX,
+                y: DS.Elevation.card.keyShadowY
+            )
+            .shadow(
+                color: DS.Elevation.card.ambientShadowColor(for: colorScheme),
+                radius: ambientRadius(isPressed: configuration.isPressed),
+                x: DS.Elevation.card.ambientShadowX,
+                y: DS.Elevation.card.ambientShadowY
+            )
+            .animation(
+                reduceMotion ? nil : .easeOut(duration: DS.Interaction.pressAnimationDuration),
+                value: configuration.isPressed
+            )
+    }
+
+    private func keyRadius(isPressed: Bool) -> CGFloat {
+        isPressed ? DS.Elevation.card.keyShadowRadius * DS.Interaction.pressedShadowMultiplier : DS.Elevation.card.keyShadowRadius
+    }
+
+    private func ambientRadius(isPressed: Bool) -> CGFloat {
+        isPressed ? DS.Elevation.card.ambientShadowRadius * DS.Interaction.pressedShadowMultiplier : DS.Elevation.card.ambientShadowRadius
+    }
+
+    @ViewBuilder
+    private func pressedStrokeOverlay(isPressed: Bool) -> some View {
+        if isPressed {
+            RoundedRectangle(cornerRadius: DS.Radius.card, style: .continuous)
+                .stroke(
+                    DS.Elevation.card.strokeColor(for: colorScheme)
+                        .opacity(1 + DS.Interaction.pressedStrokeOpacityBoost),
+                    lineWidth: DS.Elevation.card.strokeWidth
+                )
+        }
+    }
+}
+
+extension View {
+    /// Adds subtle press feedback for interactive card surfaces. Use on the view inside a `Button { }`.
+    func cardPressFeedback() -> some View {
+        self.buttonStyle(CardPressStyle())
     }
 }
