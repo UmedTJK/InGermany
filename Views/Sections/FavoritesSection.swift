@@ -52,6 +52,7 @@ struct FavoritesSection: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .cardPressFeedback()
                     }
                 }
             }
