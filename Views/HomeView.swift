@@ -308,6 +308,27 @@ struct HomeView: View {
                         makePDFLibraryViewModel: makePDFLibraryViewModel,
                         makeDataService: makeDataService
                     )
+
+                    // CONTINUE READING
+                    RecentlyReadSection(
+                        articles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager,
+                        readingStatsManager: viewModel.readingStatsManager,
+                        makeRowViewModel: makeArticleRowViewModel,
+                        makeDetailViewModel: { article, all in
+                            makeArticleDetailViewModel(article, all)
+                        }
+                    )
+
+                    // FAVORITES
+                    FavoritesSection(
+                        articles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager,
+                        makeRowViewModel: makeArticleRowViewModel,
+                        makeDetailViewModel: { article, all in
+                            makeArticleDetailViewModel(article, all)
+                        }
+                    )
                 }
                 .padding(.top, DS.Spacing.section)
                 .padding(.horizontal, DS.Spacing.contentInset)
