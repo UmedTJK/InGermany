@@ -33,10 +33,10 @@ struct RecentlyReadSection: View {
     var body: some View {
         let recentArticles = readingStatsManager.recentlyReadArticles(from: articles, limit: 7)
 
-        if !recentArticles.isEmpty {
-            VStack(alignment: .leading, spacing: DS.Spacing.m) {
-                SectionHeader(title: t("section_recently_read"))
+        VStack(alignment: .leading, spacing: DS.Spacing.m) {
+            SectionHeader(title: t("section_recently_read"))
 
+            if !recentArticles.isEmpty {
                 HorizontalCarousel {
                     ForEach(recentArticles) { article in
                         NavigationLink {
@@ -54,9 +54,36 @@ struct RecentlyReadSection: View {
                         .cardPressFeedback()
                     }
                 }
+            } else {
+                emptyState
             }
-            .padding(.bottom, DS.Spacing.xl)
         }
+        .padding(.bottom, DS.Spacing.xl)
+    }
+
+    private var emptyState: some View {
+        HStack(alignment: .center, spacing: DS.Spacing.m) {
+            Image(systemName: "clock")
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundStyle(.secondary)
+                .frame(width: 44, height: 44)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(t("Еще нет прочитанных"))
+                    .font(.headline)
+
+                Text(t("Откройте статью — и она появится здесь."))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(DS.Spacing.section)
+        .cardContainer(.standard(useMaterial: true))
+        .accessibilityElement(children: .combine)
     }
 
     private func t(_ key: String) -> String {
