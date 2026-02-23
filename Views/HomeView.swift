@@ -82,6 +82,7 @@ struct HomeView: View {
                             }
                             .padding(DS.Spacing.section)
                             .cardContainer(.standard(useMaterial: true))
+                            .cardPressFeedback()
 
                             Rectangle()
                                 .fill(DS.Color.separator.opacity(0.4))
