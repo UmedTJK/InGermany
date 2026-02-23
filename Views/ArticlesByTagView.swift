@@ -40,17 +40,28 @@ struct ArticlesByTagView: View {
                 )
             } label: {
                 ArticleRow(viewModel: articleRowFactory(article))
-                    .cardContainer()
-                    .padding(.vertical, DS.Spacing.xs)
                     .frame(minHeight: DS.Size.hitTarget)
                     .contentShape(Rectangle())
+                    .padding(.vertical, DS.Spacing.s)
+                    .padding(.horizontal, DS.Spacing.m)
+                    .cardContainer(.standard())
             }
             .buttonStyle(.plain)
+            .cardPressFeedback()
             .listRowSeparator(.hidden)
-            .listRowBackground(DS.Color.background)
+            .listRowBackground(Color.clear)
+            .listRowInsets(
+                EdgeInsets(
+                    top: DS.Spacing.s,
+                    leading: DS.Spacing.contentInset,
+                    bottom: DS.Spacing.s,
+                    trailing: DS.Spacing.contentInset
+                )
+            )
         }
         .navigationTitle("#\(tag)")
         .listStyle(.plain)
+        .scrollIndicators(.hidden)
         .scrollContentBackground(.hidden)
         .background(DS.Color.background)
     }
