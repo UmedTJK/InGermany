@@ -3,6 +3,13 @@
 Branch: `ui/pre-release-hig-v1`  
 Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppContainer) unchanged.
 
+## Recent updates (this branch)
+- Premium card surface: DS.Elevation (stroke + dual shadow + material) and lighter material tuning (.thinMaterial)
+- Press feedback groundwork: DS.Interaction tokens + CardPressStyle (apply via `.cardPressFeedback()`)
+- Home: improved rhythm (insets + hidden scroll indicators), UsefulTools promoted as hero (header/subtitle + material)
+- Home: DS-driven thin separator after hero
+- ArticleKit: stable 16:9 image container (no layout jumps) + premium placeholder + subtle fade-in (Reduce Motion aware)
+
 ## Rules of Work
 - ✅ Atomic changes: one improvement (or one file) → commit immediately
 - ✅ No architectural refactor; only UI layer + reusable components/tokens
@@ -36,7 +43,7 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] DS.Typography (sectionTitle/cardTitle/cardBody/meta/chip/badge)
 - [x] DS.Color (background/surface/secondarySurface/textPrimary/textSecondary)
 - [ ] DS.Elevation (shadow/stroke/material, light/dark aware)
-- [ ] DS.Motion (durations, spring presets; reduce motion)
+- [ ] DS.Motion (durations + presets; ensure Reduce Motion coverage)
 
 ### Components
 - [x] CardContainer modifier (replaces cardStyle/lightCardStyle/applyCardStyle/sectionCardStyle)
@@ -81,6 +88,7 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 ### Visual Consistency
 - [ ] Spacing grid consistent
 - [ ] Card surfaces consistent
+- [ ] Press feedback applied on all interactive cards (Buttons/NavigationLinks)
 - [ ] Typography consistent
 - [ ] Navigation titles/toolbars consistent across tabs
 
