@@ -14,12 +14,20 @@ struct ToolCard: View {
     let systemImage: String
     let color: Color
     
+    private enum Metrics {
+        static let iconSize: CGFloat = 24
+        static let iconContainer: CGFloat = 50
+        static let cardWidth: CGFloat = 120
+        static let cardHeight: CGFloat = 120
+        static let spacing: CGFloat = 8
+    }
+    
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: Metrics.spacing) {
             Image(systemName: systemImage)
-                .font(.system(size: 24))
+                .font(.system(size: Metrics.iconSize, weight: .semibold))
                 .foregroundColor(.white)
-                .frame(width: 50, height: 50)
+                .frame(width: Metrics.iconContainer, height: Metrics.iconContainer)
                 .background(color)
                 .clipShape(Circle())
             
@@ -27,14 +35,9 @@ struct ToolCard: View {
                 .font(.caption)
                 .foregroundColor(.primary)
         }
-        .padding()
-        .frame(width: 120, height: 120)
-        .background(Theme.backgroundCard)
-        .cornerRadius(Theme.cardCornerRadius)
-        .shadow(color: Theme.cardShadow.color,
-                radius: Theme.cardShadow.radius,
-                x: Theme.cardShadow.x,
-                y: Theme.cardShadow.y)
+        .padding(DS.Spacing.m)
+        .frame(width: Metrics.cardWidth, height: Metrics.cardHeight)
+        .cardContainer(.standard())
     }
 }
 
@@ -45,23 +48,29 @@ struct ToolCard: View {
 struct RecentArticleCard: View {
     let article: Article
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
+    
+    private enum Metrics {
+        static let spacing: CGFloat = 12
+        static let imageSize: CGFloat = 60
+        static let imageRadius: CGFloat = 8
+    }
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Metrics.spacing) {
             if let imageName = article.image,
                let uiImage = UIImage(named: imageName, in: Bundle.main, with: nil) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(8)
+                    .frame(width: Metrics.imageSize, height: Metrics.imageSize)
+                    .cornerRadius(Metrics.imageRadius)
                     .clipped()
             } else {
                 Image("Logo")
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(8)
+                    .frame(width: Metrics.imageSize, height: Metrics.imageSize)
+                    .cornerRadius(Metrics.imageRadius)
                     .clipped()
             }
 
@@ -88,12 +97,17 @@ struct EmptyFavoritesView: View {
     /// Функция перевода строк по ключу для указанного языка.
     let getTranslation: (String, String) -> String
     
+    private enum Metrics {
+        static let spacing: CGFloat = 12
+        static let iconSize: CGFloat = 40
+    }
+    
     /// Основное содержимое экрана-заглушки: иконка, сообщение и дополнительный текст при активных фильтрах.
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Metrics.spacing) {
             Image(systemName: "star.slash")
-                .font(.system(size: 40))
-                .foregroundColor(.gray)
+                .font(.system(size: Metrics.iconSize, weight: .semibold))
+                .foregroundStyle(.secondary)
             
             Text(hasFilters
                  ? getTranslation("Ничего не найдено", selectedLanguage)
@@ -108,7 +122,7 @@ struct EmptyFavoritesView: View {
             }
         }
         .multilineTextAlignment(.center)
-        .padding()
+        .padding(DS.Spacing.section)
     }
 }
 
@@ -120,17 +134,22 @@ struct CategoryFilterButton: View {
     let systemImage: String
     let action: () -> Void
     
+    private enum Metrics {
+        static let spacing: CGFloat = 6
+        static let cornerRadius: CGFloat = 20
+    }
+    
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 6) {
+            HStack(spacing: Metrics.spacing) {
                 Image(systemName: systemImage)
                 Text(title)
             }
             .font(.subheadline)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(isSelected ? Color.blue.opacity(0.15) : Color.clear)
-            .cornerRadius(20)
+            .padding(.horizontal, DS.Spacing.m)
+            .padding(.vertical, DS.Spacing.s)
+            .background(isSelected ? Color.accentColor.opacity(0.15) : Color.clear)
+            .cornerRadius(Metrics.cornerRadius)
         }
         .buttonStyle(.plain)
     }
