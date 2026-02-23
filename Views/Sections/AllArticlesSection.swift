@@ -46,6 +46,7 @@ struct AllArticlesSection: View {
                         )
                     }
                     .buttonStyle(.plain)
+                    .cardPressFeedback()
                 }
             }
         }
