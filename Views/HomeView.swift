@@ -265,38 +265,49 @@ struct HomeView: View {
         var body: some View {
             ScrollView {
                 VStack(alignment: .leading, spacing: DS.Spacing.section) {
+                    // HERO
                     SectionHeader(
-                        title: "Dashboard (WIP)",
-                        actionTitle: nil,
-                        action: nil
+                        title: "Сегодня",
+                        actionTitle: "Случайная",
+                        action: {
+                            viewModel.selectRandomArticle()
+                        }
                     )
 
-                    Text("Этот макет пока в разработке. Переключись на Legacy в меню справа сверху.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-
-                    // Keep the same tool section as a temporary placeholder so the screen is useful.
-                    VStack(alignment: .leading, spacing: DS.Spacing.section) {
+                    if let featured = viewModel.articles.first {
+                        NavigationLink {
+                            ArticleDetailView(
+                                viewModel: makeArticleDetailViewModel(featured, viewModel.articles),
+                                localizationManager: localizationManager,
+                                articleRowFactory: makeArticleRowViewModel
+                            )
+                        } label: {
+                            ArticleCompactCard(
+                                viewModel: makeArticleRowViewModel(featured)
+                            )
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
                         VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-                            Text("Полезные инструменты")
+                            Text("Пока нет статей")
                                 .font(.headline)
-                            Text("Быстрые действия и важные разделы")
+                            Text("Данные загружаются или пока недоступны.")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
-
-                        UsefulToolsSection(
-                            articles: viewModel.articles,
-                            onRandomArticleSelected: { _ in
-                                viewModel.selectRandomArticle()
-                            },
-                            makePDFLibraryViewModel: makePDFLibraryViewModel,
-                            makeDataService: makeDataService
-                        )
+                        .padding(DS.Spacing.section)
+                        .cardContainer(.standard(useMaterial: true))
                     }
-                    .padding(DS.Spacing.section)
-                    .cardContainer(.standard(useMaterial: true))
-                    .cardPressFeedback()
+
+                    // QUICK ACTIONS
+                    HomeQuickActionsRow(
+                        onRandom: {
+                            viewModel.selectRandomArticle()
+                        },
+                        makePDFLibraryViewModel: makePDFLibraryViewModel,
+                        makeDataService: makeDataService
+                    )
                 }
                 .padding(.top, DS.Spacing.section)
                 .padding(.horizontal, DS.Spacing.contentInset)
@@ -308,6 +319,69 @@ struct HomeView: View {
 
         private func t(_ key: String) -> String {
             localizationManager.getTranslation(key: key, language: selectedLanguage)
+        }
+
+        private struct HomeQuickActionsRow: View {
+            let onRandom: () -> Void
+            let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+            let makeDataService: () -> DataServiceProtocol
+
+            var body: some View {
+                VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+                    Text("Быстрые действия")
+                        .font(.headline)
+                    Text("Открой нужный раздел в один тап")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: DS.Spacing.s) {
+                            Button(action: onRandom) {
+                                actionCard(title: "Случайная", subtitle: "Статья", systemImage: "dice")
+                            }
+                            .buttonStyle(.plain)
+
+                            NavigationLink {
+                                PDFLibraryView(viewModel: makePDFLibraryViewModel())
+                            } label: {
+                                actionCard(title: "PDF", subtitle: "Библиотека", systemImage: "doc.richtext")
+                            }
+                            .buttonStyle(.plain)
+
+                            NavigationLink {
+                                MapView(dataService: makeDataService())
+                            } label: {
+                                actionCard(title: "Карта", subtitle: "Места", systemImage: "map")
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.vertical, DS.Spacing.xs)
+                    }
+                }
+                .padding(DS.Spacing.section)
+                .cardContainer(.standard(useMaterial: true))
+                .cardPressFeedback()
+            }
+
+            @ViewBuilder
+            private func actionCard(title: String, subtitle: String, systemImage: String) -> some View {
+                VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+                    Image(systemName: systemImage)
+                        .font(.title3)
+                        .foregroundStyle(.primary)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(title)
+                            .font(.headline)
+                        Text(subtitle)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .frame(width: 180, alignment: .leading)
+                .padding(DS.Spacing.m)
+                .cardContainer(.standard(useMaterial: false))
+            }
         }
     }
 }
