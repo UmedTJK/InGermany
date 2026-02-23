@@ -81,85 +81,16 @@ struct HomeView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
-                            VStack(alignment: .leading, spacing: DS.Spacing.section) {
-                                VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-                                    Text("Полезные инструменты")
-                                        .font(.headline)
-                                    Text("Быстрые действия и важные разделы")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-                                }
-
-                                UsefulToolsSection(
-                                    articles: viewModel.articles,
-                                    onRandomArticleSelected: { _ in
-                                        viewModel.selectRandomArticle()
-                                    },
-                                    makePDFLibraryViewModel: makePDFLibraryViewModel,
-                                    makeDataService: makeDataService
-                                )
-                            }
-                            .padding(DS.Spacing.section)
-                            .cardContainer(.standard(useMaterial: true))
-                            .cardPressFeedback()
-
-                            Rectangle()
-                                .fill(DS.Color.separator.opacity(0.4))
-                                .frame(height: 0.5)
-                                .padding(.vertical, DS.Spacing.section)
-
-                            RecentlyReadSection(
-                                articles: viewModel.articles,
-                                favoritesManager: viewModel.favoritesManager,
-                                readingStatsManager: viewModel.readingStatsManager,
-                                makeRowViewModel: makeArticleRowViewModel,
-                                makeDetailViewModel: { article, all in
-                                    makeArticleDetailViewModel(article, all)
-                                }
-                            )
-
-                            FavoritesSection(
-                                articles: viewModel.articles,
-                                favoritesManager: viewModel.favoritesManager,
-                                makeRowViewModel: makeArticleRowViewModel,
-                                makeDetailViewModel: { article, all in
-                                    makeArticleDetailViewModel(article, all)
-                                }
-                            )
-
-                            ForEach(viewModel.allCategories, id: \.id) { category in
-                                if let categoryArticles = viewModel.articlesByCategory[category.id],
-                                   !categoryArticles.isEmpty {
-                                    CategorySection(
-                                        category: category,
-                                        articles: categoryArticles,
-                                        favoritesManager: viewModel.favoritesManager,
-                                        language: selectedLanguage,
-                                        makeRowViewModel: makeArticleRowViewModel,
-                                        makeDetailView: { article, all in
-                                            makeArticleDetailView(article, all)
-                                        }
-                                    )
-                                }
-                            }
-
-                            AllArticlesSection(
-                                articles: viewModel.articles,
-                                favoritesManager: viewModel.favoritesManager,
-                                makeRowViewModel: makeArticleRowViewModel,
-                                makeDetailViewModel: { article, all in
-                                    makeArticleDetailViewModel(article, all)
-                                }
-                            )
-                        }
-                        .padding(.top, DS.Spacing.section)
-                        .padding(.horizontal, DS.Spacing.contentInset)
-                        .padding(.bottom, DS.Spacing.section)
-                    }
-                    .scrollIndicators(.hidden)
-                    .refreshable { await viewModel.refreshData() }
+                    HomeLegacyLayout(
+                        selectedLanguage: selectedLanguage,
+                        viewModel: viewModel,
+                        makePDFLibraryViewModel: makePDFLibraryViewModel,
+                        makeDataService: makeDataService,
+                        makeArticleRowViewModel: makeArticleRowViewModel,
+                        makeArticleDetailViewModel: makeArticleDetailViewModel,
+                        makeArticleDetailView: makeArticleDetailView,
+                        localizationManager: localizationManager
+                    )
                 }
             }
             .navigationTitle(t("tab_home"))
@@ -204,6 +135,105 @@ struct HomeView: View {
 
     private func t(_ key: String) -> String {
         localizationManager.getTranslation(key: key, language: selectedLanguage)
+    }
+
+    // MARK: - Legacy layout extracted for incremental redesign
+    private struct HomeLegacyLayout: View {
+        let selectedLanguage: String
+        @ObservedObject var viewModel: HomeViewModel
+
+        let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+        let makeDataService: () -> DataServiceProtocol
+        let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
+        let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
+        let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
+        let localizationManager: LocalizationManager
+
+        var body: some View {
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
+                    VStack(alignment: .leading, spacing: DS.Spacing.section) {
+                        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+                            Text("Полезные инструменты")
+                                .font(.headline)
+                            Text("Быстрые действия и важные разделы")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        UsefulToolsSection(
+                            articles: viewModel.articles,
+                            onRandomArticleSelected: { _ in
+                                viewModel.selectRandomArticle()
+                            },
+                            makePDFLibraryViewModel: makePDFLibraryViewModel,
+                            makeDataService: makeDataService
+                        )
+                    }
+                    .padding(DS.Spacing.section)
+                    .cardContainer(.standard(useMaterial: true))
+                    .cardPressFeedback()
+
+                    Rectangle()
+                        .fill(DS.Color.separator.opacity(0.4))
+                        .frame(height: 0.5)
+                        .padding(.vertical, DS.Spacing.section)
+
+                    RecentlyReadSection(
+                        articles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager,
+                        readingStatsManager: viewModel.readingStatsManager,
+                        makeRowViewModel: makeArticleRowViewModel,
+                        makeDetailViewModel: { article, all in
+                            makeArticleDetailViewModel(article, all)
+                        }
+                    )
+
+                    FavoritesSection(
+                        articles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager,
+                        makeRowViewModel: makeArticleRowViewModel,
+                        makeDetailViewModel: { article, all in
+                            makeArticleDetailViewModel(article, all)
+                        }
+                    )
+
+                    ForEach(viewModel.allCategories, id: \.id) { category in
+                        if let categoryArticles = viewModel.articlesByCategory[category.id],
+                           !categoryArticles.isEmpty {
+                            CategorySection(
+                                category: category,
+                                articles: categoryArticles,
+                                favoritesManager: viewModel.favoritesManager,
+                                language: selectedLanguage,
+                                makeRowViewModel: makeArticleRowViewModel,
+                                makeDetailView: { article, all in
+                                    makeArticleDetailView(article, all)
+                                }
+                            )
+                        }
+                    }
+
+                    AllArticlesSection(
+                        articles: viewModel.articles,
+                        favoritesManager: viewModel.favoritesManager,
+                        makeRowViewModel: makeArticleRowViewModel,
+                        makeDetailViewModel: { article, all in
+                            makeArticleDetailViewModel(article, all)
+                        }
+                    )
+                }
+                .padding(.top, DS.Spacing.section)
+                .padding(.horizontal, DS.Spacing.contentInset)
+                .padding(.bottom, DS.Spacing.section)
+            }
+            .scrollIndicators(.hidden)
+            .refreshable { await viewModel.refreshData() }
+        }
+
+        private func t(_ key: String) -> String {
+            localizationManager.getTranslation(key: key, language: selectedLanguage)
+        }
     }
 }
 
