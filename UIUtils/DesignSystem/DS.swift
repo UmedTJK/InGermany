@@ -99,6 +99,38 @@ extension DS {
     }
 }
 
+
+// MARK: - Motion
+extension DS {
+    /// Motion tokens (durations + canonical animations). Reduce Motion should be respected at call sites.
+    enum Motion {
+        enum Duration {
+            /// Micro interactions (e.g., press, small fades).
+            static let micro: CGFloat = 0.12
+
+            /// Default UI transitions (e.g., appear/disappear, content updates).
+            static let standard: CGFloat = 0.16
+
+            /// Larger transitions (e.g., sheet-like emphasis).
+            static let emphasized: CGFloat = 0.24
+        }
+
+        enum Spring {
+            /// A subtle, non-bouncy spring suitable for UI feedback.
+            static let response: CGFloat = 0.32
+            static let dampingFraction: CGFloat = 0.86
+        }
+
+        static func easeOut(_ duration: CGFloat = Duration.standard) -> Animation {
+            .easeOut(duration: duration)
+        }
+
+        static func spring() -> Animation {
+            .spring(response: Spring.response, dampingFraction: Spring.dampingFraction)
+        }
+    }
+}
+
 extension DS {
     enum Radius {
         static let card: CGFloat = 16
