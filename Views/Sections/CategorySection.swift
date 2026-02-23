@@ -44,6 +44,7 @@ struct CategorySection: View {
                         ArticleCompactCard(viewModel: makeRowViewModel(article))
                     }
                     .buttonStyle(.plain)
+                    .cardPressFeedback()
                 }
             }
         }
