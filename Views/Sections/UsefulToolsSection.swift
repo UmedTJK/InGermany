@@ -57,6 +57,7 @@ struct UsefulToolsSection: View {
                     )
                 }
                 .buttonStyle(.plain)
+                .cardPressFeedback()
 
                 NavigationLink(
                     destination: PDFLibraryView(
@@ -71,6 +72,7 @@ struct UsefulToolsSection: View {
                     )
                 }
                 .buttonStyle(.plain)
+                .cardPressFeedback()
 
                 Button {
                     if let random = articles.randomElement() {
@@ -85,6 +87,7 @@ struct UsefulToolsSection: View {
                     )
                 }
                 .buttonStyle(.plain)
+                .cardPressFeedback()
             }
         }
     }
