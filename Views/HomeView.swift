@@ -81,16 +81,30 @@ struct HomeView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    HomeLegacyLayout(
-                        selectedLanguage: selectedLanguage,
-                        viewModel: viewModel,
-                        makePDFLibraryViewModel: makePDFLibraryViewModel,
-                        makeDataService: makeDataService,
-                        makeArticleRowViewModel: makeArticleRowViewModel,
-                        makeArticleDetailViewModel: makeArticleDetailViewModel,
-                        makeArticleDetailView: makeArticleDetailView,
-                        localizationManager: localizationManager
-                    )
+                    switch homeLayoutStyle {
+                    case .legacy:
+                        HomeLegacyLayout(
+                            selectedLanguage: selectedLanguage,
+                            viewModel: viewModel,
+                            makePDFLibraryViewModel: makePDFLibraryViewModel,
+                            makeDataService: makeDataService,
+                            makeArticleRowViewModel: makeArticleRowViewModel,
+                            makeArticleDetailViewModel: makeArticleDetailViewModel,
+                            makeArticleDetailView: makeArticleDetailView,
+                            localizationManager: localizationManager
+                        )
+                    case .dashboard:
+                        HomeDashboardLayout(
+                            selectedLanguage: selectedLanguage,
+                            viewModel: viewModel,
+                            makePDFLibraryViewModel: makePDFLibraryViewModel,
+                            makeDataService: makeDataService,
+                            makeArticleRowViewModel: makeArticleRowViewModel,
+                            makeArticleDetailViewModel: makeArticleDetailViewModel,
+                            makeArticleDetailView: makeArticleDetailView,
+                            localizationManager: localizationManager
+                        )
+                    }
                 }
             }
             .navigationTitle(t("tab_home"))
@@ -222,6 +236,67 @@ struct HomeView: View {
                             makeArticleDetailViewModel(article, all)
                         }
                     )
+                }
+                .padding(.top, DS.Spacing.section)
+                .padding(.horizontal, DS.Spacing.contentInset)
+                .padding(.bottom, DS.Spacing.section)
+            }
+            .scrollIndicators(.hidden)
+            .refreshable { await viewModel.refreshData() }
+        }
+
+        private func t(_ key: String) -> String {
+            localizationManager.getTranslation(key: key, language: selectedLanguage)
+        }
+    }
+
+    // MARK: - Dashboard layout skeleton (WIP)
+    private struct HomeDashboardLayout: View {
+        let selectedLanguage: String
+        @ObservedObject var viewModel: HomeViewModel
+
+        let makePDFLibraryViewModel: () -> PDFLibraryViewModel
+        let makeDataService: () -> DataServiceProtocol
+        let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
+        let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
+        let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
+        let localizationManager: LocalizationManager
+
+        var body: some View {
+            ScrollView {
+                VStack(alignment: .leading, spacing: DS.Spacing.section) {
+                    SectionHeader(
+                        title: "Dashboard (WIP)",
+                        actionTitle: nil,
+                        action: nil
+                    )
+
+                    Text("Этот макет пока в разработке. Переключись на Legacy в меню справа сверху.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    // Keep the same tool section as a temporary placeholder so the screen is useful.
+                    VStack(alignment: .leading, spacing: DS.Spacing.section) {
+                        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+                            Text("Полезные инструменты")
+                                .font(.headline)
+                            Text("Быстрые действия и важные разделы")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        UsefulToolsSection(
+                            articles: viewModel.articles,
+                            onRandomArticleSelected: { _ in
+                                viewModel.selectRandomArticle()
+                            },
+                            makePDFLibraryViewModel: makePDFLibraryViewModel,
+                            makeDataService: makeDataService
+                        )
+                    }
+                    .padding(DS.Spacing.section)
+                    .cardContainer(.standard(useMaterial: true))
+                    .cardPressFeedback()
                 }
                 .padding(.top, DS.Spacing.section)
                 .padding(.horizontal, DS.Spacing.contentInset)
