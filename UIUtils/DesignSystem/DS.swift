@@ -77,7 +77,7 @@ extension DS {
             ambientShadowRadius: 3,
             ambientShadowX: 0,
             ambientShadowY: 1,
-            material: .ultraThinMaterial
+            material: .thinMaterial
         )
     }
 }
