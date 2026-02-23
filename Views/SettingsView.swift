@@ -8,6 +8,7 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private let makeAboutViewModel: () -> AboutViewModel
 
     private let dumpNetworkMetrics: (_ reset: Bool) async -> String
@@ -60,7 +61,7 @@ struct SettingsView: View {
                     )
                 }
             }
-            .animation(.spring(), value: viewModel.isHistoryCleared)
+            .animation(reduceMotion ? nil : .spring(), value: viewModel.isHistoryCleared)
         }
     }
 
@@ -111,7 +112,6 @@ struct SettingsView: View {
             NavigationLink(destination: AboutView(viewModel: makeAboutViewModel())) {
                 Text(viewModel.localizedText("tab_about"))
             }
-            .buttonStyle(.plain)
         }
     }
 
@@ -144,12 +144,10 @@ struct SettingsView: View {
                 NavigationLink("Debug Overlay") {
                     DebugOverlayView(dump: dumpNetworkMetrics)
                 }
-                .buttonStyle(.plain)
 
                 NavigationLink("Network Metrics") {
                     NetworkMetricsDebugView(dump: dumpNetworkMetrics)
                 }
-                .buttonStyle(.plain)
             }
         }
     #endif
@@ -169,14 +167,7 @@ private struct HistoryClearedToast: View {
                     .foregroundColor(.primary)
             }
             .padding(DS.Spacing.m)
-            .background(DS.Color.surface)
-            .cornerRadius(DS.Radius.card)
-            .shadow(
-                color: Color.black.opacity(0.08),
-                radius: 8,
-                x: 0,
-                y: 2
-            )
+            .cardContainer(.standard())
             .padding(.horizontal, DS.Spacing.contentInset)
             .padding(.bottom, DS.Spacing.m)
         }
