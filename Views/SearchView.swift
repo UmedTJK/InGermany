@@ -38,13 +38,9 @@ struct SearchView: View {
                 }
 
                 if viewModel.filteredArticles.isEmpty {
-                    ContentUnavailableView(
-                        localizationManager.t("search_no_results_title"),
-                        systemImage: "doc.text.magnifyingglass",
-                        description: Text(localizationManager.t("search_no_results_desc"))
-                    )
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.horizontal, DS.Spacing.contentInset)
+                    searchEmptyState
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.horizontal, DS.Spacing.contentInset)
                 } else {
                     List(viewModel.filteredArticles) { article in
                         NavigationLink {
@@ -79,6 +75,58 @@ struct SearchView: View {
                 await viewModel.loadArticles()
             }
         }
+    }
+
+    private var searchEmptyState: some View {
+        VStack(spacing: DS.Spacing.section) {
+            Spacer(minLength: 0)
+
+            VStack(alignment: .leading, spacing: DS.Spacing.m) {
+                HStack(alignment: .center, spacing: DS.Spacing.m) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .font(.system(size: 26, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 44, height: 44)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(localizationManager.t("search_no_results_title"))
+                            .font(.headline)
+
+                        Text(localizationManager.t("search_no_results_desc"))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer(minLength: 0)
+                }
+
+                if !viewModel.searchText.isEmpty || viewModel.selectedTag != nil {
+                    Button {
+                        viewModel.searchText = ""
+                        viewModel.selectedTag = nil
+                    } label: {
+                        Text(t("Сбросить"))
+                            .font(.subheadline.weight(.semibold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, DS.Spacing.s)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityHint(t("Очищает поиск и фильтры"))
+                } else {
+                    Text(t("Подсказка: попробуйте другой запрос или выберите тег"))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(DS.Spacing.section)
+            .cardContainer(.standard(useMaterial: true))
+
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .contain)
     }
 
     /// Shortcut method to fetch localized translations using LocalizationManager.
