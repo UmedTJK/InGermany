@@ -1,6 +1,6 @@
 # UI Pre-Release Plan (HIG) — InGermany
 
-Branch: `ui/pre-release-hig-v1`  
+Branch: `ui/visual-polish-v1`  
 Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppContainer) unchanged.
 
 ## Recent updates (this branch)
@@ -42,15 +42,17 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] DS.Radius (card/media/badge/chip)
 - [x] DS.Typography (sectionTitle/cardTitle/cardBody/meta/chip/badge)
 - [x] DS.Color (background/surface/secondarySurface/textPrimary/textSecondary)
-- [ ] DS.Elevation (shadow/stroke/material, light/dark aware)
+- [x] DS.Elevation (shadow/stroke/material, light/dark aware)
+- [x] DS.Interaction (press feedback tokens: scale/shadow/stroke, Reduce Motion aware)
 - [ ] DS.Motion (durations + presets; ensure Reduce Motion coverage)
 
 ### Components
-- [x] CardContainer modifier (replaces cardStyle/lightCardStyle/applyCardStyle/sectionCardStyle)
+- [x] CardContainer modifier (premium surface: subtle stroke + dual shadow + optional material)
 - [x] SectionHeader (title + optional action)
 - [x] CategoryBadge (contrast-safe, extracted component)
 - [x] TagChip (hit target + dynamic type strategy)
 - [x] HorizontalCarousel wrapper (padding/spacing unified)
+- [x] Card press feedback (CardPressStyle + .cardPressFeedback())
 
 ---
 
@@ -62,6 +64,9 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Apply .buttonStyle(.plain) to all card NavigationLinks
 - [x] Normalize carousels using HorizontalCarousel wrapper
 - [x] Remove/DEBUG-gate datasource bar (3pt)
+- [x] Home hero rhythm: promote UsefulTools as hero surface (header/subtitle + material)
+- [x] Home section transition: DS-driven thin separator after hero
+- [x] Apply card press feedback on Home (UsefulTools + carousels)
 
 ### C2 ArticleCompactCard (DS aligned)
 - [x] Unify radius/padding via DS
@@ -71,9 +76,16 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Accessibility: single VO element label/value/hint
 - [x] Dynamic Type: adjust line limits for accessibility sizes
 
+### C2.5 ArticleKit Renderer (image stability)
+- [x] Stable image container (fixed 16:9 aspect ratio, no layout jumps)
+- [x] Premium placeholder (subtle sheen)
+- [x] Subtle fade-in on success (Reduce Motion aware)
+- [x] Remove app DS dependency from Swift Package (use local Metrics tokens)
+
 ### C3 Other tabs
 - [x] Categories/Search/Favorites/Settings: unified nav + background + list style
-- [x] Empty states & loading states unified
+- [x] Favorites: premium empty state (no favorites / no results) + card rows with press feedback
+- [x] Search: premium no-results empty state + card rows with press feedback
 
 ---
 
@@ -87,8 +99,8 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 
 ### Visual Consistency
 - [ ] Spacing grid consistent
-- [ ] Card surfaces consistent
-- [ ] Press feedback applied on all interactive cards (Buttons/NavigationLinks)
+- [x] Card surfaces consistent
+- [x] Press feedback applied on all interactive cards (Buttons/NavigationLinks)
 - [ ] Typography consistent
 - [ ] Navigation titles/toolbars consistent across tabs
 
@@ -122,8 +134,7 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Reduce Motion: animations respect accessibilityReduceMotion (scale/press/slide)
 
 ### D3 Visual consistency audit
-- [ ] Navigation titles/toolbars consistent across tabs (inline/large where appropriate)
-- [ ] Card surfaces consistent (materials/shadows/strokes) across light/dark
+- [ ] Verify press feedback + card surfaces on remaining interactive areas (AllArticles list, Category list, Settings rows if applicable)
 - [ ] Typography consistency pass (titles/body/meta) across list rows + cards
 
 ### D4 Performance audit
