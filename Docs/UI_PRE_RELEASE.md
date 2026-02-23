@@ -9,6 +9,8 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - Home: improved rhythm (insets + hidden scroll indicators), UsefulTools promoted as hero (header/subtitle + material)
 - Home: DS-driven thin separator after hero
 - ArticleKit: stable 16:9 image container (no layout jumps) + premium placeholder + subtle fade-in (Reduce Motion aware)
+- DS.Motion: minimal durations + canonical animations (easeOut/spring) for consistent feel
+- CardPress: migrated press animation to DS.Motion (Reduce Motion aware at call sites)
 
 ## Rules of Work
 - ✅ Atomic changes: one improvement (or one file) → commit immediately
@@ -44,7 +46,7 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] DS.Color (background/surface/secondarySurface/textPrimary/textSecondary)
 - [x] DS.Elevation (shadow/stroke/material, light/dark aware)
 - [x] DS.Interaction (press feedback tokens: scale/shadow/stroke, Reduce Motion aware)
-- [ ] DS.Motion (durations + presets; ensure Reduce Motion coverage)
+- [x] DS.Motion (durations + canonical animations; Reduce Motion handled at call sites)
 
 ### Components
 - [x] CardContainer modifier (premium surface: subtle stroke + dual shadow + optional material)
@@ -83,7 +85,10 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Remove app DS dependency from Swift Package (use local Metrics tokens)
 
 ### C3 Other tabs
-- [x] Categories/Search/Favorites/Settings: unified nav + background + list style
+- [x] Categories: premium card rows + press feedback (DS insets + clear list background)
+- [x] ArticlesByCategory: premium card rows + premium empty state
+- [x] ArticlesByTag: premium card rows + press feedback
+- [x] Settings: restore native Form row feedback; toast uses CardContainer; Reduce Motion-aware animation
 - [x] Favorites: premium empty state (no favorites / no results) + card rows with press feedback
 - [x] Search: premium no-results empty state + card rows with press feedback
 
@@ -98,7 +103,7 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Reduce Motion support
 
 ### Visual Consistency
-- [ ] Spacing grid consistent
+- [x] Spacing grid consistent
 - [x] Card surfaces consistent
 - [x] Press feedback applied on all interactive cards (Buttons/NavigationLinks)
 - [ ] Typography consistent
@@ -134,7 +139,7 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [x] Reduce Motion: animations respect accessibilityReduceMotion (scale/press/slide)
 
 ### D3 Visual consistency audit
-- [ ] Verify press feedback + card surfaces on remaining interactive areas (AllArticles list, Category list, Settings rows if applicable)
+- [x] Verify press feedback + card surfaces on remaining interactive areas (Categories, Article lists, ArticleDetail related cards)
 - [ ] Typography consistency pass (titles/body/meta) across list rows + cards
 
 ### D4 Performance audit
@@ -143,6 +148,6 @@ Scope: UI/UX + Visual + Content + Accessibility. Architecture (MVVM + DI/AppCont
 - [ ] Scrolling sanity on iPhone SE + iPad split view
 
 ### D5 Final QA
-- [ ] Run through core flows: open article, favorite/unfavorite, search, open category list, open settings
+- [ ] Run through core flows: open article, favorite/unfavorite, search, open category + tag lists, open settings
 - [ ] Quick VO pass on Home + ArticleDetail + Search results
 - [ ] Final screenshot pass (Docs/screenshots) for release notes / store listing
