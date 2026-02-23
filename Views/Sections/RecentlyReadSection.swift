@@ -51,6 +51,7 @@ struct RecentlyReadSection: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .cardPressFeedback()
                     }
                 }
             }
