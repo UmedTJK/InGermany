@@ -79,7 +79,7 @@ private struct CardPressStyle: ButtonStyle {
                 y: DS.Elevation.card.ambientShadowY
             )
             .animation(
-                reduceMotion ? nil : .easeOut(duration: DS.Interaction.pressAnimationDuration),
+                reduceMotion ? nil : DS.Motion.easeOut(DS.Motion.Duration.standard),
                 value: configuration.isPressed
             )
     }
