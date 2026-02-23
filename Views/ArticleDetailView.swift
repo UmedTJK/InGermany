@@ -138,12 +138,14 @@ struct ArticleDetailView: View {
 
                                         } label: {
                                             ArticleRow(viewModel: articleRowFactory(relatedArticle))
-                                                .cardContainer()
-                                                .padding(.vertical, DS.Spacing.xs)
                                                 .frame(minHeight: DS.Size.hitTarget)
                                                 .contentShape(Rectangle())
+                                                .padding(.vertical, DS.Spacing.s)
+                                                .padding(.horizontal, DS.Spacing.m)
+                                                .cardContainer(.standard())
                                         }
                                         .buttonStyle(.plain)
+                                        .cardPressFeedback()
                                     }
                                 }
                                 .padding(.horizontal)
