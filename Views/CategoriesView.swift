@@ -46,13 +46,25 @@ struct CategoriesView: View {
                     .contentShape(Rectangle())
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text(category.localizedName(for: selectedLanguage)))
+                    .padding(.horizontal, DS.Spacing.m)
+                    .cardContainer(.standard())
                 }
                 .buttonStyle(.plain)
+                .cardPressFeedback()
                 .listRowSeparator(.hidden)
-                .listRowBackground(DS.Color.background)
+                .listRowBackground(Color.clear)
+                .listRowInsets(
+                    EdgeInsets(
+                        top: DS.Spacing.s,
+                        leading: DS.Spacing.contentInset,
+                        bottom: DS.Spacing.s,
+                        trailing: DS.Spacing.contentInset
+                    )
+                )
             }
             .navigationTitle(t("tab_categories"))
             .listStyle(.plain)
+            .scrollIndicators(.hidden)
             .scrollContentBackground(.hidden)
             .background(DS.Color.background)
             .task {
