@@ -34,28 +34,37 @@ struct ArticlesByCategoryView: View {
     var body: some View {
         Group {
             if filteredArticles.isEmpty {
-                ContentUnavailableView(
-                    localizationManager.getTranslation(key: "section_all_articles", language: selectedLanguage),
-                    systemImage: "doc.text.magnifyingglass",
-                    description: Text(localizationManager.getTranslation(key: "search_no_results", language: selectedLanguage))
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                emptyState
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.horizontal, DS.Spacing.contentInset)
             } else {
                 List(filteredArticles) { article in
                     NavigationLink(value: article) {
                         ArticleRow(viewModel: articleRowFactory(article))
-                            .cardContainer()
-                            .padding(.vertical, DS.Spacing.xs)
+                            .frame(minHeight: DS.Size.hitTarget)
                             .contentShape(Rectangle())
+                            .padding(.vertical, DS.Spacing.s)
+                            .padding(.horizontal, DS.Spacing.m)
+                            .cardContainer(.standard())
                             .accessibilityElement(children: .ignore)
                             .accessibilityLabel(Text(article.localizedTitle(for: selectedLanguage)))
                             .accessibilityHint(Text(localizationManager.getTranslation(key: "a11y_open_article_hint", language: selectedLanguage)))
                     }
                     .buttonStyle(.plain)
+                    .cardPressFeedback()
                     .listRowSeparator(.hidden)
-                    .listRowBackground(DS.Color.background)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(
+                        EdgeInsets(
+                            top: DS.Spacing.s,
+                            leading: DS.Spacing.contentInset,
+                            bottom: DS.Spacing.s,
+                            trailing: DS.Spacing.contentInset
+                        )
+                    )
                 }
                 .listStyle(.plain)
+                .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
                 .background(DS.Color.background)
             }
@@ -69,6 +78,44 @@ struct ArticlesByCategoryView: View {
             )
         }
         .background(DS.Color.background)
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: DS.Spacing.section) {
+            Spacer(minLength: 0)
+
+            VStack(alignment: .leading, spacing: DS.Spacing.m) {
+                HStack(alignment: .center, spacing: DS.Spacing.m) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .font(.system(size: 26, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 44, height: 44)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(localizationManager.getTranslation(key: "section_all_articles", language: selectedLanguage))
+                            .font(.headline)
+
+                        Text(localizationManager.getTranslation(key: "search_no_results", language: selectedLanguage))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer(minLength: 0)
+                }
+
+                Text(localizationManager.getTranslation(key: "search_prompt", language: selectedLanguage))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(DS.Spacing.section)
+            .cardContainer(.standard(useMaterial: true))
+
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .contain)
     }
 
     private var filteredArticles: [Article] {
