@@ -329,6 +329,50 @@ struct HomeView: View {
                             makeArticleDetailViewModel(article, all)
                         }
                     )
+
+                    // CATEGORIES (preview)
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("Категории")
+                            .font(.headline)
+
+                        Spacer()
+
+                        NavigationLink {
+                            HomeDashboardCategoriesOverview(
+                                selectedLanguage: selectedLanguage,
+                                viewModel: viewModel,
+                                makeArticleRowViewModel: makeArticleRowViewModel,
+                                makeArticleDetailView: makeArticleDetailView
+                            )
+                        } label: {
+                            Text("Все")
+                                .font(.subheadline)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.top, DS.Spacing.xs)
+
+                    let nonEmptyCategories = viewModel.allCategories.filter { category in
+                        if let items = viewModel.articlesByCategory[category.id] {
+                            return !items.isEmpty
+                        }
+                        return false
+                    }
+
+                    ForEach(nonEmptyCategories.prefix(3), id: \.id) { category in
+                        if let items = viewModel.articlesByCategory[category.id], !items.isEmpty {
+                            CategorySection(
+                                category: category,
+                                articles: Array(items.prefix(10)),
+                                favoritesManager: viewModel.favoritesManager,
+                                language: selectedLanguage,
+                                makeRowViewModel: makeArticleRowViewModel,
+                                makeDetailView: { article, all in
+                                    makeArticleDetailView(article, all)
+                                }
+                            )
+                        }
+                    }
                 }
                 .padding(.top, DS.Spacing.section)
                 .padding(.horizontal, DS.Spacing.contentInset)
@@ -402,6 +446,48 @@ struct HomeView: View {
                 .frame(width: 180, alignment: .leading)
                 .padding(DS.Spacing.m)
                 .cardContainer(.standard(useMaterial: false))
+            }
+        }
+
+        private struct HomeDashboardCategoriesOverview: View {
+            let selectedLanguage: String
+            @ObservedObject var viewModel: HomeViewModel
+
+            let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
+            let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
+
+            var body: some View {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
+                        let nonEmptyCategories = viewModel.allCategories.filter { category in
+                            if let items = viewModel.articlesByCategory[category.id] {
+                                return !items.isEmpty
+                            }
+                            return false
+                        }
+
+                        ForEach(nonEmptyCategories, id: \.id) { category in
+                            if let items = viewModel.articlesByCategory[category.id], !items.isEmpty {
+                                CategorySection(
+                                    category: category,
+                                    articles: items,
+                                    favoritesManager: viewModel.favoritesManager,
+                                    language: selectedLanguage,
+                                    makeRowViewModel: makeArticleRowViewModel,
+                                    makeDetailView: { article, all in
+                                        makeArticleDetailView(article, all)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    .padding(.top, DS.Spacing.section)
+                    .padding(.horizontal, DS.Spacing.contentInset)
+                    .padding(.bottom, DS.Spacing.section)
+                }
+                .scrollIndicators(.hidden)
+                .navigationTitle("Категории")
+                .background(DS.Color.background)
             }
         }
     }
