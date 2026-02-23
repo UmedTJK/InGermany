@@ -63,7 +63,7 @@ struct HomeView: View {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
                             VStack(alignment: .leading, spacing: DS.Spacing.section) {
-                                VStack(alignment: .leading, spacing: 4) {
+                            VStack(alignment: .leading, spacing: DS.Spacing.xs) {
                                     Text("Полезные инструменты")
                                         .font(.headline)
                                     Text("Быстрые действия и важные разделы")
@@ -134,7 +134,8 @@ struct HomeView: View {
                             )
                         }
                         .padding(.top, DS.Spacing.section)
-                        .padding([.horizontal, .bottom], DS.Spacing.section)
+                        .padding(.horizontal, DS.Spacing.contentInset)
+                        .padding(.bottom, DS.Spacing.section)
                     }
                     .scrollIndicators(.hidden)
                     .refreshable { await viewModel.refreshData() }
