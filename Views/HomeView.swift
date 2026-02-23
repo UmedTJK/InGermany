@@ -373,6 +373,35 @@ struct HomeView: View {
                             )
                         }
                     }
+
+                    // ALL ARTICLES (entry)
+                    NavigationLink {
+                        HomeDashboardAllArticlesScreen(
+                            selectedLanguage: selectedLanguage,
+                            viewModel: viewModel,
+                            makeArticleRowViewModel: makeArticleRowViewModel,
+                            makeArticleDetailViewModel: makeArticleDetailViewModel
+                        )
+                    } label: {
+                        HStack(spacing: DS.Spacing.s) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Все статьи")
+                                    .font(.headline)
+                                Text("Полный список")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(DS.Spacing.section)
+                        .cardContainer(.standard(useMaterial: true))
+                        .cardPressFeedback()
+                    }
+                    .buttonStyle(.plain)
                 }
                 .padding(.top, DS.Spacing.section)
                 .padding(.horizontal, DS.Spacing.contentInset)
@@ -487,6 +516,35 @@ struct HomeView: View {
                 }
                 .scrollIndicators(.hidden)
                 .navigationTitle("Категории")
+                .background(DS.Color.background)
+            }
+        }
+
+        private struct HomeDashboardAllArticlesScreen: View {
+            let selectedLanguage: String
+            @ObservedObject var viewModel: HomeViewModel
+
+            let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
+            let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
+
+            var body: some View {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
+                        AllArticlesSection(
+                            articles: viewModel.articles,
+                            favoritesManager: viewModel.favoritesManager,
+                            makeRowViewModel: makeArticleRowViewModel,
+                            makeDetailViewModel: { article, all in
+                                makeArticleDetailViewModel(article, all)
+                            }
+                        )
+                    }
+                    .padding(.top, DS.Spacing.section)
+                    .padding(.horizontal, DS.Spacing.contentInset)
+                    .padding(.bottom, DS.Spacing.section)
+                }
+                .scrollIndicators(.hidden)
+                .navigationTitle("Все статьи")
                 .background(DS.Color.background)
             }
         }
