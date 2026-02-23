@@ -6,6 +6,27 @@
 import SwiftUI
 
 struct HomeView: View {
+    // MARK: - Home layout switch (for incremental redesign)
+    private enum HomeLayoutStyle: String, CaseIterable, Identifiable {
+        case legacy
+        case dashboard
+
+        var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .legacy: return "Legacy"
+            case .dashboard: return "Dashboard"
+            }
+        }
+    }
+
+    @AppStorage("homeLayoutStyle") private var homeLayoutStyleRaw: String = HomeLayoutStyle.legacy.rawValue
+
+    private var homeLayoutStyle: HomeLayoutStyle {
+        HomeLayoutStyle(rawValue: homeLayoutStyleRaw) ?? .legacy
+    }
+
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: HomeViewModel
 
@@ -156,6 +177,19 @@ struct HomeView: View {
                 }
             }
             .task { await viewModel.loadData() }
+#if DEBUG
+            .toolbar {
+                Menu {
+                    Picker("Layout", selection: $homeLayoutStyleRaw) {
+                        ForEach(HomeLayoutStyle.allCases) { style in
+                            Text(style.title).tag(style.rawValue)
+                        }
+                    }
+                } label: {
+                    Image(systemName: "rectangle.3.group")
+                }
+            }
+#endif
         }
     }
 
