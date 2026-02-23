@@ -47,12 +47,9 @@ struct FavoritesView: View {
                         .progressViewStyle(.circular)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if filteredFavoriteArticles.isEmpty {
-                    ContentUnavailableView(
-                        t("Нет избранных статей"),
-                        systemImage: "heart",
-                        description: Text(t("Добавьте статьи в избранное, чтобы они появились здесь."))
-                    )
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    emptyState
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.horizontal, DS.Spacing.section)
                 } else {
                     favoritesList
                 }
@@ -68,6 +65,74 @@ struct FavoritesView: View {
                 await viewModel.loadFavorites()
             }
         }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: DS.Spacing.section) {
+            Spacer(minLength: 0)
+
+            VStack(alignment: .leading, spacing: DS.Spacing.m) {
+                HStack(alignment: .center, spacing: DS.Spacing.m) {
+                    Image(systemName: emptyStateIcon)
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 44, height: 44)
+                        .accessibilityHidden(true)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(emptyStateTitle)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+
+                        Text(emptyStateMessage)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer(minLength: 0)
+                }
+
+                if !searchText.isEmpty {
+                    Button {
+                        searchText = ""
+                    } label: {
+                        Text(t("Сбросить поиск"))
+                            .font(.subheadline.weight(.semibold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, DS.Spacing.s)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityHint(t("Очищает строку поиска и показывает все избранные статьи."))
+                } else {
+                    Text(t("Подсказка: откройте статью и нажмите ❤, чтобы добавить в избранное."))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(DS.Spacing.section)
+            .cardContainer(.standard(useMaterial: true))
+
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .contain)
+    }
+
+    private var emptyStateIcon: String {
+        searchText.isEmpty ? "heart" : "magnifyingglass"
+    }
+
+    private var emptyStateTitle: String {
+        searchText.isEmpty
+            ? t("Нет избранных статей")
+            : t("Ничего не найдено")
+    }
+
+    private var emptyStateMessage: String {
+        searchText.isEmpty
+            ? t("Добавьте статьи в избранное, чтобы они появились здесь.")
+            : t("Попробуйте другой запрос или очистите поиск.")
     }
 
     private var favoritesList: some View {
