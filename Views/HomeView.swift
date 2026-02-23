@@ -63,7 +63,7 @@ struct HomeView: View {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
                             VStack(alignment: .leading, spacing: DS.Spacing.section) {
-                            VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+                                VStack(alignment: .leading, spacing: DS.Spacing.xs) {
                                     Text("Полезные инструменты")
                                         .font(.headline)
                                     Text("Быстрые действия и важные разделы")
