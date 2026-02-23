@@ -594,6 +594,60 @@ public final  class LocalizationManager: ObservableObject {
             "fa": "یک مقاله تصادفی را باز می‌کند.",
             "ar": "يفتح مقالاً عشوائياً.",
             "uk": "Відкриє випадкову статтю."
+        ],
+        "common_all": [
+            "ru": "Все", "en": "All", "de": "Alle",
+            "tj": "Ҳама", "fa": "همه", "ar": "الكل", "uk": "Усі"
+        ],
+        "home_today": [
+            "ru": "Сегодня", "en": "Today", "de": "Heute",
+            "tj": "Имрӯз", "fa": "امروز", "ar": "اليوم", "uk": "Сьогодні"
+        ],
+        "home_random_short": [
+            "ru": "Случайная", "en": "Random", "de": "Zufällig",
+            "tj": "Тасодуфӣ", "fa": "تصادفی", "ar": "عشوائي", "uk": "Випадкова"
+        ],
+        "home_no_articles_title": [
+            "ru": "Пока нет статей", "en": "No articles yet", "de": "Noch keine Artikel",
+            "tj": "Ҳоло мақола нест", "fa": "فعلاً مقاله‌ای نیست", "ar": "لا توجد مقالات بعد", "uk": "Поки немає статей"
+        ],
+        "home_no_articles_subtitle": [
+            "ru": "Данные загружаются или пока недоступны.",
+            "en": "Data is loading or unavailable.",
+            "de": "Daten werden geladen oder sind nicht verfügbar.",
+            "tj": "Маълумот бор мешавад ё дастнорас аст.",
+            "fa": "داده‌ها در حال بارگذاری است یا در دسترس نیست.",
+            "ar": "يتم تحميل البيانات أو أنها غير متاحة.",
+            "uk": "Дані завантажуються або недоступні."
+        ],
+        "home_quick_actions_title": [
+            "ru": "Быстрые действия", "en": "Quick actions", "de": "Schnellaktionen",
+            "tj": "Амалиёти зуд", "fa": "اقدام‌های سریع", "ar": "إجراءات سريعة", "uk": "Швидкі дії"
+        ],
+        "home_quick_actions_subtitle": [
+            "ru": "Открой нужный раздел в один тап",
+            "en": "Open what you need in one tap",
+            "de": "Öffnen Sie den Bereich mit einem Tipp",
+            "tj": "Қисми лозимро бо як ламс кушоед",
+            "fa": "با یک لمس بخش موردنیاز را باز کنید",
+            "ar": "افتح القسم المطلوب بنقرة واحدة",
+            "uk": "Відкрий потрібний розділ одним натиском"
+        ],
+        "home_article": [
+            "ru": "Статья", "en": "Article", "de": "Artikel",
+            "tj": "Мақола", "fa": "مقاله", "ar": "مقال", "uk": "Стаття"
+        ],
+        "home_pdf_library": [
+            "ru": "Библиотека", "en": "Library", "de": "Bibliothek",
+            "tj": "Китобхона", "fa": "کتابخانه", "ar": "مكتبة", "uk": "Бібліотека"
+        ],
+        "home_places": [
+            "ru": "Места", "en": "Places", "de": "Orte",
+            "tj": "Ҷойҳо", "fa": "مکان‌ها", "ar": "أماكن", "uk": "Місця"
+        ],
+        "home_full_list": [
+            "ru": "Полный список", "en": "Full list", "de": "Vollständige Liste",
+            "tj": "Рӯйхати пурра", "fa": "فهرست کامل", "ar": "القائمة الكاملة", "uk": "Повний список"
         ]
     ]
     
