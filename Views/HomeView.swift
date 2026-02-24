@@ -77,7 +77,7 @@ struct HomeView: View {
 #endif
 
                 if viewModel.isLoading {
-                    ProgressView(t("Загрузка данных..."))
+                    ProgressView("home.loading")
                         .progressViewStyle(CircularProgressViewStyle())
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
@@ -108,7 +108,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle("InGermany")
+            .navigationTitle("app.name")
             .background(DS.Color.background)
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {
@@ -169,9 +169,9 @@ struct HomeView: View {
                 LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
                     VStack(alignment: .leading, spacing: DS.Spacing.section) {
                         VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-                            Text("Полезные инструменты")
+                            Text("home.useful_tools.title")
                                 .font(.headline)
-                            Text("Быстрые действия и важные разделы")
+                            Text("home.useful_tools.subtitle")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
