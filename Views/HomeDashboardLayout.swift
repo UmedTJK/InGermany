@@ -290,17 +290,36 @@ private struct HomeDashboardAllArticlesScreen: View {
     let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
     let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
 
+    @State private var searchQuery: String = ""
+
+    private var filteredArticles: [Article] {
+        let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return viewModel.articles }
+        let q = trimmed.lowercased()
+
+        return viewModel.articles.filter { article in
+            // Search through all localized titles, plus prefer the selected language when available.
+            let titles = article.title
+            if let preferred = titles[selectedLanguage]?.lowercased(), preferred.contains(q) { return true }
+            return titles.values.contains { $0.lowercased().contains(q) }
+        }
+    }
+
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
-                AllArticlesSection(
-                    articles: viewModel.articles,
-                    favoritesManager: viewModel.favoritesManager,
-                    makeRowViewModel: makeArticleRowViewModel,
-                    makeDetailViewModel: { article, all in
-                        makeArticleDetailViewModel(article, all)
-                    }
-                )
+                if filteredArticles.isEmpty {
+                    emptyState
+                } else {
+                    AllArticlesSection(
+                        articles: filteredArticles,
+                        favoritesManager: viewModel.favoritesManager,
+                        makeRowViewModel: makeArticleRowViewModel,
+                        makeDetailViewModel: { article, all in
+                            makeArticleDetailViewModel(article, all)
+                        }
+                    )
+                }
             }
             .padding(.top, DS.Spacing.section)
             .padding(.horizontal, DS.Spacing.contentInset)
@@ -308,6 +327,43 @@ private struct HomeDashboardAllArticlesScreen: View {
         }
         .scrollIndicators(.hidden)
         .navigationTitle(t("section_all_articles"))
+        .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always), prompt: Text(t("search_placeholder")))
         .background(DS.Color.background)
+    }
+
+    private var emptyState: some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.m) {
+            HStack(alignment: .center, spacing: DS.Spacing.m) {
+                Image(systemName: "doc.text.magnifyingglass")
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 44, height: 44)
+                    .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(t("search_no_results_title"))
+                        .font(.headline)
+
+                    Text(t("search_no_results_desc"))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 0)
+            }
+
+            Button {
+                searchQuery = ""
+            } label: {
+                Text(t("common_reset"))
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, DS.Spacing.s)
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding(DS.Spacing.section)
+        .cardContainer(.standard(useMaterial: true))
     }
 }

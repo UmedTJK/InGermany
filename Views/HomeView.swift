@@ -108,7 +108,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationTitle(t("tab_home"))
+            .navigationTitle("InGermany")
             .background(DS.Color.background)
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {

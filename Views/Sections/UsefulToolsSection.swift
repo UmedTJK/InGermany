@@ -43,8 +43,7 @@ struct UsefulToolsSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.m) {
-            SectionHeader(title: t("section_useful_tools"))
+        VStack(alignment: .leading, spacing: 0) {
 
             HorizontalCarousel {
 
