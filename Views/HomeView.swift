@@ -13,10 +13,10 @@ struct HomeView: View {
 
         var id: String { rawValue }
 
-        var title: String {
+        var titleKey: String {
             switch self {
-            case .legacy: return "Legacy"
-            case .dashboard: return "Dashboard"
+            case .legacy: return "home.layout.legacy"
+            case .dashboard: return "home.layout.dashboard"
             }
         }
     }
@@ -126,9 +126,9 @@ struct HomeView: View {
 #if DEBUG
             .toolbar {
                 Menu {
-                    Picker("Layout", selection: $homeLayoutStyleRaw) {
+                    Picker("home.layout.picker", selection: $homeLayoutStyleRaw) {
                         ForEach(HomeLayoutStyle.allCases) { style in
-                            Text(style.title).tag(style.rawValue)
+                            Text(style.titleKey).tag(style.rawValue)
                         }
                     }
                 } label: {

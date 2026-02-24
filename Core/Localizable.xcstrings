@@ -293,6 +293,75 @@
     "common.reset_filters" : {
       "extractionState" : "manual"
     },
+    "home.layout.dashboard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Панель"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Панел"
+          }
+        }
+      }
+    },
+    "home.layout.legacy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Legacy"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Классический"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Классикӣ"
+          }
+        }
+      }
+    },
+    "home.layout.picker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Layout"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Макет"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тарҳ"
+          }
+        }
+      }
+    },
     "home.loading" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1039,9 +1108,6 @@
           }
         }
       }
-    },
-    "юююю" : {
-      "extractionState" : "manual"
     },
     "ююююю" : {
       "extractionState" : "manual",
