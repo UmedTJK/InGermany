@@ -252,6 +252,7 @@
 │   │   ├── TagsView.swift
 │   │   └── TextSizeSettingsPanel.swift
 │   ├── FavoritesView.swift
+│   ├── HomeDashboardLayout.swift
 │   ├── HomeView.swift
 │   ├── MapView.swift
 │   ├── PDFLibraryView.swift
@@ -282,4 +283,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-75 directories, 208 files
+75 directories, 209 files
