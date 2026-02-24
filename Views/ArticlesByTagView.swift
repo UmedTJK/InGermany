@@ -14,7 +14,6 @@ struct ArticlesByTagView: View {
     private let articleRowFactory: (Article) -> ArticleRowViewModel
     private let articleDetailFactory: (Article, [Article]) -> ArticleDetailViewModel
     
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
 
     init(
         tag: String,
