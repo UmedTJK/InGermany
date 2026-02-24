@@ -6,6 +6,8 @@
 │   ├── AppContainer.swift
 │   ├── ContentView.swift
 │   ├── InGermanyApp.swift
+│   ├── Localizable.xcstrings
+│   ├── LocalizationSettings.swift
 │   ├── Observability
 │   │   └── AppLogger.swift
 │   └── View+AppEnvironment.swift
@@ -283,4 +285,4 @@
     ├── tag_with_date.sh
     └── update_project_tree.sh
 
-75 directories, 209 files
+75 directories, 211 files
