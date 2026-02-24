@@ -72,14 +72,14 @@ struct ArticleDetailView: View {
                             
                             // Мета-информация
                             HStack {
-                                Text("\(t("reading_time")): \(viewModel.articleFormatter.readingTime(viewModel.article, for: selectedLanguage)) \(t("min"))")
+                                Text("\(String(localized: "article.reading_time")): \(viewModel.articleFormatter.readingTime(viewModel.article, for: selectedLanguage)) \(String(localized: "article.minutes_short"))")
                                     .font(viewModel.textSizeManager.captionFont)
                                     .foregroundColor(.secondary)
                                 
                                 Spacer()
                                 
                                 if viewModel.article.createdAt != nil {
-                                    Text("\(t("published")): \(viewModel.articleFormatter.formattedCreatedDate(viewModel.article, for: selectedLanguage))")
+                                    Text("\(String(localized: "article.published")): \(viewModel.articleFormatter.formattedCreatedDate(viewModel.article, for: selectedLanguage))")
                                         .font(viewModel.textSizeManager.captionFont)
                                         .foregroundColor(.secondary)
                                 }
@@ -107,7 +107,7 @@ struct ArticleDetailView: View {
                         
                         // Рейтинг
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(t("article_rate"))
+                            Text("article.rate")
                                 .font(viewModel.textSizeManager.headlineFont)
                             
                             StarRatingView(
@@ -123,7 +123,7 @@ struct ArticleDetailView: View {
                         // Рекомендуемые статьи
                         if !relatedArticles.isEmpty {
                             VStack(alignment: .leading, spacing: 16) {
-                                Text(t("you_may_like"))
+                                Text("article.you_may_like")
                                     .font(viewModel.textSizeManager.headlineFont)
                                     .padding(.horizontal)
                                 
@@ -210,10 +210,6 @@ struct ArticleDetailView: View {
         .onDisappear {
             viewModel.endReadingSession()
         }
-    }
-
-    private func t(_ key: String) -> String {
-        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
