@@ -33,7 +33,6 @@ struct ContentView: View {
     let dumpNetworkMetrics: @Sendable (_ reset: Bool) async -> String
 
     @EnvironmentObject var localizationManager: LocalizationManager
-    @EnvironmentObject var localizationSettings: LocalizationSettings
 
     // ✅ Источник темы — SettingsManager
     @EnvironmentObject var settingsManager: SettingsManager
@@ -71,21 +70,6 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            HStack(spacing: 12) {
-                Button("RU") {
-                    localizationSettings.setLanguage("ru")
-                }
-                Button("EN") {
-                    localizationSettings.setLanguage("en")
-                }
-                Button("TG") {
-                    localizationSettings.setLanguage("tg")
-                }
-            }
-            .padding(.top, 8)
-
-            Text("debug.localization_test")
-
             TabView(selection: $selectedTab) {
 
             LazyView {
