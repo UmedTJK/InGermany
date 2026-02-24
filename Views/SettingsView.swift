@@ -9,6 +9,7 @@ struct SettingsView: View {
     @StateObject private var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @EnvironmentObject private var localizationSettings: LocalizationSettings
     private let makeAboutViewModel: () -> AboutViewModel
 
     private let dumpNetworkMetrics: (_ reset: Bool) async -> String
@@ -67,11 +68,17 @@ struct SettingsView: View {
 
     // MARK: - Sections
     private var languageSection: some View {
-        Section(header: Text(viewModel.localizedText("settings_language_section"))) {
-            Picker(viewModel.localizedText("settings_language_picker"), selection: $viewModel.selectedLanguage) {
-                ForEach(viewModel.supportedLanguages, id: \.self) { code in
-                    Text(viewModel.displayName(for: code)).tag(code)
-                }
+        Section(header: Text("settings.language.section")) {
+            Picker(
+                "settings.language.picker",
+                selection: Binding<String>(
+                    get: { localizationSettings.language },
+                    set: { localizationSettings.setLanguage($0) }
+                )
+            ) {
+                Text("language.ru").tag("ru")
+                Text("language.en").tag("en")
+                Text("language.tg").tag("tg")
             }
         }
     }
