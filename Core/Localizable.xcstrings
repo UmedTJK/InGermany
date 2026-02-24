@@ -1,7 +1,1030 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "“%@”" : {
 
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "%@: %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ %3$@"
+          }
+        }
+      }
+    },
+    "%@. %@ %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@. %2$@ %3$@."
+          }
+        }
+      }
+    },
+    "%@. %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@. %2$@."
+          }
+        }
+      }
+    },
+    "%@/5" : {
+
+    },
+    "%@%%" : {
+
+    },
+    "•" : {
+
+    },
+    "• %@" : {
+
+    },
+    "A" : {
+
+    },
+    "about.build.label %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сборка: %@"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохт: %@"
+          }
+        }
+      }
+    },
+    "about.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your guide to life, work and study in Germany."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш гид по жизни, работе и учёбе в Германии."
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Роҳнамои шумо барои зиндагӣ, кор ва таҳсил дар Олмон."
+          }
+        }
+      }
+    },
+    "app.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InGermany"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InGermany"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InGermany"
+          }
+        }
+      }
+    },
+    "article.minutes_short" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "min"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "мин"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "дақ"
+          }
+        }
+      }
+    },
+    "article.published" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Published"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Опубликовано"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дар бораи ин нашри барнома"
+          }
+        }
+      }
+    },
+    "article.rate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate this article"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оцените статью"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мақоларо баҳогузорӣ кунед"
+          }
+        }
+      }
+    },
+    "article.reading_time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading time"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Время чтения"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вақти хониш"
+          }
+        }
+      }
+    },
+    "article.you_may_like" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You may also like"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вам также может понравиться"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Шумо инчунин метавонед писанд кунед"
+          }
+        }
+      }
+    },
+    "common.done" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Готово"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Омода"
+          }
+        }
+      }
+    },
+    "common.empty\n" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Холӣ"
+          }
+        }
+      }
+    },
+    "common.refresh" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Азнавсозӣ"
+          }
+        }
+      }
+    },
+    "common.reset_filters" : {
+      "extractionState" : "manual"
+    },
+    "language.en" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Англисӣ"
+          }
+        }
+      }
+    },
+    "language.ru" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Russian"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Русский"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Русӣ"
+          }
+        }
+      }
+    },
+    "language.tg" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tajik"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тоҷикӣ"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тоҷикӣ"
+          }
+        }
+      }
+    },
+    "search.empty.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Попробуйте другой запрос или выберите тег."
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дархости дигар ё тегро интихоб кунед."
+          }
+        }
+      }
+    },
+    "search.empty.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подсказка: попробуйте другой запрос или выберите тег"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Маслиҳат: дархости дигар ё тегро интихоб кунед"
+          }
+        }
+      }
+    },
+    "search.empty.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ничего не найдено"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Натиҷа нест"
+          }
+        }
+      }
+    },
+    "search.prompt" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҷустуҷӯ"
+          }
+        }
+      }
+    },
+    "search.reset_filters.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очищает поиск и фильтры"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҷустуҷӯ ва филтрҳоро тоза мекунад"
+          }
+        }
+      }
+    },
+    "settings.about.section" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "О приложении"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дар бораи барнома\n"
+          }
+        }
+      }
+    },
+    "settings.appearance.dark_mode" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тёмная тема"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Реҷаи шабона"
+          }
+        }
+      }
+    },
+    "settings.appearance.dark_mode.a11y" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переключить тёмную тему"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Реҷаи барнома"
+          }
+        }
+      }
+    },
+    "settings.appearance.dark_mode.a11y\n" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переключить тёмную тему"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Реҷаи барнома"
+          }
+        }
+      }
+    },
+    "settings.appearance.section" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оформление"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Қисмати реҷаи барнома"
+          }
+        }
+      }
+    },
+    "settings.appearance.section\n" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оформление"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Қисмати реҷаи барнома"
+          }
+        }
+      }
+    },
+    "settings.card_style.picker\n" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите стиль"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Интихобу намуди кортҳо"
+          }
+        }
+      }
+    },
+    "settings.clear_history" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очистить историю"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Таърихро пок сохтанс"
+          }
+        }
+      }
+    },
+    "settings.clear_history.a11" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear reading history"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Таърихи хонишро пок кунед"
+          }
+        }
+      }
+    },
+    "settings.clear_history.a11y" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очистить историю чтения"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Таърихи хонишро пок кунед"
+          }
+        }
+      }
+    },
+    "settings.date_format.relative_dates" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Относительные даты"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Санаҳои нисбӣ"
+          }
+        }
+      }
+    },
+    "settings.date_format.relative_dates.a11y" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переключить относительные даты"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Таърихи хонишро пок кунед\n"
+          }
+        }
+      }
+    },
+    "settings.date_format.section" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Формат даты"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Формати сана"
+          }
+        }
+      }
+    },
+    "settings.history.cleared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "История очищена"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Таърих пок шуд"
+          }
+        }
+      }
+    },
+    "settings.language.picker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select language"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите язык"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забонро интихоб кунед"
+          }
+        }
+      }
+    },
+    "settings.language.section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Язык"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забон"
+          }
+        }
+      }
+    },
+    "settings.reset_defaults" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сброс"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Аз нав танзим кардан"
+          }
+        }
+      }
+    },
+    "settings.reset_defaults.a11y" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сбросить настройки"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Танзимотро аз нав барқарор кунед"
+          }
+        }
+      }
+    },
+    "settings.statistics.disabled" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статистика чтения временно отключена"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Омори хониши маводҳо муваққатан қатъ карда шудааст"
+          }
+        }
+      }
+    },
+    "settings.statistics.section" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статистика"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Омор"
+          }
+        }
+      }
+    },
+    "settings.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҷӯрсозӣ"
+          }
+        }
+      }
+    },
+    "tab.about" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "О приложении"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дар бораи барнома"
+          }
+        }
+      }
+    },
+    "tab.categories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Categories"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Категории"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Категорияҳо"
+          }
+        }
+      }
+    },
+    "tab.favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Избранное"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Писандидаҳо"
+          }
+        }
+      }
+    },
+    "tab.home" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Главная"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Асосӣ"
+          }
+        }
+      }
+    },
+    "tab.search" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҷустуҷӯ"
+          }
+        }
+      }
+    },
+    "tab.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Танзимот"
+          }
+        }
+      }
+    },
+    "Unknown section type: %@" : {
+      "shouldTranslate" : false
+    },
+    "Быстрые действия и важные разделы" : {
+
+    },
+    "Изображение" : {
+      "localizations" : {
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Расм"
+          }
+        }
+      }
+    },
+    "Полезные инструменты" : {
+      "localizations" : {
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лавозимоти лозимӣ"
+          }
+        }
+      }
+    },
+    "ю" : {
+      "extractionState" : "manual"
+    },
+    "юю" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Localization test"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тест локализации"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Санҷиши маҳаллисозӣ"
+          }
+        }
+      }
+    },
+    "юююю" : {
+      "extractionState" : "manual"
+    },
+    "ююююю" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You may also like"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вам также может понравиться"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Шумо инчунин метавонед писанд кунед"
+          }
+        }
+      }
+    }
   },
   "version" : "1.1"
 }

@@ -3,8 +3,6 @@ import SwiftUI
 struct AboutView: View {
 
     @StateObject private var viewModel: AboutViewModel
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
-    @EnvironmentObject private var localizationManager: LocalizationManager
 
     /// Dependency-injected initializer (composition root / previews)
     init(viewModel: AboutViewModel) {
@@ -14,17 +12,17 @@ struct AboutView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(t("app_name"))
+                Text("app.name")
                     .font(.largeTitle)
                     .bold()
 
-                Text(t("about_description"))
+                Text("about.description")
                     .font(.body)
                     .foregroundColor(.primary)
                     .multilineTextAlignment(.leading)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("\(t("about_build")): \(viewModel.buildNumber)")
+                    Text("about.build.label \(viewModel.buildNumber)")
 
                     Link(viewModel.repositoryURL, destination: URL(string: viewModel.repositoryURL)!)
                 }
@@ -33,12 +31,9 @@ struct AboutView: View {
             }
             .padding()
         }
-        .navigationTitle(t("tab_about"))
+        .navigationTitle("tab.about")
     }
 
-    private func t(_ key: String) -> String {
-        localizationManager.getTranslation(key: key, language: selectedLanguage)
-    }
 }
 
 // MARK: - Preview

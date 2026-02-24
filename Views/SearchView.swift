@@ -8,7 +8,6 @@ import SwiftUI
 /// Provides a search interface for articles and categories with tag filtering and navigation.
 struct SearchView: View {
     @StateObject private var viewModel: SearchViewModel
-    @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @State private var didInitialLoad: Bool = false
     @EnvironmentObject private var localizationManager: LocalizationManager
 
@@ -76,10 +75,10 @@ struct SearchView: View {
                     .background(DS.Color.background)
                 }
             }
-            .navigationTitle(localizationManager.t("tab_search"))
+            .navigationTitle("tab.search")
             .searchable(
                 text: $viewModel.searchText,
-                prompt: localizationManager.t("search_prompt")
+                prompt: Text("search.prompt")
             )
             .background(DS.Color.background)
             .task {
@@ -103,10 +102,10 @@ struct SearchView: View {
                         .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(localizationManager.t("search_no_results_title"))
+                        Text("search.empty.title")
                             .font(.headline)
 
-                        Text(localizationManager.t("search_no_results_desc"))
+                        Text("search.empty.description")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
@@ -120,15 +119,15 @@ struct SearchView: View {
                         viewModel.searchText = ""
                         viewModel.selectedTag = nil
                     } label: {
-                        Text(t("Сбросить"))
+                        Text("common.reset_filters")
                             .font(.subheadline.weight(.semibold))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, DS.Spacing.s)
                     }
                     .buttonStyle(.bordered)
-                    .accessibilityHint(t("Очищает поиск и фильтры"))
+                    .accessibilityHint(Text("search.reset_filters.hint"))
                 } else {
-                    Text(t("Подсказка: попробуйте другой запрос или выберите тег"))
+                    Text("search.empty.hint")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -140,11 +139,6 @@ struct SearchView: View {
             Spacer(minLength: 0)
         }
         .accessibilityElement(children: .contain)
-    }
-
-    /// Shortcut method to fetch localized translations using LocalizationManager.
-    private func t(_ key: String) -> String {
-        localizationManager.getTranslation(key: key, language: selectedLanguage)
     }
 }
 
@@ -158,5 +152,4 @@ struct SearchView: View {
             container.makeArticleDetailViewModel(article: article, allArticles: all)
         }
     )
-    .environmentObject(container.localizationManager)
 }
