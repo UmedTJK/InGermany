@@ -84,7 +84,7 @@ struct HomeDashboardLayout: View {
 
                 // CATEGORIES (preview)
                 HStack(alignment: .firstTextBaseline) {
-                    Text(t("tab_categories"))
+                    Text("tab.categories")
                         .font(.headline)
 
                     Spacer()
@@ -98,7 +98,7 @@ struct HomeDashboardLayout: View {
                             makeArticleDetailView: makeArticleDetailView
                         )
                     } label: {
-                        Text(t("common_all"))
+                        Text("common.all")
                             .font(.subheadline)
                     }
                     .buttonStyle(.plain)
@@ -277,7 +277,7 @@ private struct HomeDashboardCategoriesOverview: View {
             .padding(.bottom, DS.Spacing.section)
         }
         .scrollIndicators(.hidden)
-        .navigationTitle(t("tab_categories"))
+        .navigationTitle("tab.categories")
         .background(DS.Color.background)
     }
 }
@@ -326,8 +326,8 @@ private struct HomeDashboardAllArticlesScreen: View {
             .padding(.bottom, DS.Spacing.section)
         }
         .scrollIndicators(.hidden)
-        .navigationTitle(t("section_all_articles"))
-        .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always), prompt: Text(t("search_placeholder")))
+        .navigationTitle("section_all_articles")
+        .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("search.prompt"))
         .background(DS.Color.background)
     }
 
@@ -341,10 +341,10 @@ private struct HomeDashboardAllArticlesScreen: View {
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(t("search_no_results_title"))
+                    Text("search.empty.title")
                         .font(.headline)
 
-                    Text(t("search_no_results_desc"))
+                    Text("search.empty.description")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -356,7 +356,7 @@ private struct HomeDashboardAllArticlesScreen: View {
             Button {
                 searchQuery = ""
             } label: {
-                Text(t("common_reset"))
+                Text("common.reset")
                     .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, DS.Spacing.s)

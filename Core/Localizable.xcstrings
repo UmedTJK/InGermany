@@ -251,6 +251,9 @@
         }
       }
     },
+    "common.all" : {
+
+    },
     "common.done" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -289,6 +292,9 @@
           }
         }
       }
+    },
+    "common.reset" : {
+
     },
     "common.reset_filters" : {
       "extractionState" : "manual"
@@ -1094,17 +1100,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Расм"
-          }
-        }
-      }
-    },
-    "Полезные инструменты" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Лавозимоти лозимӣ"
           }
         }
       }
