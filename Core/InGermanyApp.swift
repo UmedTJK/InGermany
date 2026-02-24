@@ -1,15 +1,20 @@
+
 import SwiftUI
+// MARK: - Apple Localization
+import Foundation
 
 @main
 struct InGermanyApp: App {
 
     @StateObject private var settingsManager: SettingsManager
     @StateObject private var appContainer: AppContainer
+    @StateObject private var localizationSettings: LocalizationSettings
 
     init() {
         let sm = SettingsManager()
         _settingsManager = StateObject(wrappedValue: sm)
         _appContainer = StateObject(wrappedValue: AppContainer(settingsManager: sm))
+        _localizationSettings = StateObject(wrappedValue: LocalizationSettings())
     }
 
     var body: some Scene {
@@ -33,6 +38,8 @@ struct InGermanyApp: App {
             )
                 .appEnvironment(using: appContainer)
                 .environmentObject(settingsManager)
+                .environmentObject(localizationSettings)
+                .environment(\.locale, localizationSettings.locale)
 
                 // 🌙 ЕДИНСТВЕННЫЙ источник темы
                 .preferredColorScheme(
