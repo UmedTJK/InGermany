@@ -90,8 +90,7 @@ struct HomeView: View {
                             makeDataService: makeDataService,
                             makeArticleRowViewModel: makeArticleRowViewModel,
                             makeArticleDetailViewModel: makeArticleDetailViewModel,
-                            makeArticleDetailView: makeArticleDetailView,
-                            localizationManager: localizationManager
+                            makeArticleDetailView: makeArticleDetailView
                         )
                     case .dashboard:
                         HomeDashboardLayout(
@@ -162,7 +161,6 @@ struct HomeView: View {
         let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
         let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
         let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
-        let localizationManager: LocalizationManager
 
         var body: some View {
             ScrollView {
