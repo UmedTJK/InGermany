@@ -189,10 +189,6 @@ struct HomeView: View {
                     .cardContainer(.standard(useMaterial: true))
                     .cardPressFeedback()
 
-                    Rectangle()
-                        .fill(DS.Color.separator.opacity(0.4))
-                        .frame(height: 0.5)
-                        .padding(.vertical, DS.Spacing.section)
 
                     RecentlyReadSection(
                         articles: viewModel.articles,
