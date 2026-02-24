@@ -33,6 +33,7 @@ struct ContentView: View {
     let dumpNetworkMetrics: @Sendable (_ reset: Bool) async -> String
 
     @EnvironmentObject var localizationManager: LocalizationManager
+    @EnvironmentObject var localizationSettings: LocalizationSettings
 
     // ✅ Источник темы — SettingsManager
     @EnvironmentObject var settingsManager: SettingsManager
@@ -69,7 +70,23 @@ struct ContentView: View {
     }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        VStack {
+            HStack(spacing: 12) {
+                Button("RU") {
+                    localizationSettings.setLanguage("ru")
+                }
+                Button("EN") {
+                    localizationSettings.setLanguage("en")
+                }
+                Button("TG") {
+                    localizationSettings.setLanguage("tg")
+                }
+            }
+            .padding(.top, 8)
+
+            Text("debug.localization_test")
+
+            TabView(selection: $selectedTab) {
 
             LazyView {
                 HomeView(
@@ -84,7 +101,7 @@ struct ContentView: View {
             }
             .tabItem {
                 Label(
-                    localizationManager.t("tab_home"),
+                    "tab.home",
                     systemImage: "house.fill"
                 )
             }
@@ -99,7 +116,7 @@ struct ContentView: View {
             }
             .tabItem {
                 Label(
-                    localizationManager.t("tab_categories"),
+                    "tab.categories",
                     systemImage: "square.grid.2x2"
                 )
             }
@@ -114,7 +131,7 @@ struct ContentView: View {
             }
             .tabItem {
                 Label(
-                    localizationManager.t("tab_search"),
+                    "tab.search",
                     systemImage: "magnifyingglass"
                 )
             }
@@ -129,7 +146,7 @@ struct ContentView: View {
             }
             .tabItem {
                 Label(
-                    localizationManager.t("tab_favorites"),
+                    "tab.favorites",
                     systemImage: "heart.fill"
                 )
             }
@@ -144,11 +161,12 @@ struct ContentView: View {
             }
             .tabItem {
                 Label(
-                    localizationManager.t("tab_settings"),
+                    "tab.settings",
                     systemImage: "gearshape.fill"
                 )
             }
             .tag(4)
+            }
         }
         .toolbarBackground(.visible, for: .tabBar)
         .toolbarBackground(.ultraThinMaterial, for: .tabBar)
