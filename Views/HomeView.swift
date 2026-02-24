@@ -242,9 +242,6 @@ struct HomeView: View {
             .refreshable { await viewModel.refreshData() }
         }
 
-        private func t(_ key: String) -> String {
-            localizationManager.getTranslation(key: key, language: selectedLanguage)
-        }
     }
 }
 
