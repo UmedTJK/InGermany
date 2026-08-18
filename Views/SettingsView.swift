@@ -38,17 +38,8 @@ struct SettingsView: View {
                     Text("settings.statistics.disabled")
                 }
                 aboutSection
-                clearHistorySection
-                resetSection
             }
             .navigationTitle("settings.title")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("common.done") {
-                        dismiss()
-                    }
-                }
-            }
             .scrollContentBackground(.hidden)
             .background(DS.Color.background)
             .overlay {
@@ -103,29 +94,6 @@ struct SettingsView: View {
             NavigationLink(destination: AboutView(viewModel: makeAboutViewModel())) {
                 Text("tab.about")
             }
-        }
-    }
-
-
-    private var clearHistorySection: some View {
-        Section {
-            Button(role: .destructive) {
-                viewModel.clearHistory()
-            } label: {
-                Text("settings.clear_history")
-            }
-            .accessibilityLabel(Text("settings.clear_history.a11y"))
-        }
-    }
-
-    private var resetSection: some View {
-        Section {
-            Button(role: .destructive) {
-                viewModel.resetToDefaults()
-            } label: {
-                Text("settings.reset_defaults")
-            }
-            .accessibilityLabel(Text("settings.reset_defaults.a11y"))
         }
     }
 }

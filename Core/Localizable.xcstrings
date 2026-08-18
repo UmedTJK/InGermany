@@ -806,6 +806,7 @@
       }
     },
     "settings.clear_history" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
@@ -839,6 +840,7 @@
       }
     },
     "settings.clear_history.a11y" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
@@ -966,6 +968,7 @@
       }
     },
     "settings.reset_defaults" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
@@ -982,6 +985,7 @@
       }
     },
     "settings.reset_defaults.a11y" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ru" : {
           "stringUnit" : {
