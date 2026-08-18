@@ -1,6 +1,11 @@
+//
+//  CategoriesView.swift
+//  InGermany
+//
+
 import SwiftUI
 
-/// Displays a list of article categories with navigation into category-specific articles.
+/// Displays a list of article categories as a grid with 3 columns.
 struct CategoriesView: View {
 
     @StateObject private var viewModel: CategoriesViewModel
@@ -9,6 +14,13 @@ struct CategoriesView: View {
 
     private let makeRowViewModel: (Article) -> ArticleRowViewModel
     private let makeDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
+
+    // Grid layout: 3 columns with adaptive sizing
+    private let columns = [
+        GridItem(.flexible(), spacing: DS.Spacing.m),
+        GridItem(.flexible(), spacing: DS.Spacing.m),
+        GridItem(.flexible(), spacing: DS.Spacing.m)
+    ]
 
     init(
         viewModel: CategoriesViewModel,
@@ -22,51 +34,27 @@ struct CategoriesView: View {
 
     var body: some View {
         NavigationStack {
-            List(viewModel.categories) { category in
-                NavigationLink(value: category) {
-                    HStack(spacing: DS.Spacing.m) {
-                        ZStack {
-                            Circle()
-                                .fill(Color(hex: category.colorHex) ?? .blue)
-                                .frame(width: DS.Size.categoryIconCircle, height: DS.Size.categoryIconCircle)
-
-                            Image(systemName: category.icon)
-                                .font(.system(size: DS.Size.categoryIconSymbol, weight: .semibold))
-                                .foregroundStyle(.white)
-                                .accessibilityHidden(true)
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: DS.Spacing.m) {
+                    ForEach(viewModel.categories) { category in
+                        NavigationLink(value: category) {
+                            CategoryGridCard(
+                                category: category,
+                                language: selectedLanguage,
+                                localizationManager: localizationManager
+                            )
                         }
-                        .accessibilityHidden(true)
-
-                        Text(category.localizedName(for: selectedLanguage))
-                            .font(DS.Typography.cardTitle)
-                            .foregroundStyle(DS.Color.textPrimary)
+                        .buttonStyle(.plain)
+                        .cardPressFeedback()
                     }
-                    .padding(.vertical, DS.Spacing.s)
-                    .frame(minHeight: DS.Size.hitTarget)
-                    .contentShape(Rectangle())
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(Text(category.localizedName(for: selectedLanguage)))
-                    .padding(.horizontal, DS.Spacing.m)
-                    .cardContainer(.standard())
                 }
-                .buttonStyle(.plain)
-                .cardPressFeedback()
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
-                .listRowInsets(
-                    EdgeInsets(
-                        top: DS.Spacing.s,
-                        leading: DS.Spacing.contentInset,
-                        bottom: DS.Spacing.s,
-                        trailing: DS.Spacing.contentInset
-                    )
-                )
+                .padding(.horizontal, DS.Spacing.contentInset)
+                .padding(.top, DS.Spacing.section)
+                .padding(.bottom, DS.Spacing.section)
             }
-            .navigationTitle(t("tab_categories"))
-            .listStyle(.plain)
             .scrollIndicators(.hidden)
-            .scrollContentBackground(.hidden)
             .background(DS.Color.background)
+            .navigationTitle(t("tab_categories"))
             .task {
                 await viewModel.load()
             }
@@ -87,6 +75,47 @@ struct CategoriesView: View {
     /// Provides localized strings for UI elements.
     private func t(_ key: String) -> String {
         localizationManager.getTranslation(key: key, language: selectedLanguage)
+    }
+}
+
+// MARK: - Category Grid Card
+
+struct CategoryGridCard: View {
+    let category: Category
+    let language: String
+    let localizationManager: LocalizationManager
+
+    var body: some View {
+        VStack(spacing: DS.Spacing.s) {
+            // Icon with colored background
+            ZStack {
+                RoundedRectangle(cornerRadius: DS.Radius.card)
+                    .fill(Color(hex: category.colorHex) ?? .blue)
+                    .frame(width: 60, height: 60)
+
+                Image(systemName: category.icon)
+                    .font(.system(size: 28, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .accessibilityHidden(true)
+            }
+            .accessibilityHidden(true)
+
+            // Category name
+            Text(category.localizedName(for: language))
+                .font(.callout)
+                .fontWeight(.medium)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .foregroundStyle(DS.Color.textPrimary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, DS.Spacing.l)
+        .padding(.horizontal, DS.Spacing.s)
+        .cardContainer(.standard(useMaterial: true))
+        .aspectRatio(1.0, contentMode: .fit) // Makes it square
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(category.localizedName(for: language)))
+        .accessibilityHint(Text(localizationManager.getTranslation(key: "a11y_open_category_hint", language: language)))
     }
 }
 
