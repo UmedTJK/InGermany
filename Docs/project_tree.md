@@ -272,7 +272,6 @@
     │   ├── TagsView.swift
     │   └── TextSizeSettingsPanel.swift
     ├── FavoritesView.swift
-    ├── HomeDashboardLayout.swift
     ├── HomeView.swift
     ├── MapView.swift
     ├── PDFLibraryView.swift
@@ -285,4 +284,4 @@
     │   └── UsefulToolsSection.swift
     └── SettingsView.swift
 
-75 directories, 211 files
+75 directories, 210 files
