@@ -299,6 +299,9 @@
     "common.reset_filters" : {
       "extractionState" : "manual"
     },
+    "home.article" : {
+      "extractionState" : "manual"
+    },
     "home.layout.dashboard" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -390,6 +393,84 @@
           }
         }
       }
+    },
+    "home.pdf_library" : {
+      "extractionState" : "manual"
+    },
+    "home.places" : {
+      "extractionState" : "manual"
+    },
+    "home.quick_actions.pdf" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        }
+      }
+    },
+    "home.quick_actions.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Useful shortcuts"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Полезные ярлыки"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Шумо инчунин метавонед писанд кунед"
+          }
+        }
+      }
+    },
+    "home.quick_actions.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick actions"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Быстрые действия"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Амалҳои зуд"
+          }
+        }
+      }
+    },
+    "home.random_short" : {
+      "extractionState" : "manual"
     },
     "home.useful_tools.subtitle" : {
       "extractionState" : "manual",
@@ -1091,6 +1172,9 @@
         }
       }
     },
+    "tool.map" : {
+      "extractionState" : "manual"
+    },
     "Unknown section type: %@" : {
       "shouldTranslate" : false
     },
@@ -1100,29 +1184,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Расм"
-          }
-        }
-      }
-    },
-    "ююююю" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You may also like"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вам также может понравиться"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Шумо инчунин метавонед писанд кунед"
           }
         }
       }

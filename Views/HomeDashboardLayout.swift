@@ -55,7 +55,6 @@ struct HomeDashboardLayout: View {
 
                 // QUICK ACTIONS
                 HomeQuickActionsRow(
-                    t: t,
                     onRandom: { viewModel.selectRandomArticle() },
                     makePDFLibraryViewModel: makePDFLibraryViewModel,
                     makeDataService: makeDataService
@@ -167,16 +166,15 @@ struct HomeDashboardLayout: View {
 // MARK: - Components
 
 private struct HomeQuickActionsRow: View {
-    let t: (String) -> String
     let onRandom: () -> Void
     let makePDFLibraryViewModel: () -> PDFLibraryViewModel
     let makeDataService: () -> DataServiceProtocol
 
     var body: some View {
         VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-            Text(t("home_quick_actions_title"))
+            Text("home.quick_actions.title")
                 .font(.headline)
-            Text(t("home_quick_actions_subtitle"))
+            Text("home.quick_actions.subtitle")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
@@ -184,8 +182,8 @@ private struct HomeQuickActionsRow: View {
                 HStack(spacing: DS.Spacing.s) {
                     Button(action: onRandom) {
                         actionCard(
-                            title: t("home_random_short"),
-                            subtitle: t("home_article"),
+                            title: "home.random_short",
+                            subtitle: "home.article",
                             systemImage: "dice"
                         )
                     }
@@ -195,8 +193,8 @@ private struct HomeQuickActionsRow: View {
                         PDFLibraryView(viewModel: makePDFLibraryViewModel())
                     } label: {
                         actionCard(
-                            title: "PDF",
-                            subtitle: t("home_pdf_library"),
+                            title: "home.quick_actions.pdf",
+                            subtitle: "home.pdf_library",
                             systemImage: "doc.richtext"
                         )
                     }
@@ -206,8 +204,8 @@ private struct HomeQuickActionsRow: View {
                         MapView(dataService: makeDataService())
                     } label: {
                         actionCard(
-                            title: t("tool_map"),
-                            subtitle: t("home_places"),
+                            title: "tool.map",
+                            subtitle: "home.places",
                             systemImage: "map"
                         )
                     }
@@ -222,7 +220,7 @@ private struct HomeQuickActionsRow: View {
     }
 
     @ViewBuilder
-    private func actionCard(title: String, subtitle: String, systemImage: String) -> some View {
+    private func actionCard(title: LocalizedStringKey, subtitle: LocalizedStringKey, systemImage: String) -> some View {
         VStack(alignment: .leading, spacing: DS.Spacing.xs) {
             Image(systemName: systemImage)
                 .font(.title3)
