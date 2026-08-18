@@ -251,9 +251,6 @@
         }
       }
     },
-    "common.all" : {
-
-    },
     "common.done" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -293,13 +290,13 @@
         }
       }
     },
-    "common.reset" : {
-
-    },
     "common.reset_filters" : {
       "extractionState" : "manual"
     },
     "home.article" : {
+      "extractionState" : "manual"
+    },
+    "home.full_list" : {
       "extractionState" : "manual"
     },
     "home.layout.dashboard" : {
@@ -394,6 +391,12 @@
         }
       }
     },
+    "home.no_articles_subtitle" : {
+      "extractionState" : "manual"
+    },
+    "home.no_articles_title" : {
+      "extractionState" : "manual"
+    },
     "home.pdf_library" : {
       "extractionState" : "manual"
     },
@@ -472,6 +475,9 @@
     "home.random_short" : {
       "extractionState" : "manual"
     },
+    "home.today" : {
+      "extractionState" : "manual"
+    },
     "home.useful_tools.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -517,6 +523,9 @@
           }
         }
       }
+    },
+    "Key" : {
+      "extractionState" : "manual"
     },
     "language.en" : {
       "extractionState" : "manual",
@@ -677,6 +686,9 @@
           }
         }
       }
+    },
+    "section.all_articles" : {
+      "extractionState" : "manual"
     },
     "settings.about.section" : {
       "localizations" : {

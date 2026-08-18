@@ -6,27 +6,6 @@
 import SwiftUI
 
 struct HomeView: View {
-    // MARK: - Home layout switch (for incremental redesign)
-    private enum HomeLayoutStyle: String, CaseIterable, Identifiable {
-        case legacy
-        case dashboard
-
-        var id: String { rawValue }
-
-        var titleKey: String {
-            switch self {
-            case .legacy: return "home.layout.legacy"
-            case .dashboard: return "home.layout.dashboard"
-            }
-        }
-    }
-
-    @AppStorage("homeLayoutStyle") private var homeLayoutStyleRaw: String = HomeLayoutStyle.legacy.rawValue
-
-    private var homeLayoutStyle: HomeLayoutStyle {
-        HomeLayoutStyle(rawValue: homeLayoutStyleRaw) ?? .legacy
-    }
-
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: HomeViewModel
 
@@ -81,30 +60,85 @@ struct HomeView: View {
                         .progressViewStyle(CircularProgressViewStyle())
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    switch homeLayoutStyle {
-                    case .legacy:
-                        HomeLegacyLayout(
-                            selectedLanguage: selectedLanguage,
-                            viewModel: viewModel,
-                            makePDFLibraryViewModel: makePDFLibraryViewModel,
-                            makeDataService: makeDataService,
-                            makeArticleRowViewModel: makeArticleRowViewModel,
-                            makeArticleDetailViewModel: makeArticleDetailViewModel,
-                            makeArticleDetailView: makeArticleDetailView
-                        )
-                    case .dashboard:
-                        HomeDashboardLayout(
-                            t: t,
-                            selectedLanguage: selectedLanguage,
-                            viewModel: viewModel,
-                            makePDFLibraryViewModel: makePDFLibraryViewModel,
-                            makeDataService: makeDataService,
-                            makeArticleRowViewModel: makeArticleRowViewModel,
-                            makeArticleDetailViewModel: makeArticleDetailViewModel,
-                            makeArticleDetailView: makeArticleDetailView,
-                            localizationManager: localizationManager
-                        )
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
+                            // USEFUL TOOLS
+                            VStack(alignment: .leading, spacing: DS.Spacing.section) {
+                                VStack(alignment: .leading, spacing: DS.Spacing.xs) {
+                                    Text(String(localized: "home.useful_tools.title"))
+                                        .font(.headline)
+                                    Text(String(localized: "home.useful_tools.subtitle"))
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                UsefulToolsSection(
+                                    articles: viewModel.articles,
+                                    onRandomArticleSelected: { _ in
+                                        viewModel.selectRandomArticle()
+                                    },
+                                    makePDFLibraryViewModel: makePDFLibraryViewModel,
+                                    makeDataService: makeDataService
+                                )
+                            }
+                            .padding(DS.Spacing.section)
+                            .cardContainer(.standard(useMaterial: true))
+                            .cardPressFeedback()
+
+                            // CONTINUE READING
+                            RecentlyReadSection(
+                                articles: viewModel.articles,
+                                favoritesManager: viewModel.favoritesManager,
+                                readingStatsManager: viewModel.readingStatsManager,
+                                makeRowViewModel: makeArticleRowViewModel,
+                                makeDetailViewModel: { article, all in
+                                    makeArticleDetailViewModel(article, all)
+                                }
+                            )
+
+                            // FAVORITES
+                            FavoritesSection(
+                                articles: viewModel.articles,
+                                favoritesManager: viewModel.favoritesManager,
+                                makeRowViewModel: makeArticleRowViewModel,
+                                makeDetailViewModel: { article, all in
+                                    makeArticleDetailViewModel(article, all)
+                                }
+                            )
+
+                            // CATEGORIES
+                            ForEach(viewModel.allCategories, id: \.id) { category in
+                                if let categoryArticles = viewModel.articlesByCategory[category.id],
+                                   !categoryArticles.isEmpty {
+                                    CategorySection(
+                                        category: category,
+                                        articles: categoryArticles,
+                                        favoritesManager: viewModel.favoritesManager,
+                                        language: selectedLanguage,
+                                        makeRowViewModel: makeArticleRowViewModel,
+                                        makeDetailView: { article, all in
+                                            makeArticleDetailView(article, all)
+                                        }
+                                    )
+                                }
+                            }
+
+                            // ALL ARTICLES
+                            AllArticlesSection(
+                                articles: viewModel.articles,
+                                favoritesManager: viewModel.favoritesManager,
+                                makeRowViewModel: makeArticleRowViewModel,
+                                makeDetailViewModel: { article, all in
+                                    makeArticleDetailViewModel(article, all)
+                                }
+                            )
+                        }
+                        .padding(.top, DS.Spacing.section)
+                        .padding(.horizontal, DS.Spacing.contentInset)
+                        .padding(.bottom, DS.Spacing.section)
                     }
+                    .scrollIndicators(.hidden)
+                    .refreshable { await viewModel.refreshData() }
                 }
             }
             .navigationTitle("app.name")
@@ -122,19 +156,6 @@ struct HomeView: View {
                 }
             }
             .task { await viewModel.loadData() }
-#if DEBUG
-            .toolbar {
-                Menu {
-                    Picker("home.layout.picker", selection: $homeLayoutStyleRaw) {
-                        ForEach(HomeLayoutStyle.allCases) { style in
-                            Text(style.titleKey).tag(style.rawValue)
-                        }
-                    }
-                } label: {
-                    Image(systemName: "rectangle.3.group")
-                }
-            }
-#endif
         }
     }
 
@@ -145,101 +166,6 @@ struct HomeView: View {
         case "local": return .orange
         default: return .gray
         }
-    }
-
-    private func t(_ key: String) -> String {
-        localizationManager.getTranslation(key: key, language: selectedLanguage)
-    }
-
-    // MARK: - Legacy layout extracted for incremental redesign
-    private struct HomeLegacyLayout: View {
-        let selectedLanguage: String
-        @ObservedObject var viewModel: HomeViewModel
-
-        let makePDFLibraryViewModel: () -> PDFLibraryViewModel
-        let makeDataService: () -> DataServiceProtocol
-        let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
-        let makeArticleDetailViewModel: (Article, [Article]) -> ArticleDetailViewModel
-        let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
-
-        var body: some View {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: DS.Spacing.section) {
-                    VStack(alignment: .leading, spacing: DS.Spacing.section) {
-                        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-                            Text("home.useful_tools.title")
-                                .font(.headline)
-                            Text("home.useful_tools.subtitle")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        UsefulToolsSection(
-                            articles: viewModel.articles,
-                            onRandomArticleSelected: { _ in
-                                viewModel.selectRandomArticle()
-                            },
-                            makePDFLibraryViewModel: makePDFLibraryViewModel,
-                            makeDataService: makeDataService
-                        )
-                    }
-                    .padding(DS.Spacing.section)
-                    .cardContainer(.standard(useMaterial: true))
-                    .cardPressFeedback()
-
-
-                    RecentlyReadSection(
-                        articles: viewModel.articles,
-                        favoritesManager: viewModel.favoritesManager,
-                        readingStatsManager: viewModel.readingStatsManager,
-                        makeRowViewModel: makeArticleRowViewModel,
-                        makeDetailViewModel: { article, all in
-                            makeArticleDetailViewModel(article, all)
-                        }
-                    )
-
-                    FavoritesSection(
-                        articles: viewModel.articles,
-                        favoritesManager: viewModel.favoritesManager,
-                        makeRowViewModel: makeArticleRowViewModel,
-                        makeDetailViewModel: { article, all in
-                            makeArticleDetailViewModel(article, all)
-                        }
-                    )
-
-                    ForEach(viewModel.allCategories, id: \.id) { category in
-                        if let categoryArticles = viewModel.articlesByCategory[category.id],
-                           !categoryArticles.isEmpty {
-                            CategorySection(
-                                category: category,
-                                articles: categoryArticles,
-                                favoritesManager: viewModel.favoritesManager,
-                                language: selectedLanguage,
-                                makeRowViewModel: makeArticleRowViewModel,
-                                makeDetailView: { article, all in
-                                    makeArticleDetailView(article, all)
-                                }
-                            )
-                        }
-                    }
-
-                    AllArticlesSection(
-                        articles: viewModel.articles,
-                        favoritesManager: viewModel.favoritesManager,
-                        makeRowViewModel: makeArticleRowViewModel,
-                        makeDetailViewModel: { article, all in
-                            makeArticleDetailViewModel(article, all)
-                        }
-                    )
-                }
-                .padding(.top, DS.Spacing.section)
-                .padding(.horizontal, DS.Spacing.contentInset)
-                .padding(.bottom, DS.Spacing.section)
-            }
-            .scrollIndicators(.hidden)
-            .refreshable { await viewModel.refreshData() }
-        }
-
     }
 }
 
