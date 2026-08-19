@@ -5,7 +5,68 @@
 
 ---
 
+## [Unreleased]
+### Added
+- _Next: add UI/UX polish for Debug overlay + expand metrics coverage across DataService_
 
+### Changed
+- _Next: standardize metric names + ensure metrics are emitted on all failure paths_
+
+### Fixed
+- _Next: address any TSAN regressions immediately_
+
+---
+
+## [v0.3.1-apple-localization] – 2026-08-19
+
+### Added
+- **Apple Native Localization** — полный переход с кастомного `LocalizationManager` на систему Apple:
+  - Все строки используют `String(localized:)` с ключами из `Localizable.xcstrings`
+  - Добавлена поддержка локализации через `xcstrings` файл
+  - Удалён кастомный `LocalizationManager` из UI слоя
+- **Новые категории** (14 категорий в `categories.json`):
+  - Ведомства (`building.columns`, #1A73E8)
+  - Документы (`doc.text`, #E67E22)
+  - Чеклисты (`checklist`, #27AE60)
+  - Виза (`passport`, #8E44AD)
+  - Досуг (`figure.socialdance`, #E74C3C)
+  - Ресурсы (`link`, #F39C12)
+- **Новые статьи** (17 статей в `articles.json`):
+  - Как записаться в Ausländerbehörde (Ведомства)
+  - Чеклист переезда в Германию (Чеклисты)
+  - Типы виз в Германию (Виза)
+  - Полезные сайты для экспатов (Ресурсы)
+  - Как оформить документы в Германии (Документы)
+  - Куда сходить в Германии (Досуг)
+- **UI улучшения**:
+  - `CategoriesView` переработан в сетку 3×3 с квадратными карточками
+  - Удалены устаревшие макеты `HomeLegacyLayout` и `HomeDashboardLayout`
+  - Упрощён `HomeView` до единого макета
+
+### Changed
+- **Миграция локализации завершена**:
+  - Удалены все вызовы `t()` и `LocalizationManager` из `HomeDashboardLayout`
+  - Все строки теперь используют `String(localized:)`
+  - Удалён мусорный ключ `ююююю` из `Localizable.xcstrings`
+- **Архитектура**:
+  - Удалён дублирующийся `HomeLayoutStyle` enum
+  - Упрощена структура `HomeView`
+  - `ArticleEditorViewModel` больше не импортирует сам себя (`//import ArticleKit`)
+
+### Fixed
+- Исправлен тип параметров в `actionCard` с `String` на `LocalizedStringKey`
+- Добавлены недостающие параметры `localizationManager` и `articleRowFactory` в `HomeDashboardLayout`
+- Исправлена категория для статьи "Krankenversicherung" (Учёба → Здравоохранение)
+
+### Removed
+- Удалён `HomeLegacyLayout` и `HomeDashboardLayout` (заменены единым макетом)
+- Удалён `t()` метод из `HomeView`
+- Удалён мусорный ключ `ююююю` из `Localizable.xcstrings`
+
+---
+
+## [v0.3.0-f4-stabilization] – 2026-02-22
+...
 ## [Unreleased]
 ### Added
 - _Next: add UI/UX polish for Debug overlay + expand metrics coverage across DataService_
