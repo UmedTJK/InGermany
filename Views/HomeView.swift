@@ -15,7 +15,6 @@ struct HomeView: View {
     private let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
     private let localizationManager: LocalizationManager
 
-    // ✅ Принимаем биндинг на индекс вкладки
     @Binding var selectedTab: Int
 
     init(
@@ -42,79 +41,41 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: DS.Spacing.section) {
-
-                    // ✅ Поиск переключает selectedTab = 2
+                    
+                    // 1. Поисковая строка
                     SearchHomeTriggerView(
-                        onTap: {
-                            selectedTab = 2
-                        }
+                        onTap: { selectedTab = 2 }
                     )
                     .padding(.horizontal, DS.Spacing.contentInset)
-
+                    
+                    // 2. Баннер (с текстом внутри)
                     HeroBannerView()
-                    AppTitleSection()
-
+                    
+                    // 3. Список всех статей (просто друг под другом)
                     if viewModel.isLoading {
                         SkeletonHomeView()
                     } else {
-                        if !viewModel.articles.isEmpty {
-                            RecentlyReadSection(
-                                articles: viewModel.articles,
-                                favoritesManager: viewModel.favoritesManager,
-                                readingStatsManager: viewModel.readingStatsManager,
-                                makeRowViewModel: makeArticleRowViewModel,
-                                makeDetailViewModel: { article, all in
-                                    makeArticleDetailViewModel(article, all)
+                        VStack(spacing: DS.Spacing.m) {
+                            ForEach(viewModel.articles, id: \.id) { article in
+                                NavigationLink {
+                                    ArticleDetailView(
+                                        viewModel: makeArticleDetailViewModel(article, viewModel.articles),
+                                        localizationManager: localizationManager,
+                                        articleRowFactory: makeArticleRowViewModel
+                                    )
+                                } label: {
+                                    ArticleRow(viewModel: makeArticleRowViewModel(article))
+                                        .padding(DS.Spacing.m)
+                                        .background(Color(UIColor.secondarySystemGroupedBackground))
+                                        .clipShape(
+                                            RoundedCorner(radius: 16, corners: .allCorners)
+                                        )
+                                        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+                                        .padding(.horizontal, DS.Spacing.contentInset)
                                 }
-                            )
-                        }
-
-                        let hasFavorites = viewModel.articles.contains {
-                            viewModel.favoritesManager.isFavorite($0.id)
-                        }
-
-                        if hasFavorites {
-                            FavoritesSection(
-                                articles: viewModel.articles,
-                                favoritesManager: viewModel.favoritesManager,
-                                makeRowViewModel: makeArticleRowViewModel,
-                                makeDetailViewModel: { article, all in
-                                    makeArticleDetailViewModel(article, all)
-                                }
-                            )
-                        }
-
-                        ForEach(viewModel.allCategories, id: \.id) { category in
-                            if let categoryArticles = viewModel.articlesByCategory[category.id],
-                               !categoryArticles.isEmpty {
-                                CategorySection(
-                                    category: category,
-                                    articles: categoryArticles,
-                                    favoritesManager: viewModel.favoritesManager,
-                                    language: selectedLanguage,
-                                    makeRowViewModel: makeArticleRowViewModel,
-                                    makeDetailView: { article, all in
-                                        makeArticleDetailView(article, all)
-                                    }
-                                )
+                                .buttonStyle(.plain)
                             }
                         }
-
-                        SectionHeader(
-                            title: String(localized: "home.all_articles"),
-                            actionTitle: nil,
-                            action: nil
-                        )
-                        .padding(.horizontal, DS.Spacing.contentInset)
-
-                        AllArticlesSection(
-                            articles: viewModel.articles,
-                            favoritesManager: viewModel.favoritesManager,
-                            makeRowViewModel: makeArticleRowViewModel,
-                            makeDetailViewModel: { article, all in
-                                makeArticleDetailViewModel(article, all)
-                            }
-                        )
                     }
                 }
                 .padding(.bottom, DS.Spacing.section)
@@ -174,56 +135,54 @@ struct SearchHomeTriggerView: View {
     }
 }
 
-// MARK: - Hero Banner View
+// MARK: - Hero Banner View (С текстом внутри)
 struct HeroBannerView: View {
     var body: some View {
         GeometryReader { geo in
-            Image("homeBackground")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: geo.size.width, height: 280)
-                .clipped()
-                .overlay(
-                    LinearGradient(
-                        colors: [
-                            Color.black.opacity(0.5),
-                            Color.black.opacity(0.1),
-                            Color.black.opacity(0.4)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
+            ZStack(alignment: .bottomLeading) {
+                Image("homeBackground")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: geo.size.width, height: 280)
+                    .clipped()
+                    .overlay(
+                        LinearGradient(
+                            colors: [
+                                Color.black.opacity(0.5),
+                                Color.black.opacity(0.1),
+                                Color.black.opacity(0.4)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
                     )
+                    .mask(
+                        RoundedCorner(radius: 20, corners: [.bottomLeft, .bottomRight])
+                    )
+                
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("InGermany")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.white)
+
+                    Text("Справочник по Германии 2026: миграция, работа, учёба, жизнь и бюрократия")
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.9))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    Color.black.opacity(0.25)
+                        .blur(radius: 2)
                 )
-                .mask(
-                    RoundedCorner(radius: 20, corners: [.bottomLeft, .bottomRight])
-                )
+                .cornerRadius(20)
+                .padding(.horizontal, 15)
+                .padding(.bottom, 20)
+            }
         }
         .frame(height: 280)
-        .padding(.horizontal, 15)
-    }
-}
-
-// MARK: - App's Title Section
-struct AppTitleSection: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("InGermany")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundStyle(.white)
-
-            Text("Справочник по Германии 2026: миграция, работа, учёба, жизнь и бюрократия")
-                .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.9))
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            Color.black.opacity(0.25)
-                .blur(radius: 2)
-        )
-        .cornerRadius(20)
         .padding(.horizontal, 15)
     }
 }
@@ -235,7 +194,7 @@ struct SkeletonHomeView: View {
             HStack {
                 RoundedRectangle(cornerRadius: 4)
                     .fill(DS.Color.secondarySurface)
-                    .frame(width: 150, height: 20)
+                    .frame(width: 150, height: 40)
                 Spacer()
             }
             .padding(.horizontal, DS.Spacing.contentInset)

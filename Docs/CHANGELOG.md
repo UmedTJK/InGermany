@@ -6,14 +6,30 @@
 ---
 
 ## [Unreleased]
+
 ### Added
-- _Next: add UI/UX polish for Debug overlay + expand metrics coverage across DataService_
+- **Главный экран (HomeView):**
+  - Широкая строка поиска (триггер) на всю ширину экрана с тактильной отдачей.
+  - При нажатии на строку поиска приложение программно переключается на вкладку `Search` (индекс 2).
+  - Текст `AppTitleSection` ("InGermany" и описание) перемещён внутрь `HeroBannerView` для единого премиального блока.
+  - Главный экран теперь отображает только баннер и вертикальную ленту всех статей в виде аккуратных карточек. Секции "Недавние", "Избранное" и "Категории" временно скрыты.
+
+- **Экран настроек (SettingsView):**
+  - Полный редизайн: переход от стандартного `List` к кастомным карточкам (`settingsCard`) с белым фоном, скруглёнными углами (радиус 16) и мягкими тенями.
+  - Выбор языка переделан в горизонтальный переключатель (`.segmented`) на всю ширину карточки.
+  - Добавлены новые разделы "Служба поддержки": "Частые вопросы" (навигация на `FAQView`) и "Написать в поддержку" (прямая ссылка на email).
+  - Убраны заголовки секций для минималистичного дизайна.
+
+- **Таб-бар:**
+  - Возвращён системный `TabView` с эффектом «жидкого стекла» (`.ultraThinMaterial`).
 
 ### Changed
-- _Next: standardize metric names + ensure metrics are emitted on all failure paths_
+- Архитектура навигации: `HomeView` теперь принимает `@Binding var selectedTab: Int` для программного переключения вкладок через поиск.
+- `CustomTabBarView` удалён из проекта в пользу нативного системного `TabView`.
+- `ContentView` полностью восстановлен как корневой контейнер для `TabView`.
 
 ### Fixed
-- _Next: address any TSAN regressions immediately_
+- Исправлены ошибки компиляции, связанные с передачей параметров `selectedTab` в `HomeView` из `ContentView` и `CustomTabBarView`.
 
 ---
 
@@ -66,19 +82,6 @@
 ---
 
 ## [v0.3.0-f4-stabilization] – 2026-02-22
-...
-## [Unreleased]
-### Added
-- _Next: add UI/UX polish for Debug overlay + expand metrics coverage across DataService_
-
-### Changed
-- _Next: standardize metric names + ensure metrics are emitted on all failure paths_
-
-### Fixed
-- _Next: address any TSAN regressions immediately_
-
-
-## [v0.3.0-f4-stabilization] – 2026-02-22
 
 ### Stabilization (F4)
 - Strict in-flight request deduplication implemented in `NetworkService` (shared tasks with waiter-aware cancellation)
@@ -113,7 +116,6 @@
 
 ---
 
-
 ## [v0.2.3-di-localization-clean] – 2026-02-21
 
 ### Architecture & DI
@@ -146,7 +148,7 @@
 ### Tests
 - Test suite updated to be DI-pure (no `.shared` usage)
 
-
+---
 
 ## [v1.17.0] – 2025-10-23
 
@@ -353,7 +355,7 @@
 ## [v1.12.4] – 2025-10-05
 
 ### Tests - COMPLETE UNIT TESTING COVERAGE 🎉
-- ALL COMPONENTS TESTED: 21/21 components с 300+ unit тестами
+- ALL COMPONENTS TESTED: 21/21 компонентов с 300+ unit тестами
 - **Models**: Article (26), Category (24), Location (22) - 72 tests total
 - **Helpers**: ReadingTimeCalculator (60+), ReadingTimeTracker (30+), ReadingProgressTracker (25) - 115+ tests total
 - **ViewModels**: 8 ViewModels с полным покрытием
@@ -594,7 +596,6 @@
 - Карта с локациями
 - Поддержка PDF-документов
 - Фильтрация статей по тегам
-
 
 ---
 
