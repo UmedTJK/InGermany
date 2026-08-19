@@ -1,4 +1,3 @@
-
 import SwiftUI
 // MARK: - Apple Localization
 import Foundation
@@ -19,7 +18,8 @@ struct InGermanyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(
+            // ✅ ЗАМЕНЯЕМ ContentView на CustomTabBarView
+            CustomTabBarView(
                 makeHomeViewModel: appContainer.makeHomeViewModel,
                 makeCategoriesViewModel: appContainer.makeCategoriesViewModel,
                 makeSearchViewModel: appContainer.makeSearchViewModel,
@@ -36,28 +36,28 @@ struct InGermanyApp: App {
                     appContainer.makeArticleDetailView(article: article, allArticles: all)
                 }
             )
-                .appEnvironment(using: appContainer)
-                .environmentObject(settingsManager)
-                .environmentObject(localizationSettings)
-                .environment(\.locale, localizationSettings.locale)
+            .environmentObject(appContainer.localizationManager)
+            .environmentObject(settingsManager)
+            .environmentObject(localizationSettings)
+            .environment(\.locale, localizationSettings.locale)
 
-                // 🌙 ЕДИНСТВЕННЫЙ источник темы
-                .preferredColorScheme(
-                    settingsManager.isDarkMode ? .dark : .light
-                )
+            // 🌙 ЕДИНСТВЕННЫЙ источник темы
+            .preferredColorScheme(
+                settingsManager.isDarkMode ? .dark : .light
+            )
 
-                .environment(\.screenSize, UIScreen.main.bounds.size)
-                .onAppear {
-                    appContainer.bootstrap()
+            .environment(\.screenSize, UIScreen.main.bounds.size)
+            .onAppear {
+                appContainer.bootstrap()
 
 #if DEBUG
-                    Task {
-                        // Wait for initial bootstrap + async refresh
-                        try? await Task.sleep(nanoseconds: 2_000_000_000)
+                Task {
+                    // Wait for initial bootstrap + async refresh
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
 
-                        let metricsDump = await appContainer.dumpNetworkMetrics()
+                    let metricsDump = await appContainer.dumpNetworkMetrics()
 
-                        print("""
+                    print("""
 
 📊 ================================
 NETWORK METRICS SNAPSHOT (LAUNCH)
@@ -66,9 +66,9 @@ NETWORK METRICS SNAPSHOT (LAUNCH)
 =================================
 
 """)
-                    }
-#endif
                 }
+#endif
+            }
         }
     }
 }

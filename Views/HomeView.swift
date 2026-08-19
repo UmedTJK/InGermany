@@ -15,6 +15,9 @@ struct HomeView: View {
     private let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
     private let localizationManager: LocalizationManager
 
+    // ✅ Колбэк для переключения на вкладку поиска
+    var onSearchTapped: () -> Void
+
     init(
         viewModelFactory: @escaping () -> HomeViewModel,
         makePDFLibraryViewModel: @escaping () -> PDFLibraryViewModel,
@@ -22,7 +25,8 @@ struct HomeView: View {
         makeArticleRowViewModel: @escaping (Article) -> ArticleRowViewModel,
         makeArticleDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel,
         makeArticleDetailView: @escaping (Article, [Article]) -> ArticleDetailView,
-        localizationManager: LocalizationManager
+        localizationManager: LocalizationManager,
+        onSearchTapped: @escaping () -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModelFactory())
         self.makePDFLibraryViewModel = makePDFLibraryViewModel
@@ -31,6 +35,7 @@ struct HomeView: View {
         self.makeArticleDetailViewModel = makeArticleDetailViewModel
         self.makeArticleDetailView = makeArticleDetailView
         self.localizationManager = localizationManager
+        self.onSearchTapped = onSearchTapped
     }
 
     var body: some View {
@@ -38,13 +43,22 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: DS.Spacing.section) {
 
+                    // ✅ 1. Поисковая строка (вызывает onSearchTapped)
+                    SearchHomeTriggerView(
+                        onTap: onSearchTapped
+                    )
+                    .padding(.horizontal, DS.Spacing.contentInset)
+
+                    // ✅ 2. ВЕРНУЛИ БАННЕР С КАРТИНКОЙ
                     HeroBannerView()
+
+                    // ✅ 3. ВЕРНУЛИ ТЕКСТОВЫЙ БЛОК
                     AppTitleSection()
 
+                    // ✅ 4. Остальной контент
                     if viewModel.isLoading {
                         SkeletonHomeView()
                     } else {
-
                         if !viewModel.articles.isEmpty {
                             RecentlyReadSection(
                                 articles: viewModel.articles,
@@ -126,6 +140,42 @@ struct HomeView: View {
     }
 }
 
+// MARK: - Home Search Trigger (Верхняя широкая зона поиска)
+
+struct SearchHomeTriggerView: View {
+    var onTap: () -> Void
+    
+    var body: some View {
+        Button(action: {
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+            onTap()
+        }) {
+            HStack(spacing: DS.Spacing.m) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                
+                Text("Поиск статей, категорий и тем...")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                
+                Spacer()
+                
+                Image(systemName: "mic")
+                    .font(.system(size: 18))
+                    .foregroundStyle(.blue.opacity(0.7))
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, DS.Spacing.m)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 18))
+            .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+    }
+}
 
 // MARK: - Hero Banner View
 
@@ -265,6 +315,7 @@ struct ShimmerEffect: ViewModifier {
         makeArticleDetailView: { article, all in
             container.makeArticleDetailView(article: article, allArticles: all)
         },
-        localizationManager: container.localizationManager
+        localizationManager: container.localizationManager,
+        onSearchTapped: {}
     )
 }

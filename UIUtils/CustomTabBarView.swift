@@ -95,7 +95,8 @@ struct CustomTabBarView: View {
                 makeArticleRowViewModel: makeArticleRowViewModel,
                 makeArticleDetailViewModel: makeArticleDetailViewModel,
                 makeArticleDetailView: makeArticleDetailView,
-                localizationManager: localizationManager
+                localizationManager: localizationManager,
+                onSearchTapped: { selectedTab = 2 } // ✅ ИСПРАВЛЕНО на onSearchTapped
             )
 
         case 1:
@@ -133,7 +134,8 @@ struct CustomTabBarView: View {
                 makeArticleRowViewModel: makeArticleRowViewModel,
                 makeArticleDetailViewModel: makeArticleDetailViewModel,
                 makeArticleDetailView: makeArticleDetailView,
-                localizationManager: localizationManager
+                localizationManager: localizationManager,
+                onSearchTapped: { selectedTab = 2 } // ✅ ИСПРАВЛЕНО на onSearchTapped
             )
         }
     }
