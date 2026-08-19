@@ -15,8 +15,8 @@ struct HomeView: View {
     private let makeArticleDetailView: (Article, [Article]) -> ArticleDetailView
     private let localizationManager: LocalizationManager
 
-    // ✅ Колбэк для переключения на вкладку поиска
-    var onSearchTapped: () -> Void
+    // ✅ Принимаем биндинг на индекс вкладки
+    @Binding var selectedTab: Int
 
     init(
         viewModelFactory: @escaping () -> HomeViewModel,
@@ -26,7 +26,7 @@ struct HomeView: View {
         makeArticleDetailViewModel: @escaping (Article, [Article]) -> ArticleDetailViewModel,
         makeArticleDetailView: @escaping (Article, [Article]) -> ArticleDetailView,
         localizationManager: LocalizationManager,
-        onSearchTapped: @escaping () -> Void
+        selectedTab: Binding<Int>
     ) {
         _viewModel = StateObject(wrappedValue: viewModelFactory())
         self.makePDFLibraryViewModel = makePDFLibraryViewModel
@@ -35,7 +35,7 @@ struct HomeView: View {
         self.makeArticleDetailViewModel = makeArticleDetailViewModel
         self.makeArticleDetailView = makeArticleDetailView
         self.localizationManager = localizationManager
-        self.onSearchTapped = onSearchTapped
+        self._selectedTab = selectedTab
     }
 
     var body: some View {
@@ -43,19 +43,17 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: DS.Spacing.section) {
 
-                    // ✅ 1. Поисковая строка (вызывает onSearchTapped)
+                    // ✅ Поиск переключает selectedTab = 2
                     SearchHomeTriggerView(
-                        onTap: onSearchTapped
+                        onTap: {
+                            selectedTab = 2
+                        }
                     )
                     .padding(.horizontal, DS.Spacing.contentInset)
 
-                    // ✅ 2. ВЕРНУЛИ БАННЕР С КАРТИНКОЙ
                     HeroBannerView()
-
-                    // ✅ 3. ВЕРНУЛИ ТЕКСТОВЫЙ БЛОК
                     AppTitleSection()
 
-                    // ✅ 4. Остальной контент
                     if viewModel.isLoading {
                         SkeletonHomeView()
                     } else {
@@ -140,8 +138,7 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Home Search Trigger (Верхняя широкая зона поиска)
-
+// MARK: - Home Search Trigger
 struct SearchHomeTriggerView: View {
     var onTap: () -> Void
     
@@ -178,7 +175,6 @@ struct SearchHomeTriggerView: View {
 }
 
 // MARK: - Hero Banner View
-
 struct HeroBannerView: View {
     var body: some View {
         GeometryReader { geo in
@@ -208,7 +204,6 @@ struct HeroBannerView: View {
 }
 
 // MARK: - App's Title Section
-
 struct AppTitleSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -233,13 +228,10 @@ struct AppTitleSection: View {
     }
 }
 
-
 // MARK: - Skeleton Loading
-
 struct SkeletonHomeView: View {
     var body: some View {
         VStack(spacing: DS.Spacing.m) {
-            // Skeleton Section Header
             HStack {
                 RoundedRectangle(cornerRadius: 4)
                     .fill(DS.Color.secondarySurface)
@@ -248,7 +240,6 @@ struct SkeletonHomeView: View {
             }
             .padding(.horizontal, DS.Spacing.contentInset)
             
-            // Skeleton Articles
             VStack(spacing: DS.Spacing.m) {
                 ForEach(0..<3, id: \.self) { _ in
                     RoundedRectangle(cornerRadius: DS.Radius.card)
@@ -262,15 +253,12 @@ struct SkeletonHomeView: View {
     }
 }
 
-// MARK: - Shimmer Extension
-
+// MARK: - Shimmer
 extension View {
     func shimmering() -> some View {
         modifier(ShimmerEffect())
     }
 }
-
-// MARK: - Shimmer Effect
 
 struct ShimmerEffect: ViewModifier {
     @State private var phase: CGFloat = 0
@@ -316,6 +304,6 @@ struct ShimmerEffect: ViewModifier {
             container.makeArticleDetailView(article: article, allArticles: all)
         },
         localizationManager: container.localizationManager,
-        onSearchTapped: {}
+        selectedTab: .constant(0)
     )
 }

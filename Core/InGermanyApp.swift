@@ -1,5 +1,4 @@
 import SwiftUI
-// MARK: - Apple Localization
 import Foundation
 
 @main
@@ -18,8 +17,7 @@ struct InGermanyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            // ✅ ЗАМЕНЯЕМ ContentView на CustomTabBarView
-            CustomTabBarView(
+            ContentView(
                 makeHomeViewModel: appContainer.makeHomeViewModel,
                 makeCategoriesViewModel: appContainer.makeCategoriesViewModel,
                 makeSearchViewModel: appContainer.makeSearchViewModel,
@@ -36,36 +34,22 @@ struct InGermanyApp: App {
                     appContainer.makeArticleDetailView(article: article, allArticles: all)
                 }
             )
-            .environmentObject(appContainer.localizationManager)
+            .appEnvironment(using: appContainer)
             .environmentObject(settingsManager)
             .environmentObject(localizationSettings)
             .environment(\.locale, localizationSettings.locale)
-
-            // 🌙 ЕДИНСТВЕННЫЙ источник темы
             .preferredColorScheme(
                 settingsManager.isDarkMode ? .dark : .light
             )
-
             .environment(\.screenSize, UIScreen.main.bounds.size)
             .onAppear {
                 appContainer.bootstrap()
 
 #if DEBUG
                 Task {
-                    // Wait for initial bootstrap + async refresh
                     try? await Task.sleep(nanoseconds: 2_000_000_000)
-
                     let metricsDump = await appContainer.dumpNetworkMetrics()
-
-                    print("""
-
-📊 ================================
-NETWORK METRICS SNAPSHOT (LAUNCH)
-================================
-\(metricsDump)
-=================================
-
-""")
+                    print("\n📊 NETWORK METRICS SNAPSHOT (LAUNCH)\n\(metricsDump)\n")
                 }
 #endif
             }

@@ -92,7 +92,6 @@
 		ADB930462F135DC400A961D7 /* SharedCore in Frameworks */ = {isa = PBXBuildFile; productRef = ADB930452F135DC400A961D7 /* SharedCore */; };
 		ADDF80FD2EA6C8B8000885DE /* NSWindow+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */; };
 		ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */ = {isa = PBXBuildFile; fileRef = ADE23B732E9BEED400BD152B /* burgeramt_registration.json */; };
-		ADE23B7F2E9BF8F500BD152B /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */; };
 		ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */; };
 		ADF3394A2E8850FA00AE4CBF /* RatingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339452E8850FA00AE4CBF /* RatingManager.swift */; };
 		ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF339472E8850FA00AE4CBF /* TextSizeManager.swift */; };
@@ -238,7 +237,6 @@
 		ADC6DA552F4903CD0040AFF8 /* ARCHITECTURE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ARCHITECTURE.md; sourceTree = "<group>"; };
 		ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWindow+SwiftUI.swift"; sourceTree = "<group>"; };
 		ADE23B732E9BEED400BD152B /* burgeramt_registration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration.json; sourceTree = "<group>"; };
-		ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
 		ADE9E0362F49D3A100849FF4 /* AUDIT_2026-02-21_TECHNICAL_PLAN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "AUDIT_2026-02-21_TECHNICAL_PLAN.md"; sourceTree = "<group>"; };
 		ADE9E45F2F4AE26000849FF4 /* InGermany.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = InGermany.xctestplan; path = InGermanyTests/InGermany.xctestplan; sourceTree = "<group>"; };
 		ADF339442E8850FA00AE4CBF /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
@@ -390,7 +388,6 @@
 				AD67E9512F4B21B9001E5849 /* DesignSystem */,
 				ADDF80FC2EA6C8B4000885DE /* NSWindow+SwiftUI.swift */,
 				AD108D322E9F70130032F0D9 /* PDFThumbnailGenerator.swift */,
-				ADE23B7E2E9BF8F200BD152B /* CustomTabBarView.swift */,
 				AD1624422E9ADA9800E6E14B /* Accessibility+Extensions.swift */,
 				AD16243E2E9ADA4400E6E14B /* ScaleOnTap.swift */,
 				AD16243C2E9ADA0100E6E14B /* ShakeEffect.swift */,
@@ -1033,7 +1030,6 @@
 				AD5D36CD2E96DF4A00DB63EF /* TextAnalysisService.swift in Sources */,
 				AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */,
 				ADF339492E8850FA00AE4CBF /* FavoritesManager.swift in Sources */,
-				ADE23B7F2E9BF8F500BD152B /* CustomTabBarView.swift in Sources */,
 				ADF3394A2E8850FA00AE4CBF /* RatingManager.swift in Sources */,
 				AD16243B2E9AD9D700E6E14B /* ShimmerEffect.swift in Sources */,
 				ADF3394D2E8850FA00AE4CBF /* TextSizeManager.swift in Sources */,
