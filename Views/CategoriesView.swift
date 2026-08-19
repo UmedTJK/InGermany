@@ -19,6 +19,7 @@ struct CategoriesView: View {
     private let columns = [
         GridItem(.flexible(), spacing: DS.Spacing.m),
         GridItem(.flexible(), spacing: DS.Spacing.m),
+        GridItem(.flexible(), spacing: DS.Spacing.m),
         GridItem(.flexible(), spacing: DS.Spacing.m)
     ]
 

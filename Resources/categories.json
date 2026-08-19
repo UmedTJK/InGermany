@@ -86,5 +86,71 @@
     },
     "icon": "house.fill",
     "colorHex": "#9B59B6"
+  },
+  {
+    "id": "12121212-1212-1212-1212-121212121212",
+    "name": {
+      "ru": "Ведомства",
+      "en": "Government Offices",
+      "de": "Behörden",
+      "tj": "Мақомоти давлатӣ"
+    },
+    "icon": "building.columns",
+    "colorHex": "#1A73E8"
+  },
+  {
+    "id": "13131313-1313-1313-1313-131313131313",
+    "name": {
+      "ru": "Документы",
+      "en": "Documents",
+      "de": "Dokumente",
+      "tj": "Ҳуҷҷатҳо"
+    },
+    "icon": "doc.text",
+    "colorHex": "#E67E22"
+  },
+  {
+    "id": "14141414-1414-1414-1414-141414141414",
+    "name": {
+      "ru": "Чеклисты",
+      "en": "Checklists",
+      "de": "Checklisten",
+      "tj": "Рӯйхати санҷишӣ"
+    },
+    "icon": "checklist",
+    "colorHex": "#27AE60"
+  },
+  {
+    "id": "15151515-1515-1515-1515-151515151515",
+    "name": {
+      "ru": "Виза",
+      "en": "Visa",
+      "de": "Visum",
+      "tj": "Визa"
+    },
+    "icon": "passport",
+    "colorHex": "#8E44AD"
+  },
+  {
+    "id": "16161616-1616-1616-1616-161616161616",
+    "name": {
+      "ru": "Досуг",
+      "en": "Leisure",
+      "de": "Freizeit",
+      "tj": "Фарғат"
+    },
+    "icon": "figure.socialdance",
+    "colorHex": "#E74C3C"
+  },
+  {
+    "id": "17171717-1717-1717-1717-171717171717",
+    "name": {
+      "ru": "Ресурсы",
+      "en": "Resources",
+      "de": "Ressourcen",
+      "tj": "Захираҳо"
+    },
+    "icon": "link",
+    "colorHex": "#F39C12"
   }
 ]
