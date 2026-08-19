@@ -210,7 +210,51 @@
         }
       }
     },
-
+    "article.reading_time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading time"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Время чтения"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вақти хониш"
+          }
+        }
+      }
+    },
+    "article.you_may_like" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You may also like"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вам также может понравиться"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Шумо инчунин метавонед писанд кунед"
+          }
+        }
+      }
+    },
     "common.all" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -230,6 +274,45 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ҳама"
+          }
+        }
+      }
+    },
+    "common.done" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Готово"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Омода"
+          }
+        }
+      }
+    },
+    "common.empty\n" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Холӣ"
+          }
+        }
+      }
+    },
+    "common.refresh" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Азнавсозӣ"
           }
         }
       }
@@ -257,6 +340,32 @@
         }
       }
     },
+    "common.reset_filters" : {
+      "extractionState" : "manual"
+    },
+    "home.all_articles" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Articles"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все статьи"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҳамаи мақолаҳо"
+          }
+        }
+      }
+    },
     "home.article" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -280,6 +389,75 @@
         }
       }
     },
+    "home.articles_available" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "articles available"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "статей доступно"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "мақола дастрас"
+          }
+        }
+      }
+    },
+    "home.continue_reading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue Reading"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продолжить чтение"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Хонишро давом диҳед"
+          }
+        }
+      }
+    },
+    "home.favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Избранное"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Писандидаҳо"
+          }
+        }
+      }
+    },
     "home.full_list" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -299,6 +477,121 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Рӯйхати пурра"
+          }
+        }
+      }
+    },
+    "home.hero_subtitle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Germany Guide 2026: migration, work, study, life and bureaucracy"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Справочник по Германии 2026: миграция, работа, учёба, жизнь и бюрократия"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дастури Олмон 2026: муҳоҷират, кор, таҳсил, зиндагӣ ва бюрократия"
+          }
+        }
+      }
+    },
+    "home.layout.dashboard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Панель"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Панел"
+          }
+        }
+      }
+    },
+    "home.layout.legacy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Legacy"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Классический"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Классикӣ"
+          }
+        }
+      }
+    },
+    "home.layout.picker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Layout"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Макет"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тарҳ"
+          }
+        }
+      }
+    },
+    "home.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка данных…"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Боргузорӣ…"
           }
         }
       }
@@ -395,259 +688,6 @@
         }
       }
     },
-    "home.random" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Random"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Случайная"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Тақрибан"
-          }
-        }
-      }
-    },
-    "home.random_short" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Random"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Случайная"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Тақрибан"
-          }
-        }
-      }
-    },
-    "home.today" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сегодня"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Имрӯз"
-          }
-        }
-      }
-    },
-    "section.all_articles" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Articles"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Все статьи"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ҳамаи мақолаҳо"
-          }
-        }
-      }
-    },
-    "tool.map" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Map"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Карта"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Харита"
-          }
-        }
-      }
-    },
-    "home.welcome" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Welcome back"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Добро пожаловать"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Хуш омадед"
-          }
-        }
-      }
-    },
-    "home.articles_available" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "articles available"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "статей доступно"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "мақола дастрас"
-          }
-        }
-      }
-    },
-    "home.continue_reading" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue Reading"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Продолжить чтение"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Хонишро давом диҳед"
-          }
-        }
-      }
-    },
-    "home.favorites" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favorites"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Избранное"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Писандидаҳо"
-          }
-        }
-      }
-    },
-    "home.view_all" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View All"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Все"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ҳама"
-          }
-        }
-      }
-    },
-    "home.all_articles" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Articles"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Все статьи"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ҳамаи мақолаҳо"
-          }
-        }
-      }
-    },
     "home.popular_categories" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -670,227 +710,6 @@
           }
         }
       }
-    },
-    "settings.app_version" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Version 1.17.0"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Версия 1.17.0"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Версия 1.17.0"
-          }
-        }
-      }
-    }
-,
-    "article.reading_time" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reading time"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Время чтения"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вақти хониш"
-          }
-        }
-      }
-    },
-    "article.you_may_like" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You may also like"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вам также может понравиться"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Шумо инчунин метавонед писанд кунед"
-          }
-        }
-      }
-    },
-    "common.done" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Готово"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Омода"
-          }
-        }
-      }
-    },
-    "common.empty\n" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Холӣ"
-          }
-        }
-      }
-    },
-    "common.refresh" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Азнавсозӣ"
-          }
-        }
-      }
-    },
-    "common.reset_filters" : {
-      "extractionState" : "manual"
-    },
-    "home.article" : {
-      "extractionState" : "manual"
-    },
-    "home.full_list" : {
-      "extractionState" : "manual"
-    },
-    "home.layout.dashboard" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dashboard"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Панель"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Панел"
-          }
-        }
-      }
-    },
-    "home.layout.legacy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Legacy"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Классический"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Классикӣ"
-          }
-        }
-      }
-    },
-    "home.layout.picker" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Layout"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Макет"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Тарҳ"
-          }
-        }
-      }
-    },
-    "home.loading" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading…"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Загрузка данных…"
-          }
-        },
-        "tg-TJ" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Боргузорӣ…"
-          }
-        }
-      }
-    },
-    "home.no_articles_subtitle" : {
-      "extractionState" : "manual"
-    },
-    "home.no_articles_title" : {
-      "extractionState" : "manual"
-    },
-    "home.pdf_library" : {
-      "extractionState" : "manual"
-    },
-    "home.places" : {
-      "extractionState" : "manual"
     },
     "home.quick_actions.pdf" : {
       "extractionState" : "manual",
@@ -961,11 +780,97 @@
         }
       }
     },
+    "home.random" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Random"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Случайная"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тақрибан"
+          }
+        }
+      }
+    },
     "home.random_short" : {
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Random"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Случайная"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тақрибан"
+          }
+        }
+      }
+    },
+    "home.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your guide to life in Germany"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш гид по жизни в Германии"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Роҳнамои шумо барои зиндагӣ дар Олмон"
+          }
+        }
+      }
     },
     "home.today" : {
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сегодня"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имрӯз"
+          }
+        }
+      }
     },
     "home.useful_tools.subtitle" : {
       "extractionState" : "manual",
@@ -1012,6 +917,56 @@
           }
         }
       }
+    },
+    "home.view_all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View All"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҳама"
+          }
+        }
+      }
+    },
+    "home.welcome" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome back"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добро пожаловать"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Хуш омадед"
+          }
+        }
+      }
+    },
+    "InGermany" : {
+      "comment" : "The name of the app.",
+      "isCommentAutoGenerated" : true
     },
     "Key" : {
       "extractionState" : "manual"
@@ -1181,7 +1136,27 @@
       }
     },
     "section.all_articles" : {
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Articles"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все статьи"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ҳамаи мақолаҳо"
+          }
+        }
+      }
     },
     "settings.about.section" : {
       "extractionState" : "stale",
@@ -1201,8 +1176,27 @@
       }
     },
     "settings.app_version" : {
-      "comment" : "The version of the app.",
-      "isCommentAutoGenerated" : true
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version 1.17.0"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Версия 1.17.0"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Версия 1.17.0"
+          }
+        }
+      }
     },
     "settings.appearance.dark_mode" : {
       "localizations" : {
@@ -1690,7 +1684,27 @@
       }
     },
     "tool.map" : {
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Map"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Карта"
+          }
+        },
+        "tg-TJ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Харита"
+          }
+        }
+      }
     },
     "Unknown section type: %@" : {
       "shouldTranslate" : false
@@ -1704,6 +1718,10 @@
           }
         }
       }
+    },
+    "Справочник по Германии 2026: миграция, работа, учёба, жизнь и бюрократия" : {
+      "comment" : "The description of the app.",
+      "isCommentAutoGenerated" : true
     }
   },
   "version" : "1.1"

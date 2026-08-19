@@ -140,7 +140,7 @@ struct ContentView: View {
                 SettingsView(
                     viewModel: makeSettingsViewModel(),
                     makeAboutViewModel: makeAboutViewModel,
-                    dumpNetworkMetrics: dumpNetworkMetrics
+                    //dumpNetworkMetrics: dumpNetworkMetrics
                 )
             }
             .tabItem {

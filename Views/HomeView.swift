@@ -8,8 +8,6 @@ import SwiftUI
 struct HomeView: View {
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "ru"
     @StateObject private var viewModel: HomeViewModel
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
     private let makePDFLibraryViewModel: () -> PDFLibraryViewModel
     private let makeDataService: () -> DataServiceProtocol
     private let makeArticleRowViewModel: (Article) -> ArticleRowViewModel
@@ -35,33 +33,18 @@ struct HomeView: View {
         self.localizationManager = localizationManager
     }
 
-    /// Для превью и тестов
-    init(viewModel: HomeViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-        self.makePDFLibraryViewModel = { fatalError("Not implemented") }
-        self.makeDataService = { fatalError("Not implemented") }
-        self.makeArticleRowViewModel = { _ in fatalError("Not implemented") }
-        self.makeArticleDetailViewModel = { _, _ in fatalError("Not implemented") }
-        self.makeArticleDetailView = { _, _ in fatalError("Not implemented") }
-        self.localizationManager = LocalizationManager()
-    }
-
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: DS.Spacing.section) {
-                    
-                    // MARK: - Hero Header
-                    HeroHeaderView(
-                        userName: "🇩🇪 \(String(localized: "home.welcome"))",
-                        articlesCount: viewModel.articles.count
-                    )
-                    
+
+                    HeroBannerView()
+                    AppTitleSection()
+
                     if viewModel.isLoading {
-                        // MARK: - Skeleton Loading
                         SkeletonHomeView()
                     } else {
-                        // MARK: - Continue Reading
+
                         if !viewModel.articles.isEmpty {
                             RecentlyReadSection(
                                 articles: viewModel.articles,
@@ -73,10 +56,9 @@ struct HomeView: View {
                                 }
                             )
                         }
-                        
-                        // MARK: - Favorites
-                        let hasFavorites = viewModel.articles.contains { article in
-                            viewModel.favoritesManager.isFavorite(article.id)
+
+                        let hasFavorites = viewModel.articles.contains {
+                            viewModel.favoritesManager.isFavorite($0.id)
                         }
 
                         if hasFavorites {
@@ -89,8 +71,7 @@ struct HomeView: View {
                                 }
                             )
                         }
-                        
-                        // MARK: - All Categories
+
                         ForEach(viewModel.allCategories, id: \.id) { category in
                             if let categoryArticles = viewModel.articlesByCategory[category.id],
                                !categoryArticles.isEmpty {
@@ -106,15 +87,14 @@ struct HomeView: View {
                                 )
                             }
                         }
-                        
-                        // MARK: - All Articles
+
                         SectionHeader(
                             title: String(localized: "home.all_articles"),
                             actionTitle: nil,
                             action: nil
                         )
                         .padding(.horizontal, DS.Spacing.contentInset)
-                        
+
                         AllArticlesSection(
                             articles: viewModel.articles,
                             favoritesManager: viewModel.favoritesManager,
@@ -125,21 +105,17 @@ struct HomeView: View {
                         )
                     }
                 }
-                .padding(.top, DS.Spacing.section)
                 .padding(.bottom, DS.Spacing.section)
             }
             .scrollIndicators(.hidden)
             .refreshable { await viewModel.refreshData() }
             .background(DS.Color.background)
-            .navigationTitle("app.name")
+            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(isPresented: $viewModel.isShowingRandomArticle) {
                 if let article = viewModel.randomArticle {
                     ArticleDetailView(
-                        viewModel: makeArticleDetailViewModel(
-                            article,
-                            viewModel.articles
-                        ),
+                        viewModel: makeArticleDetailViewModel(article, viewModel.articles),
                         localizationManager: localizationManager,
                         articleRowFactory: makeArticleRowViewModel
                     )
@@ -150,228 +126,75 @@ struct HomeView: View {
     }
 }
 
-// MARK: - Hero Header
 
-struct HeroHeaderView: View {
-    let userName: String
-    let articlesCount: Int
-    
+// MARK: - Hero Banner View
+
+struct HeroBannerView: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.s) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(userName)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(DS.Color.textPrimary)
-                    
-                    Text("\(articlesCount) \(String(localized: "home.articles_available"))")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                
-                Spacer()
-                
-                // Аватар или иконка
-                ZStack {
-                    Circle()
-                        .fill(LinearGradient(
-                            colors: [.blue.opacity(0.3), .purple.opacity(0.2)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ))
-                        .frame(width: 48, height: 48)
-                    
-                    Image(systemName: "person.fill")
-                        .font(.title2)
-                        .foregroundStyle(.blue)
-                }
-            }
-            .padding(.horizontal, DS.Spacing.contentInset)
-        }
-    }
-}
-
-// MARK: - Quick Actions Grid
-
-struct QuickActionsGrid: View {
-    let onRandom: () -> Void
-    let makePDFLibraryViewModel: () -> PDFLibraryViewModel
-    let makeDataService: () -> DataServiceProtocol
-    
-    private let actions: [(title: String, icon: String, color: Color)] = [
-        ("home.random", "dice", .purple),
-        ("home.pdf_library", "doc.richtext", .blue),
-        ("home.places", "map", .green),
-    ]
-    
-    var body: some View {
-        HStack(spacing: DS.Spacing.m) {
-            // Случайная статья
-            Button(action: onRandom) {
-                QuickActionCard(
-                    title: String(localized: "home.random"),
-                    icon: "dice",
-                    color: .purple
-                )
-            }
-            .buttonStyle(.plain)
-            
-            // PDF Библиотека
-            NavigationLink {
-                PDFLibraryView(viewModel: makePDFLibraryViewModel())
-            } label: {
-                QuickActionCard(
-                    title: String(localized: "home.pdf_library"),
-                    icon: "doc.richtext",
-                    color: .blue
-                )
-            }
-            .buttonStyle(.plain)
-            
-            // Карта
-            NavigationLink {
-                MapView(dataService: makeDataService())
-            } label: {
-                QuickActionCard(
-                    title: String(localized: "home.places"),
-                    icon: "map",
-                    color: .green
-                )
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(.vertical, DS.Spacing.xs)
-    }
-}
-
-// MARK: - Quick Action Card
-
-struct QuickActionCard: View {
-    let title: String
-    let icon: String
-    let color: Color
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    
-    var body: some View {
-        VStack(spacing: DS.Spacing.s) {
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [color.opacity(0.8), color],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+        GeometryReader { geo in
+            Image("homeBackground")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: geo.size.width, height: 280)
+                .clipped()
+                .overlay(
+                    LinearGradient(
+                        colors: [
+                            Color.black.opacity(0.5),
+                            Color.black.opacity(0.1),
+                            Color.black.opacity(0.4)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
                     )
-                    .frame(width: 48, height: 48)
-                    .shadow(color: color.opacity(0.3), radius: 8, x: 0, y: 4)
-                
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundStyle(.white)
-            }
-            
-            Text(title)
-                .font(.caption)
-                .fontWeight(.medium)
-                .foregroundStyle(DS.Color.textPrimary)
-                .multilineTextAlignment(.center)
-                .lineLimit(1)
+                )
+                .mask(
+                    RoundedCorner(radius: 20, corners: [.bottomLeft, .bottomRight])
+                )
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, DS.Spacing.m)
-        .cardContainer(.standard(useMaterial: true))
-        .scaleOnAppear()
-        .cardPressFeedback()
+        .frame(height: 280)
+        .padding(.horizontal, 15)
     }
 }
 
-// MARK: - Category Carousel
+// MARK: - App's Title Section
 
-struct CategoryCarousel: View {
-    let categories: [Category]
-    let language: String
-    
+struct AppTitleSection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: DS.Spacing.xs) {
-            Text(String(localized: "home.popular_categories"))
-                .font(.headline)
-                .padding(.horizontal, DS.Spacing.contentInset)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: DS.Spacing.s) {
-                    ForEach(categories.prefix(6), id: \.id) { category in
-                        NavigationLink {
-                            // TODO: Переход на категорию
-                        } label: {
-                            CategoryChip(
-                                category: category,
-                                language: language
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(.horizontal, DS.Spacing.contentInset)
-                .padding(.vertical, DS.Spacing.xs)
-            }
-        }
-    }
-}
+        VStack(alignment: .leading, spacing: 6) {
+            Text("InGermany")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundStyle(.white)
 
-// MARK: - Category Chip
-
-struct CategoryChip: View {
-    let category: Category
-    let language: String
-    
-    var body: some View {
-        HStack(spacing: DS.Spacing.xs) {
-            Image(systemName: category.icon)
-                .font(.caption)
-                .foregroundStyle(Color(hex: category.colorHex) ?? .blue)
-            
-            Text(category.localizedName(for: language))
+            Text("Справочник по Германии 2026: миграция, работа, учёба, жизнь и бюрократия")
                 .font(.subheadline)
-                .fontWeight(.medium)
-                .foregroundStyle(DS.Color.textPrimary)
+                .foregroundStyle(.white.opacity(0.9))
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.horizontal, DS.Spacing.m)
-        .padding(.vertical, DS.Spacing.s)
-        .background(DS.Color.secondarySurface.opacity(0.6))
-        .cornerRadius(DS.Radius.chip)
-        .overlay(
-            RoundedRectangle(cornerRadius: DS.Radius.chip)
-                .stroke(Color(hex: category.colorHex)?.opacity(0.3) ?? .clear, lineWidth: 1)
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            Color.black.opacity(0.25)
+                .blur(radius: 2)
         )
+        .cornerRadius(20)
+        .padding(.horizontal, 15)
     }
 }
+
 
 // MARK: - Skeleton Loading
 
 struct SkeletonHomeView: View {
     var body: some View {
         VStack(spacing: DS.Spacing.m) {
-            // Skeleton Quick Actions
-            HStack(spacing: DS.Spacing.m) {
-                ForEach(0..<3, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: DS.Radius.card)
-                        .fill(DS.Color.secondarySurface)
-                        .frame(height: 100)
-                        .shimmering()
-                }
-            }
-            .padding(.horizontal, DS.Spacing.contentInset)
-            
-            // Skeleton Categories
-            HStack(spacing: DS.Spacing.s) {
-                ForEach(0..<4, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: DS.Radius.chip)
-                        .fill(DS.Color.secondarySurface)
-                        .frame(width: 80, height: 36)
-                        .shimmering()
-                }
+            // Skeleton Section Header
+            HStack {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(DS.Color.secondarySurface)
+                    .frame(width: 150, height: 20)
+                Spacer()
             }
             .padding(.horizontal, DS.Spacing.contentInset)
             

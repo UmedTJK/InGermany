@@ -59,6 +59,24 @@
 		AD67E94F2F4B20A1001E5849 /* UI_PRE_RELEASE.md in Resources */ = {isa = PBXBuildFile; fileRef = AD67E94E2F4B20A1001E5849 /* UI_PRE_RELEASE.md */; };
 		AD67E9542F4B24A1001E5849 /* CardContainerStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD67E9532F4B249E001E5849 /* CardContainerStyle.swift */; };
 		AD67E9562F4B25EF001E5849 /* DS.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD67E9552F4B25E8001E5849 /* DS.swift */; };
+		AD6ACB403035B3870034722B /* germany1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB283035B3870034722B /* germany1.jpg */; };
+		AD6ACB413035B3870034722B /* germany2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB293035B3870034722B /* germany2.jpg */; };
+		AD6ACB423035B3870034722B /* germany7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB363035B3870034722B /* germany7.jpg */; };
+		AD6ACB433035B3870034722B /* germany6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB353035B3870034722B /* germany6.jpg */; };
+		AD6ACB443035B3870034722B /* germany12.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB3B3035B3870034722B /* germany12.jpg */; };
+		AD6ACB453035B3870034722B /* germany4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB333035B3870034722B /* germany4.jpg */; };
+		AD6ACB463035B3870034722B /* insurance.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB3F3035B3870034722B /* insurance.pdf */; };
+		AD6ACB473035B3870034722B /* germany8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB373035B3870034722B /* germany8.jpg */; };
+		AD6ACB483035B3870034722B /* guide.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB1C3035B3870034722B /* guide.pdf */; };
+		AD6ACB493035B3870034722B /* bank_account.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB1F3035B3870034722B /* bank_account.jpg */; };
+		AD6ACB4A3035B3870034722B /* germany13.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB3C3035B3870034722B /* germany13.jpg */; };
+		AD6ACB4B3035B3870034722B /* burgergeld.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB1B3035B3870034722B /* burgergeld.pdf */; };
+		AD6ACB4D3035B3870034722B /* germany3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB323035B3870034722B /* germany3.jpg */; };
+		AD6ACB4E3035B3870034722B /* germany5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB343035B3870034722B /* germany5.jpg */; };
+		AD6ACB4F3035B3870034722B /* germany9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB383035B3870034722B /* germany9.jpg */; };
+		AD6ACB503035B3870034722B /* germany11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB3A3035B3870034722B /* germany11.jpg */; };
+		AD6ACB513035B3870034722B /* germany10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB393035B3870034722B /* germany10.jpg */; };
+		AD6ACB563035BF040034722B /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD6ACB553035BF040034722B /* Media.xcassets */; };
 		AD6C1E162E76C7C000EA59A7 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */; };
 		AD70954F2E9D8ECD00E79E19 /* ReadingHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */; };
 		AD70965F2E9E2E7800E79E19 /* burgeramt_registration_base64.json in Resources */ = {isa = PBXBuildFile; fileRef = AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */; };
@@ -159,6 +177,40 @@
 		AD67E94E2F4B20A1001E5849 /* UI_PRE_RELEASE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = UI_PRE_RELEASE.md; sourceTree = "<group>"; };
 		AD67E9532F4B249E001E5849 /* CardContainerStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainerStyle.swift; sourceTree = "<group>"; };
 		AD67E9552F4B25E8001E5849 /* DS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DS.swift; sourceTree = "<group>"; };
+		AD6ACB1B3035B3870034722B /* burgergeld.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = burgergeld.pdf; sourceTree = "<group>"; };
+		AD6ACB1C3035B3870034722B /* guide.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = guide.pdf; sourceTree = "<group>"; };
+		AD6ACB1D3035B3870034722B /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Base; path = Base.lproj/bank_account.jpg; sourceTree = "<group>"; };
+		AD6ACB1E3035B3870034722B /* en */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = en; path = en.lproj/bank_account.jpg; sourceTree = "<group>"; };
+		AD6ACB203035B3870034722B /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Base; path = Base.lproj/germany1.jpg; sourceTree = "<group>"; };
+		AD6ACB213035B3870034722B /* en */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = en; path = en.lproj/germany1.jpg; sourceTree = "<group>"; };
+		AD6ACB223035B3870034722B /* ar */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = ar; path = ar.lproj/germany1.jpg; sourceTree = "<group>"; };
+		AD6ACB233035B3870034722B /* de */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = de; path = de.lproj/germany1.jpg; sourceTree = "<group>"; };
+		AD6ACB243035B3870034722B /* fa */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = fa; path = fa.lproj/germany1.jpg; sourceTree = "<group>"; };
+		AD6ACB253035B3870034722B /* ru */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = ru; path = ru.lproj/germany1.jpg; sourceTree = "<group>"; };
+		AD6ACB263035B3870034722B /* tg-TJ */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "tg-TJ"; path = "tg-TJ.lproj/germany1.jpg"; sourceTree = "<group>"; };
+		AD6ACB273035B3870034722B /* uk */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = uk; path = uk.lproj/germany1.jpg; sourceTree = "<group>"; };
+		AD6ACB293035B3870034722B /* germany2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany2.jpg; sourceTree = "<group>"; };
+		AD6ACB2A3035B3870034722B /* Base */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Base; path = Base.lproj/germany3.jpg; sourceTree = "<group>"; };
+		AD6ACB2B3035B3870034722B /* en */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = en; path = en.lproj/germany3.jpg; sourceTree = "<group>"; };
+		AD6ACB2C3035B3870034722B /* ar */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = ar; path = ar.lproj/germany3.jpg; sourceTree = "<group>"; };
+		AD6ACB2D3035B3870034722B /* de */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = de; path = de.lproj/germany3.jpg; sourceTree = "<group>"; };
+		AD6ACB2E3035B3870034722B /* fa */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = fa; path = fa.lproj/germany3.jpg; sourceTree = "<group>"; };
+		AD6ACB2F3035B3870034722B /* ru */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = ru; path = ru.lproj/germany3.jpg; sourceTree = "<group>"; };
+		AD6ACB303035B3870034722B /* tg-TJ */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "tg-TJ"; path = "tg-TJ.lproj/germany3.jpg"; sourceTree = "<group>"; };
+		AD6ACB313035B3870034722B /* uk */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = uk; path = uk.lproj/germany3.jpg; sourceTree = "<group>"; };
+		AD6ACB333035B3870034722B /* germany4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany4.jpg; sourceTree = "<group>"; };
+		AD6ACB343035B3870034722B /* germany5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany5.jpg; sourceTree = "<group>"; };
+		AD6ACB353035B3870034722B /* germany6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany6.jpg; sourceTree = "<group>"; };
+		AD6ACB363035B3870034722B /* germany7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany7.jpg; sourceTree = "<group>"; };
+		AD6ACB373035B3870034722B /* germany8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany8.jpg; sourceTree = "<group>"; };
+		AD6ACB383035B3870034722B /* germany9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany9.jpg; sourceTree = "<group>"; };
+		AD6ACB393035B3870034722B /* germany10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany10.jpg; sourceTree = "<group>"; };
+		AD6ACB3A3035B3870034722B /* germany11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany11.jpg; sourceTree = "<group>"; };
+		AD6ACB3B3035B3870034722B /* germany12.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany12.jpg; sourceTree = "<group>"; };
+		AD6ACB3C3035B3870034722B /* germany13.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = germany13.jpg; sourceTree = "<group>"; };
+		AD6ACB3F3035B3870034722B /* insurance.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = insurance.pdf; sourceTree = "<group>"; };
+		AD6ACB543035BE610034722B /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
+		AD6ACB553035BF040034722B /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		AD6C1E152E76C7BE00EA59A7 /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		AD70954E2E9D8ECB00E79E19 /* ReadingHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingHistoryManager.swift; sourceTree = "<group>"; };
 		AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = burgeramt_registration_base64.json; sourceTree = "<group>"; };
@@ -247,11 +299,6 @@
 		AD3FE8A12EABA465001777D1 /* Services */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Services;
-			sourceTree = "<group>";
-		};
-		AD52FCF22E84765A00CC9F61 /* Images */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Images;
 			sourceTree = "<group>";
 		};
 		AD8552942E75ABEC003D3826 /* InGermany */ = {
@@ -594,9 +641,33 @@
 			path = DesignSystem;
 			sourceTree = "<group>";
 		};
+		AD6ACB3E3035B3870034722B /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				AD6ACB1F3035B3870034722B /* bank_account.jpg */,
+				AD6ACB283035B3870034722B /* germany1.jpg */,
+				AD6ACB293035B3870034722B /* germany2.jpg */,
+				AD6ACB323035B3870034722B /* germany3.jpg */,
+				AD6ACB333035B3870034722B /* germany4.jpg */,
+				AD6ACB343035B3870034722B /* germany5.jpg */,
+				AD6ACB353035B3870034722B /* germany6.jpg */,
+				AD6ACB363035B3870034722B /* germany7.jpg */,
+				AD6ACB373035B3870034722B /* germany8.jpg */,
+				AD6ACB383035B3870034722B /* germany9.jpg */,
+				AD6ACB393035B3870034722B /* germany10.jpg */,
+				AD6ACB3A3035B3870034722B /* germany11.jpg */,
+				AD6ACB3B3035B3870034722B /* germany12.jpg */,
+				AD6ACB3C3035B3870034722B /* germany13.jpg */,
+			);
+			name = Images;
+			path = Resources/Images;
+			sourceTree = SOURCE_ROOT;
+		};
 		AD8552892E75ABEB003D3826 = {
 			isa = PBXGroup;
 			children = (
+				AD6ACB553035BF040034722B /* Media.xcassets */,
+				AD6ACB543035BE610034722B /* Untitled.swift */,
 				ADE9E45F2F4AE26000849FF4 /* InGermany.xctestplan */,
 				ADB930472F135E6200A961D7 /* Adapters */,
 				AD38F5862E76899600E36EA4 /* README.md */,
@@ -651,12 +722,15 @@
 		AD8552C62E75B48D003D3826 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AD6ACB1B3035B3870034722B /* burgergeld.pdf */,
+				AD6ACB1C3035B3870034722B /* guide.pdf */,
+				AD6ACB3E3035B3870034722B /* Images */,
+				AD6ACB3F3035B3870034722B /* insurance.pdf */,
 				AD239D562E9F0237003B263D /* test1.pdf */,
 				AD239D572E9F0237003B263D /* test2.pdf */,
 				AD239D582E9F0237003B263D /* test3.pdf */,
 				AD70965E2E9E2E7500E79E19 /* burgeramt_registration_base64.json */,
 				ADE23B7D2E9BF11300BD152B /* articles */,
-				AD52FCF22E84765A00CC9F61 /* Images */,
 				ADA942082E78950B008D1364 /* locations.json */,
 				ADA942002E78930B008D1364 /* Test_Document.pdf */,
 				AD8552C82E75B4C4003D3826 /* categories.json */,
@@ -793,7 +867,6 @@
 				AD2A63B12E8C1AE4006A94DD /* ViewModels */,
 				AD2E60DE2EA1703100436C9A /* Repositories */,
 				AD3FE8A12EABA465001777D1 /* Services */,
-				AD52FCF22E84765A00CC9F61 /* Images */,
 				AD8552942E75ABEC003D3826 /* InGermany */,
 				AD8552A72E75AEBF003D3826 /* Core */,
 				AD8552B62E75B300003D3826 /* Views */,
@@ -873,6 +946,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADE23B752E9BEED400BD152B /* burgeramt_registration.json in Resources */,
+				AD6ACB403035B3870034722B /* germany1.jpg in Resources */,
+				AD6ACB413035B3870034722B /* germany2.jpg in Resources */,
+				AD6ACB423035B3870034722B /* germany7.jpg in Resources */,
+				AD6ACB433035B3870034722B /* germany6.jpg in Resources */,
+				AD6ACB443035B3870034722B /* germany12.jpg in Resources */,
+				AD6ACB453035B3870034722B /* germany4.jpg in Resources */,
+				AD6ACB463035B3870034722B /* insurance.pdf in Resources */,
+				AD6ACB473035B3870034722B /* germany8.jpg in Resources */,
+				AD6ACB483035B3870034722B /* guide.pdf in Resources */,
+				AD6ACB493035B3870034722B /* bank_account.jpg in Resources */,
+				AD6ACB4A3035B3870034722B /* germany13.jpg in Resources */,
+				AD6ACB4B3035B3870034722B /* burgergeld.pdf in Resources */,
+				AD6ACB4D3035B3870034722B /* germany3.jpg in Resources */,
+				AD6ACB563035BF040034722B /* Media.xcassets in Resources */,
+				AD6ACB4E3035B3870034722B /* germany5.jpg in Resources */,
+				AD6ACB4F3035B3870034722B /* germany9.jpg in Resources */,
+				AD6ACB503035B3870034722B /* germany11.jpg in Resources */,
+				AD6ACB513035B3870034722B /* germany10.jpg in Resources */,
 				AD40EEF02E75C3DC00866648 /* categories.json in Resources */,
 				ADB9303D2F1354D600A961D7 /* .gitignore in Resources */,
 				AD40EEF12E75C3DC00866648 /* articles.json in Resources */,
@@ -970,6 +1061,48 @@
 			targetProxy = AD2A67D02E910028006A94DD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		AD6ACB1F3035B3870034722B /* bank_account.jpg */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD6ACB1D3035B3870034722B /* Base */,
+				AD6ACB1E3035B3870034722B /* en */,
+			);
+			name = bank_account.jpg;
+			sourceTree = "<group>";
+		};
+		AD6ACB283035B3870034722B /* germany1.jpg */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD6ACB203035B3870034722B /* Base */,
+				AD6ACB213035B3870034722B /* en */,
+				AD6ACB223035B3870034722B /* ar */,
+				AD6ACB233035B3870034722B /* de */,
+				AD6ACB243035B3870034722B /* fa */,
+				AD6ACB253035B3870034722B /* ru */,
+				AD6ACB263035B3870034722B /* tg-TJ */,
+				AD6ACB273035B3870034722B /* uk */,
+			);
+			name = germany1.jpg;
+			sourceTree = "<group>";
+		};
+		AD6ACB323035B3870034722B /* germany3.jpg */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AD6ACB2A3035B3870034722B /* Base */,
+				AD6ACB2B3035B3870034722B /* en */,
+				AD6ACB2C3035B3870034722B /* ar */,
+				AD6ACB2D3035B3870034722B /* de */,
+				AD6ACB2E3035B3870034722B /* fa */,
+				AD6ACB2F3035B3870034722B /* ru */,
+				AD6ACB303035B3870034722B /* tg-TJ */,
+				AD6ACB313035B3870034722B /* uk */,
+			);
+			name = germany3.jpg;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		AD2A67D32E910028006A94DD /* Debug */ = {
