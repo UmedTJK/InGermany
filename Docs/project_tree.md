@@ -110,6 +110,13 @@
 │   ├── ReadingStatsManager.swift
 │   ├── SettingsManager.swift
 │   └── TextSizeManager.swift
+├── Media.xcassets
+│   ├── Contents.json
+│   └── homeBackground.imageset
+│       ├── Contents.json
+│       ├── homeBackround 1.jpg
+│       ├── homeBackround 2.jpg
+│       └── homeBackround.jpg
 ├── Models
 │   ├── Article.swift
 │   ├── Category.swift
@@ -170,6 +177,7 @@
 │   │   ├── germany7.jpg
 │   │   ├── germany8.jpg
 │   │   ├── germany9.jpg
+│   │   ├── homeBackground.jpg
 │   │   ├── ru.lproj
 │   │   ├── tg-TJ.lproj
 │   │   └── uk.lproj
@@ -232,6 +240,7 @@
 │   ├── ShakeEffect.swift
 │   ├── ShimmerEffect.swift
 │   └── Theme.swift
+├── Untitled.swift
 ├── ViewModels
 │   ├── AboutViewModel.swift
 │   ├── ArticleCompactCardViewModel.swift
@@ -284,4 +293,4 @@
     │   └── UsefulToolsSection.swift
     └── SettingsView.swift
 
-75 directories, 210 files
+77 directories, 217 files
