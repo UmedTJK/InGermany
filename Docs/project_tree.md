@@ -4,7 +4,6 @@
 │       └── ArticlesProviderAdapter.swift
 ├── Core
 │   ├── AppContainer.swift
-│   ├── ContentView.swift
 │   ├── InGermanyApp.swift
 │   ├── Localizable.xcstrings
 │   ├── LocalizationSettings.swift
@@ -293,4 +292,4 @@
     │   └── UsefulToolsSection.swift
     └── SettingsView.swift
 
-77 directories, 217 files
+77 directories, 216 files
