@@ -30,119 +30,171 @@ struct SettingsView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            List {
-                // MARK: - App Header
-                Section {
-                    HStack(spacing: DS.Spacing.m) {
-                        Image("LogoLight")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 40, height: 40)
-                            .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
-                            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("app.name")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                            Text("settings.app_version")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                    }
-                    .padding(.vertical, DS.Spacing.xs)
-                    .listRowBackground(Color.clear)
-                }
-
-                // MARK: - Language
-                Section {
-                    Picker(
-                        "settings.language.picker",
-                        selection: Binding<String>(
-                            get: { localizationSettings.language },
-                            set: { localizationSettings.setLanguage($0) }
-                        )
-                    ) {
-                        Label("🇷🇺 Русский", systemImage: "globe").tag("ru")
-                        Label("🇬🇧 English", systemImage: "globe").tag("en")
-                        Label("🇹🇯 Тоҷикӣ", systemImage: "globe").tag("tg")
-                    }
-                    .pickerStyle(.menu)
-                    .listRowBackground(DS.Color.secondarySurface.opacity(0.5))
-                } header: {
-                    Label("settings.language.section", systemImage: "globe")
-                }
-
-                // MARK: - Appearance
-                Section {
-                    Toggle(isOn: $viewModel.isDarkMode) {
+            ZStack {
+                // 1. Красивый фоновый цвет для всего экрана
+                Color(UIColor.systemGroupedBackground)
+                    .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: DS.Spacing.l) {
+                        
+                        // MARK: - App Header (Просто вверху)
                         HStack(spacing: DS.Spacing.m) {
-                            Image(systemName: viewModel.isDarkMode ? "moon.fill" : "sun.max.fill")
-                                .foregroundStyle(viewModel.isDarkMode ? .yellow : .orange)
-                                .frame(width: 24)
-                            Text("settings.appearance.dark_mode")
+                            Image("LogoLight")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 44, height: 44)
+                                .clipShape(RoundedRectangle(cornerRadius: DS.Radius.card))
+                                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("app.name")
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                Text("settings.app_version")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
                         }
-                    }
-                    .accessibilityLabel(Text("settings.appearance.dark_mode.a11y"))
-                    .listRowBackground(DS.Color.secondarySurface.opacity(0.5))
-                } header: {
-                    Label("settings.appearance.section", systemImage: "paintbrush")
-                }
+                        .padding(.horizontal, DS.Spacing.contentInset)
+                        .padding(.top, DS.Spacing.s)
 
-                // MARK: - Date Format
-                Section {
-                    Toggle(isOn: $viewModel.relativeDates) {
-                        HStack(spacing: DS.Spacing.m) {
-                            Image(systemName: "calendar")
-                                .foregroundStyle(.blue)
-                                .frame(width: 24)
-                            Text("settings.date_format.relative_dates")
+                        // MARK: - Language
+                        settingsHeader(title: "settings.language.section", icon: "globe")
+                        settingsCard {
+                            VStack(spacing: 0) {
+                                Picker(
+                                    "settings.language.picker",
+                                    selection: Binding<String>(
+                                        get: { localizationSettings.language },
+                                        set: { localizationSettings.setLanguage($0) }
+                                    )
+                                ) {
+                                    Text("🇷🇺 Русский").tag("ru")
+                                    Text("🇬🇧 English").tag("en")
+                                    Text("🇹🇯 Тоҷикӣ").tag("tg")
+                                }
+                                .pickerStyle(.segmented)
+                                .tint(.blue)
+                                .labelsHidden()
+                            }
                         }
-                    }
-                    .accessibilityLabel(Text("settings.date_format.relative_dates.a11y"))
-                    .listRowBackground(DS.Color.secondarySurface.opacity(0.5))
-                } header: {
-                    Label("settings.date_format.section", systemImage: "calendar")
-                }
 
-                // MARK: - Statistics
-                Section {
-                    HStack(spacing: DS.Spacing.m) {
-                        Image(systemName: "chart.bar")
-                            .foregroundStyle(.purple)
-                            .frame(width: 24)
-                        Text("settings.statistics.disabled")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Image(systemName: "lock.fill")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .listRowBackground(DS.Color.secondarySurface.opacity(0.5))
-                } header: {
-                    Label("settings.statistics.section", systemImage: "chart.bar")
-                }
-
-                // MARK: - About
-                Section {
-                    NavigationLink(destination: AboutView(viewModel: makeAboutViewModel())) {
-                        HStack(spacing: DS.Spacing.m) {
-                            Image(systemName: "info.circle")
-                                .foregroundStyle(.blue)
-                                .frame(width: 24)
-                            Text("tab.about")
+                        // MARK: - Appearance
+                        settingsHeader(title: "settings.appearance.section", icon: "paintbrush")
+                        settingsCard {
+                            Toggle(isOn: $viewModel.isDarkMode) {
+                                HStack(spacing: DS.Spacing.m) {
+                                    Image(systemName: viewModel.isDarkMode ? "moon.fill" : "sun.max.fill")
+                                        .foregroundStyle(viewModel.isDarkMode ? .yellow : .orange)
+                                        .frame(width: 24)
+                                    Text("settings.appearance.dark_mode")
+                                }
+                            }
+                            .tint(.blue)
+                            .accessibilityLabel(Text("settings.appearance.dark_mode.a11y"))
                         }
-                    }
-                    .listRowBackground(DS.Color.secondarySurface.opacity(0.5))
-                } header: {
-                    Label("settings.about.section", systemImage: "info.circle")
-                }
 
-                // MARK: - Footer
-                Section {
-                    HStack {
-                        Spacer()
+                        // MARK: - Date Format
+                        settingsHeader(title: "settings.date_format.section", icon: "calendar")
+                        settingsCard {
+                            Toggle(isOn: $viewModel.relativeDates) {
+                                HStack(spacing: DS.Spacing.m) {
+                                    Image(systemName: "calendar")
+                                        .foregroundStyle(.blue)
+                                        .frame(width: 24)
+                                    Text("settings.date_format.relative_dates")
+                                }
+                            }
+                            .tint(.blue)
+                            .accessibilityLabel(Text("settings.date_format.relative_dates.a11y"))
+                        }
+
+                        // MARK: - Statistics
+                        settingsHeader(title: "settings.statistics.section", icon: "chart.bar")
+                        settingsCard {
+                            HStack(spacing: DS.Spacing.m) {
+                                Image(systemName: "chart.bar")
+                                    .foregroundStyle(.purple)
+                                    .frame(width: 24)
+                                Text("settings.statistics.disabled")
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Image(systemName: "lock.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+
+                        // MARK: - About
+                        settingsHeader(title: "settings.about.section", icon: "info.circle")
+                        settingsCard {
+                            NavigationLink(destination: AboutView(viewModel: makeAboutViewModel())) {
+                                HStack(spacing: DS.Spacing.m) {
+                                    Image(systemName: "info.circle")
+                                        .foregroundStyle(.blue)
+                                        .frame(width: 24)
+                                    Text("tab.about")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary.opacity(0.5))
+                                }
+                                .contentShape(Rectangle())
+                            }
+                            .tint(.primary)
+                        }
+
+                        // ============================================
+                        // MARK: - 👇 ДОБАВЛЕННЫЕ РАЗДЕЛЫ ПОДДЕРЖКИ 👇
+                        // ============================================
+                        settingsHeader(title: "Служба поддержки", icon: "questionmark.circle")
+                        settingsCard {
+                            VStack(spacing: 0) {
+                                // 1. Частые вопросы (Навигация)
+                                NavigationLink(destination: FAQView()) {
+                                    HStack(spacing: DS.Spacing.m) {
+                                        Image(systemName: "list.bullet.rectangle.portrait")
+                                            .foregroundStyle(.blue)
+                                            .frame(width: 24)
+                                        Text("Частые вопросы")
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary.opacity(0.5))
+                                    }
+                                    .contentShape(Rectangle())
+                                }
+                                .tint(.primary)
+                                .padding(.bottom, DS.Spacing.m)
+
+                                // Разделительная линия
+                                Divider()
+                                    .padding(.vertical, DS.Spacing.s)
+
+                                // 2. Написать в поддержку (Ссылка на почту)
+                                Link(destination: URL(string: "mailto:support@ingermany.com?subject=Вопрос%20по%20приложению")!) {
+                                    HStack(spacing: DS.Spacing.m) {
+                                        Image(systemName: "envelope")
+                                            .foregroundStyle(.blue)
+                                            .frame(width: 24)
+                                        Text("Написать в поддержку")
+                                        Spacer()
+                                        Image(systemName: "arrow.up.right.square")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary.opacity(0.5))
+                                    }
+                                    .contentShape(Rectangle())
+                                }
+                                .tint(.primary)
+                            }
+                        }
+                        // ============================================
+                        // MARK: - 👆 КОНЕЦ ДОБАВЛЕННЫХ РАЗДЕЛОВ 👆
+                        // ============================================
+
+                        // MARK: - Footer
                         VStack(spacing: 4) {
                             Text("Made with ❤️ in Germany")
                                 .font(.caption)
@@ -151,25 +203,53 @@ struct SettingsView: View {
                                 .font(.caption2)
                                 .foregroundStyle(.secondary.opacity(0.6))
                         }
-                        Spacer()
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, DS.Spacing.m)
+                        .padding(.bottom, DS.Spacing.l)
                     }
-                    .listRowBackground(Color.clear)
+                    .padding(.horizontal, DS.Spacing.contentInset)
                 }
-            }
-            .listStyle(.insetGrouped)
-            .scrollContentBackground(.hidden)
-            .background(DS.Color.background)
-            .navigationTitle("settings.title")
-            .navigationBarTitleDisplayMode(.large)
-            .overlay {
+                .scrollIndicators(.hidden)
+                
+                // MARK: - Toast
                 if viewModel.isHistoryCleared {
                     HistoryClearedToast(
                         message: String(localized: "settings.history.cleared")
                     )
                 }
             }
+            .navigationTitle("settings.title")
+            .navigationBarTitleDisplayMode(.large)
             .animation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.8), value: viewModel.isHistoryCleared)
         }
+    }
+    
+    // MARK: - Helper Functions
+    
+    @ViewBuilder
+    private func settingsHeader(title: String, icon: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.caption)
+            Text(LocalizedStringKey(title))
+                .font(.subheadline)
+                .fontWeight(.medium)
+        }
+        .foregroundStyle(.secondary)
+        .padding(.leading, 4)
+        .padding(.bottom, 6)
+        .padding(.top, 4)
+    }
+    
+    @ViewBuilder
+    private func settingsCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(spacing: 0) {
+            content()
+        }
+        .padding(DS.Spacing.m)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
 }
 
@@ -191,13 +271,24 @@ private struct HistoryClearedToast: View {
             }
             .padding(DS.Spacing.m)
             .padding(.horizontal, DS.Spacing.l)
-            .cardContainer(.standard(useMaterial: true))
+            .background(Color(UIColor.systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
             .padding(.horizontal, DS.Spacing.contentInset)
             .padding(.bottom, DS.Spacing.m)
-            .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
         }
         .transition(.move(edge: .bottom).combined(with: .opacity))
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: true)
+    }
+}
+
+// MARK: - FAQ View (Заглушка, чтобы код скомпилировался)
+struct FAQView: View {
+    var body: some View {
+        List {
+            Text("Здесь будет список частых вопросов")
+        }
+        .navigationTitle("Частые вопросы")
     }
 }
 

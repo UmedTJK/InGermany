@@ -1,4 +1,4 @@
-import SwiftUI
+/* import SwiftUI
 
 public struct ArticleRenderer: View {
     let sections: [ArticleSectionDTO]
@@ -455,3 +455,6 @@ private struct UnknownView: View {
         .padding()
     }
 }
+
+
+*/
