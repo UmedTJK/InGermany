@@ -4,6 +4,7 @@
 │       └── ArticlesProviderAdapter.swift
 ├── Core
 │   ├── AppContainer.swift
+│   ├── ContentView.swift
 │   ├── InGermanyApp.swift
 │   ├── Localizable.xcstrings
 │   ├── LocalizationSettings.swift
@@ -225,7 +226,6 @@
 │   ├── CardSize.swift
 │   ├── CardStyle.swift
 │   ├── Color+Hex.swift
-│   ├── CustomTabBarView.swift
 │   ├── DesignSystem
 │   │   ├── CardContainerStyle.swift
 │   │   └── DS.swift
